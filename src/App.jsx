@@ -1,12 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState } from "react"
 
 function App() {
   return (
-    <div className="">
-      <header className="">
-
-      </header>
-    </div>
+    <React.Fragment>
+      <main></main>
+    </React.Fragment>
   )
 }
 
