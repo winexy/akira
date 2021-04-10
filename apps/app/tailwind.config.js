@@ -1,11 +1,13 @@
 module.exports = {
   purge: [],
-  darkMode: false, // or 'media' or 'class'
+  darkMode: false,
   theme: {
     extend: {},
   },
   variants: {
-    extend: {},
+    extend: {
+      backgroundColor: ['active'],
+    },
   },
-  plugins: [],
+  plugins: [require('tailwind-caret-color')()],
 }
