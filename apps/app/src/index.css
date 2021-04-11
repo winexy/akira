@@ -1,6 +1,27 @@
 @tailwind base;
 @tailwind utilities;
 
+html,
 body {
-  @apply bg-red-400;
+  @apply bg-red-400 overscroll-none;
+}
+
+* {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+body {
+  @apply min-h-screen flex flex-col;
+}
+
+/* Avoid Chrome to see Safari hack */
+@supports (-webkit-touch-callout: none) {
+  body {
+    /* The hack for Safari */
+    min-height: -webkit-fill-available;
+  }
+}
+
+#root {
+  @apply flex flex-col flex-1;
 }
