@@ -81,7 +81,7 @@ function Swipeable({Component = 'div', children, before, after}) {
   return (
     <Component className="relative overflow-hidden">
       {before && (
-        <div ref={beforeRef} className="absolute left-0 top-0 bottom-0">
+        <div ref={beforeRef} className="absolute left-0 top-0 bottom-0 flex">
           {before}
         </div>
       )}
@@ -93,7 +93,7 @@ function Swipeable({Component = 'div', children, before, after}) {
         {children}
       </div>
       {after && (
-        <div ref={afterRef} className="absolute right-0 top-0 bottom-0">
+        <div ref={afterRef} className="absolute right-0 top-0 bottom-0 flex">
           {after}
         </div>
       )}
@@ -136,18 +136,18 @@ function ItemList({list, onCheck, onRemove}) {
         <Swipeable
           key={item.id}
           Component="li"
-          before={
-            <button className="appearance-none focus:outline-none bg-indigo-400 h-full px-5 text-xl flex items-center justify-center active:bg-indigo-500">
-              😘
-            </button>
-          }
           after={
-            <button
-              className="h-full px-5 text-xl font-bold flex items-center justify-between text-white bg-red-500"
-              onClick={() => onRemove(item.id)}
-            >
-              &times;
-            </button>
+            <>
+              <button
+                className="h-full px-5 text-xl font-bold flex items-center justify-between text-white bg-red-500"
+                onClick={() => onRemove(item.id)}
+              >
+                &times;
+              </button>
+              <button className="appearance-none focus:outline-none bg-indigo-400 h-full px-5 text-xl flex items-center justify-center active:bg-indigo-500">
+                😘
+              </button>
+            </>
           }
         >
           <div
