@@ -75,8 +75,9 @@ const ItemForm = forwardRef(function ItemForm(
               ref={inputRef}
               className="
               w-full pl-4 py-3 pr-12
-              text-2xl caret-black
-              border border-gray-200
+              text-2xl caret-black text-white
+              bg-white bg-opacity-10
+              border border-gray-200 border-opacity-30
               rounded-lg shadow appearance-none
               transition ease-in duration-150
               focus:outline-none focus:shadow-2xl
@@ -92,7 +93,7 @@ const ItemForm = forwardRef(function ItemForm(
               type="button"
               className="
                 absolute right-0 
-                text-black text-3xl p-4 
+                text-white text-3xl p-4 
                 transition ease-in duration-150
                 focus:outline-none 
                 active:text-gray-500
