@@ -52,6 +52,11 @@ const ItemForm = forwardRef(function ItemForm(
     onSubmit(e)
   }
 
+  function onReset() {
+    onTitleChange('')
+    inputRef.current.focus()
+  }
+
   return (
     <div
       className={clsx('p-4 box-content')}
@@ -84,6 +89,7 @@ const ItemForm = forwardRef(function ItemForm(
               onInput={e => onTitleChange(e.target.value)}
             />
             <button
+              type="button"
               className="
                 absolute right-0 
                 text-black text-3xl p-4 
@@ -91,7 +97,7 @@ const ItemForm = forwardRef(function ItemForm(
                 focus:outline-none 
                 active:text-gray-500
               "
-              onClick={() => onTitleChange('')}
+              onClick={onReset}
             >
               &times;
             </button>
