@@ -12,10 +12,18 @@ import produce from 'immer'
 import assign from 'lodash/fp/assign'
 import clsx from 'clsx'
 import {Swipeable} from './components/Swipeable/Swipeable'
+import {usePersistedState} from './hooks/use-persisted-state'
 
 const storage = {
-  save(key, data) {},
-  remove(key) {},
+  set(key, data) {
+    localStorage.setItem(key, JSON.stringify(data))
+  },
+  get(key) {
+    return JSON.parse(localStorage.getItem(key))
+  },
+  remove(key) {
+    localStorage.removeItem(key)
+  },
 }
 
 const ItemForm = forwardRef(function ItemForm(
@@ -156,9 +164,12 @@ function Checkbox({isChecked, onChange, className = ''}) {
 }
 
 function App() {
-  const [title, setTitle] = useState('')
-  const [list, setList] = useState([])
   const formRef = useRef()
+  const [title, setTitle] = useState('')
+  const [list, setList] = usePersistedState(storage, {
+    key: 'akira:todo-list',
+    defaultState: [],
+  })
 
   function addItem() {
     setList(
