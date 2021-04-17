@@ -198,7 +198,7 @@ function App() {
   function onRemove(id) {
     setList(
       produce(list, draft => {
-        delete draft[findIndex(propEq('id', id), list)]
+        draft.splice(findIndex(propEq('id', id), list), 1)
       })
     )
   }
