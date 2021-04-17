@@ -14,7 +14,7 @@ import {Swipeable} from './components/Swipeable/Swipeable'
 import {usePersistedState} from './hooks/use-persisted-state'
 import remove from 'lodash/fp/remove'
 import isEmpty from 'lodash/fp/isEmpty'
-import {CheckIcon} from '@heroicons/react/solid'
+import {CheckIcon, PlusIcon} from '@heroicons/react/solid'
 
 const storage = {
   set(key, data) {
@@ -76,7 +76,7 @@ const ItemForm = forwardRef(function ItemForm(
               ref={inputRef}
               className="
               w-full pl-4 py-3 pr-12
-              text-2xl caret-black text-white
+              text-2xl caret-white text-white placeholder-white
               bg-white bg-opacity-10
               border border-gray-200 border-opacity-30
               rounded-lg shadow appearance-none
@@ -90,19 +90,21 @@ const ItemForm = forwardRef(function ItemForm(
               onBlur={() => setIsFocused(false)}
               onInput={e => onTitleChange(e.target.value)}
             />
-            <button
-              type="button"
-              className="
-                absolute right-0 
-                text-white text-3xl p-4 
-                transition ease-in duration-150
-                focus:outline-none 
-                active:text-gray-500
-              "
-              onClick={onReset}
-            >
-              &times;
-            </button>
+            {!isEmpty(title) && (
+              <button
+                type="button"
+                className="
+                  absolute right-0 
+                  text-white text-3xl p-4 
+                  transition ease-in duration-150
+                  focus:outline-none 
+                  active:text-gray-500
+                "
+                onClick={onReset}
+              >
+                &times;
+              </button>
+            )}
           </div>
         </form>
       </div>
@@ -246,10 +248,18 @@ function App() {
         </section>
         <div className="z-20 fixed bottom-0 left-0 right-0 p-4">
           <button
-            className="w-full py-4 bg-black bg-opacity-30 text-white rounded-md active:bg-opacity-40 transition ease-in duration-100 focus:outline-none focus:ring"
+            className="
+              flex items-center justify-center
+              w-full py-4
+              bg-black bg-opacity-30 
+              text-white rounded-md 
+              active:bg-opacity-40 
+              transition ease-in duration-100 
+              focus:outline-none focus:ring
+            "
             onClick={onAddItemIntent}
           >
-            Добавить
+            <PlusIcon className="w-6 h-6 mr-2" /> Добавить
           </button>
         </div>
       </main>
