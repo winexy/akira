@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react'
+import React, {useState, useRef, useImperativeHandle, forwardRef, useEffect} from 'react'
 import {uid} from 'uid'
 import findIndex from 'lodash/fp/findIndex'
 import propEq from 'lodash/fp/propEq'
@@ -17,7 +17,7 @@ const getBoundingRect = el => el.getBoundingClientRect()
 const getWidth = pipe(getBoundingRect, get('width'))
 const getTouch = get('touches.0.pageX')
 
-function Swipeable({Component = 'div', children, before, after}) {
+function Swipeable({Component = 'div', children, before, after, className}) {
   const [shift, setShift] = useState(0)
   const touchStartRef = useRef(0)
   const finalTouchRef = useRef(0)
@@ -46,13 +46,11 @@ function Swipeable({Component = 'div', children, before, after}) {
 
       if (!isOverSwipeLeft && !isOverSwipeRight) {
         setShift(0)
-      } 
-      
-      if (isOverHalfShiftLeft) {
-        setShift(-afterWidth)
       }
 
-      if (isOverHalfShiftRight) {
+      if (isOverHalfShiftLeft) {
+        setShift(-afterWidth)
+      } else if (isOverHalfShiftRight) {
         setShift(beforeWidth)
       }
     }
@@ -89,7 +87,7 @@ function Swipeable({Component = 'div', children, before, after}) {
   }, [])
 
   return (
-    <Component className="relative overflow-hidden">
+    <Component className={clsx('relative overflow-hidden', className)}>
       {before && (
         <div ref={beforeRef} className="absolute left-0 top-0 bottom-0 flex">
           {before}
@@ -97,7 +95,7 @@ function Swipeable({Component = 'div', children, before, after}) {
       )}
       <div
         ref={ref}
-        className="relative z-10 w-full transition ease-in duration-150 bg-gray-100"
+        className="relative z-10 w-full transition ease-in duration-150"
         style={{transform: `translateX(${shift}px)`}}
       >
         {children}
@@ -111,59 +109,81 @@ function Swipeable({Component = 'div', children, before, after}) {
   )
 }
 
-function ItemForm({title, onTitleInput, onSubmit}) {
+const ItemForm = forwardRef(function ItemForm(
+  {title, onTitleInput, onSubmit},
+  ref
+) {
+  const inputRef = useRef()
+  const [isFocused, setIsFocused] = useState(false)
+  const height = useRef();
+
+  useImperativeHandle(ref, () => ({
+    focus: () => inputRef.current.focus(),
+  }))
+
+  useEffect(() => {
+    height.current = getComputedStyle(inputRef.current).height
+  }, []);
+
   return (
-    <div className="relative z-20 pb-7">
-      <div className="relative bg-red-400 h-12">
-        <form
-          className="w-full px-4 absolute left-0 bottom-0 -mb-7 flex flex-col"
-          onSubmit={onSubmit}
-        >
+    <div
+      className={clsx('p-4 box-content')}
+      style={{
+        height: isFocused ? height.current : 'auto',
+      }}
+    >
+      <div
+        className={clsx('transition ease-in duration-75 backdrop-filter', {
+          'p-4 z-20 fixed inset-0 bg-black bg-opacity-20 backdrop-blur-sm': isFocused,
+        })}
+      >
+        <form onSubmit={onSubmit}>
           <input
+            ref={inputRef}
             className="
-              w-full px-4 py-3
-              text-2xl caret-black
-              border border-gray-200
-              rounded-lg shadow appearance-none
-              transition ease-in duration-150
-              focus:outline-none focus:shadow-2xl
-            "
+            w-full px-4 py-3
+            text-2xl caret-black
+            border border-gray-200
+            rounded-lg shadow appearance-none
+            transition ease-in duration-150
+            focus:outline-none focus:shadow-2xl
+          "
             placeholder="Bread..."
             type="text"
             value={title}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
             onInput={e => onTitleInput(e.target.value)}
           />
         </form>
       </div>
     </div>
   )
-}
+})
 
 function ItemList({list, onCheck, onRemove}) {
   return (
-    <ul className="divide-y">
+    <ul className="space-y-1 px-4">
       {list.map(item => (
         <Swipeable
           key={item.id}
           Component="li"
+          className="rounded-md overflow-hidden shadow"
           after={
             <>
               <button
-                className="h-full px-5 text-xl font-bold flex items-center justify-between text-white bg-red-500"
+                className="h-full px-5 text-xl font-bold flex items-center justify-between  text-white bg-red-500"
                 onClick={() => onRemove(item.id)}
               >
                 &times;
-              </button>
-              <button className="appearance-none focus:outline-none bg-indigo-400 h-full px-5 text-xl flex items-center justify-center active:bg-indigo-500">
-                😘
               </button>
             </>
           }
         >
           <div
             className={clsx(
-              'bg-gray-100 p-4 text-lg truncate',
-              'active:bg-gray-200',
+              'bg-white p-4 text-lg truncate',
+              'rounded-md',
               'transition ease-in duration-150',
               {
                 'line-through': item.checked,
@@ -182,11 +202,12 @@ function ItemList({list, onCheck, onRemove}) {
 function App() {
   const [title, setTitle] = useState('')
   const [list, setList] = useState([])
+  const formRef = useRef()
 
   function addItem() {
     setList(
       produce(list, draft => {
-        draft.push({
+        draft.unshift({
           id: uid(),
           title,
           timestamp: Date.now(),
@@ -221,13 +242,30 @@ function App() {
     setTitle('')
   }
 
+  function onAddItemIntent() {
+    formRef.current.focus()
+  }
+
   return (
     <React.Fragment>
-      <main className="flex-1 bg-gray-100">
-        <ItemForm title={title} onTitleInput={setTitle} onSubmit={onSubmit} />
-        <section className="mt-4">
+      <main className="flex-1 bg-indigo-400">
+        <ItemForm
+          ref={formRef}
+          title={title}
+          onTitleInput={setTitle}
+          onSubmit={onSubmit}
+        />
+        <section>
           <ItemList list={list} onCheck={checkItem} onRemove={onRemove} />
         </section>
+        <div className="fixed bottom-0 left-0 right-0 p-4">
+          <button
+            className="w-full py-4 bg-black bg-opacity-20 text-white rounded-md active:bg-opacity-30 transition ease-in duration-100 focus:outline-none focus:ring"
+            onClick={onAddItemIntent}
+          >
+            Добавить
+          </button>
+        </div>
       </main>
     </React.Fragment>
   )
