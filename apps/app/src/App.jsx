@@ -7,7 +7,6 @@ import React, {
 } from 'react'
 import {uid} from 'uid'
 import findIndex from 'lodash/fp/findIndex'
-import propEq from 'lodash/fp/propEq'
 import produce from 'immer'
 import assign from 'lodash/fp/assign'
 import clsx from 'clsx'
@@ -188,7 +187,7 @@ function App() {
   function checkItem(id) {
     setList(
       produce(list, draft => {
-        const idx = findIndex(propEq('id', id), list)
+        const idx = findIndex({id}, list)
         const item = draft[idx]
 
         draft[idx] = assign(item, {checked: !item.checked})
