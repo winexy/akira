@@ -14,7 +14,7 @@ import {Swipeable} from './components/Swipeable/Swipeable'
 import {usePersistedState} from './hooks/use-persisted-state'
 import remove from 'lodash/fp/remove'
 import isEmpty from 'lodash/fp/isEmpty'
-import {CheckIcon, PlusIcon} from '@heroicons/react/solid'
+import {CheckIcon, PlusIcon, XCircleIcon, XIcon} from '@heroicons/react/solid'
 
 const storage = {
   set(key, data) {
@@ -102,7 +102,7 @@ const ItemForm = forwardRef(function ItemForm(
                 "
                 onClick={onReset}
               >
-                &times;
+                <XCircleIcon className="h-5 w-5" />
               </button>
             )}
           </div>
@@ -121,14 +121,12 @@ function ItemList({list, onCheck, onRemove}) {
           Component="li"
           className="rounded-md overflow-hidden shadow bg-white"
           after={
-            <>
-              <button
-                className="h-full px-5 text-xl font-bold flex items-center justify-between  text-white bg-red-500"
-                onClick={() => onRemove(item.id)}
-              >
-                &times;
-              </button>
-            </>
+            <button
+              className="h-full px-5 text-xl font-bold flex items-center justify-between  text-white bg-red-500"
+              onClick={() => onRemove(item.id)}
+            >
+              <XIcon className="w-5 h-5" />
+            </button>
           }
         >
           <label
