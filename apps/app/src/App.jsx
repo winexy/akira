@@ -186,22 +186,69 @@ function ItemList({list, onCheck, onRemove}) {
             </>
           }
         >
-          <div
+          <label
             className={clsx(
-              'bg-white p-4 text-lg truncate',
+              'flex items-center',
+              'bg-white p-4 text-lg truncate text-black',
               'rounded-md',
               'transition ease-in duration-150',
+              'active:bg-gray-100',
               {
-                'line-through': item.checked,
+                'line-through text-gray-400': item.checked,
               }
             )}
-            onClick={() => onCheck(item.id)}
           >
+            <Checkbox
+              className="mr-3"
+              isChecked={item.checked}
+              onChange={() => onCheck(item.id)}
+            />
             {item.title}
-          </div>
+          </label>
         </Swipeable>
       ))}
     </ul>
+  )
+}
+
+function Checkbox({isChecked, onChange, className = ''}) {
+  return (
+    <div className={className}>
+      <input
+        type="checkbox"
+        className="sr-only"
+        checked={isChecked}
+        onChange={() => onChange(!isChecked)}
+      />
+      <div
+        className={clsx(
+          'flex items-center justify-center',
+          'w-4 h-4 rounded border',
+          'transition ease-in duration-75',
+          {
+            'bg-black border-black': isChecked,
+            'bg-white border-gray-400': !isChecked,
+          }
+        )}
+      >
+        {isChecked && (
+          <>
+            <div
+              className="w-1.5 h-0.5 bg-white"
+              style={{
+                transform: 'translate(2px, 1px) rotate(45deg)',
+              }}
+            ></div>
+            <div
+              className="w-3 h-0.5 bg-white"
+              style={{
+                transform: 'translate(-1px, -1px) rotate(-45deg)',
+              }}
+            ></div>
+          </>
+        )}
+      </div>
+    </div>
   )
 }
 
