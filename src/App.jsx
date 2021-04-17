@@ -317,7 +317,7 @@ function App() {
         <section>
           <ItemList list={list} onCheck={checkItem} onRemove={onRemove} />
         </section>
-        <div className="fixed bottom-0 left-0 right-0 p-4">
+        <div className="z-20 fixed bottom-0 left-0 right-0 p-4">
           <button
             className="w-full py-4 bg-black bg-opacity-30 text-white rounded-md active:bg-opacity-40 transition ease-in duration-100 focus:outline-none focus:ring"
             onClick={onAddItemIntent}
