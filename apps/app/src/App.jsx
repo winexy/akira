@@ -14,6 +14,7 @@ import {Swipeable} from './components/Swipeable/Swipeable'
 import {usePersistedState} from './hooks/use-persisted-state'
 import remove from 'lodash/fp/remove'
 import isEmpty from 'lodash/fp/isEmpty'
+import {CheckIcon} from '@heroicons/react/solid'
 
 const storage = {
   set(key, data) {
@@ -173,22 +174,7 @@ function Checkbox({isChecked, onChange, className = ''}) {
           }
         )}
       >
-        {isChecked && (
-          <>
-            <div
-              className="w-1.5 h-0.5 bg-white"
-              style={{
-                transform: 'translate(2px, 1px) rotate(45deg)',
-              }}
-            ></div>
-            <div
-              className="w-3 h-0.5 bg-white"
-              style={{
-                transform: 'translate(-1px, -1px) rotate(-45deg)',
-              }}
-            ></div>
-          </>
-        )}
+        {isChecked && <CheckIcon className="h-4 w-4 text-white" />}
       </div>
     </div>
   )
