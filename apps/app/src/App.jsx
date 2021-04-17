@@ -28,7 +28,7 @@ const storage = {
 }
 
 const ItemForm = forwardRef(function ItemForm(
-  {title, onTitleInput, onSubmit},
+  {title, onTitleChange, onSubmit},
   ref
 ) {
   const inputRef = useRef()
@@ -65,23 +65,37 @@ const ItemForm = forwardRef(function ItemForm(
         })}
       >
         <form onSubmit={handleSubmit}>
-          <input
-            ref={inputRef}
-            className="
-            w-full px-4 py-3
-            text-2xl caret-black
-            border border-gray-200
-            rounded-lg shadow appearance-none
-            transition ease-in duration-150
-            focus:outline-none focus:shadow-2xl
-          "
-            placeholder="Bread..."
-            type="text"
-            value={title}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
-            onInput={e => onTitleInput(e.target.value)}
-          />
+          <div className="relative flex items-center">
+            <input
+              ref={inputRef}
+              className="
+              w-full pl-4 py-3 pr-12
+              text-2xl caret-black
+              border border-gray-200
+              rounded-lg shadow appearance-none
+              transition ease-in duration-150
+              focus:outline-none focus:shadow-2xl
+            "
+              placeholder="Bread..."
+              type="text"
+              value={title}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+              onInput={e => onTitleChange(e.target.value)}
+            />
+            <button
+              className="
+                absolute right-0 
+                text-black text-3xl p-4 
+                transition ease-in duration-150
+                focus:outline-none 
+                active:text-gray-500
+              "
+              onClick={() => onTitleChange('')}
+            >
+              &times;
+            </button>
+          </div>
         </form>
       </div>
     </div>
@@ -231,7 +245,7 @@ function App() {
         <ItemForm
           ref={formRef}
           title={title}
-          onTitleInput={setTitle}
+          onTitleChange={setTitle}
           onSubmit={onSubmit}
         />
         <section>
