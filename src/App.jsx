@@ -13,6 +13,7 @@ import assign from 'lodash/fp/assign'
 import clsx from 'clsx'
 import {Swipeable} from './components/Swipeable/Swipeable'
 import {usePersistedState} from './hooks/use-persisted-state'
+import remove from 'lodash/fp/remove'
 
 const storage = {
   set(key, data) {
@@ -196,11 +197,7 @@ function App() {
   }
 
   function onRemove(id) {
-    setList(
-      produce(list, draft => {
-        draft.splice(findIndex(propEq('id', id), list), 1)
-      })
-    )
+    setList(remove({id}, list))
   }
 
   function onSubmit(e) {
