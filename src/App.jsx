@@ -41,9 +41,19 @@ function Swipeable({Component = 'div', children, before, after}) {
 
       const isOverSwipeLeft = isSwipeLeft && finalShift > afterWidth
       const isOverSwipeRight = isSwipeRight && finalShift > beforeWidth
+      const isOverHalfShiftLeft = isSwipeLeft && finalShift > afterWidth / 2
+      const isOverHalfShiftRight = isSwipeRight && finalShift > beforeWidth / 2
 
       if (!isOverSwipeLeft && !isOverSwipeRight) {
         setShift(0)
+      } 
+      
+      if (isOverHalfShiftLeft) {
+        setShift(-afterWidth)
+      }
+
+      if (isOverHalfShiftRight) {
+        setShift(beforeWidth)
       }
     }
 
