@@ -3,7 +3,7 @@
 
 html,
 body {
-  @apply bg-red-400 overscroll-none;
+  @apply overscroll-none;
 }
 
 * {
