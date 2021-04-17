@@ -13,6 +13,7 @@ import clsx from 'clsx'
 import {Swipeable} from './components/Swipeable/Swipeable'
 import {usePersistedState} from './hooks/use-persisted-state'
 import remove from 'lodash/fp/remove'
+import isEmpty from 'lodash/fp/isEmpty'
 
 const storage = {
   set(key, data) {
@@ -42,6 +43,15 @@ const ItemForm = forwardRef(function ItemForm(
     height.current = getComputedStyle(inputRef.current).height
   }, [])
 
+  function handleSubmit(e) {
+    if (isEmpty(title)) {
+      e.preventDefault()
+      return
+    }
+
+    onSubmit(e)
+  }
+
   return (
     <div
       className={clsx('p-4 box-content')}
@@ -54,7 +64,7 @@ const ItemForm = forwardRef(function ItemForm(
           'p-4 z-20 fixed inset-0 bg-black bg-opacity-20 backdrop-blur-sm': isFocused,
         })}
       >
-        <form onSubmit={onSubmit}>
+        <form onSubmit={handleSubmit}>
           <input
             ref={inputRef}
             className="
