@@ -1,4 +1,10 @@
-import React, {useState, useRef, useImperativeHandle, forwardRef, useEffect} from 'react'
+import React, {
+  useState,
+  useRef,
+  useImperativeHandle,
+  forwardRef,
+  useEffect,
+} from 'react'
 import {uid} from 'uid'
 import findIndex from 'lodash/fp/findIndex'
 import propEq from 'lodash/fp/propEq'
@@ -115,7 +121,7 @@ const ItemForm = forwardRef(function ItemForm(
 ) {
   const inputRef = useRef()
   const [isFocused, setIsFocused] = useState(false)
-  const height = useRef();
+  const height = useRef()
 
   useImperativeHandle(ref, () => ({
     focus: () => inputRef.current.focus(),
@@ -123,7 +129,7 @@ const ItemForm = forwardRef(function ItemForm(
 
   useEffect(() => {
     height.current = getComputedStyle(inputRef.current).height
-  }, []);
+  }, [])
 
   return (
     <div
@@ -168,7 +174,7 @@ function ItemList({list, onCheck, onRemove}) {
         <Swipeable
           key={item.id}
           Component="li"
-          className="rounded-md overflow-hidden shadow"
+          className="rounded-md overflow-hidden shadow bg-white"
           after={
             <>
               <button
@@ -248,7 +254,13 @@ function App() {
 
   return (
     <React.Fragment>
-      <main className="flex-1 bg-indigo-400">
+      <main
+        className="flex-1 bg-indigo-400 bg-cover"
+        style={{
+          backgroundImage:
+            'url(https://images.unsplash.com/photo-1616466446987-62a71e71b629?ixid=MnwxMjA3fDB8MHxwaG90by1vZi10aGUtZGF5fHx8fGVufDB8fHx8&ixlib=rb-1.2.1&dpr=1&auto=format%2Ccompress&fit=crop&w=2999&h=594%201x,%20https://images.unsplash.com/photo-1616466446987-62a71e71b629?ixid=MnwxMjA3fDB8MHxwaG90by1vZi10aGUtZGF5fHx8fGVufDB8fHx8&ixlib=rb-1.2.1&dpr=2&auto=format%2Ccompress&fit=crop&w=2999&h=594%202x)',
+        }}
+      >
         <ItemForm
           ref={formRef}
           title={title}
@@ -260,7 +272,7 @@ function App() {
         </section>
         <div className="fixed bottom-0 left-0 right-0 p-4">
           <button
-            className="w-full py-4 bg-black bg-opacity-20 text-white rounded-md active:bg-opacity-30 transition ease-in duration-100 focus:outline-none focus:ring"
+            className="w-full py-4 bg-black bg-opacity-30 text-white rounded-md active:bg-opacity-40 transition ease-in duration-100 focus:outline-none focus:ring"
             onClick={onAddItemIntent}
           >
             Добавить
