@@ -3,7 +3,7 @@ import React, {
   useRef,
   useImperativeHandle,
   forwardRef,
-  useEffect,
+  useEffect
 } from 'react'
 import {uid} from 'uid'
 import findIndex from 'lodash/fp/findIndex'
@@ -19,7 +19,7 @@ import {
   PlusIcon,
   XCircleIcon,
   XIcon,
-  MenuAlt4Icon,
+  MenuAlt4Icon
 } from '@heroicons/react/solid'
 import {useDrag, useDrop} from 'react-dnd'
 
@@ -32,7 +32,7 @@ const storage = {
   },
   remove(key) {
     localStorage.removeItem(key)
-  },
+  }
 }
 
 const ItemForm = forwardRef(function ItemForm(
@@ -44,7 +44,7 @@ const ItemForm = forwardRef(function ItemForm(
   const height = useRef()
 
   useImperativeHandle(ref, () => ({
-    focus: () => inputRef.current.focus(),
+    focus: () => inputRef.current.focus()
   }))
 
   useEffect(() => {
@@ -69,12 +69,12 @@ const ItemForm = forwardRef(function ItemForm(
     <div
       className={clsx('p-4 box-content')}
       style={{
-        height: isFocused ? height.current : 'auto',
+        height: isFocused ? height.current : 'auto'
       }}
     >
       <div
         className={clsx('transition ease-in duration-75 backdrop-filter', {
-          'p-4 z-20 fixed inset-0 bg-black bg-opacity-20 backdrop-blur-sm': isFocused,
+          'p-4 z-20 fixed inset-0 bg-black bg-opacity-20 backdrop-blur-sm': isFocused
         })}
       >
         <form onSubmit={handleSubmit}>
@@ -172,9 +172,9 @@ function ListItem({item, index, onRemove, onCheck, onOrderChange}) {
         const isDragging = monitor.isDragging()
         return {
           isDragging,
-          opacity: isDragging ? 0.7 : 1,
+          opacity: isDragging ? 0.7 : 1
         }
-      },
+      }
     }),
     []
   )
@@ -182,9 +182,9 @@ function ListItem({item, index, onRemove, onCheck, onOrderChange}) {
   const [{handlerId}, drop] = useDrop({
     accept: ItemType,
     collect: monitor => ({
-      handlerId: monitor.getHandlerId(),
+      handlerId: monitor.getHandlerId()
     }),
-    hover: onDragHover(dragRef, index, onOrderChange),
+    hover: onDragHover(dragRef, index, onOrderChange)
   })
 
   drag(dragRef)
@@ -198,7 +198,7 @@ function ListItem({item, index, onRemove, onCheck, onOrderChange}) {
       className={clsx(
         'rounded-md overflow-hidden shadow bg-white transform transition ease-in duration-100',
         {
-          'scale-95': isDragging,
+          'scale-95': isDragging
         }
       )}
       style={{opacity}}
@@ -220,7 +220,7 @@ function ListItem({item, index, onRemove, onCheck, onOrderChange}) {
           'transition ease-in duration-150',
           'active:bg-gray-200',
           {
-            'line-through text-gray-400': item.checked,
+            'line-through text-gray-400': item.checked
           }
         )}
       >
@@ -280,7 +280,7 @@ function Checkbox({isChecked, onChange, className = ''}) {
           'transition ease-in duration-75',
           {
             'bg-black border-black': isChecked,
-            'bg-white border-gray-400': !isChecked,
+            'bg-white border-gray-400': !isChecked
           }
         )}
       >
@@ -295,7 +295,7 @@ function App() {
   const [title, setTitle] = useState('')
   const [list, setList] = usePersistedState(storage, {
     key: 'akira:todo-list',
-    defaultState: [],
+    defaultState: []
   })
 
   function addItem() {
@@ -305,7 +305,7 @@ function App() {
           id: uid(),
           title,
           timestamp: Date.now(),
-          checked: false,
+          checked: false
         })
       })
     )
@@ -350,7 +350,7 @@ function App() {
         className="flex-1 bg-indigo-400 bg-cover"
         style={{
           backgroundImage:
-            'url(https://images.unsplash.com/photo-1616466446987-62a71e71b629?ixid=MnwxMjA3fDB8MHxwaG90by1vZi10aGUtZGF5fHx8fGVufDB8fHx8&ixlib=rb-1.2.1&dpr=1&auto=format%2Ccompress&fit=crop&w=2999&h=594%201x,%20https://images.unsplash.com/photo-1616466446987-62a71e71b629?ixid=MnwxMjA3fDB8MHxwaG90by1vZi10aGUtZGF5fHx8fGVufDB8fHx8&ixlib=rb-1.2.1&dpr=2&auto=format%2Ccompress&fit=crop&w=2999&h=594%202x)',
+            'url(https://images.unsplash.com/photo-1616466446987-62a71e71b629?ixid=MnwxMjA3fDB8MHxwaG90by1vZi10aGUtZGF5fHx8fGVufDB8fHx8&ixlib=rb-1.2.1&dpr=1&auto=format%2Ccompress&fit=crop&w=2999&h=594%201x,%20https://images.unsplash.com/photo-1616466446987-62a71e71b629?ixid=MnwxMjA3fDB8MHxwaG90by1vZi10aGUtZGF5fHx8fGVufDB8fHx8&ixlib=rb-1.2.1&dpr=2&auto=format%2Ccompress&fit=crop&w=2999&h=594%202x)'
         }}
       >
         <ItemForm
