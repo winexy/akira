@@ -2,8 +2,8 @@ import React, {useRef} from 'react'
 import {useDrag, useDrop} from 'react-dnd'
 import clsx from 'clsx'
 import {XIcon, MenuAlt4Icon} from '@heroicons/react/solid'
-import {Swipeable} from '../Swipeable/Swipeable'
-import {Checkbox} from '../Checkbox/Checkbox'
+import {Swipeable} from '@components/Swipeable/Swipeable'
+import {Checkbox} from '@components/Checkbox/Checkbox'
 
 const ItemType = 'list-item'
 

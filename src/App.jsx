@@ -1,5 +1,5 @@
 import React from 'react'
-import {MainView} from './views/MainView/MainView'
+import {MainView} from '@views/MainView/MainView'
 
 const mainStyles = {
   backgroundImage:

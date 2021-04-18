@@ -5,9 +5,9 @@ import produce from 'immer'
 import assign from 'lodash/fp/assign'
 import remove from 'lodash/fp/remove'
 import {PlusIcon} from '@heroicons/react/solid'
-import {usePersistedState} from '../../hooks/use-persisted-state'
-import {TodoForm} from '../../components/TodoForm/TodoForm'
-import {TodoList} from '../../components/TodoList/TodoList'
+import {usePersistedState} from '@hooks/use-persisted-state'
+import {TodoForm} from '@components/TodoForm/TodoForm'
+import {TodoList} from '@components/TodoList/TodoList'
 
 const storage = {
   set(key, data) {
