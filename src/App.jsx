@@ -198,7 +198,7 @@ function ListItem({item, index, onRemove, onCheck, onOrderChange}) {
       className={clsx(
         'rounded-md overflow-hidden shadow bg-white transform transition ease-in duration-100',
         {
-          'scale-95': isDragging
+          'scale-95 -rotate-1': isDragging
         }
       )}
       style={{opacity}}
