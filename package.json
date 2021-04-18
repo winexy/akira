@@ -13,6 +13,8 @@
     "immer": "^9.0.1",
     "lodash": "^4.17.21",
     "react": "^17.0.0",
+    "react-dnd": "^14.0.2",
+    "react-dnd-touch-backend": "^14.0.0",
     "react-dom": "^17.0.0",
     "tailwind-caret-color": "^1.1.0",
     "uid": "^2.0.0"
