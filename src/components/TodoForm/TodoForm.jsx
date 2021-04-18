@@ -14,22 +14,12 @@ export const TodoForm = forwardRef(function ItemForm(
   ref
 ) {
   const inputRef = useRef()
-  const [isFocused, setIsFocused] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
-  const [height, setHeight] = useState()
 
   useImperativeHandle(ref, () => ({
     focus: () => inputRef.current.focus(),
     show: () => setIsVisible(true)
   }))
-
-  useEffect(() => {
-    if (isEmpty(inputRef.current)) {
-      return
-    }
-
-    setHeight(getComputedStyle(inputRef.current).height)
-  }, [inputRef.current])
 
   useEffect(() => {
     if (isVisible) {
@@ -51,20 +41,23 @@ export const TodoForm = forwardRef(function ItemForm(
     inputRef.current.focus()
   }
 
+  function onOutsideClick(event) {
+    if (event.target === backdropRef.current) {
+      setIsVisible(false)
+    }
+  }
+
+  const backdropRef = useRef()
+
   return (
-    <div
-      className={clsx('box-content px-4', {
-        'pt-4': isVisible
-      })}
-      style={{
-        height: isVisible ? height : 'auto'
-      }}
-    >
+    <div className={clsx('box-content px-4')}>
       {isVisible && (
         <div
+          ref={backdropRef}
           className={clsx('transition ease-in duration-75 backdrop-filter', {
             'p-4 z-20 fixed inset-0 bg-black bg-opacity-20 backdrop-blur-sm': isVisible
           })}
+          onClick={onOutsideClick}
         >
           <form onSubmit={handleSubmit}>
             <div className="relative flex items-center">
@@ -73,8 +66,8 @@ export const TodoForm = forwardRef(function ItemForm(
                 className="
                   w-full pl-4 py-3 pr-12
                   text-2xl caret-white text-white placeholder-white
-                  bg-white bg-opacity-10
-                  border border-gray-200 border-opacity-30
+                  bg-white bg-opacity-40
+                  border border-gray-200
                   rounded-lg shadow appearance-none
                   transition ease-in duration-150
                   focus:outline-none focus:shadow-2xl
@@ -82,20 +75,19 @@ export const TodoForm = forwardRef(function ItemForm(
                 placeholder="Bread..."
                 type="text"
                 value={title}
-                onBlur={() => setIsVisible(false)}
                 onInput={e => onTitleChange(e.target.value)}
               />
               {!isEmpty(title) && (
                 <button
                   type="button"
                   className="
-                  absolute right-0 
-                  text-white text-3xl p-4 
-                  transition ease-in duration-150
-                  focus:outline-none 
-                  active:text-gray-500
-                "
-                  onClick={onReset}
+                    absolute right-0 
+                    text-white text-3xl p-4 
+                    transition ease-in duration-150
+                    focus:outline-none 
+                    active:text-gray-500
+                  "
+                  onClickCapture={onReset}
                 >
                   <XCircleIcon className="h-5 w-5" />
                 </button>
