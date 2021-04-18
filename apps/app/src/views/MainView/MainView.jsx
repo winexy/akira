@@ -64,7 +64,8 @@ export function MainView() {
   }
 
   function onAddItemIntent() {
-    formRef.current.focus()
+    // formRef.current.focus()
+    formRef.current.show()
   }
 
   function onOrderChange(dragIndex, hoverIndex) {
@@ -76,14 +77,14 @@ export function MainView() {
   }
 
   return (
-    <>
+    <div className="pt-4">
       <TodoForm
         ref={formRef}
         title={title}
         onTitleChange={setTitle}
         onSubmit={onSubmit}
       />
-      <section>
+      <section className="mt-3">
         <TodoList
           list={list}
           onCheck={checkItem}
@@ -107,6 +108,6 @@ export function MainView() {
           <PlusIcon className="w-6 h-6 mr-2" /> Добавить
         </button>
       </div>
-    </>
+    </div>
   )
 }
