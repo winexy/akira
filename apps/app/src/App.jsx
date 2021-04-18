@@ -1,21 +1,13 @@
-import React, {
-  useState,
-  useRef,
-  useImperativeHandle,
-  forwardRef,
-  useEffect
-} from 'react'
+import React, {useState, useRef} from 'react'
 import {uid} from 'uid'
 import findIndex from 'lodash/fp/findIndex'
 import produce from 'immer'
 import assign from 'lodash/fp/assign'
-import clsx from 'clsx'
-import {Swipeable} from './components/Swipeable/Swipeable'
 import {usePersistedState} from './hooks/use-persisted-state'
 import remove from 'lodash/fp/remove'
-import {CheckIcon, PlusIcon, XIcon, MenuAlt4Icon} from '@heroicons/react/solid'
-import {useDrag, useDrop} from 'react-dnd'
+import {PlusIcon} from '@heroicons/react/solid'
 import {TodoForm} from './components/TodoForm/TodoForm'
+import {TodoList} from './components/TodoList/TodoList'
 
 const storage = {
   set(key, data) {
@@ -27,176 +19,6 @@ const storage = {
   remove(key) {
     localStorage.removeItem(key)
   }
-}
-const ItemType = 'list-item'
-
-function onDragHover(ref, index, changeCallback) {
-  return function (item, monitor) {
-    if (!ref.current) {
-      return
-    }
-    const dragIndex = item.index
-    const hoverIndex = index
-
-    if (dragIndex === hoverIndex) {
-      return
-    }
-    // Determine rectangle on screen
-    const hoverBoundingRect = ref.current?.getBoundingClientRect()
-    // Get vertical middle
-    const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2
-    // Determine mouse position
-    const clientOffset = monitor.getClientOffset()
-    // Get pixels to the top
-    const hoverClientY = clientOffset.y - hoverBoundingRect.top
-    // Only perform the move when the mouse has crossed half of the items height
-    // When dragging downwards, only move when the cursor is below 50%
-    // When dragging upwards, only move when the cursor is above 50%
-    // Dragging downwards
-    if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-      return
-    }
-    // Dragging upwards
-    if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-      return
-    }
-    // Time to actually perform the action
-    changeCallback(dragIndex, hoverIndex)
-    // Note: we're mutating the monitor item here!
-    // Generally it's better to avoid mutations,
-    // but it's good here for the sake of performance
-    // to avoid expensive index searches.
-    item.index = hoverIndex
-  }
-}
-
-function ListItem({item, index, onRemove, onCheck, onOrderChange}) {
-  const dragRef = useRef()
-  const dropRef = useRef()
-  const [{opacity, isDragging}, drag] = useDrag(
-    () => ({
-      type: ItemType,
-      item: {id: item.id, index},
-      collect(monitor) {
-        const isDragging = monitor.isDragging()
-        return {
-          isDragging,
-          opacity: isDragging ? 0.7 : 1
-        }
-      }
-    }),
-    []
-  )
-
-  const [{handlerId}, drop] = useDrop({
-    accept: ItemType,
-    collect: monitor => ({
-      handlerId: monitor.getHandlerId()
-    }),
-    hover: onDragHover(dragRef, index, onOrderChange)
-  })
-
-  drag(dragRef)
-  drop(dropRef)
-
-  return (
-    <Swipeable
-      ref={dropRef}
-      key={item.id}
-      Component="li"
-      className={clsx(
-        'rounded-md overflow-hidden shadow bg-white transform transition ease-in duration-100',
-        {
-          'scale-95 -rotate-1': isDragging
-        }
-      )}
-      style={{opacity}}
-      data-handler-id={handlerId}
-      after={
-        <button
-          className="h-full px-5 text-xl font-bold flex items-center justify-between  text-white bg-red-500"
-          onClick={() => onRemove(item.id)}
-        >
-          <XIcon className="w-5 h-5" />
-        </button>
-      }
-    >
-      <label
-        className={clsx(
-          'flex items-center',
-          'bg-white p-4 text-lg truncate text-black',
-          'select-none rounded-md',
-          'transition ease-in duration-150',
-          'active:bg-gray-200',
-          {
-            'line-through text-gray-400': item.checked
-          }
-        )}
-      >
-        <Checkbox
-          className="mr-3"
-          isChecked={item.checked}
-          onChange={() => onCheck(item.id)}
-        />
-        {item.title}
-        <button
-          ref={dragRef}
-          className="
-              ml-auto w-8 h-8 -mr-2
-              flex items-center justify-center
-              text-gray-400 
-              active:text-gray-300
-              focus:outline-none
-              "
-        >
-          <MenuAlt4Icon className="w-4 h-4" />
-        </button>
-      </label>
-    </Swipeable>
-  )
-}
-
-function ItemList({list, onCheck, onRemove, onOrderChange}) {
-  return (
-    <ul className="space-y-1 px-4">
-      {list.map((item, index) => (
-        <ListItem
-          key={item.id}
-          item={item}
-          index={index}
-          onCheck={onCheck}
-          onRemove={onRemove}
-          onOrderChange={onOrderChange}
-        />
-      ))}
-    </ul>
-  )
-}
-
-function Checkbox({isChecked, onChange, className = ''}) {
-  return (
-    <div className={className}>
-      <input
-        type="checkbox"
-        className="sr-only"
-        checked={isChecked}
-        onChange={() => onChange(!isChecked)}
-      />
-      <div
-        className={clsx(
-          'flex items-center justify-center',
-          'w-4 h-4 rounded border',
-          'transition ease-in duration-75',
-          {
-            'bg-black border-black': isChecked,
-            'bg-white border-gray-400': !isChecked
-          }
-        )}
-      >
-        {isChecked && <CheckIcon className="h-4 w-4 text-white" />}
-      </div>
-    </div>
-  )
 }
 
 function App() {
@@ -269,7 +91,7 @@ function App() {
           onSubmit={onSubmit}
         />
         <section>
-          <ItemList
+          <TodoList
             list={list}
             onCheck={checkItem}
             onRemove={onRemove}
