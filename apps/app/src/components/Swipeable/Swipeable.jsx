@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from 'react'
+import React, {useEffect, useState, useRef, forwardRef} from 'react'
 import clsx from 'clsx'
 import pipe from 'lodash/fp/pipe'
 import get from 'lodash/fp/get'
@@ -7,13 +7,10 @@ const getBoundingRect = el => el.getBoundingClientRect()
 const getWidth = pipe(getBoundingRect, get('width'))
 const getTouch = get('touches.0.pageX')
 
-export function Swipeable({
-  Component = 'div',
-  children,
-  before,
-  after,
-  className,
-}) {
+export const Swipeable = forwardRef(function Swipeable(
+  {Component = 'div', children, before, after, className, ...props},
+  parentRef
+) {
   const [shift, setShift] = useState(0)
   const touchStartRef = useRef(0)
   const finalTouchRef = useRef(0)
@@ -83,7 +80,11 @@ export function Swipeable({
   }, [])
 
   return (
-    <Component className={clsx('relative overflow-hidden', className)}>
+    <Component
+      ref={parentRef}
+      className={clsx('relative overflow-hidden', className)}
+      {...props}
+    >
       {before && (
         <div ref={beforeRef} className="absolute left-0 top-0 bottom-0 flex">
           {before}
@@ -103,4 +104,4 @@ export function Swipeable({
       )}
     </Component>
   )
-}
+})

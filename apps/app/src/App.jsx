@@ -19,9 +19,9 @@ import {
   PlusIcon,
   XCircleIcon,
   XIcon,
-  ArrowsExpandIcon,
+  MenuAlt4Icon,
 } from '@heroicons/react/solid'
-import find from 'lodash/fp/find'
+import {useDrag, useDrop} from 'react-dnd'
 
 const storage = {
   set(key, data) {
@@ -33,88 +33,6 @@ const storage = {
   remove(key) {
     localStorage.removeItem(key)
   },
-}
-
-const DnD = {
-  Area,
-  Draggable,
-}
-
-function Area({Component = 'div', children, onDrop, ...props}) {
-  const ref = useRef()
-
-  const isDropArea = event => ref.current === event.target
-  const findDraggable = event => event.target.closest('[draggable]')
-
-  function onDragEnter(event) {
-    if (isDropArea(event)) {
-      return
-    }
-
-    const draggable = findDraggable(event)
-
-    draggable.style.opacity = 0.5
-  }
-
-  function onDragLeave(event) {
-    if (isDropArea(event)) {
-      return
-    }
-
-    const draggable = findDraggable(event)
-
-    draggable.style.opacity = 1
-  }
-
-  function onDragOver(event) {
-    if (isDropArea(event)) {
-      return
-    }
-
-    const isTextPlain = event.dataTransfer.types.includes('application/json')
-
-    if (isTextPlain) {
-      event.preventDefault()
-    }
-  }
-
-  function handleDrop(event) {
-    const id = JSON.parse(event.dataTransfer.getData('application/json'))
-    event.preventDefault()
-
-    const draggable = findDraggable(event)
-    draggable.style.opacity = 1
-
-    onDrop({
-      id,
-      before: draggable.dataset.dragId,
-    })
-  }
-
-  return (
-    <Component
-      ref={ref}
-      {...props}
-      onDragEnter={onDragEnter}
-      onDragOver={onDragOver}
-      onDrop={handleDrop}
-      onDragLeave={onDragLeave}
-    >
-      {children}
-    </Component>
-  )
-}
-
-function Draggable({Component = 'div', id, children}) {
-  function onDragStart(event) {
-    event.dataTransfer.setData('application/json', JSON.stringify(id))
-  }
-
-  return (
-    <Component draggable={true} data-drag-id={id} onDragStart={onDragStart}>
-      {children}
-    </Component>
-  )
 }
 
 const ItemForm = forwardRef(function ItemForm(
@@ -201,56 +119,148 @@ const ItemForm = forwardRef(function ItemForm(
   )
 })
 
-function ItemList({list, onCheck, onRemove, onOrderChange}) {
+const ItemType = 'list-item'
+
+function onDragHover(ref, index, changeCallback) {
+  return function (item, monitor) {
+    if (!ref.current) {
+      return
+    }
+    const dragIndex = item.index
+    const hoverIndex = index
+
+    if (dragIndex === hoverIndex) {
+      return
+    }
+    // Determine rectangle on screen
+    const hoverBoundingRect = ref.current?.getBoundingClientRect()
+    // Get vertical middle
+    const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2
+    // Determine mouse position
+    const clientOffset = monitor.getClientOffset()
+    // Get pixels to the top
+    const hoverClientY = clientOffset.y - hoverBoundingRect.top
+    // Only perform the move when the mouse has crossed half of the items height
+    // When dragging downwards, only move when the cursor is below 50%
+    // When dragging upwards, only move when the cursor is above 50%
+    // Dragging downwards
+    if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+      return
+    }
+    // Dragging upwards
+    if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+      return
+    }
+    // Time to actually perform the action
+    changeCallback(dragIndex, hoverIndex)
+    // Note: we're mutating the monitor item here!
+    // Generally it's better to avoid mutations,
+    // but it's good here for the sake of performance
+    // to avoid expensive index searches.
+    item.index = hoverIndex
+  }
+}
+
+function ListItem({item, index, onRemove, onCheck, onOrderChange}) {
+  const dragRef = useRef()
+  const dropRef = useRef()
+  const [{opacity, isDragging}, drag] = useDrag(
+    () => ({
+      type: ItemType,
+      item: {id: item.id, index},
+      collect(monitor) {
+        const isDragging = monitor.isDragging()
+        return {
+          isDragging,
+          opacity: isDragging ? 0.7 : 1,
+        }
+      },
+    }),
+    []
+  )
+
+  const [{handlerId}, drop] = useDrop({
+    accept: ItemType,
+    collect: monitor => ({
+      handlerId: monitor.getHandlerId(),
+    }),
+    hover: onDragHover(dragRef, index, onOrderChange),
+  })
+
+  drag(dragRef)
+  drop(dropRef)
+
   return (
-    <DnD.Area Component="ul" className="space-y-1 px-4" onDrop={onOrderChange}>
-      {list.map(item => (
-        <DnD.Draggable key={item.id} Component="li" id={item.id}>
-          <Swipeable
-            className="rounded-md overflow-hidden shadow bg-white"
-            after={
-              <button
-                className="h-full px-5 text-xl font-bold flex items-center justify-between  text-white bg-red-500"
-                onClick={() => onRemove(item.id)}
-              >
-                <XIcon className="w-5 h-5" />
-              </button>
-            }
-          >
-            <label
-              className={clsx(
-                'flex items-center',
-                'bg-white p-4 text-lg truncate text-black',
-                'rounded-md',
-                'transition ease-in duration-150',
-                'active:bg-gray-200',
-                {
-                  'line-through text-gray-400': item.checked,
-                }
-              )}
-            >
-              <Checkbox
-                className="mr-3"
-                isChecked={item.checked}
-                onChange={() => onCheck(item.id)}
-              />
-              {item.title}
-              <button
-                className="
+    <Swipeable
+      ref={dropRef}
+      key={item.id}
+      Component="li"
+      className={clsx(
+        'rounded-md overflow-hidden shadow bg-white transform transition ease-in duration-100',
+        {
+          'scale-95': isDragging,
+        }
+      )}
+      style={{opacity}}
+      data-handler-id={handlerId}
+      after={
+        <button
+          className="h-full px-5 text-xl font-bold flex items-center justify-between  text-white bg-red-500"
+          onClick={() => onRemove(item.id)}
+        >
+          <XIcon className="w-5 h-5" />
+        </button>
+      }
+    >
+      <label
+        className={clsx(
+          'flex items-center',
+          'bg-white p-4 text-lg truncate text-black',
+          'select-none rounded-md',
+          'transition ease-in duration-150',
+          'active:bg-gray-200',
+          {
+            'line-through text-gray-400': item.checked,
+          }
+        )}
+      >
+        <Checkbox
+          className="mr-3"
+          isChecked={item.checked}
+          onChange={() => onCheck(item.id)}
+        />
+        {item.title}
+        <button
+          ref={dragRef}
+          className="
               ml-auto w-8 h-8 -mr-2
               flex items-center justify-center
-              text-gray-100 
+              text-gray-400 
               active:text-gray-300
               focus:outline-none
               "
-              >
-                <ArrowsExpandIcon className="w-4 h-4" />
-              </button>
-            </label>
-          </Swipeable>
-        </DnD.Draggable>
+        >
+          <MenuAlt4Icon className="w-4 h-4" />
+        </button>
+      </label>
+    </Swipeable>
+  )
+}
+
+function ItemList({list, onCheck, onRemove, onOrderChange}) {
+  return (
+    <ul className="space-y-1 px-4">
+      {list.map((item, index) => (
+        <ListItem
+          key={item.id}
+          item={item}
+          index={index}
+          onCheck={onCheck}
+          onRemove={onRemove}
+          onOrderChange={onOrderChange}
+        />
       ))}
-    </DnD.Area>
+    </ul>
   )
 }
 
@@ -326,15 +336,14 @@ function App() {
     formRef.current.focus()
   }
 
-  function onOrderChange(data) {
-    const {id} = data
-    const target = find({id}, list)
-    const newList = remove({id}, list)
-    const beforeIndex = findIndex({id: data.before}, newList)
-    newList.splice(beforeIndex, 0, target)
+  function onOrderChange(dragIndex, hoverIndex) {
+    const newList = list.slice()
+    const item = newList[dragIndex]
+    newList.splice(dragIndex, 1)
+    newList.splice(hoverIndex, 0, item)
     setList(newList)
   }
-  
+
   return (
     <React.Fragment>
       <main
