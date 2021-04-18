@@ -6,7 +6,7 @@ import {DndProvider} from 'react-dnd'
 import {TouchBackend} from 'react-dnd-touch-backend'
 
 const dndConfig = {
-  enableMouseEvents: true,
+  enableMouseEvents: true
 }
 
 ReactDOM.render(
