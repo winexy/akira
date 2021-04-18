@@ -77,14 +77,14 @@ export function MainView() {
   }
 
   return (
-    <div className="pt-4">
+    <div className="pt-2 mb-24">
       <TodoForm
         ref={formRef}
         title={title}
         onTitleChange={setTitle}
         onSubmit={onSubmit}
       />
-      <section className="mt-3">
+      <section className="mt-3 overflow-y-scroll">
         <TodoList
           list={list}
           onCheck={checkItem}
