@@ -16,6 +16,9 @@ jobs:
       - name: Checkout 
         uses: actions/checkout@v2
 
+      - name: Remove Git
+        run: rm -rf .git
+
       - name: Install 
         run: yarn install --frozen-lockfile 
 
