@@ -27,7 +27,7 @@ jobs:
       - name: Pull Github Pages
         uses: actions/checkout@v2
         with: 
-          repository: ${GITHUB_ACTOR}/${GITHUB_ACTOR}
+          repository: ${GITHUB_ACTOR}/${GITHUB_ACTOR}.github.io
           path: $HOME/work/${GITHUB_ACTOR}
 
       - run: |
