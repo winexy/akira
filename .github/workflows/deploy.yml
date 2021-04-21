@@ -12,7 +12,14 @@ jobs:
       - run: pwd
       - run: |
           cd ..
-          ls -R
+          pwd
+      - run: pwd
       - run: yarn install --frozen-lockfile 
       - run: yarn build
       - run: ls -R
+  next:
+    runs-on: ubuntu-latest
+    steps: 
+      - run: pwd
+      - run: ls -R
+
