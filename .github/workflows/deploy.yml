@@ -25,11 +25,13 @@ jobs:
       - run: |
           echo "$GITHUB_ACTOR/$GITHUB_ACTOR.github.io"
           echo "$HOME/work/$GITHUB_ACTOR"
+          echo "${{ toJSON(env) }}"
+
       - name: Pull Github Pages
         uses: actions/checkout@v2
         with: 
-          repository: ${{ env.GITHUB_ACTOR }}/${{ env.GITHUB_ACTOR }}.github.io
-          path: ${{ env.HOME }}/work/${{ env.GITHUB_ACTOR }}
+          repository: winexy/winexy.github.io
+          path: $HOME/work/winexy
 
       - run: |
           pwd 
