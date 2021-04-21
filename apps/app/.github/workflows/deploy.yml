@@ -9,19 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
+          echo $HOME
           pwd
-          ls -R
       - uses: actions/checkout@v2
-      - run: |
-          pwd
-          ls -R
-      - run: |
-          cd ..
-          pwd
-          ls
-      - run: |
-          pwd
-          ls
+      - run: pwd
       - run: yarn install --frozen-lockfile 
       - run: yarn build
       - run: ls -R
