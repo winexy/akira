@@ -9,8 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          echo $HOME
-          pwd
+          echo "Home $HOME"
+          echo "Workspace $GITHUB_WORKSPACE"
+          echo "pwd $(pwd)"
       - uses: actions/checkout@v2
       - run: pwd
       - run: yarn install --frozen-lockfile 
