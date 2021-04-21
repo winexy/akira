@@ -40,6 +40,6 @@ jobs:
           git add -A
           git commit -m "upload akira"
           git remote -v
-          git remote set-url --push origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/winexy/winexy.github.io
+          git remote set-url --push origin "https://winexy:${{ secrets.GH_TOKEN }}@github.com/winexy/winexy.github.io.git"
           git remote -v
           git push
