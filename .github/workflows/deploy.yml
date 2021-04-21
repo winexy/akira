@@ -44,7 +44,8 @@ jobs:
           git status
           git config --global user.email "robot@winex.github.io"
           git config --global user.name "Robokek"
-          git commit -am "upload akira"
+          git add -A
+          git commit -m "upload akira"
           git status
           git log
 
