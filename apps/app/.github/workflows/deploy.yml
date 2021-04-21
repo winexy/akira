@@ -25,11 +25,6 @@ jobs:
       - name: Build
         run: yarn build
 
-      - run: |
-          echo "$GITHUB_ACTOR/$GITHUB_ACTOR.github.io"
-          echo "$HOME/work/$GITHUB_ACTOR"
-          echo "${{ toJSON(env) }}"
-
       - name: Pull Github Pages
         uses: actions/checkout@v2
         with: 
@@ -44,4 +39,5 @@ jobs:
           git config --global user.name "Robokek"
           git add -A
           git commit -m "upload akira"
-          git push origin master
+          git remote set-url --push origin "https://$GITHUB_ACTOR:${{ secrets.GITHUB_TOKEN }}@github.com/winexy/winexy.github.io.git"
+          git push
