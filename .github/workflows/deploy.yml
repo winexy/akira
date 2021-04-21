@@ -22,8 +22,10 @@ jobs:
       - name: Build
         run: yarn build
 
-      - run: ls -R
-
+      - run: |
+          ls -R
+          echo "$GITHUB_ACTOR/$GITHUB_ACTOR.github.io"
+          echo "$HOME/work/$GITHUB_ACTOR"
       - name: Pull Github Pages
         uses: actions/checkout@v2
         with: 
