@@ -38,6 +38,8 @@ jobs:
           ls 
           mv dist ./github-pages/akira
           git status
+          git config --global user.email "robot@winex.github.io"
+          git config --global user.name "Robokek"
           git commit -am "upload akira"
           git status
           git log
