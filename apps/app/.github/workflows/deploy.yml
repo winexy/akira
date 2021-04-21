@@ -7,10 +7,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    env:
-      GH_PAGES_REPOSITORY: "$GITHUB_ACTOR/$GITHUB_ACTOR.github.io"
-      GH_PAGES_PATH: "$HOME/work/$GITHUB_ACTOR"
-
     steps:
       - run: |
           echo "Home $HOME"
@@ -31,13 +27,13 @@ jobs:
       - name: Pull Github Pages
         uses: actions/checkout@v2
         with: 
-          repository: ${{ env.GH_PAGES_REPOSITORY }}
-          path: ${{ env.GH_PAGES_PATH }}
+          repository: "$GITHUB_ACTOR/$GITHUB_ACTOR.github.io"
+          path: "$HOME/work/$GITHUB_ACTOR"
 
       - run: |
           pwd 
           ls -R
-          cd ${{ env.GH_PAGES_PATH }}
+          cd "$HOME/work/$GITHUB_ACTOR"
           ls 
 
 
