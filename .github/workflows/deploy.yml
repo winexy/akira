@@ -31,12 +31,15 @@ jobs:
         uses: actions/checkout@v2
         with: 
           repository: winexy/winexy.github.io
-          path: ~/work/winexy"
+          path: "github-pages"
 
       - run: |
-          pwd 
-          ls -R
-          cd "$HOME/work/$GITHUB_ACTOR"
+          pwd
           ls 
+          mv dist ./github-pages/akira
+          git status
+          git commit -am "upload akira"
+          git status
+          git log
 
 
