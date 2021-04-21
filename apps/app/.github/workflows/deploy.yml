@@ -36,17 +36,12 @@ jobs:
           repository: winexy/winexy.github.io
           path: "github-pages"
 
-      - run: |
-          pwd
-          ls 
+      - name: Deploy Akira to Github Pages 
+        run: |
           mv dist ./github-pages/akira
           cd ./github-pages
-          git status
           git config --global user.email "robot@winex.github.io"
           git config --global user.name "Robokek"
           git add -A
           git commit -m "upload akira"
-          git status
-          git log
-
-
+          git push origin master
