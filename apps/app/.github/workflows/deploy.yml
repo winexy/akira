@@ -12,9 +12,28 @@ jobs:
           echo "Home $HOME"
           echo "Workspace $GITHUB_WORKSPACE"
           echo "pwd $(pwd)"
-      # - uses: actions/checkout@v2
-      - run: pwd
-      # - run: yarn install --frozen-lockfile 
-      # - run: yarn build
+
+      - name: Checkout 
+        uses: actions/checkout@v2
+
+      - name: Install 
+        run: yarn install --frozen-lockfile 
+
+      - name: Build
+        run: yarn build
+
       - run: ls -R
+
+      - name: Pull Github Pages
+        uses: actions/checkout@v2
+        with: 
+          repository: ${GITHUB_ACTOR}/${GITHUB_ACTOR}
+          path: $HOME/work/${GITHUB_ACTOR}
+
+      - run: |
+          pwd 
+          ls -R
+          cd $HOME/work/${GITHUB_ACTOR}
+          ls 
+
 
