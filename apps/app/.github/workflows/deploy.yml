@@ -35,9 +35,9 @@ jobs:
         run: |
           mv dist ./github-pages/akira
           cd ./github-pages
-          git config --global user.email "robot@winex.github.io"
+          git config --global user.email "robot@winexy.github.io"
           git config --global user.name "Robokek"
           git add -A
           git commit -m "upload akira"
-          git remote set-url --push origin "https://$GITHUB_ACTOR:${{ secrets.GITHUB_TOKEN }}@github.com/winexy/winexy.github.io.git"
+          git remote set-url --push origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/winexy/winexy.github.io
           git push
