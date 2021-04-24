@@ -1,6 +1,13 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
+    "noImplicitAny": true,
+    "esModuleInterop": true,
+    "jsx": "react",
+    "removeComments": true,
+    "sourceMap": true,
+    "isolatedModules": true,
+    "types": ["vite/client"],
     "paths": {
       "@components/*": ["./src/components/*"],
       "@hooks/*": ["./src/hooks/*"],
