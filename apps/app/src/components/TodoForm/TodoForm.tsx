@@ -24,7 +24,8 @@ export type TodoFormRef = {
 
 export const TodoForm = forwardRef<TodoFormRef, TodoFormProps>(
   function ItemForm({title, onTitleChange, onSubmit}, ref) {
-    const inputRef = useRef<HTMLInputElement>()
+    const inputRef = useRef<HTMLInputElement>(null)
+    const backdropRef = useRef<HTMLDivElement>(null)
     const [isVisible, setIsVisible] = useState(false)
 
     useImperativeHandle(ref, () => ({
@@ -32,7 +33,7 @@ export const TodoForm = forwardRef<TodoFormRef, TodoFormProps>(
     }))
 
     useLayoutEffect(() => {
-      if (isVisible) {
+      if (isVisible && inputRef.current) {
         inputRef.current.focus()
       }
     }, [isVisible])
@@ -48,7 +49,10 @@ export const TodoForm = forwardRef<TodoFormRef, TodoFormProps>(
 
     function onReset() {
       onTitleChange('')
-      inputRef.current.focus()
+      
+      if (inputRef.current) {
+        inputRef.current.focus()
+      }
     }
 
     const onOutsideClick: MouseEventHandler = event => {
@@ -56,8 +60,6 @@ export const TodoForm = forwardRef<TodoFormRef, TodoFormProps>(
         setIsVisible(false)
       }
     }
-
-    const backdropRef = useRef()
 
     return (
       <div className={clsx('box-content px-4')}>
@@ -74,14 +76,14 @@ export const TodoForm = forwardRef<TodoFormRef, TodoFormProps>(
                 <input
                   ref={inputRef}
                   className="
-                  w-full pl-4 py-3 pr-12
-                  text-2xl caret-white text-white placeholder-white
-                  bg-white bg-opacity-40
-                  border border-gray-200
-                  rounded-lg shadow appearance-none
-                  transition ease-in duration-150
-                  focus:outline-none focus:shadow-2xl
-                "
+                    w-full pl-4 py-3 pr-12
+                    text-2xl caret-white text-white placeholder-white
+                    bg-white bg-opacity-40
+                    border border-gray-200
+                    rounded-lg shadow appearance-none
+                    transition ease-in duration-150
+                    focus:outline-none focus:shadow-2xl
+                  "
                   placeholder="Bread..."
                   type="text"
                   value={title}
@@ -92,13 +94,13 @@ export const TodoForm = forwardRef<TodoFormRef, TodoFormProps>(
                 {!isEmpty(title) && (
                   <button
                     type="button"
-                    className="
-                    absolute right-0 
-                    text-white text-3xl p-4 
-                    transition ease-in duration-150
-                    focus:outline-none 
-                    active:text-gray-500
-                  "
+                      className="
+                      absolute right-0 
+                      text-white text-3xl p-4 
+                      transition ease-in duration-150
+                      focus:outline-none 
+                      active:text-gray-500
+                    "
                     onClickCapture={onReset}
                   >
                     <XCircleIcon className="h-5 w-5" />

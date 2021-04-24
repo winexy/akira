@@ -8,6 +8,7 @@ import React, {
 import clsx, {ClassValue} from 'clsx'
 import pipe from 'lodash/fp/pipe'
 import get from 'lodash/fp/get'
+import defaultTo from 'lodash/defaultTo'
 
 const getBoundingRect = (el: Element) => el.getBoundingClientRect()
 const getWidth = pipe(getBoundingRect, get('width'))
@@ -30,13 +31,17 @@ export const Swipeable = forwardRef<Element, SwipeableProps>(function Swipeable(
   const touchStartRef = useRef(0)
   const finalTouchRef = useRef(0)
   const swipeInfoRef = useRef({isSwipeLeft: false, isSwipeRight: false})
-  const beforeRef = useRef<HTMLDivElement>()
-  const ref = useRef<HTMLDivElement>()
-  const afterRef = useRef<HTMLDivElement>()
+  const beforeRef = useRef<HTMLDivElement>(null)
+  const ref = useRef<HTMLDivElement>(null)
+  const afterRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const beforeWidth = beforeRef.current ? getWidth(beforeRef.current) : 0
-    const afterWidth = afterRef.current ? getWidth(afterRef.current) : 0
+    const beforeWidth = beforeRef.current
+      ? defaultTo(getWidth(beforeRef.current), 0)
+      : 0
+    const afterWidth = afterRef.current
+      ? defaultTo(getWidth(afterRef.current), 0)
+      : 0
 
     const onTouchStart = (e: TouchEvent) => {
       const touch = getTouch(e)
@@ -81,9 +86,11 @@ export const Swipeable = forwardRef<Element, SwipeableProps>(function Swipeable(
       finalTouchRef.current = currentTouch
     }
 
-    ref.current.addEventListener('touchstart', onTouchStart)
-    ref.current.addEventListener('touchmove', onTouchMove)
-    ref.current.addEventListener('touchend', onTouchEnd)
+    if (ref.current) {
+      ref.current.addEventListener('touchstart', onTouchStart)
+      ref.current.addEventListener('touchmove', onTouchMove)
+      ref.current.addEventListener('touchend', onTouchEnd)
+    }
 
     return () => {
       if (ref.current) {
