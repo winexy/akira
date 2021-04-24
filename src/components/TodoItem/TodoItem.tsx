@@ -1,10 +1,11 @@
-import React, {useRef} from 'react'
+import React, {LegacyRef, Ref, useRef} from 'react'
 import {DragSourceMonitor, DropTargetMonitor, useDrag, useDrop} from 'react-dnd'
 import clsx from 'clsx'
 import {XIcon, MenuAlt4Icon} from '@heroicons/react/solid'
 import {Swipeable} from '@components/Swipeable/Swipeable'
 import {Checkbox} from '@components/Checkbox/Checkbox'
 import {TodoItemT} from '../../models/TodoItem'
+import isNull from 'lodash/isNull'
 
 const ItemType = 'list-item'
 
@@ -15,7 +16,7 @@ type DragObject = {
 }
 
 function onDragHover(
-  dropRef: React.MutableRefObject<Element>,
+  dropRef: React.MutableRefObject<Element | undefined>,
   index: number,
   swap: SwapIndexesF
 ) {
@@ -35,6 +36,10 @@ function onDragHover(
     const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2
     // Determine mouse position
     const clientOffset = monitor.getClientOffset()
+
+    if (isNull(clientOffset)) {
+      return;
+    }
     // Get pixels to the top
     const hoverClientY = clientOffset.y - hoverBoundingRect.top
     // Only perform the move when the mouse has crossed half of the items height
@@ -108,7 +113,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({
 
   return (
     <Swipeable
-      ref={dropRef}
+      ref={dropRef as Ref<Element>}
       Component="li"
       className={clsx(
         'rounded-md overflow-hidden shadow bg-white transform transition ease-in duration-100',
@@ -145,7 +150,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({
         />
         {item.title}
         <button
-          ref={dragRef}
+          ref={dragRef as LegacyRef<HTMLButtonElement>}
           className="
             ml-auto w-8 h-8 -mr-2
             flex items-center justify-center

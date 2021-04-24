@@ -1,7 +1,8 @@
-import React, {useState, useRef, FormEvent} from 'react'
+import React, {useState, useRef, FormEvent, Ref} from 'react'
 import {uid} from 'uid'
 import findIndex from 'lodash/fp/findIndex'
 import produce from 'immer'
+import isNull from 'lodash/isNull'
 import assign from 'lodash/fp/assign'
 import remove from 'lodash/fp/remove'
 import {PlusIcon} from '@heroicons/react/solid'
@@ -12,7 +13,7 @@ import {storage} from '@/models/Storage'
 import {TodoItemT} from '@/models/TodoItem'
 
 export function MainView() {
-  const formRef = useRef<TodoFormRef>()
+  const formRef = useRef<TodoFormRef>(null)
   const [title, setTitle] = useState('')
   const [list, setList] = usePersistedState<TodoItemT[]>(storage, {
     key: 'akira:todo-list',
@@ -54,7 +55,9 @@ export function MainView() {
   }
 
   function onAddItemIntent() {
-    formRef.current.show()
+    if (!isNull(formRef.current)) {
+      formRef.current.show()
+    }
   }
 
   function onOrderChange(dragIndex: number, hoverIndex: number) {
@@ -84,14 +87,14 @@ export function MainView() {
       <div className="z-20 fixed bottom-0 left-0 right-0 p-4">
         <button
           className="
-              flex items-center justify-center
-              w-full py-4
-              bg-black bg-opacity-30 
-              text-white rounded-md 
-              active:bg-opacity-40 
-              transition ease-in duration-100 
-              focus:outline-none focus:ring
-            "
+            flex items-center justify-center
+            w-full py-4
+            bg-black bg-opacity-30 
+            text-white rounded-md 
+            active:bg-opacity-40 
+            transition ease-in duration-100 
+            focus:outline-none focus:ring
+          "
           onClick={onAddItemIntent}
         >
           <PlusIcon className="w-6 h-6 mr-2" /> Добавить

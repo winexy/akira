@@ -1,3 +1,5 @@
+import isNull from 'lodash/isNull';
+
 export type StorageT = {
   set<T>(key: string, data: T): void;
   get(key: string): unknown;
@@ -9,7 +11,13 @@ export const storage: StorageT = {
     localStorage.setItem(key, JSON.stringify(data))
   },
   get(key) {
-    return JSON.parse(localStorage.getItem(key))
+    const value = localStorage.getItem(key);
+
+    if (isNull(value)) {
+      return value;
+    }
+
+    return JSON.parse(value)
   },
   remove(key) {
     localStorage.removeItem(key)
