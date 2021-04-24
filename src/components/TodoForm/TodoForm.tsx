@@ -18,7 +18,7 @@ type TodoFormProps = {
   onSubmit(event: FormEvent): void
 }
 
-type TodoFormRef = {
+export type TodoFormRef = {
   show(): void
 }
 
