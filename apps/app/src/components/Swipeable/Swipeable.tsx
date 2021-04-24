@@ -1,13 +1,28 @@
-import React, {useEffect, useState, useRef, forwardRef} from 'react'
-import clsx from 'clsx'
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  forwardRef,
+  CSSProperties
+} from 'react'
+import clsx, {ClassValue} from 'clsx'
 import pipe from 'lodash/fp/pipe'
 import get from 'lodash/fp/get'
 
-const getBoundingRect = el => el.getBoundingClientRect()
+const getBoundingRect = (el: Element) => el.getBoundingClientRect()
 const getWidth = pipe(getBoundingRect, get('width'))
 const getTouch = get('touches.0.pageX')
 
-export const Swipeable = forwardRef(function Swipeable(
+type SwipeableProps = {
+  Component: React.ElementType
+  before?: React.ReactChild
+  after?: React.ReactChild
+  className: ClassValue
+  children: React.ReactChild
+  style?: CSSProperties
+}
+
+export const Swipeable = forwardRef<Element, SwipeableProps>(function Swipeable(
   {Component = 'div', children, before, after, className, ...props},
   parentRef
 ) {
@@ -15,15 +30,15 @@ export const Swipeable = forwardRef(function Swipeable(
   const touchStartRef = useRef(0)
   const finalTouchRef = useRef(0)
   const swipeInfoRef = useRef({isSwipeLeft: false, isSwipeRight: false})
-  const beforeRef = useRef()
-  const ref = useRef()
-  const afterRef = useRef()
+  const beforeRef = useRef<HTMLDivElement>()
+  const ref = useRef<HTMLDivElement>()
+  const afterRef = useRef<HTMLDivElement>()
 
   useEffect(() => {
     const beforeWidth = beforeRef.current ? getWidth(beforeRef.current) : 0
     const afterWidth = afterRef.current ? getWidth(afterRef.current) : 0
 
-    const onTouchStart = e => {
+    const onTouchStart = (e: TouchEvent) => {
       const touch = getTouch(e)
       touchStartRef.current = touch
     }
@@ -48,7 +63,7 @@ export const Swipeable = forwardRef(function Swipeable(
       }
     }
 
-    const onTouchMove = e => {
+    const onTouchMove = (e: TouchEvent) => {
       const touchStart = touchStartRef.current
       const currentTouch = getTouch(e)
 

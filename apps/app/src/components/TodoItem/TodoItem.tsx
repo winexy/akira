@@ -15,7 +15,7 @@ type DragObject = {
 }
 
 function onDragHover(
-  dropRef: React.MutableRefObject<HTMLElement>,
+  dropRef: React.MutableRefObject<Element>,
   index: number,
   swap: SwapIndexesF
 ) {
@@ -83,7 +83,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({
   onCheck,
   onOrderChange
 }) => {
-  const dropRef = useRef<HTMLElement>()
+  const dropRef = useRef<Element>()
   const dragRef = useRef<HTMLButtonElement>()
   const [{opacity, isDragging}, connectDragSource] = useDrag<
     DragObject,
