@@ -7,22 +7,22 @@ import assign from 'lodash/fp/assign'
 import remove from 'lodash/fp/remove'
 import {PlusIcon} from '@heroicons/react/solid'
 import {usePersistedState} from '@hooks/use-persisted-state'
-import {TodoForm, TodoFormRef} from '@components/TodoForm/TodoForm'
-import {TodoList} from '@components/TodoList/TodoList'
+import {TaskForm, TaskFormRef} from '@/components/TaskForm/TaskForm'
+import {Tasks} from '@/components/Tasks/Tasks'
 import {storage} from '@/models/Storage'
-import {TodoItemT} from '@/models/TodoItem'
+import {TaskT} from '@/models/Task'
 
 export function MainView() {
-  const formRef = useRef<TodoFormRef>(null)
+  const formRef = useRef<TaskFormRef>(null)
   const [title, setTitle] = useState('')
-  const [list, setList] = usePersistedState<TodoItemT[]>(storage, {
-    key: 'akira:todo-list',
+  const [tasks, setTasks] = usePersistedState<TaskT[]>(storage, {
+    key: 'akira:tasks',
     defaultState: []
   })
 
   function addItem() {
-    setList(
-      produce(list, draft => {
+    setTasks(
+      produce(tasks, draft => {
         draft.unshift({
           id: uid(),
           title,
@@ -33,10 +33,10 @@ export function MainView() {
     )
   }
 
-  function checkItem(id: TodoItemT['id']) {
-    setList(
-      produce(list, draft => {
-        const idx = findIndex({id}, list)
+  function checkItem(id: TaskT['id']) {
+    setTasks(
+      produce(tasks, draft => {
+        const idx = findIndex({id}, tasks)
         const item = draft[idx]
 
         draft[idx] = assign(item, {checked: !item.checked})
@@ -44,8 +44,8 @@ export function MainView() {
     )
   }
 
-  function onRemove(id: TodoItemT['id']) {
-    setList(remove({id}, list))
+  function onRemove(id: TaskT['id']) {
+    setTasks(remove({id}, tasks))
   }
 
   function onSubmit(event: FormEvent) {
@@ -61,24 +61,24 @@ export function MainView() {
   }
 
   function onOrderChange(dragIndex: number, hoverIndex: number) {
-    const newList = list.slice()
-    const item = newList[dragIndex]
-    newList.splice(dragIndex, 1)
-    newList.splice(hoverIndex, 0, item)
-    setList(newList)
+    const newTasks = tasks.slice()
+    const item = newTasks[dragIndex]
+    newTasks.splice(dragIndex, 1)
+    newTasks.splice(hoverIndex, 0, item)
+    setTasks(newTasks)
   }
 
   return (
     <div className="pt-2 mb-24">
-      <TodoForm
+      <TaskForm
         ref={formRef}
         title={title}
         onTitleChange={setTitle}
         onSubmit={onSubmit}
       />
       <section className="mt-3 overflow-y-scroll">
-        <TodoList
-          list={list}
+        <Tasks
+          tasks={tasks}
           onCheck={checkItem}
           onRemove={onRemove}
           onOrderChange={onOrderChange}

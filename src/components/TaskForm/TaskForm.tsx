@@ -12,17 +12,17 @@ import isEmpty from 'lodash/fp/isEmpty'
 import {XCircleIcon} from '@heroicons/react/solid'
 import clsx from 'clsx'
 
-type TodoFormProps = {
+type TaskFormProps = {
   title: string
   onTitleChange(title: string): void
   onSubmit(event: FormEvent): void
 }
 
-export type TodoFormRef = {
+export type TaskFormRef = {
   show(): void
 }
 
-export const TodoForm = forwardRef<TodoFormRef, TodoFormProps>(
+export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
   function ItemForm({title, onTitleChange, onSubmit}, ref) {
     const inputRef = useRef<HTMLInputElement>(null)
     const backdropRef = useRef<HTMLDivElement>(null)
@@ -49,7 +49,7 @@ export const TodoForm = forwardRef<TodoFormRef, TodoFormProps>(
 
     function onReset() {
       onTitleChange('')
-      
+
       if (inputRef.current) {
         inputRef.current.focus()
       }
@@ -94,7 +94,7 @@ export const TodoForm = forwardRef<TodoFormRef, TodoFormProps>(
                 {!isEmpty(title) && (
                   <button
                     type="button"
-                      className="
+                    className="
                       absolute right-0 
                       text-white text-3xl p-4 
                       transition ease-in duration-150

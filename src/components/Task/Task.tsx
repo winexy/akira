@@ -4,14 +4,14 @@ import clsx from 'clsx'
 import {XIcon, MenuAlt4Icon} from '@heroicons/react/solid'
 import {Swipeable} from '@components/Swipeable/Swipeable'
 import {Checkbox} from '@components/Checkbox/Checkbox'
-import {TodoItemT} from '../../models/TodoItem'
+import {TaskT} from '../../models/Task'
 import isNull from 'lodash/isNull'
 
 const ItemType = 'list-item'
 
 type SwapIndexesF = (dragIndex: number, hoverIndex: number) => void
 type DragObject = {
-  id: TodoItemT['id']
+  id: TaskT['id']
   index: number
 }
 
@@ -38,7 +38,7 @@ function onDragHover(
     const clientOffset = monitor.getClientOffset()
 
     if (isNull(clientOffset)) {
-      return;
+      return
     }
     // Get pixels to the top
     const hoverClientY = clientOffset.y - hoverBoundingRect.top
@@ -64,11 +64,11 @@ function onDragHover(
   }
 }
 
-type TodoItemProps = {
-  item: TodoItemT
+type TaskProps = {
+  task: TaskT
   index: number
-  onRemove(id: TodoItemT['id']): void
-  onCheck(id: TodoItemT['id']): void
+  onRemove(id: TaskT['id']): void
+  onCheck(id: TaskT['id']): void
   onOrderChange: SwapIndexesF
 }
 
@@ -81,8 +81,8 @@ const collectProps = (monitor: DragSourceMonitor) => {
   }
 }
 
-export const TodoItem: React.FC<TodoItemProps> = ({
-  item,
+export const Task: React.FC<TaskProps> = ({
+  task,
   index,
   onRemove,
   onCheck,
@@ -97,7 +97,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({
   >(
     () => ({
       type: ItemType,
-      item: {id: item.id, index},
+      item: {id: task.id, index},
       collect: collectProps
     }),
     [index]
@@ -125,7 +125,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({
       after={
         <button
           className="h-full px-5 text-xl font-bold flex items-center justify-between  text-white bg-red-500"
-          onClick={() => onRemove(item.id)}
+          onClick={() => onRemove(task.id)}
         >
           <XIcon className="w-5 h-5" />
         </button>
@@ -139,16 +139,16 @@ export const TodoItem: React.FC<TodoItemProps> = ({
           'transition ease-in duration-150',
           'active:bg-gray-200',
           {
-            'line-through text-gray-400': item.checked
+            'line-through text-gray-400': task.checked
           }
         )}
       >
         <Checkbox
           className="mr-3"
-          isChecked={item.checked}
-          onChange={() => onCheck(item.id)}
+          isChecked={task.checked}
+          onChange={() => onCheck(task.id)}
         />
-        {item.title}
+        {task.title}
         <button
           ref={dragRef as LegacyRef<HTMLButtonElement>}
           className="
