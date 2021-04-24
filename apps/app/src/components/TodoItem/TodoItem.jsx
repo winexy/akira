@@ -99,7 +99,7 @@ export function TodoItem({item, index, onRemove, onCheck, onOrderChange}) {
         className={clsx(
           'flex items-center',
           'bg-white p-4 text-lg truncate text-black',
-          'select-none rounded-md',
+          'rounded-md',
           'transition ease-in duration-150',
           'active:bg-gray-200',
           {
