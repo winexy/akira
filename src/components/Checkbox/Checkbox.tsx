@@ -2,7 +2,17 @@ import React from 'react'
 import clsx from 'clsx'
 import {CheckIcon} from '@heroicons/react/solid'
 
-export function Checkbox({isChecked, onChange, className = ''}) {
+type CheckboxProps = {
+  isChecked: boolean
+  onChange(newState: boolean): void
+  className?: string
+}
+
+export const Checkbox: React.FC<CheckboxProps> = ({
+  isChecked,
+  onChange,
+  className = ''
+}) => {
   return (
     <label className={className}>
       <input
