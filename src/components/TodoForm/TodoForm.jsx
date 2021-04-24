@@ -2,7 +2,7 @@ import React, {
   forwardRef,
   useRef,
   useState,
-  useEffect,
+  useLayoutEffect,
   useImperativeHandle
 } from 'react'
 import isEmpty from 'lodash/fp/isEmpty'
@@ -21,7 +21,7 @@ export const TodoForm = forwardRef(function ItemForm(
     show: () => setIsVisible(true)
   }))
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (isVisible) {
       inputRef.current.focus()
     }
