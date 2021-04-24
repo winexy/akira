@@ -1,14 +1,25 @@
 import React, {useRef} from 'react'
-import {useDrag, useDrop} from 'react-dnd'
+import {DragSourceMonitor, DropTargetMonitor, useDrag, useDrop} from 'react-dnd'
 import clsx from 'clsx'
 import {XIcon, MenuAlt4Icon} from '@heroicons/react/solid'
 import {Swipeable} from '@components/Swipeable/Swipeable'
 import {Checkbox} from '@components/Checkbox/Checkbox'
+import {TodoItemT} from '../../models/TodoItem'
 
 const ItemType = 'list-item'
 
-function onDragHover(dropRef, index, swap) {
-  return function (item, monitor) {
+type SwapIndexesF = (dragIndex: number, hoverIndex: number) => void
+type DragObject = {
+  id: TodoItemT['id']
+  index: number
+}
+
+function onDragHover(
+  dropRef: React.MutableRefObject<HTMLElement>,
+  index: number,
+  swap: SwapIndexesF
+) {
+  return function (item: DragObject, monitor: DropTargetMonitor) {
     if (!dropRef.current) {
       return
     }
@@ -48,21 +59,41 @@ function onDragHover(dropRef, index, swap) {
   }
 }
 
-export function TodoItem({item, index, onRemove, onCheck, onOrderChange}) {
-  const dropRef = useRef()
-  const dragRef = useRef()
-  const [{opacity, isDragging}, connectDragSource] = useDrag(
+type TodoItemProps = {
+  item: TodoItemT
+  index: number
+  onRemove(id: TodoItemT['id']): void
+  onCheck(id: TodoItemT['id']): void
+  onOrderChange: SwapIndexesF
+}
+
+const collectProps = (monitor: DragSourceMonitor) => {
+  const isDragging = monitor.isDragging()
+
+  return {
+    isDragging,
+    opacity: isDragging ? 0.7 : 1
+  }
+}
+
+export const TodoItem: React.FC<TodoItemProps> = ({
+  item,
+  index,
+  onRemove,
+  onCheck,
+  onOrderChange
+}) => {
+  const dropRef = useRef<HTMLElement>()
+  const dragRef = useRef<HTMLButtonElement>()
+  const [{opacity, isDragging}, connectDragSource] = useDrag<
+    DragObject,
+    undefined,
+    ReturnType<typeof collectProps>
+  >(
     () => ({
       type: ItemType,
       item: {id: item.id, index},
-      collect(monitor) {
-        const isDragging = monitor.isDragging()
-
-        return {
-          isDragging,
-          opacity: isDragging ? 0.7 : 1
-        }
-      }
+      collect: collectProps
     }),
     [index]
   )
