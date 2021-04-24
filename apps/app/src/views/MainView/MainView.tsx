@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react'
+import React, {useState, useRef, FormEvent} from 'react'
 import {uid} from 'uid'
 import findIndex from 'lodash/fp/findIndex'
 import produce from 'immer'
@@ -6,25 +6,15 @@ import assign from 'lodash/fp/assign'
 import remove from 'lodash/fp/remove'
 import {PlusIcon} from '@heroicons/react/solid'
 import {usePersistedState} from '@hooks/use-persisted-state'
-import {TodoForm} from '@components/TodoForm/TodoForm'
+import {TodoForm, TodoFormRef} from '@components/TodoForm/TodoForm'
 import {TodoList} from '@components/TodoList/TodoList'
-
-const storage = {
-  set(key, data) {
-    localStorage.setItem(key, JSON.stringify(data))
-  },
-  get(key) {
-    return JSON.parse(localStorage.getItem(key))
-  },
-  remove(key) {
-    localStorage.removeItem(key)
-  }
-}
+import {storage} from '@/models/Storage'
+import {TodoItemT} from '@/models/TodoItem'
 
 export function MainView() {
-  const formRef = useRef()
+  const formRef = useRef<TodoFormRef>()
   const [title, setTitle] = useState('')
-  const [list, setList] = usePersistedState(storage, {
+  const [list, setList] = usePersistedState<TodoItemT[]>(storage, {
     key: 'akira:todo-list',
     defaultState: []
   })
@@ -42,7 +32,7 @@ export function MainView() {
     )
   }
 
-  function checkItem(id) {
+  function checkItem(id: TodoItemT['id']) {
     setList(
       produce(list, draft => {
         const idx = findIndex({id}, list)
@@ -53,22 +43,21 @@ export function MainView() {
     )
   }
 
-  function onRemove(id) {
+  function onRemove(id: TodoItemT['id']) {
     setList(remove({id}, list))
   }
 
-  function onSubmit(e) {
-    e.preventDefault()
+  function onSubmit(event: FormEvent) {
+    event.preventDefault()
     addItem()
     setTitle('')
   }
 
   function onAddItemIntent() {
-    // formRef.current.focus()
     formRef.current.show()
   }
 
-  function onOrderChange(dragIndex, hoverIndex) {
+  function onOrderChange(dragIndex: number, hoverIndex: number) {
     const newList = list.slice()
     const item = newList[dragIndex]
     newList.splice(dragIndex, 1)
