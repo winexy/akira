@@ -9,7 +9,11 @@ import isNull from 'lodash/isNull'
 
 const ItemType = 'list-item'
 
-type SwapIndexesF = (dragIndex: number, hoverIndex: number) => void
+type UpdatePositionParams = {
+  fromIndex: number
+  toIndex: number
+}
+
 type DragObject = {
   id: TaskT['id']
   index: number
@@ -18,7 +22,7 @@ type DragObject = {
 function onDragHover(
   dropRef: React.MutableRefObject<Element | undefined>,
   index: number,
-  swap: SwapIndexesF
+  updatePosition: (params: UpdatePositionParams) => void
 ) {
   return function (item: DragObject, monitor: DropTargetMonitor) {
     if (!dropRef.current) {
@@ -55,7 +59,7 @@ function onDragHover(
       return
     }
     // Time to actually perform the action
-    swap(dragIndex, hoverIndex)
+    updatePosition({fromIndex: dragIndex, toIndex: hoverIndex})
     // Note: we're mutating the monitor item here!
     // Generally it's better to avoid mutations,
     // but it's good here for the sake of performance
@@ -69,7 +73,7 @@ type TaskProps = {
   index: number
   onRemove(id: TaskT['id']): void
   onCheck(id: TaskT['id']): void
-  onOrderChange: SwapIndexesF
+  onOrderChange(params: UpdatePositionParams): void
 }
 
 const collectProps = (monitor: DragSourceMonitor) => {
