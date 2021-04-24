@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react'
-import {MainView} from '@views/MainView/MainView.jsx'
+import {MainView} from '@views/MainView/MainView'
 import {MenuIcon} from '@heroicons/react/solid'
 
 const mainStyles = {
