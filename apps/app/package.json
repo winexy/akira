@@ -23,6 +23,7 @@
     "uid": "^2.0.0"
   },
   "devDependencies": {
+    "@reatom/debug": "^1.2.0",
     "@types/hoist-non-react-statics": "^3.3.1",
     "@types/lodash": "^4.14.168",
     "@types/react": "^17.0.3",

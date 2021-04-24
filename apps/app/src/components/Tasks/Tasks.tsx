@@ -1,20 +1,23 @@
 import React from 'react'
+import {useAtom, useAction} from '@reatom/react'
 import {Task} from '@/components/Task/Task'
-import {TaskT} from '@/models/Task'
+import {
+  changeTaskPosition,
+  removeTask,
+  tasksAtom,
+  toggleTask
+} from '@/store/tasks'
 
-type TasksProps = {
-  tasks: TaskT[]
-  onCheck(newState: TaskT['id']): void
-  onRemove(id: TaskT['id']): void
-  onOrderChange(dragIndex: number, hoverIndex: number): void
-}
+export const Tasks: React.FC = () => {
+  const tasks = useAtom(tasksAtom)
+  const handleRemoveTask = useAction(removeTask)
+  const handleToggleTask = useAction(toggleTask)
+  const handleChangeTaskPosition = useAction(changeTaskPosition)
 
-export const Tasks: React.FC<TasksProps> = ({
-  tasks,
-  onCheck,
-  onRemove,
-  onOrderChange
-}) => {
+  function onOrderChange(fromIndex: number, toIndex: number) {
+    handleChangeTaskPosition({fromIndex, toIndex})
+  }
+
   return (
     <ul className="space-y-1 px-4">
       {tasks.map((task, index) => (
@@ -22,8 +25,8 @@ export const Tasks: React.FC<TasksProps> = ({
           key={task.id}
           task={task}
           index={index}
-          onCheck={onCheck}
-          onRemove={onRemove}
+          onCheck={handleToggleTask}
+          onRemove={handleRemoveTask}
           onOrderChange={onOrderChange}
         />
       ))}
