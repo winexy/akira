@@ -4,7 +4,7 @@ import {CheckIcon} from '@heroicons/react/solid'
 
 export function Checkbox({isChecked, onChange, className = ''}) {
   return (
-    <div className={className}>
+    <label className={className}>
       <input
         type="checkbox"
         className="sr-only"
@@ -24,6 +24,6 @@ export function Checkbox({isChecked, onChange, className = ''}) {
       >
         {isChecked && <CheckIcon className="h-4 w-4 text-white" />}
       </div>
-    </div>
+    </label>
   )
 }

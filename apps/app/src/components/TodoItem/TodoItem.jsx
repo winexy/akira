@@ -95,7 +95,7 @@ export function TodoItem({item, index, onRemove, onCheck, onOrderChange}) {
         </button>
       }
     >
-      <label
+      <div
         className={clsx(
           'flex items-center',
           'bg-white p-4 text-lg truncate text-black',
@@ -125,7 +125,7 @@ export function TodoItem({item, index, onRemove, onCheck, onOrderChange}) {
         >
           <MenuAlt4Icon className="w-4 h-4" />
         </button>
-      </label>
+      </div>
     </Swipeable>
   )
 }
