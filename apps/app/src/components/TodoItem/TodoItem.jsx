@@ -7,9 +7,9 @@ import {Checkbox} from '@components/Checkbox/Checkbox'
 
 const ItemType = 'list-item'
 
-function onDragHover(ref, index, changeCallback) {
+function onDragHover(dropRef, index, swap) {
   return function (item, monitor) {
-    if (!ref.current) {
+    if (!dropRef.current) {
       return
     }
     const dragIndex = item.index
@@ -19,7 +19,7 @@ function onDragHover(ref, index, changeCallback) {
       return
     }
     // Determine rectangle on screen
-    const hoverBoundingRect = ref.current?.getBoundingClientRect()
+    const hoverBoundingRect = dropRef.current?.getBoundingClientRect()
     // Get vertical middle
     const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2
     // Determine mouse position
@@ -30,6 +30,7 @@ function onDragHover(ref, index, changeCallback) {
     // When dragging downwards, only move when the cursor is below 50%
     // When dragging upwards, only move when the cursor is above 50%
     // Dragging downwards
+
     if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
       return
     }
@@ -38,7 +39,7 @@ function onDragHover(ref, index, changeCallback) {
       return
     }
     // Time to actually perform the action
-    changeCallback(dragIndex, hoverIndex)
+    swap(dragIndex, hoverIndex)
     // Note: we're mutating the monitor item here!
     // Generally it's better to avoid mutations,
     // but it's good here for the sake of performance
@@ -48,9 +49,9 @@ function onDragHover(ref, index, changeCallback) {
 }
 
 export function TodoItem({item, index, onRemove, onCheck, onOrderChange}) {
-  const dragRef = useRef()
   const dropRef = useRef()
-  const [{opacity, isDragging}, drag] = useDrag(
+  const dragRef = useRef()
+  const [{opacity, isDragging}, connectDragSource] = useDrag(
     () => ({
       type: ItemType,
       item: {id: item.id, index},
@@ -63,24 +64,20 @@ export function TodoItem({item, index, onRemove, onCheck, onOrderChange}) {
         }
       }
     }),
-    []
+    [index]
   )
 
-  const [{handlerId}, drop] = useDrop({
+  const [, connectDropTarget] = useDrop({
     accept: ItemType,
-    collect: monitor => ({
-      handlerId: monitor.getHandlerId()
-    }),
-    hover: onDragHover(dragRef, index, onOrderChange)
+    hover: onDragHover(dropRef, index, onOrderChange)
   })
 
-  drag(dragRef)
-  drop(dropRef)
+  connectDropTarget(dropRef)
+  connectDragSource(dragRef)
 
   return (
     <Swipeable
       ref={dropRef}
-      key={item.id}
       Component="li"
       className={clsx(
         'rounded-md overflow-hidden shadow bg-white transform transition ease-in duration-100',
@@ -89,7 +86,6 @@ export function TodoItem({item, index, onRemove, onCheck, onOrderChange}) {
         }
       )}
       style={{opacity}}
-      data-handler-id={handlerId}
       after={
         <button
           className="h-full px-5 text-xl font-bold flex items-center justify-between  text-white bg-red-500"
@@ -120,12 +116,12 @@ export function TodoItem({item, index, onRemove, onCheck, onOrderChange}) {
         <button
           ref={dragRef}
           className="
-              ml-auto w-8 h-8 -mr-2
-              flex items-center justify-center
-              text-gray-400 
-              active:text-gray-300
-              focus:outline-none
-              "
+            ml-auto w-8 h-8 -mr-2
+            flex items-center justify-center
+            text-gray-400 
+            active:text-gray-300
+            focus:outline-none
+          "
         >
           <MenuAlt4Icon className="w-4 h-4" />
         </button>

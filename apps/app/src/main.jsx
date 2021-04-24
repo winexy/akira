@@ -1,9 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import './index.css'
-import App from './App'
 import {DndProvider} from 'react-dnd'
 import {TouchBackend} from 'react-dnd-touch-backend'
+import './index.css'
+import App from './App'
 
 const dndConfig = {
   enableMouseEvents: true
