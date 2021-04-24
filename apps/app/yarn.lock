@@ -266,6 +266,16 @@
   resolved "https://registry.yarnpkg.com/@react-dnd/shallowequal/-/shallowequal-2.0.0.tgz#a3031eb54129f2c66b2753f8404266ec7bf67f0a"
   integrity sha512-Pc/AFTdwZwEKJxFJvlxrSmGe/di+aAOBn60sremrpLo6VI/6cmiUYNNwlI5KNYttg7uypzA3ILPMPgxB2GYZEg==
 
+"@reatom/core@^1.1.5":
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/@reatom/core/-/core-1.1.5.tgz#ad80dc83dfabe222c840d56ae3e8571c242b4f34"
+  integrity sha512-Bi28IltJDsY6+3v+DsK6NGXRGBuB/2S7mYsRM9xvASH63IwnVF7h3B5p3egt3NGLI3UUfK8CLA65EvD577rTZg==
+
+"@reatom/react@^1.1.4":
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/@reatom/react/-/react-1.1.4.tgz#e2d7786b7d688a27247770d21c6cfb5080e2932c"
+  integrity sha512-F7Tdp9V45XvNda7DAxVhPbIb+IGOtxss+Jol4MS6ogcCzOizC8GWY7mknSpFDkdc9Y1/h3c2PH8245lxoNk4nQ==
+
 "@types/hoist-non-react-statics@^3.3.1":
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/@types/hoist-non-react-statics/-/hoist-non-react-statics-3.3.1.tgz#1124aafe5118cb591977aeb1ceaaed1070eb039f"
