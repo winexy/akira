@@ -8,15 +8,22 @@ import {
   toggleTask
 } from '@/store/tasks'
 
+function useForceUpdate() {
+  const [, updateState] = React.useState()
+  return React.useCallback(() => {
+    updateState({} as any)
+  }, [])
+}
+
 export const Tasks: React.FC = () => {
   const tasks = useAtom(tasksAtom)
   const handleRemoveTask = useAction(removeTask)
   const handleToggleTask = useAction(toggleTask)
   const handleChangeTaskPosition = useAction(changeTaskPosition)
+  const forceUpdate = useForceUpdate()
 
-  function onOrderChange(fromIndex: number, toIndex: number) {
-    handleChangeTaskPosition({fromIndex, toIndex})
-  }
+  // @ts-ignore
+  window.forceUpdate = forceUpdate
 
   return (
     <ul className="space-y-1 px-4">
@@ -27,7 +34,7 @@ export const Tasks: React.FC = () => {
           index={index}
           onCheck={handleToggleTask}
           onRemove={handleRemoveTask}
-          onOrderChange={onOrderChange}
+          onOrderChange={handleChangeTaskPosition}
         />
       ))}
     </ul>
