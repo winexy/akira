@@ -266,11 +266,6 @@
   resolved "https://registry.yarnpkg.com/@react-dnd/shallowequal/-/shallowequal-2.0.0.tgz#a3031eb54129f2c66b2753f8404266ec7bf67f0a"
   integrity sha512-Pc/AFTdwZwEKJxFJvlxrSmGe/di+aAOBn60sremrpLo6VI/6cmiUYNNwlI5KNYttg7uypzA3ILPMPgxB2GYZEg==
 
-"@reatom/debug@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@reatom/debug/-/debug-1.2.0.tgz#1e6d2f05b88882a47a0d59b83f88242ec3dceb55"
-  integrity sha512-Obf1rI++1CKZyp1P8HY3pCCQ5GUGrYDZn8dbMaqCzvWd6kyZDFtaf51gfdnUnLwZZ8EHFYkpwgHtvbJXSv+b3w==
-
 "@types/hoist-non-react-statics@^3.3.1":
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/@types/hoist-non-react-statics/-/hoist-non-react-statics-3.3.1.tgz#1124aafe5118cb591977aeb1ceaaed1070eb039f"
