@@ -1,5 +1,4 @@
 import React, {useState, useRef, FormEvent} from 'react'
-import {useAction} from '@reatom/react'
 import isNull from 'lodash/isNull'
 import {PlusIcon} from '@heroicons/react/solid'
 import {TaskForm, TaskFormRef} from '@/components/TaskForm/TaskForm'
@@ -10,16 +9,14 @@ import {addTask, loadTasks} from '@/store/tasks'
 export function MainView() {
   const formRef = useRef<TaskFormRef>(null)
   const [title, setTitle] = useState('')
-  const handleAddTask = useAction(addTask)
-  const handleLoadTasks = useAction(loadTasks)
 
   useEffect(() => {
-    handleLoadTasks()
+    loadTasks()
   }, [])
 
   function onSubmit(event: FormEvent) {
     event.preventDefault()
-    handleAddTask(title)
+    addTask(title)
     setTitle('')
   }
 
