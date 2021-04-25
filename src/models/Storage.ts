@@ -2,7 +2,7 @@ import isNull from 'lodash/isNull'
 
 export type StorageT = {
   set<T>(key: string, data: T): void
-  get<T = null>(key: string, defaultValue: T): T
+  get(key: string, defaultValue?: unknown): unknown
   remove(key: string): void
 }
 
