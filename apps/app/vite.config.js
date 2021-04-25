@@ -13,7 +13,8 @@ export default defineConfig({
       '@components': path.resolve(srcPath, 'components'),
       '@hooks': path.resolve(srcPath, 'hooks'),
       '@views': path.resolve(srcPath, 'views'),
-      '@store': path.resolve(srcPath, 'store')
+      '@store': path.resolve(srcPath, 'store'),
+      '@config': path.resolve(srcPath, 'config')
     }
   }
 })
