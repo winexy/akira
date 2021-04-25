@@ -4,14 +4,14 @@ import {PlusIcon} from '@heroicons/react/solid'
 import {TaskForm, TaskFormRef} from '@/components/TaskForm/TaskForm'
 import {Tasks} from '@/components/Tasks/Tasks'
 import {useEffect} from 'react'
-import {addTask, loadTasks} from '@/store/tasks'
+import {addTask, loadTasksFx} from '@/store/tasks'
 
 export function MainView() {
   const formRef = useRef<TaskFormRef>(null)
   const [title, setTitle] = useState('')
 
   useEffect(() => {
-    loadTasks()
+    loadTasksFx()
   }, [])
 
   function onSubmit(event: FormEvent) {
