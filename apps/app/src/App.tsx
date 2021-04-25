@@ -17,7 +17,7 @@ const SvgLoader = (
     height="57"
     viewBox="0 0 57 57"
     xmlns="http://www.w3.org/2000/svg"
-    stroke="#6366f1"
+    stroke="currentColor"
   >
     <g fill="none" fillRule="evenodd">
       <g transform="translate(1 1)" strokeWidth="2">
@@ -91,9 +91,9 @@ function App() {
 
   if (isLoading) {
     return (
-      <div className="flex-1 flex-col flex justify-center items-center">
+      <div className="flex-1 flex-col flex justify-center items-center text-red-500">
         {SvgLoader}
-        <h1 className="mt-8 font-mono font-bold text-indigo-500 text-4xl">
+        <h1 className="mt-8 font-mono font-bold text-4xl">
           Akira
         </h1>
       </div>
