@@ -1,4 +1,4 @@
-import {createEvent, createStore, Event} from 'effector'
+import {merge, createEvent, createStore, Event, createEffect} from 'effector'
 import produce from 'immer'
 import assign from 'lodash/fp/assign'
 import findIndex from 'lodash/fp/findIndex'
@@ -44,10 +44,6 @@ type ReducerMap = ResolveReducers<
   }
 >
 
-function loadTasksReducer() {
-  return storage.get<TaskT[]>('akira:tasks', [])
-}
-
 const addTaskReducer: ReducerMap['addTask'] = (tasks, title) => {
   return produce(tasks, draft => {
     draft.unshift(createTask(title))
@@ -82,11 +78,20 @@ export const addTask = createEvent<string>()
 export const toggleTask = createEvent<TaskT['id']>()
 export const removeTask = createEvent<TaskT['id']>()
 export const changeTaskPosition = createEvent<ChangePositionParams>()
-export const loadTasks = createEvent()
+
+export const loadTasksFx = createEffect(() =>
+  storage.get<TaskT[]>('akira:tasks', [])
+)
+
+const takeSecondArg = <T>(_: unknown, arg: T) => arg
 
 export const $tasks = createStore<TaskT[]>([])
-  .on(loadTasks, loadTasksReducer)
+  .on(loadTasksFx.doneData, takeSecondArg)
   .on(addTask, addTaskReducer)
   .on(toggleTask, toggleTaskReducer)
   .on(removeTask, removeTaskReducer)
   .on(changeTaskPosition, changeTaskPositionReducer)
+
+merge([addTask, toggleTask, removeTask, changeTaskPosition]).watch(() => {
+  storage.set('akira:tasks', $tasks.getState())
+})
