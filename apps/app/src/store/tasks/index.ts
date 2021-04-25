@@ -5,18 +5,23 @@ import findIndex from 'lodash/fp/findIndex'
 import remove from 'lodash/fp/remove'
 import {storage} from '@/models/Storage'
 import {nanoid} from 'nanoid'
-
-export type TaskT = {
-  id: string
-  title: string
-  timestamp: number
-  checked: boolean
-}
+import {is, object, string, number, boolean, Infer, array} from 'superstruct'
 
 type ChangePositionParams = {
   fromIndex: number
   toIndex: number
 }
+
+const Task = object({
+  id: string(),
+  title: string(),
+  timestamp: number(),
+  checked: boolean()
+})
+
+const Tasks = array(Task)
+
+type TaskT = Infer<typeof Task>
 
 const createTask = (title: string): TaskT => ({
   id: nanoid(),
@@ -79,9 +84,10 @@ export const toggleTask = createEvent<TaskT['id']>()
 export const removeTask = createEvent<TaskT['id']>()
 export const changeTaskPosition = createEvent<ChangePositionParams>()
 
-export const loadTasksFx = createEffect(() =>
-  storage.get<TaskT[]>('akira:tasks', [])
-)
+export const loadTasksFx = createEffect(() => {
+  const tasks = storage.get('akira:tasks')
+  return is(tasks, Tasks) ? tasks : []
+})
 
 const takeSecondArg = <T>(_: unknown, arg: T) => arg
 
