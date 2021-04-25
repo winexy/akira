@@ -8,7 +8,8 @@ module.exports = {
     extend: {
       textColor: ['active'],
       backgroundColor: ['active'],
-      backgroundOpacity: ['active']
+      backgroundOpacity: ['active'],
+      boxShadow: ['active']
     }
   },
   plugins: [require('tailwind-caret-color')()]
