@@ -20,6 +20,10 @@ const dndConfig = {
   enableMouseEvents: true
 }
 
+
+// @ts-ignore
+console.log(import.meta.env.VITE_MSG)
+
 function App() {
   useBodyBackground()
 
