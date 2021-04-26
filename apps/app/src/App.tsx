@@ -1,11 +1,13 @@
 import React from 'react'
 import {DndProvider} from 'react-dnd'
 import {TouchBackend} from 'react-dnd-touch-backend'
+import {Provider} from 'react-redux'
 import {MainView} from '@views/MainView/MainView'
 import {Header} from './components/Header/Header'
 import {useAuth0} from '@auth0/auth0-react'
 import {AuthView} from './views/AuthView/AuthView'
 import {Menu} from './components/Menu/Menu'
+import {store} from '@store/index'
 
 const dndConfig = {
   enableMouseEvents: true
@@ -106,13 +108,15 @@ function App() {
 
   return (
     <DndProvider backend={TouchBackend} options={dndConfig}>
-      <React.Fragment>
-        <Menu />
-        <Header />
-        <main className="flex-1">
-          <MainView />
-        </main>
-      </React.Fragment>
+      <Provider store={store}>
+        <React.Fragment>
+          <Menu />
+          <Header />
+          <main className="flex-1">
+            <MainView />
+          </main>
+        </React.Fragment>
+      </Provider>
     </DndProvider>
   )
 }
