@@ -1,10 +1,16 @@
 import React from 'react'
 import {Task} from '@/components/Task/Task'
-import {useStore} from 'effector-react'
-import {$tasks, changeTaskPosition, removeTask, toggleTask} from '@/store/tasks'
+import { useSelector, useDispatch } from '@/store'
+import {
+  changeTaskPosition,
+  removeTask,
+  selectTasks,
+  toggleTask
+} from '@/store/tasks'
 
 export const Tasks: React.FC = () => {
-  const tasks = useStore($tasks)
+  const dispatch = useDispatch()
+  const tasks = useSelector(selectTasks)
 
   return (
     <ul className="space-y-1 px-4">
@@ -13,9 +19,9 @@ export const Tasks: React.FC = () => {
           key={task.id}
           task={task}
           index={index}
-          onCheck={toggleTask}
-          onRemove={removeTask}
-          onOrderChange={changeTaskPosition}
+          onCheck={id => dispatch(toggleTask(id))}
+          onRemove={id => dispatch(removeTask(id))}
+          onOrderChange={params => dispatch(changeTaskPosition(params))}
         />
       ))}
     </ul>

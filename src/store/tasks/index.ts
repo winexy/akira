@@ -1,11 +1,11 @@
-import {merge, createEvent, createStore, Event, createEffect} from 'effector'
-import produce from 'immer'
 import assign from 'lodash/fp/assign'
 import findIndex from 'lodash/fp/findIndex'
-import remove from 'lodash/fp/remove'
 import {storage} from '@/models/Storage'
 import {nanoid} from 'nanoid'
 import {is, object, string, number, boolean, Infer, array} from 'superstruct'
+import {createAction, createSlice, PayloadAction} from '@reduxjs/toolkit'
+import {RootState} from '..'
+import {put, select, takeEvery} from 'redux-saga/effects'
 
 type ChangePositionParams = {
   fromIndex: number
@@ -22,6 +22,7 @@ const Task = object({
 const Tasks = array(Task)
 
 type TaskT = Infer<typeof Task>
+type TaskID = TaskT['id']
 
 const createTask = (title: string): TaskT => ({
   id: nanoid(),
@@ -30,74 +31,73 @@ const createTask = (title: string): TaskT => ({
   checked: false
 })
 
-type UnpackEvent<Evt> = Evt extends Event<infer T> ? T : never
-
-type ResolveReducers<Store, EventMap> = {
-  [K in keyof EventMap]: (
-    store: Store,
-    payload: UnpackEvent<EventMap[K]>
-  ) => Store
+interface TasksState {
+  list: TaskT[]
 }
 
-type ReducerMap = ResolveReducers<
-  TaskT[],
-  {
-    addTask: typeof addTask
-    removeTask: typeof removeTask
-    toggleTask: typeof toggleTask
-    changeTaskPosition: typeof changeTaskPosition
+const initialState: TasksState = {
+  list: []
+}
+
+const tasksSlice = createSlice({
+  name: 'tasks',
+  initialState,
+  reducers: {
+    setTasks(state, action: PayloadAction<TaskT[]>) {
+      state.list = action.payload
+    },
+    addTask(state, action: PayloadAction<string>) {
+      state.list.unshift(createTask(action.payload))
+    },
+    toggleTask(state, {payload: id}: PayloadAction<TaskID>) {
+      const idx = findIndex({id}, state.list)
+      const item = state.list[idx]
+
+      state.list[idx] = assign(item, {checked: !item.checked})
+    },
+    removeTask(state, {payload: id}: PayloadAction<TaskID>) {
+      const idx = findIndex({id}, state.list)
+      delete state.list[idx]
+    },
+    changeTaskPosition(state, action: PayloadAction<ChangePositionParams>) {
+      const {fromIndex, toIndex} = action.payload
+      const task = state.list[fromIndex]
+
+      state.list.splice(fromIndex, 1)
+      state.list.splice(toIndex, 0, task)
+    }
   }
->
-
-const addTaskReducer: ReducerMap['addTask'] = (tasks, title) => {
-  return produce(tasks, draft => {
-    draft.unshift(createTask(title))
-  })
-}
-
-const toggleTaskReducer: ReducerMap['toggleTask'] = (tasks, id) => {
-  return produce(tasks, draft => {
-    const idx = findIndex({id}, tasks)
-    const item = draft[idx]
-
-    draft[idx] = assign(item, {checked: !item.checked})
-  })
-}
-
-const removeTaskReducer: ReducerMap['removeTask'] = (tasks, id) => {
-  return remove({id}, tasks)
-}
-
-const changeTaskPositionReducer: ReducerMap['changeTaskPosition'] = (
-  tasks,
-  {fromIndex, toIndex}
-) => {
-  return produce(tasks, draft => {
-    const task = draft[fromIndex]
-    draft.splice(fromIndex, 1)
-    draft.splice(toIndex, 0, task)
-  })
-}
-
-export const addTask = createEvent<string>()
-export const toggleTask = createEvent<TaskT['id']>()
-export const removeTask = createEvent<TaskT['id']>()
-export const changeTaskPosition = createEvent<ChangePositionParams>()
-
-export const loadTasksFx = createEffect(() => {
-  const tasks = storage.get('akira:tasks')
-  return is(tasks, Tasks) ? tasks : []
 })
 
-const takeSecondArg = <T>(_: unknown, arg: T) => arg
+export const loadTasks = createAction('loadTasks')
+export const {
+  addTask,
+  toggleTask,
+  removeTask,
+  changeTaskPosition,
+  setTasks
+} = tasksSlice.actions
 
-export const $tasks = createStore<TaskT[]>([])
-  .on(loadTasksFx.doneData, takeSecondArg)
-  .on(addTask, addTaskReducer)
-  .on(toggleTask, toggleTaskReducer)
-  .on(removeTask, removeTaskReducer)
-  .on(changeTaskPosition, changeTaskPositionReducer)
+export const selectTasks = (state: RootState) => state.tasks.list
 
-merge([addTask, toggleTask, removeTask, changeTaskPosition]).watch(() => {
-  storage.set('akira:tasks', $tasks.getState())
-})
+export const tasksReducer = tasksSlice.reducer
+
+function* syncStorageSaga() {
+  const tasks: ReturnType<typeof selectTasks> = yield select(selectTasks)
+  storage.set('akira:tasks', tasks)
+}
+
+function* loadTasksSaga() {
+  const data = storage.get('akira:tasks', [])
+
+  if (is(data, Tasks)) {
+    yield put(setTasks(data))
+  } else {
+    yield put(setTasks([]))
+  }
+}
+
+export function* tasksSaga() {
+  yield takeEvery(loadTasks.toString(), loadTasksSaga)
+  yield takeEvery('*', syncStorageSaga)
+}

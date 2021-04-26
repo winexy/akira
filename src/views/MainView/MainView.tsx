@@ -4,7 +4,9 @@ import {PlusIcon} from '@heroicons/react/solid'
 import {TaskForm, TaskFormRef} from '@/components/TaskForm/TaskForm'
 import {Tasks} from '@/components/Tasks/Tasks'
 import {useEffect} from 'react'
-import {addTask, loadTasksFx} from '@/store/tasks'
+
+import {useDispatch} from '@/store/index'
+import {addTask, loadTasks} from '@/store/tasks'
 
 const mainStyles = {
   backgroundImage:
@@ -25,16 +27,17 @@ function useBodyBackground() {
 export function MainView() {
   const formRef = useRef<TaskFormRef>(null)
   const [title, setTitle] = useState('')
+  const dispatch = useDispatch()
 
   useBodyBackground()
 
   useEffect(() => {
-    loadTasksFx()
+    dispatch(loadTasks())
   }, [])
 
   function onSubmit(event: FormEvent) {
     event.preventDefault()
-    addTask(title)
+    dispatch(addTask(title))
     setTitle('')
   }
 
