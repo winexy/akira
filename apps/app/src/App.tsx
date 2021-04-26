@@ -112,7 +112,7 @@ function App() {
         <React.Fragment>
           <Menu />
           <Header />
-          <main className="flex-1">
+          <main className="flex-1 bg-gray-700">
             <MainView />
           </main>
         </React.Fragment>
