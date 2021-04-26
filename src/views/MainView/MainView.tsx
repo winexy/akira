@@ -27,6 +27,7 @@ function useBodyBackground() {
 export function MainView() {
   const formRef = useRef<TaskFormRef>(null)
   const [title, setTitle] = useState('')
+  const [isAddButtonVisible, setIsAddButtonVisible] = useState(true)
   const dispatch = useDispatch()
 
   useBodyBackground()
@@ -47,6 +48,13 @@ export function MainView() {
     }
   }
 
+  function onTaskFormVisiblityChange(isVisible: boolean) {
+    console.log({isVisible})
+    setIsAddButtonVisible(!isVisible)
+  }
+
+  console.log({isAddButtonVisible})
+
   return (
     <div className="pt-2 mb-24">
       <TaskForm
@@ -54,13 +62,15 @@ export function MainView() {
         title={title}
         onTitleChange={setTitle}
         onSubmit={onSubmit}
+        onVisibilityChange={onTaskFormVisiblityChange}
       />
       <section className="mt-3">
         <Tasks />
       </section>
-      <div className="z-20 fixed bottom-0 left-0 right-0 p-4">
-        <button
-          className="
+      {isAddButtonVisible && (
+        <div className="z-20 fixed bottom-0 left-0 right-0 p-4">
+          <button
+            className="
             flex items-center justify-center
             w-full py-4
             bg-black bg-opacity-30 
@@ -69,11 +79,12 @@ export function MainView() {
             transition ease-in duration-100 
             focus:outline-none focus:ring
           "
-          onClick={onAddItemIntent}
-        >
-          <PlusIcon className="w-6 h-6 mr-2" /> Добавить
-        </button>
-      </div>
+            onClick={onAddItemIntent}
+          >
+            <PlusIcon className="w-6 h-6 mr-2" /> Добавить
+          </button>
+        </div>
+      )}
     </div>
   )
 }
