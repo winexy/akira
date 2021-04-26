@@ -69,7 +69,7 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
               'flex flex-col',
               'transition ease-in duration-75 backdrop-filter',
               {
-                'z-20 fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm': isVisible
+                'z-20 fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm': isVisible
               }
             )}
           >
@@ -126,8 +126,24 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                 )}
               </div>
             </form>
-            {!isEmpty(title) && (
-              <div className="mt-auto p-4">
+            <div className="mt-auto p-4 bg-gradient-to-t from-gray-900">
+              {isEmpty(title) ? (
+                <button
+                  className="
+                    w-full px-4 py-2.5
+                    bg-white bg-opacity-10
+                    border border-white border-opacity-20
+                    text-center font-bold text-white text-lg
+                    shadow-md rounded select-none
+                    transition ease-in duration-75
+                    active:bg-white active:bg-opacity-20
+                    focus:outline-none
+                  "
+                  onClick={() => setIsVisible(false)}
+                >
+                  Close
+                </button>
+              ) : (
                 <button
                   className="
                     w-full px-4 py-2.5
@@ -145,8 +161,8 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                 >
                   Submit
                 </button>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         )}
       </div>
