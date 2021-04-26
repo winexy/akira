@@ -89,12 +89,9 @@ function* syncStorageSaga() {
 
 function* loadTasksSaga() {
   const data = storage.get('akira:tasks', [])
+  const tasks = is(data, Tasks) ? data : [];
 
-  if (is(data, Tasks)) {
-    yield put(setTasks(data))
-  } else {
-    yield put(setTasks([]))
-  }
+  yield put(setTasks(tasks))
 }
 
 export function* tasksSaga() {
