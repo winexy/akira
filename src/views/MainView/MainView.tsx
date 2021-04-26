@@ -36,8 +36,7 @@ export function MainView() {
     dispatch(loadTasks())
   }, [])
 
-  function onSubmit(event: FormEvent) {
-    event.preventDefault()
+  function onSubmit() {
     dispatch(addTask(title))
     setTitle('')
   }
