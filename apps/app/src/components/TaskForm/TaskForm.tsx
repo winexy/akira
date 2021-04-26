@@ -130,7 +130,7 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
               <div className="mt-auto p-4">
                 <button
                   className="
-                    w-full px-4 py-2 
+                    w-full px-4 py-2.5
                     bg-indigo-500 border border-indigo-600 
                     text-center font-bold text-white text-lg
                     shadow-lg rounded select-none
