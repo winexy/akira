@@ -9,8 +9,8 @@ import {useDispatch} from '@/store/index'
 import {addTask, loadTasks} from '@/store/tasks'
 
 const mainStyles = {
-  backgroundImage:
-    'url(https://images.unsplash.com/photo-1616466446987-62a71e71b629?ixid=MnwxMjA3fDB8MHxwaG90by1vZi10aGUtZGF5fHx8fGVufDB8fHx8&ixlib=rb-1.2.1&dpr=1&auto=format%2Ccompress&fit=crop&w=2999&h=594%201x,%20https://images.unsplash.com/photo-1616466446987-62a71e71b629?ixid=MnwxMjA3fDB8MHxwaG90by1vZi10aGUtZGF5fHx8fGVufDB8fHx8&ixlib=rb-1.2.1&dpr=2&auto=format%2Ccompress&fit=crop&w=2999&h=594%202x)'
+  backgroundImage: ''
+  // 'url(https://images.unsplash.com/photo-1616466446987-62a71e71b629?ixid=MnwxMjA3fDB8MHxwaG90by1vZi10aGUtZGF5fHx8fGVufDB8fHx8&ixlib=rb-1.2.1&dpr=1&auto=format%2Ccompress&fit=crop&w=2999&h=594%201x,%20https://images.unsplash.com/photo-1616466446987-62a71e71b629?ixid=MnwxMjA3fDB8MHxwaG90by1vZi10aGUtZGF5fHx8fGVufDB8fHx8&ixlib=rb-1.2.1&dpr=2&auto=format%2Ccompress&fit=crop&w=2999&h=594%202x)'
 }
 
 function useBodyBackground() {
@@ -55,7 +55,7 @@ export function MainView() {
   console.log({isAddButtonVisible})
 
   return (
-    <div className="pt-2 mb-24">
+    <div className="mb-24">
       <TaskForm
         ref={formRef}
         title={title}
@@ -63,7 +63,7 @@ export function MainView() {
         onSubmit={onSubmit}
         onVisibilityChange={onTaskFormVisiblityChange}
       />
-      <section className="mt-3">
+      <section className="mt-1">
         <Tasks />
       </section>
       {isAddButtonVisible && (
