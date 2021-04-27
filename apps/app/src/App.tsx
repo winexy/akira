@@ -108,11 +108,12 @@ function App() {
     <DndProvider backend={TouchBackend} options={dndConfig}>
       <Provider store={store}>
         <React.Fragment>
-          <Menu />
-          <Header />
-          <main className="flex-1">
-            <MainView />
-          </main>
+          <Menu>
+            <Header />
+            <main className="flex-1">
+              <MainView />
+            </main>
+          </Menu>
         </React.Fragment>
       </Provider>
     </DndProvider>
