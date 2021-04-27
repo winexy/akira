@@ -1,6 +1,6 @@
 import React from 'react'
 import {MenuIcon} from '@heroicons/react/solid'
-import {openMenu} from '@store/menu'
+import {toggleMenu} from '@store/menu'
 
 export const Header: React.FC = () => {
   return (
@@ -15,7 +15,7 @@ export const Header: React.FC = () => {
           active:bg-gray-100 active:bg-opacity-20
           focus:outline-none focus:ring
         "
-        onClick={() => openMenu()}
+        onClick={() => toggleMenu()}
       >
         <MenuIcon className="w-6 h-6" />
       </button>
