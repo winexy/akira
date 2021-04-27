@@ -93,11 +93,9 @@ function App() {
 
   if (isLoading) {
     return (
-      <div className="flex-1 flex-col flex justify-center items-center text-red-500">
+      <div className="flex-1 flex-col flex justify-center items-center text-white">
         {SvgLoader}
-        <h1 className="mt-8 font-mono font-bold text-4xl">
-          Akira
-        </h1>
+        <h1 className="mt-8 font-mono font-bold text-4xl">Akira</h1>
       </div>
     )
   }
