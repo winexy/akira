@@ -3,7 +3,7 @@
 
 html,
 body {
-  @apply overscroll-contain bg-gray-700;
+  @apply overscroll-contain;
 }
 
 * {
