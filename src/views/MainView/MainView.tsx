@@ -73,6 +73,7 @@ export function MainView() {
             flex items-center justify-center
             w-full py-4
             bg-black bg-opacity-30 
+            border border-black border-opacity-20
             text-white rounded-md 
             active:bg-opacity-40 
             transition ease-in duration-100 
