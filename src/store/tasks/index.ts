@@ -16,19 +16,21 @@ const Task = object({
   id: string(),
   title: string(),
   timestamp: number(),
-  checked: boolean()
+  checked: boolean(),
+  important: boolean()
 })
 
 const Tasks = array(Task)
 
-type TaskT = Infer<typeof Task>
-type TaskID = TaskT['id']
+export type TaskT = Infer<typeof Task>
+export type TaskIdT = TaskT['id']
 
 const createTask = (title: string): TaskT => ({
   id: nanoid(),
   title,
   timestamp: Date.now(),
-  checked: false
+  checked: false,
+  important: false
 })
 
 interface TasksState {
@@ -49,13 +51,13 @@ const tasksSlice = createSlice({
     addTask(state, action: PayloadAction<string>) {
       state.list.unshift(createTask(action.payload))
     },
-    toggleTask(state, {payload: id}: PayloadAction<TaskID>) {
+    toggleTask(state, {payload: id}: PayloadAction<TaskIdT>) {
       const idx = findIndex({id}, state.list)
-      const item = state.list[idx]
+      const task = state.list[idx]
 
-      state.list[idx] = assign(item, {checked: !item.checked})
+      task.checked = !task.checked
     },
-    removeTask(state, {payload: id}: PayloadAction<TaskID>) {
+    removeTask(state, {payload: id}: PayloadAction<TaskIdT>) {
       const idx = findIndex({id}, state.list)
       delete state.list[idx]
     },
@@ -65,6 +67,12 @@ const tasksSlice = createSlice({
 
       state.list.splice(fromIndex, 1)
       state.list.splice(toIndex, 0, task)
+    },
+    toggleImportant(state, action: PayloadAction<TaskIdT>) {
+      const idx = findIndex({id: action.payload}, state.list)
+      const task = state.list[idx]
+
+      task.important = !task.important
     }
   }
 })
@@ -75,7 +83,8 @@ export const {
   toggleTask,
   removeTask,
   changeTaskPosition,
-  setTasks
+  setTasks,
+  toggleImportant
 } = tasksSlice.actions
 
 export const selectTasks = (state: RootState) => state.tasks.list
@@ -89,7 +98,7 @@ function* syncStorageSaga() {
 
 function* loadTasksSaga() {
   const data = storage.get('akira:tasks', [])
-  const tasks = is(data, Tasks) ? data : [];
+  const tasks = is(data, Tasks) ? data : []
 
   yield put(setTasks(tasks))
 }

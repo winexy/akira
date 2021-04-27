@@ -5,7 +5,8 @@ import {
   changeTaskPosition,
   removeTask,
   selectTasks,
-  toggleTask
+  toggleTask,
+  toggleImportant
 } from '@/store/tasks'
 
 export const Tasks: React.FC = () => {
@@ -22,6 +23,7 @@ export const Tasks: React.FC = () => {
           onCheck={id => dispatch(toggleTask(id))}
           onRemove={id => dispatch(removeTask(id))}
           onOrderChange={params => dispatch(changeTaskPosition(params))}
+          onSetImportant={id => dispatch(toggleImportant(id))}
         />
       ))}
     </ul>

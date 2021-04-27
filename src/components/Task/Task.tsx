@@ -1,10 +1,10 @@
 import React, {LegacyRef, Ref, useRef} from 'react'
 import {DragSourceMonitor, DropTargetMonitor, useDrag, useDrop} from 'react-dnd'
 import clsx from 'clsx'
-import {XIcon, MenuAlt4Icon} from '@heroicons/react/solid'
+import {XIcon, MenuAlt4Icon, StarIcon} from '@heroicons/react/solid'
 import {Swipeable} from '@components/Swipeable/Swipeable'
 import {Checkbox} from '@components/Checkbox/Checkbox'
-import {TaskT} from '../../models/Task'
+import {TaskT, TaskIdT} from '@store/tasks'
 import isNull from 'lodash/isNull'
 
 const ItemType = 'list-item'
@@ -71,9 +71,10 @@ function onDragHover(
 type TaskProps = {
   task: TaskT
   index: number
-  onRemove(id: TaskT['id']): void
-  onCheck(id: TaskT['id']): void
+  onRemove(id: TaskIdT): void
+  onCheck(id: TaskIdT): void
   onOrderChange(params: UpdatePositionParams): void
+  onSetImportant(id: TaskIdT): void
 }
 
 const collectProps = (monitor: DragSourceMonitor) => {
@@ -90,7 +91,8 @@ export const Task: React.FC<TaskProps> = ({
   index,
   onRemove,
   onCheck,
-  onOrderChange
+  onOrderChange,
+  onSetImportant
 }) => {
   const dropRef = useRef<Element>()
   const dragRef = useRef<HTMLButtonElement>()
@@ -127,12 +129,37 @@ export const Task: React.FC<TaskProps> = ({
       )}
       style={{opacity}}
       after={
-        <button
-          className="h-full px-5 text-xl font-bold flex items-center justify-between  text-white bg-red-500"
-          onClick={() => onRemove(task.id)}
-        >
-          <XIcon className="w-5 h-5" />
-        </button>
+        <>
+          <button
+            className="
+              h-full px-5 
+              flex items-center justify-between  
+              text-white bg-red-500
+              transition ease-in duration-100
+              active:bg-red-600
+              focus:outline-none
+            "
+            onClick={() => onRemove(task.id)}
+          >
+            <XIcon className="w-5 h-5" />
+          </button>
+          <button
+            className={clsx(
+              'flex items-center justify-center',
+              'h-full px-5',
+              'text-white',
+              'transition ease-in duration-100',
+              'active:text-2xl',
+              'focus:outline-none',
+              task.important
+                ? 'bg-yellow-500 active:bg-yellow-400'
+                : 'bg-gray-400 active:bg-gray-500'
+            )}
+            onClick={() => onSetImportant(task.id)}
+          >
+            <StarIcon className="w-5 h-5" />
+          </button>
+        </>
       }
     >
       <div
