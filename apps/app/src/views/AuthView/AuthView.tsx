@@ -7,7 +7,7 @@ export const AuthView: React.FC = () => {
 
   return (
     <div className="flex-1 flex-col flex justify-end items-center p-6">
-      <h1 className="flex items-center text-white font-bold text-4xl mb-4 self-start">
+      <h1 className="flex items-center text-gray-700 font-bold text-4xl mb-4 self-start">
         Welcome
       </h1>
       <button
@@ -18,10 +18,10 @@ export const AuthView: React.FC = () => {
           px-8 py-3
           font-bold text-white
           rounded
-          border border-white
+          border border-gray-700
           transition ease-in duration-150
-          active:bg-white
-          active:text-gray-700
+          active:bg-gray-700
+          active:text-white
           active:shadow-xl
           focus:outline-none
         "
