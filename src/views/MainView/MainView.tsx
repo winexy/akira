@@ -48,11 +48,8 @@ export function MainView() {
   }
 
   function onTaskFormVisiblityChange(isVisible: boolean) {
-    console.log({isVisible})
     setIsAddButtonVisible(!isVisible)
   }
-
-  console.log({isAddButtonVisible})
 
   return (
     <div className="mb-24">
