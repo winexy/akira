@@ -8,6 +8,7 @@ module.exports = {
     extend: {
       textColor: ['active'],
       backgroundColor: ['active'],
+      borderColor: ['active'],
       backgroundOpacity: ['active'],
       boxShadow: ['active']
     }
