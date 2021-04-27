@@ -23,7 +23,7 @@ export const Menu: React.FC = ({children}) => {
         )}
       >
         <div className="p-4 flex">
-          <div className="flex items-center">
+          <div className="flex items-center mr-3">
             <img src={user.picture} className="mr-4 w-10 h-10" />
             <strong className="text-lg truncate">{user.name}</strong>
           </div>
