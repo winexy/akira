@@ -1,12 +1,15 @@
-import React, {useState, useRef, FormEvent} from 'react'
+import React, {useState, useRef} from 'react'
 import isNull from 'lodash/isNull'
 import {PlusIcon} from '@heroicons/react/solid'
 import {TaskForm, TaskFormRef} from '@/components/TaskForm/TaskForm'
 import {Tasks} from '@/components/Tasks/Tasks'
+import size from 'lodash/fp/size'
 import {useEffect} from 'react'
 
 import {useDispatch} from '@/store/index'
 import {addTask, loadTasks} from '@/store/tasks'
+import {useSelector} from '../../store/index'
+import {selectCompletedTasksCount, selectTasks} from '../../store/tasks/index'
 
 const mainStyles = {
   backgroundImage: ''
@@ -29,6 +32,8 @@ export function MainView() {
   const [title, setTitle] = useState('')
   const [isAddButtonVisible, setIsAddButtonVisible] = useState(true)
   const dispatch = useDispatch()
+  const completedTasksCount = useSelector(selectCompletedTasksCount)
+  const tasks = useSelector(selectTasks)
 
   useBodyBackground()
 
@@ -60,7 +65,26 @@ export function MainView() {
         onSubmit={onSubmit}
         onVisibilityChange={onTaskFormVisiblityChange}
       />
-      <section className="mt-1">
+      <div className="px-4">
+        <span className="text-white font-bold mr-4">
+          {completedTasksCount} / {size(tasks)}
+        </span>
+        <button
+          className="
+            px-2 py-1 
+            text-white rounded 
+            border border-white 
+            transition ease-in duration-150
+            active:bg-gray-100 
+            active:border-gray-300
+            active:text-gray-700
+            focus:outline-none
+          "
+        >
+          All tasks
+        </button>
+      </div>
+      <section className="mt-4">
         <Tasks />
       </section>
       {isAddButtonVisible && (
