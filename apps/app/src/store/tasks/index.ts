@@ -16,7 +16,7 @@ const Task = object({
   id: string(),
   title: string(),
   timestamp: number(),
-  checked: boolean(),
+  completed: boolean(),
   important: boolean()
 })
 
@@ -29,7 +29,7 @@ const createTask = (title: string): TaskT => ({
   id: nanoid(),
   title,
   timestamp: Date.now(),
-  checked: false,
+  completed: false,
   important: false
 })
 
@@ -55,7 +55,7 @@ const tasksSlice = createSlice({
       const idx = findIndex({id}, state.list)
       const task = state.list[idx]
 
-      task.checked = !task.checked
+      task.completed = !task.completed
     },
     removeTask(state, {payload: id}: PayloadAction<TaskIdT>) {
       const idx = findIndex({id}, state.list)
