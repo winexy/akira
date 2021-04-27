@@ -10,6 +10,9 @@ import {useDispatch} from '@/store/index'
 import {addTask, loadTasks} from '@/store/tasks'
 import {useSelector} from '../../store/index'
 import {selectCompletedTasksCount, selectTasks} from '../../store/tasks/index'
+import {useStore} from 'effector-react'
+import {$isMenuOpened} from '@store/menu'
+import clsx from 'clsx'
 
 const mainStyles = {
   backgroundImage: ''
@@ -31,6 +34,7 @@ export function MainView() {
   const formRef = useRef<TaskFormRef>(null)
   const [title, setTitle] = useState('')
   const [isAddButtonVisible, setIsAddButtonVisible] = useState(true)
+  const isMenuOpened = useStore($isMenuOpened)
   const dispatch = useDispatch()
   const completedTasksCount = useSelector(selectCompletedTasksCount)
   const tasks = useSelector(selectTasks)
@@ -90,16 +94,19 @@ export function MainView() {
       {isAddButtonVisible && (
         <div className="z-20 fixed bottom-0 left-0 right-0 p-4">
           <button
-            className="
-            flex items-center justify-center
-            w-full py-4
-            bg-black bg-opacity-30 
-            border border-black border-opacity-20
-            text-white rounded-md 
-            active:bg-opacity-40 
-            transition ease-in duration-100 
-            focus:outline-none focus:ring
-          "
+            className={clsx(
+              `
+                flex items-center justify-center
+                w-full py-4
+                bg-black bg-opacity-30 
+                border border-black border-opacity-20
+                text-white rounded-md
+                active:bg-opacity-40 
+                transition ease-in duration-100 
+                focus:outline-none focus:ring
+              `,
+              isMenuOpened ? 'rounded-2xl' : 'rounded-md'
+            )}
             onClick={onAddItemIntent}
           >
             <PlusIcon className="w-6 h-6 mr-2" /> Добавить
