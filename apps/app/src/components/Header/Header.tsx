@@ -4,7 +4,7 @@ import {openMenu} from '@store/menu'
 
 export const Header: React.FC = () => {
   return (
-    <header className="sticky top-0 z-20 px-4 py-2 flex items-center bg-gray-700">
+    <header className="sticky top-0 z-20 px-4 py-2 flex items-center">
       <h1 className="font-bold text-xl text-white font-mono">Akira</h1>
       <button
         className="
