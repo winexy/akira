@@ -47,24 +47,12 @@ export const Menu: React.FC = ({children}) => {
             <ChevronLeftIcon className="w-8 h-8" />
           </button>
         </div>
-        <ul className="px-4 space-y-2 text-white font-bold text-lg flex-1 overflow-auto">
-          {[
-            'Important',
-            'Completed',
-            'Preferences',
-            'Categories',
-            'WIP',
-            'Analytics',
-            'Changelog',
-            'More',
-            'Dummy',
-            'Menu',
-            'Items'
-          ].map((item, index) => (
+        <ul className="px-4 space-y-1 text-white font-bold text-lg flex-1 overflow-auto">
+          {['Important', 'Completed', 'Preferences'].map((item, index) => (
             <li
               key={index}
               className={clsx(
-                'px-4 py-1 rounded',
+                'px-4 py-2 rounded',
                 'transition ease-in duration-150',
                 'active:bg-gray-50 active:bg-opacity-20'
               )}
