@@ -1,8 +1,11 @@
 import React from 'react'
 import {MenuIcon} from '@heroicons/react/solid'
 import {toggleMenu} from '@store/menu'
+import {useDispatch} from '../../store/index'
 
 export const Header: React.FC = () => {
+  const dispatch = useDispatch()
+
   return (
     <header className="sticky top-0 z-20 px-4 py-2 flex items-center text-gray-700 bg-white shadow-2xl rounded-b-lg">
       <h1 className="font-bold text-xl font-mono">Akira</h1>
@@ -15,7 +18,7 @@ export const Header: React.FC = () => {
           active:bg-gray-100 active:bg-opacity-20
           focus:outline-none focus:ring
         "
-        onClick={() => toggleMenu()}
+        onClick={() => dispatch(toggleMenu())}
       >
         <MenuIcon className="w-6 h-6" />
       </button>

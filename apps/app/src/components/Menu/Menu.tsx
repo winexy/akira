@@ -1,12 +1,13 @@
 import React from 'react'
-import {useStore} from 'effector-react'
 import {useAuth0} from '@auth0/auth0-react'
 import clsx from 'clsx'
-import {ChevronLeftIcon, LogoutIcon, XIcon} from '@heroicons/react/solid'
-import {$isMenuOpened, closeMenu} from '@store/menu'
+import {ChevronLeftIcon, LogoutIcon} from '@heroicons/react/solid'
+import {closeMenu, selectIsMenuOpen} from '@store/menu'
+import {useSelector, useDispatch} from '@store/index'
 
 export const Menu: React.FC = ({children}) => {
-  const isOpened = useStore($isMenuOpened)
+  const isOpened = useSelector(selectIsMenuOpen)
+  const dispatch = useDispatch()
   const {logout, user} = useAuth0()
 
   return (
@@ -41,7 +42,7 @@ export const Menu: React.FC = ({children}) => {
               active:bg-gray-50 active:bg-opacity-30
               focus:outline-none
             "
-            onClick={() => closeMenu()}
+            onClick={() => dispatch(closeMenu())}
           >
             <ChevronLeftIcon className="w-8 h-8" />
           </button>
@@ -86,7 +87,7 @@ export const Menu: React.FC = ({children}) => {
             "
             onClick={() => {
               logout()
-              closeMenu()
+              dispatch(closeMenu())
             }}
           >
             <LogoutIcon className="w-6 h-6 mr-2" />

@@ -1,11 +1,26 @@
-import { createEvent, createStore } from 'effector'
+import {createSlice} from '@reduxjs/toolkit'
+import {RootState} from '..'
 
-export const openMenu = createEvent()
-export const closeMenu = createEvent()
-export const toggleMenu = createEvent()
+const menuSlice = createSlice({
+  name: 'menu',
+  initialState: {
+    isOpen: false
+  },
+  reducers: {
+    openMenu(state) {
+      state.isOpen = true
+    },
+    closeMenu(state) {
+      state.isOpen = false
+    },
+    toggleMenu(state) {
+      state.isOpen = !state.isOpen
+    }
+  }
+})
 
-export const $isMenuOpened = createStore(false)
-  .on(openMenu, () => true)
-  .on(closeMenu, () => false)
-  .on(toggleMenu, state => !state)
+export const selectIsMenuOpen = (state: RootState) => state.menu.isOpen
 
+export const {openMenu, closeMenu, toggleMenu} = menuSlice.actions
+
+export const menuReducer = menuSlice.reducer
