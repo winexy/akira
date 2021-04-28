@@ -109,7 +109,6 @@ function App() {
       <Provider store={store}>
         <React.Fragment>
           <Menu>
-            <Header />
             <MainView />
           </Menu>
         </React.Fragment>
