@@ -3,7 +3,7 @@
 
 html,
 body {
-  @apply overscroll-contain;
+  @apply overscroll-contain bg-gray-700;
 }
 
 * {
@@ -24,4 +24,22 @@ body {
 
 #root {
   @apply flex flex-col flex-1;
+}
+
+.vh-full {
+  height: 100vh;
+}
+
+.max-vh-full {
+  max-height: 100vh;
+}
+
+@supports (-webkit-touch-callout: none) {
+  .vh-full {
+    height: -webkit-fill-available;
+  }
+
+  .max-vh-full {
+    max-height: -webkit-fill-available;
+  }
 }

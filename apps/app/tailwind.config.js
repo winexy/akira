@@ -9,6 +9,7 @@ module.exports = {
       textColor: ['active'],
       backgroundColor: ['active'],
       borderColor: ['active'],
+      scale: ['active'],
       backgroundOpacity: ['active'],
       boxShadow: ['active']
     }

@@ -93,7 +93,7 @@ function App() {
 
   if (isLoading) {
     return (
-      <div className="flex-1 flex-col flex justify-center items-center text-gray-700">
+      <div className="flex-1 flex-col flex justify-center items-center text-white">
         {SvgLoader}
         <h1 className="mt-8 font-mono font-bold text-4xl">Akira</h1>
       </div>
@@ -110,9 +110,7 @@ function App() {
         <React.Fragment>
           <Menu>
             <Header />
-            <main className="flex-1">
-              <MainView />
-            </main>
+            <MainView />
           </Menu>
         </React.Fragment>
       </Provider>

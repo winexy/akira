@@ -122,7 +122,10 @@ export const Task: React.FC<TaskProps> = ({
       ref={dropRef as Ref<Element>}
       Component="li"
       className={clsx(
-        'rounded-md overflow-hidden shadow bg-white transform transition ease-in duration-100',
+        'rounded-md overflow-hidden',
+        'shadow-xs bg-white',
+        'transform',
+        'transition ease-in duration-100',
         {
           'scale-95 -rotate-1': isDragging
         }
@@ -153,7 +156,7 @@ export const Task: React.FC<TaskProps> = ({
               'focus:outline-none',
               task.important
                 ? 'bg-yellow-500 active:bg-yellow-400'
-                : 'bg-gray-400 active:bg-gray-500'
+                : 'bg-gray-400 bg-opacity-70 active:bg-opacity-100'
             )}
             onClick={() => onSetImportant(task.id)}
           >
