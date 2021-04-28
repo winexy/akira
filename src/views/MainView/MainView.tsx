@@ -14,22 +14,6 @@ import {useStore} from 'effector-react'
 import {$isMenuOpened} from '@store/menu'
 import clsx from 'clsx'
 
-const mainStyles = {
-  backgroundImage: ''
-  // 'url(https://images.unsplash.com/photo-1616466446987-62a71e71b629?ixid=MnwxMjA3fDB8MHxwaG90by1vZi10aGUtZGF5fHx8fGVufDB8fHx8&ixlib=rb-1.2.1&dpr=1&auto=format%2Ccompress&fit=crop&w=2999&h=594%201x,%20https://images.unsplash.com/photo-1616466446987-62a71e71b629?ixid=MnwxMjA3fDB8MHxwaG90by1vZi10aGUtZGF5fHx8fGVufDB8fHx8&ixlib=rb-1.2.1&dpr=2&auto=format%2Ccompress&fit=crop&w=2999&h=594%202x)'
-}
-
-function useBodyBackground() {
-  useEffect(() => {
-    document.body.style.backgroundImage = mainStyles.backgroundImage
-    document.body.style.backgroundSize = 'cover'
-
-    return () => {
-      document.body.style.backgroundImage = 'none'
-    }
-  }, [])
-}
-
 export function MainView() {
   const formRef = useRef<TaskFormRef>(null)
   const [title, setTitle] = useState('')
@@ -38,8 +22,6 @@ export function MainView() {
   const dispatch = useDispatch()
   const completedTasksCount = useSelector(selectCompletedTasksCount)
   const tasks = useSelector(selectTasks)
-
-  useBodyBackground()
 
   useEffect(() => {
     dispatch(loadTasks())
@@ -61,7 +43,7 @@ export function MainView() {
   }
 
   return (
-    <div className="mb-24">
+    <main className="bg-gray-100 flex-1 pt-4">
       <TaskForm
         ref={formRef}
         title={title}
@@ -70,18 +52,17 @@ export function MainView() {
         onVisibilityChange={onTaskFormVisiblityChange}
       />
       <div className="px-4">
-        <span className="text-white font-bold mr-4">
+        <span className="text-gray-700 font-bold mr-4">
           {completedTasksCount} / {size(tasks)}
         </span>
         <button
           className="
             px-2 py-1 
-            text-white rounded 
-            border border-white 
+            text-gray-700 rounded 
+            border border-gray-300
             transition ease-in duration-150
-            active:bg-gray-100 
+            active:bg-white 
             active:border-gray-300
-            active:text-gray-700
             focus:outline-none
           "
         >
@@ -92,27 +73,29 @@ export function MainView() {
         <Tasks />
       </section>
       {isAddButtonVisible && (
-        <div className="z-20 fixed bottom-0 left-0 right-0 p-4">
+        <div className="z-20 fixed bottom-0 right-0 p-4">
           <button
             className={clsx(
               `
                 flex items-center justify-center
-                w-full py-4
-                bg-black bg-opacity-30 
-                border border-black border-opacity-20
-                text-white rounded-md
-                active:bg-opacity-40 
+                p-1 w-12 h-12 box-content
+                bg-blue-500 border-blue-600
+                border border-opacity-20
+                text-white rounded-full
+                shadow-2xl transform
                 transition ease-in duration-100 
-                focus:outline-none focus:ring
+                active:bg-blue-600
+                active:scale-95
+                focus:outline-none
               `,
               isMenuOpened ? 'rounded-2xl' : 'rounded-md'
             )}
             onClick={onAddItemIntent}
           >
-            <PlusIcon className="w-6 h-6 mr-2" /> Добавить
+            <PlusIcon className="w-8 h-8" />
           </button>
         </div>
       )}
-    </div>
+    </main>
   )
 }

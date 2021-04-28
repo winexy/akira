@@ -27,7 +27,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
           'w-4 h-4 rounded border',
           'transition ease-in duration-75',
           {
-            'bg-black border-black': isChecked,
+            'bg-blue-500 border-blue-600': isChecked,
             'bg-white border-gray-400': !isChecked
           }
         )}

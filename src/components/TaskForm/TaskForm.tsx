@@ -126,7 +126,7 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                 )}
               </div>
             </form>
-            <div className="mt-auto p-4 bg-gradient-to-t from-gray-900">
+            <div className="mt-auto p-4 bg-gradient-to-t from-gray-600">
               {isEmpty(title) ? (
                 <button
                   className="
@@ -147,11 +147,11 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                 <button
                   className="
                     w-full px-4 py-2.5
-                    bg-indigo-500 border border-indigo-600 
+                    bg-blue-500 border border-blue-600 
                     text-center font-bold text-white text-lg
                     shadow-lg rounded select-none
                     transition ease-in duration-75
-                    active:bg-indigo-600
+                    active:bg-blue-600
                     focus:outline-none
                   "
                   onClick={() => {

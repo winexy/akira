@@ -28,19 +28,17 @@ export const Menu: React.FC = ({children}) => {
       >
         <div className="p-4 flex">
           <div className="flex items-center mr-3">
-            <img src={user.picture} className="mr-4 w-10 h-10" />
-            <strong className="text-lg text-gray-700 truncate">
-              {user.name}
-            </strong>
+            <img src={user.picture} className="mr-4 w-10 h-10 rounded-full" />
+            <strong className="text-lg text-white truncate">{user.name}</strong>
           </div>
           <button
             className="
               ml-auto w-10 h-10 
               flex justify-center items-center 
-              text-gray-700
+              text-white
               rounded
               transition ease-in duration-150
-              active:bg-gray-200
+              active:bg-gray-50 active:bg-opacity-30
               focus:outline-none
             "
             onClick={() => closeMenu()}
@@ -48,8 +46,31 @@ export const Menu: React.FC = ({children}) => {
             <ChevronLeftIcon className="w-8 h-8" />
           </button>
         </div>
-        <ul>
-          <li></li>
+        <ul className="px-4 space-y-2 text-white font-bold text-lg flex-1 overflow-auto">
+          {[
+            'Important',
+            'Completed',
+            'Preferences',
+            'Categories',
+            'WIP',
+            'Analytics',
+            'Changelog',
+            'More',
+            'Dummy',
+            'Menu',
+            'Items'
+          ].map((item, index) => (
+            <li
+              key={index}
+              className={clsx(
+                'px-4 py-1 rounded',
+                'transition ease-in duration-150',
+                'active:bg-gray-50 active:bg-opacity-20'
+              )}
+            >
+              {item}
+            </li>
+          ))}
         </ul>
         <div className="mt-auto p-4">
           <button
@@ -75,24 +96,21 @@ export const Menu: React.FC = ({children}) => {
       </nav>
       <div
         className={clsx(
-          'z-50',
-          'flex-1 flex relative transform transition ease-out duration-300'
+          'transform flex flex-col',
+          'transition ease-in duration-150',
+          'bg-gray-100',
+          'transition-transform ease-in duration-300',
+          isOpened ? 'max-vh-full' : 'vh-full',
+          {
+            'scale-90 rounded-3xl shadow-2xl h-screen overflow-hidden pointer-events-none': isOpened
+          }
         )}
         style={{
-          transform: isOpened ? 'translateX(85%)' : 'none'
+          // @ts-expect-error
+          '--tw-translate-x': isOpened ? '85%' : 'none'
         }}
       >
-        <div
-          className={clsx(
-            'flex-1 transform transition ease-in duration-150 bg-gray-700',
-            'transition-transform ease-in duration-300',
-            {
-              'scale-90 rounded-3xl shadow-2xl': isOpened
-            }
-          )}
-        >
-          {children}
-        </div>
+        {children}
       </div>
     </>
   )
