@@ -6,19 +6,17 @@ import {Tasks} from '@/components/Tasks/Tasks'
 import size from 'lodash/fp/size'
 import {useEffect} from 'react'
 
-import {useDispatch} from '@/store/index'
+import {useDispatch, useSelector} from '@store/index'
 import {addTask, loadTasks} from '@/store/tasks'
-import {useSelector} from '../../store/index'
 import {selectCompletedTasksCount, selectTasks} from '../../store/tasks/index'
-import {useStore} from 'effector-react'
-import {$isMenuOpened} from '@store/menu'
+import {selectIsMenuOpen} from '@store/menu'
 import clsx from 'clsx'
 
 export function MainView() {
   const formRef = useRef<TaskFormRef>(null)
   const [title, setTitle] = useState('')
   const [isAddButtonVisible, setIsAddButtonVisible] = useState(true)
-  const isMenuOpened = useStore($isMenuOpened)
+  const isMenuOpened = useSelector(selectIsMenuOpen)
   const dispatch = useDispatch()
   const completedTasksCount = useSelector(selectCompletedTasksCount)
   const tasks = useSelector(selectTasks)

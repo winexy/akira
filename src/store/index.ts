@@ -5,6 +5,7 @@ import {
   useSelector as _useSelector
 } from 'react-redux'
 import {tasksReducer, tasksSaga} from './tasks'
+import {menuReducer} from './menu'
 import createSagaMiddleware from 'redux-saga'
 import {all} from 'redux-saga/effects'
 
@@ -13,7 +14,8 @@ const sagaMiddleware = createSagaMiddleware()
 export const store = configureStore({
   devTools: true,
   reducer: {
-    tasks: tasksReducer
+    tasks: tasksReducer,
+    menu: menuReducer
   },
   middleware(getDefaultMiddleware) {
     return getDefaultMiddleware({
