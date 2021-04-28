@@ -3,7 +3,7 @@ import produce from 'immer'
 import assign from 'lodash/fp/assign'
 import findIndex from 'lodash/fp/findIndex'
 import remove from 'lodash/fp/remove'
-import {storage} from '@/models/Storage'
+import {storage} from '@/lib/Storage'
 import {nanoid} from 'nanoid'
 import {is, object, string, number, boolean, Infer, array} from 'superstruct'
 
