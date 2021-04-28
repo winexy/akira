@@ -6,7 +6,8 @@
     "build": "tsc && vite build",
     "serve": "vite preview",
     "test": "jest",
-    "prettier": "prettier --write ."
+    "format:check": "prettier --check '**/*.{js,jsx,ts,tsx,json,css,md,yml}",
+    "format": "prettier --check '**/*.{js,jsx,ts,tsx,json,css,md,yml}"
   },
   "dependencies": {
     "@auth0/auth0-react": "^1.4.0",
