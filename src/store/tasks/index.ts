@@ -60,7 +60,7 @@ const tasksSlice = createSlice({
     },
     removeTask(state, {payload: id}: PayloadAction<TaskIdT>) {
       const idx = findIndex({id}, state.list)
-      delete state.list[idx]
+      state.list.splice(idx, 1)
     },
     changeTaskPosition(state, action: PayloadAction<ChangePositionParams>) {
       const {fromIndex, toIndex} = action.payload
@@ -90,8 +90,8 @@ export const {
 
 export const selectTasks = (state: RootState) => state.tasks.list
 
-export const selectCompletedTasksCount = (state: RootState) => 
-  size(filter({ completed: true }, state.tasks.list))
+export const selectCompletedTasksCount = (state: RootState) =>
+  size(filter({completed: true}, state.tasks.list))
 
 export const tasksReducer = tasksSlice.reducer
 
