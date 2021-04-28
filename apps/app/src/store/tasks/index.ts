@@ -1,5 +1,5 @@
 import findIndex from 'lodash/fp/findIndex'
-import {storage} from '@/models/Storage'
+import {storage} from '@/lib/Storage'
 import {nanoid} from 'nanoid'
 import size from 'lodash/fp/size'
 import filter from 'lodash/fp/filter'
