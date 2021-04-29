@@ -26,7 +26,9 @@ jobs:
       - name: Build Project
         if: github.event_name == 'push'
         run: yarn build
-      - run: yarn add -g surge
+      - name: Install Surge.sh
+        if: github.event_name == 'push'
+        run: npm i -g surge
       - name: Deploy to Staging
         if: github.event_name == 'push'
         run: npx surge --project ./dist --domain akira-staging.surge.sh
