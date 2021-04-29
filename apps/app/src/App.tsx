@@ -7,6 +7,7 @@ import {useAuth0} from '@auth0/auth0-react'
 import {AuthView} from './views/AuthView/AuthView'
 import {Menu} from './components/Menu/Menu'
 import {store} from '@store/index'
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
 
 const dndConfig = {
   enableMouseEvents: true
@@ -106,11 +107,15 @@ function App() {
   return (
     <DndProvider backend={TouchBackend} options={dndConfig}>
       <Provider store={store}>
-        <React.Fragment>
+        <Router>
           <Menu>
-            <MainView />
+            <Switch>
+              <Route path="/">
+                <MainView />
+              </Route>
+            </Switch>
           </Menu>
-        </React.Fragment>
+        </Router>
       </Provider>
     </DndProvider>
   )
