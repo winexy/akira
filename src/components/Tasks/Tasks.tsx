@@ -1,6 +1,6 @@
 import React from 'react'
 import {Task} from '@/components/Task/Task'
-import { useSelector, useDispatch } from '@/store'
+import {useSelector, useDispatch} from '@/store'
 import {
   changeTaskPosition,
   removeTask,
