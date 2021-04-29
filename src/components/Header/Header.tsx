@@ -3,6 +3,7 @@ import {MenuIcon} from '@heroicons/react/solid'
 import isUndefined from 'lodash/fp/isUndefined'
 import {toggleMenu} from '@store/menu'
 import {useDispatch} from '@store/index'
+import {Link} from 'react-router-dom'
 
 export const Header: React.FC = ({children}) => {
   const dispatch = useDispatch()
@@ -10,7 +11,9 @@ export const Header: React.FC = ({children}) => {
   return (
     <header className="sticky top-0 z-20 px-4 py-2 flex items-center text-gray-700 bg-white shadow-2xl rounded-b-lg">
       {isUndefined(children) ? (
-        <h1 className="font-bold text-xl font-mono">Akira</h1>
+        <Link to="/">
+          <h1 className="font-bold text-xl font-mono">Akira</h1>
+        </Link>
       ) : (
         children
       )}

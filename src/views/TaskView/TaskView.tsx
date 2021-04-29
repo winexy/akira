@@ -13,24 +13,24 @@ export const TaskView: React.FC = () => {
 
   return (
     <View
-      header={
-        <Header>
-          <button
-            className={clsx(
-              '-ml-2 p-2 pr-4',
-              'flex justify-center items-center',
-              'text-gray-700',
-              'rounded-md',
-              'transition ease-in duration-100',
-              'active:bg-gray-100',
-              'focus:outline-none'
-            )}
-          >
-            <ChevronLeftIcon className="w-6 h-6 mr-2" />
-            Back
-          </button>
-        </Header>
-      }
+    // header={
+    //   <Header>
+    //     <button
+    //       className={clsx(
+    //         '-ml-2 p-2 pr-4',
+    //         'flex justify-center items-center',
+    //         'text-gray-700',
+    //         'rounded-md',
+    //         'transition ease-in duration-100',
+    //         'active:bg-gray-100',
+    //         'focus:outline-none'
+    //       )}
+    //     >
+    //       <ChevronLeftIcon className="w-6 h-6 mr-2" />
+    //       Back
+    //     </button>
+    //   </Header>
+    // }
     >
       task {id}: {task?.title}
     </View>
