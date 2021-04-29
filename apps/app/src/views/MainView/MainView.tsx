@@ -46,21 +46,20 @@ export function MainView() {
   }
 
   return (
-    <View>
-      <main className="bg-gray-100 flex-1 pt-4">
-        <TaskForm
-          ref={formRef}
-          title={title}
-          onTitleChange={setTitle}
-          onSubmit={onSubmit}
-          onVisibilityChange={onTaskFormVisiblityChange}
-        />
-        <div className="px-4">
-          <span className="text-gray-700 font-bold mr-4">
-            {completedTasksCount} / {size(tasks)}
-          </span>
-          <button
-            className="
+    <View className="bg-gray-100 flex-1 pt-4">
+      <TaskForm
+        ref={formRef}
+        title={title}
+        onTitleChange={setTitle}
+        onSubmit={onSubmit}
+        onVisibilityChange={onTaskFormVisiblityChange}
+      />
+      <div className="px-4">
+        <span className="text-gray-700 font-bold mr-4">
+          {completedTasksCount} / {size(tasks)}
+        </span>
+        <button
+          className="
             px-2 py-1 
             text-gray-700 rounded 
             border border-gray-300
@@ -69,18 +68,18 @@ export function MainView() {
             active:border-gray-300
             focus:outline-none
           "
-          >
-            All tasks
-          </button>
-        </div>
-        <section className="mt-4">
-          <Tasks />
-        </section>
-        {isAddButtonVisible && (
-          <div className="z-20 fixed bottom-0 right-0 p-4">
-            <button
-              className={clsx(
-                `
+        >
+          All tasks
+        </button>
+      </div>
+      <section className="mt-4">
+        <Tasks />
+      </section>
+      {isAddButtonVisible && (
+        <div className="z-20 fixed bottom-0 right-0 p-4">
+          <button
+            className={clsx(
+              `
                 flex items-center justify-center
                 p-1 w-12 h-12 box-content
                 bg-blue-500 border-blue-600
@@ -92,15 +91,14 @@ export function MainView() {
                 active:scale-95
                 focus:outline-none
               `,
-                isMenuOpened ? 'rounded-2xl' : 'rounded-md'
-              )}
-              onClick={onAddItemIntent}
-            >
-              <PlusIcon className="w-8 h-8" />
-            </button>
-          </div>
-        )}
-      </main>
+              isMenuOpened ? 'rounded-2xl' : 'rounded-md'
+            )}
+            onClick={onAddItemIntent}
+          >
+            <PlusIcon className="w-8 h-8" />
+          </button>
+        </div>
+      )}
     </View>
   )
 }
