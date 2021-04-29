@@ -1,5 +1,6 @@
 import React, {LegacyRef, Ref, useRef} from 'react'
 import {DragSourceMonitor, DropTargetMonitor, useDrag, useDrop} from 'react-dnd'
+import {Link} from 'react-router-dom'
 import clsx from 'clsx'
 import {XIcon, MenuAlt4Icon, StarIcon} from '@heroicons/react/solid'
 import {Swipeable} from '@components/Swipeable/Swipeable'
@@ -165,37 +166,39 @@ export const Task: React.FC<TaskProps> = ({
         </>
       }
     >
-      <div
-        className={clsx(
-          'flex items-center',
-          'bg-white p-4 text-lg truncate text-black',
-          'rounded-md',
-          'transition ease-in duration-150',
-          'active:bg-gray-200',
-          {
-            'line-through text-gray-400': task.completed
-          }
-        )}
-      >
-        <Checkbox
-          className="mr-3"
-          isChecked={task.completed}
-          onChange={() => onCheck(task.id)}
-        />
-        {task.title}
-        <button
-          ref={dragRef as LegacyRef<HTMLButtonElement>}
-          className="
-            ml-auto w-8 h-8 -mr-2
-            flex items-center justify-center
-            text-gray-400 
-            active:text-gray-300
-            focus:outline-none
-          "
+      <Link to={`/tasks/${task.id}`}>
+        <div
+          className={clsx(
+            'flex items-center',
+            'bg-white p-4 text-lg truncate text-black',
+            'rounded-md',
+            'transition ease-in duration-150',
+            'active:bg-gray-200',
+            {
+              'line-through text-gray-400': task.completed
+            }
+          )}
         >
-          <MenuAlt4Icon className="w-4 h-4" />
-        </button>
-      </div>
+          <Checkbox
+            className="mr-3"
+            isChecked={task.completed}
+            onChange={() => onCheck(task.id)}
+          />
+          {task.title}
+          <button
+            ref={dragRef as LegacyRef<HTMLButtonElement>}
+            className="
+          ml-auto w-8 h-8 -mr-2
+          flex items-center justify-center
+          text-gray-400 
+          active:text-gray-300
+          focus:outline-none
+          "
+          >
+            <MenuAlt4Icon className="w-4 h-4" />
+          </button>
+        </div>
+      </Link>
     </Swipeable>
   )
 }
