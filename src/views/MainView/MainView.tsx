@@ -7,7 +7,7 @@ import size from 'lodash/fp/size'
 import {useEffect} from 'react'
 
 import {useDispatch, useSelector} from '@store/index'
-import {Header} from '@components/Header/Header'
+import {View} from '@views/View/View'
 import {
   selectCompletedTasksCount,
   selectTasks,
@@ -46,8 +46,7 @@ export function MainView() {
   }
 
   return (
-    <>
-      <Header />
+    <View>
       <main className="bg-gray-100 flex-1 pt-4">
         <TaskForm
           ref={formRef}
@@ -102,6 +101,6 @@ export function MainView() {
           </div>
         )}
       </main>
-    </>
+    </View>
   )
 }
