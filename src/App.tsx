@@ -5,7 +5,8 @@ import {Provider} from 'react-redux'
 import {MainView} from '@views/MainView/MainView'
 import {useAuth0} from '@auth0/auth0-react'
 import {AuthView} from './views/AuthView/AuthView'
-import {Menu} from './components/Menu/Menu'
+import {TaskView} from '@views/TaskView/TaskView'
+import {Menu} from '@components/Menu/Menu'
 import {store} from '@store/index'
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
 
@@ -110,8 +111,11 @@ function App() {
         <Router>
           <Menu>
             <Switch>
-              <Route path="/">
+              <Route path="/" exact>
                 <MainView />
+              </Route>
+              <Route path="/tasks/:id">
+                <TaskView />
               </Route>
             </Switch>
           </Menu>

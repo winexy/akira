@@ -1,14 +1,17 @@
 import React from 'react'
-import {Header} from '@components/Header/Header'
 import clsx, {ClassValue} from 'clsx'
+import {Header} from '@components/Header/Header'
+import isUndefined from 'lodash/fp/isUndefined'
 
-export const View: React.FC<{className?: ClassValue}> = ({
-  children,
-  className
-}) => {
+type ViewProps = {
+  className?: ClassValue
+  header?: React.ReactChild
+}
+
+export const View: React.FC<ViewProps> = ({children, className, header}) => {
   return (
     <>
-      <Header />
+      {isUndefined(header) ? <Header /> : header}
       <main className={clsx(className)}>{children}</main>
     </>
   )
