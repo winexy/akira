@@ -1,14 +1,14 @@
 import React from 'react'
-import {useAuth0} from '@auth0/auth0-react'
 import clsx from 'clsx'
 import {ChevronLeftIcon, LogoutIcon} from '@heroicons/react/solid'
 import {closeMenu, selectIsMenuOpen} from '@store/menu'
 import {useSelector, useDispatch} from '@store/index'
+import {useFirebaseAuth} from '@/firebase/Provider'
 
 export const Menu: React.FC = ({children}) => {
   const isOpened = useSelector(selectIsMenuOpen)
   const dispatch = useDispatch()
-  const {logout, user} = useAuth0()
+  const auth = useFirebaseAuth()
 
   return (
     <>
@@ -28,14 +28,20 @@ export const Menu: React.FC = ({children}) => {
         }}
       >
         <div className="p-4 flex">
-          <div className="flex items-center mr-3">
-            <img
-              src={user.picture}
-              alt="User avatar"
-              className="mr-4 w-10 h-10 rounded-full"
-            />
-            <strong className="text-lg text-white truncate">{user.name}</strong>
-          </div>
+          {auth.isAuthenticated && (
+            <div className="flex items-center mr-3">
+              {auth.user.photoURL && (
+                <img
+                  src={auth.user.photoURL}
+                  alt="User avatar"
+                  className="mr-4 w-10 h-10 rounded-full"
+                />
+              )}
+              <strong className="text-lg text-white truncate">
+                {auth.user.displayName}
+              </strong>
+            </div>
+          )}
           <button
             className="
               ml-auto w-10 h-10 
@@ -79,7 +85,7 @@ export const Menu: React.FC = ({children}) => {
               focus:outline-none
             "
             onClick={() => {
-              logout()
+              auth.logout()
               dispatch(closeMenu())
             }}
           >

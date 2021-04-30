@@ -1,9 +1,9 @@
 import React from 'react'
-import {useAuth0} from '@auth0/auth0-react'
 import {LoginIcon} from '@heroicons/react/solid'
+import {useFirebaseAuth} from '@/firebase/index'
 
 export const AuthView: React.FC = () => {
-  const {loginWithRedirect} = useAuth0()
+  const {login} = useFirebaseAuth()
 
   return (
     <div className="flex-1 flex-col flex justify-end items-center p-6">
@@ -25,7 +25,7 @@ export const AuthView: React.FC = () => {
           active:shadow-xl
           focus:outline-none
         "
-        onClick={loginWithRedirect}
+        onClick={login}
       >
         <LoginIcon className="w-6 h-6 mr-2" />
         Sign in
