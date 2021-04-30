@@ -1,3 +1,5 @@
+const TailwindCaretColor = require('tailwind-caret-color')
+
 module.exports = {
   purge: ['./src/**/*.tsx'],
   darkMode: false,
@@ -14,5 +16,5 @@ module.exports = {
       boxShadow: ['active']
     }
   },
-  plugins: [require('tailwind-caret-color')()]
+  plugins: [TailwindCaretColor()]
 }

@@ -4,10 +4,10 @@ import {
   useDispatch as _useDispatch,
   useSelector as _useSelector
 } from 'react-redux'
-import {tasksReducer, tasksSaga} from './tasks'
-import {menuReducer} from './menu'
 import createSagaMiddleware from 'redux-saga'
 import {all} from 'redux-saga/effects'
+import {tasksReducer, tasksSaga} from './tasks'
+import {menuReducer} from './menu'
 
 const sagaMiddleware = createSagaMiddleware()
 

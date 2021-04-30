@@ -6,8 +6,8 @@ import size from 'lodash/fp/size'
 import filter from 'lodash/fp/filter'
 import {is, object, string, number, boolean, Infer, array} from 'superstruct'
 import {createAction, createSlice, PayloadAction} from '@reduxjs/toolkit'
-import {RootState} from '..'
 import {put, select, takeEvery} from 'redux-saga/effects'
+import {RootState} from '..'
 
 type ChangePositionParams = {
   fromIndex: number
@@ -47,11 +47,11 @@ const tasksSlice = createSlice({
   name: 'tasks',
   initialState,
   reducers: {
-    setTasks(state, action: PayloadAction<TaskT[]>) {
-      state.list = action.payload
+    setTasks(draft, action: PayloadAction<TaskT[]>) {
+      draft.list = action.payload
     },
-    addTask(state, action: PayloadAction<string>) {
-      state.list.unshift(createTask(action.payload))
+    addTask(draft, action: PayloadAction<string>) {
+      draft.list.unshift(createTask(action.payload))
     },
     toggleTask(state, {payload: id}: PayloadAction<TaskIdT>) {
       const idx = findIndex({id}, state.list)

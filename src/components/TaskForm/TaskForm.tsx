@@ -23,7 +23,7 @@ export type TaskFormRef = {
 }
 
 export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
-  function ItemForm({title, onTitleChange, onSubmit, onVisibilityChange}, ref) {
+  ({title, onTitleChange, onSubmit, onVisibilityChange}, ref) => {
     const inputRef = useRef<HTMLInputElement>(null)
     const backdropRef = useRef<HTMLDivElement>(null)
     const [isVisible, setIsVisible] = useState(false)
@@ -34,7 +34,7 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
 
     useEffect(() => {
       onVisibilityChange(isVisible)
-    }, [isVisible])
+    }, [isVisible, onVisibilityChange])
 
     useLayoutEffect(() => {
       if (isVisible && inputRef.current) {
