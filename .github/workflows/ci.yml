@@ -53,7 +53,7 @@ jobs:
         run: npm i -g surge
       - name: Create a Release
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        run: yarn semantic release
+        run: yarn release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Deploy to Staging
