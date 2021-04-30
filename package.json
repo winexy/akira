@@ -9,7 +9,7 @@
     "test:coverage": "jest --coverage",
     "format:check": "prettier --check '**/*.{js,jsx,ts,tsx,json,css,md,yml}'",
     "format": "prettier --write '**/*.{js,jsx,ts,tsx,json,css,md,yml}'",
-    "release": "semantic release"
+    "release": "semantic-release"
   },
   "repository": {
     "type": "git",
