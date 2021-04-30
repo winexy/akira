@@ -28,6 +28,8 @@ jobs:
             ${{ runner.os }}-yarn-
       - name: Install Dependencies
         run: yarn install --frozen-lockfile
+      - name: Lint code
+        run: yarn lint
       - name: Check code format
         run: yarn format:check
       - name: Run tests
