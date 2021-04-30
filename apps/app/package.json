@@ -18,7 +18,6 @@
     "url": "https://github.com/winexy/akira"
   },
   "dependencies": {
-    "@auth0/auth0-react": "^1.4.0",
     "@heroicons/react": "^1.0.1",
     "@reduxjs/toolkit": "^1.5.1",
     "@sentry/react": "^6.3.1",

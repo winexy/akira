@@ -3,12 +3,12 @@ import {DndProvider} from 'react-dnd'
 import {TouchBackend} from 'react-dnd-touch-backend'
 import {Provider} from 'react-redux'
 import {MainView} from '@views/MainView/MainView'
-import {useAuth0} from '@auth0/auth0-react'
 import {TaskView} from '@views/TaskView/TaskView'
 import {Menu} from '@components/Menu/Menu'
 import {store} from '@store/index'
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
 import {AuthView} from './views/AuthView/AuthView'
+import {useFirebaseAuth} from './firebase/Provider'
 
 const dndConfig = {
   enableMouseEvents: true
@@ -90,7 +90,7 @@ const SvgLoader = (
 )
 
 function App() {
-  const {isAuthenticated, isLoading} = useAuth0()
+  const {isLoading, isAuthenticated} = useFirebaseAuth()
 
   if (isLoading) {
     return (
@@ -124,5 +124,5 @@ function App() {
     </DndProvider>
   )
 }
-
+ 
 export default App
