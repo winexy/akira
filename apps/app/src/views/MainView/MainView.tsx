@@ -1,10 +1,9 @@
-import React, {useState, useRef} from 'react'
+import React, {useState, useRef, useEffect} from 'react'
 import isNull from 'lodash/isNull'
 import {PlusIcon} from '@heroicons/react/solid'
 import {TaskForm, TaskFormRef} from '@/components/TaskForm/TaskForm'
 import {Tasks} from '@/components/Tasks/Tasks'
 import size from 'lodash/fp/size'
-import {useEffect} from 'react'
 
 import {useDispatch, useSelector} from '@store/index'
 import {View} from '@views/View/View'
@@ -28,7 +27,7 @@ export function MainView() {
 
   useEffect(() => {
     dispatch(loadTasks())
-  }, [])
+  }, [dispatch])
 
   function onSubmit() {
     dispatch(addTask(title))

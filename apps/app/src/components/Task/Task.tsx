@@ -25,7 +25,7 @@ function onDragHover(
   index: number,
   updatePosition: (params: UpdatePositionParams) => void
 ) {
-  return function (item: DragObject, monitor: DropTargetMonitor) {
+  return function dragHover(item: DragObject, monitor: DropTargetMonitor) {
     if (!dropRef.current) {
       return
     }
@@ -65,6 +65,7 @@ function onDragHover(
     // Generally it's better to avoid mutations,
     // but it's good here for the sake of performance
     // to avoid expensive index searches.
+    // eslint-disable-next-line no-param-reassign
     item.index = hoverIndex
   }
 }

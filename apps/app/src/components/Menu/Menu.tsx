@@ -29,7 +29,11 @@ export const Menu: React.FC = ({children}) => {
       >
         <div className="p-4 flex">
           <div className="flex items-center mr-3">
-            <img src={user.picture} className="mr-4 w-10 h-10 rounded-full" />
+            <img
+              src={user.picture}
+              alt="User avatar"
+              className="mr-4 w-10 h-10 rounded-full"
+            />
             <strong className="text-lg text-white truncate">{user.name}</strong>
           </div>
           <button
@@ -50,6 +54,7 @@ export const Menu: React.FC = ({children}) => {
         <ul className="px-4 space-y-1 text-white font-bold text-lg flex-1 overflow-auto">
           {['Important', 'Completed', 'Preferences'].map((item, index) => (
             <li
+              // eslint-disable-next-line react/no-array-index-key
               key={index}
               className={clsx(
                 'px-4 py-2 rounded',

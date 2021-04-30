@@ -7,14 +7,14 @@ const menuSlice = createSlice({
     isOpen: false
   },
   reducers: {
-    openMenu(state) {
-      state.isOpen = true
+    openMenu(draft) {
+      draft.isOpen = true
     },
-    closeMenu(state) {
-      state.isOpen = false
+    closeMenu(draft) {
+      draft.isOpen = false
     },
-    toggleMenu(state) {
-      state.isOpen = !state.isOpen
+    toggleMenu(draft) {
+      draft.isOpen = !draft.isOpen
     }
   }
 })
