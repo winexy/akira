@@ -36,7 +36,7 @@ jobs:
           CI: true
       - name: Upload Test Coverage
         uses: actions/upload-artifact@v1
-        with: 
+        with:
           name: code-coverage
           path: coverage
       - name: Build Project
@@ -45,7 +45,7 @@ jobs:
       - name: Upload Build Folder
         if: github.event_name == 'push'
         uses: actions/upload-artifact@v1
-        with: 
+        with:
           name: build
           path: dist
       - name: Install Surge.sh
