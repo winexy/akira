@@ -51,6 +51,11 @@ jobs:
       - name: Install Surge.sh
         if: github.event_name == 'push'
         run: npm i -g surge
+      - name: ZIP Assets
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: |
+          zip -r build.zip ./dist
+          zip -r coverage.zip ./coverage
       - name: Create a Release
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: yarn release
