@@ -84,7 +84,7 @@ const collectProps = (monitor: DragSourceMonitor) => {
 
   return {
     isDragging,
-    opacity: isDragging ? 0.7 : 1
+    opacity: isDragging ? 0.4 : 1
   }
 }
 
@@ -167,39 +167,39 @@ export const Task: React.FC<TaskProps> = ({
         </>
       }
     >
-      <Link to={`/tasks/${task.id}`}>
-        <div
-          className={clsx(
-            'flex items-center',
-            'bg-white p-4 text-lg truncate text-black',
-            'rounded-md',
-            'transition ease-in duration-150',
-            'active:bg-gray-200',
-            {
-              'line-through text-gray-400': task.completed
-            }
-          )}
-        >
-          <Checkbox
-            className="mr-3"
-            isChecked={task.completed}
-            onChange={() => onCheck(task.id)}
-          />
+      <div
+        className={clsx(
+          'flex items-center',
+          'bg-white p-4 text-lg text-black',
+          'rounded-md',
+          'transition ease-in duration-150',
+          'active:bg-gray-200',
+          {
+            'line-through text-gray-400': task.completed
+          }
+        )}
+      >
+        <Checkbox
+          className="mr-3"
+          isChecked={task.completed}
+          onChange={() => onCheck(task.id)}
+        />
+        <Link to={`/tasks/${task.id}`} className="flex-1 truncate mx-2">
           {task.title}
-          <button
-            ref={dragRef as LegacyRef<HTMLButtonElement>}
-            className="
+        </Link>
+        <button
+          ref={dragRef as LegacyRef<HTMLButtonElement>}
+          className="
           ml-auto w-8 h-8 -mr-2
           flex items-center justify-center
           text-gray-400 
           active:text-gray-300
           focus:outline-none
           "
-          >
-            <MenuAlt4Icon className="w-4 h-4" />
-          </button>
-        </div>
-      </Link>
+        >
+          <MenuAlt4Icon className="w-4 h-4" />
+        </button>
+      </div>
     </Swipeable>
   )
 }
