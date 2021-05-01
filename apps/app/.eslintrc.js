@@ -2,9 +2,10 @@ const alias = require('./config/alias')
 
 module.exports = {
   extends: ['airbnb', 'plugin:jsx-a11y/recommended', 'prettier'],
-  plugins: ['jsx-a11y', 'react-hooks'],
+  plugins: ['jsx-a11y', 'react-hooks', 'jest'],
   env: {
-    browser: true
+    browser: true,
+    'jest/globals': true
   },
   overrides: [
     {
