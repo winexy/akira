@@ -6,7 +6,6 @@
     "commit": "cz",
     "dev": "vite",
     "build": "tsc && vite build",
-    "postbuild": "node scripts/copy-static",
     "serve": "vite preview",
     "test": "jest",
     "test:coverage": "jest --coverage",
@@ -75,6 +74,7 @@
     "jest": "^26.6.3",
     "postcss": "^8.2.9",
     "prettier": "2.2.1",
+    "rollup-plugin-copy": "^3.4.0",
     "semantic-release": "^17.4.2",
     "tailwindcss": "^2.1.1",
     "vite": "^2.1.5"
