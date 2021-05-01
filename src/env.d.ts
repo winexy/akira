@@ -1,2 +1,1 @@
-interface ImportMetaEnv {
-}
+interface ImportMetaEnv {}
