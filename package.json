@@ -6,6 +6,7 @@
     "commit": "cz",
     "dev": "vite",
     "build": "tsc && vite build",
+    "postbuild": "node scripts/copy-static",
     "serve": "vite preview",
     "test": "jest",
     "test:coverage": "jest --coverage",
