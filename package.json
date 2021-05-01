@@ -2,6 +2,8 @@
   "name": "akira",
   "version": "0.0.0",
   "scripts": {
+    "prepare": "husky install",
+    "commit": "cz",
     "dev": "vite",
     "build": "tsc && vite build",
     "serve": "vite preview",
@@ -11,8 +13,7 @@
     "format": "prettier --write '**/*.{js,jsx,ts,tsx,json,css,md,yml}'",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
-    "release": "semantic-release",
-    "prepare": "husky install"
+    "release": "semantic-release"
   },
   "repository": {
     "type": "git",
