@@ -124,5 +124,5 @@ function App() {
     </DndProvider>
   )
 }
- 
+
 export default App
