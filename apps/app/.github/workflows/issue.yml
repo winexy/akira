@@ -1,0 +1,13 @@
+name: Notify on Issue
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  slack-message:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Slack Message
+        run: |
+          curl -X POST -H 'Content-Type: application/json' --data '{"text":"New Issure Created: ${{ github.event.issue }} is out, <${{ github.event.issue.html_url }}|${{ github.event.issue.title }}>"}' ${{ secrets.SLACK_WEBHOOK }}
