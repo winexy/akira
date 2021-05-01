@@ -1,0 +1,6 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+COMMIT_MESSAGE=$(cat $1)
+
+echo $COMMIT_MESSAGE | yarn commitlint
