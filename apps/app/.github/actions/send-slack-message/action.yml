@@ -2,7 +2,7 @@ name: Slack Message
 description: Send Slack message using webhook
 author: Olzhas Seitmagambet
 inputs:
-  message: 
+  message:
     description: Message content
     required: true
   webhook_url:
