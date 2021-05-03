@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Send Slack Message
-      - uses: ./.github/actions/send-slack-message
+        uses: ./.github/actions/send-slack-message
         with:
           message: 'New Release: ${{ github.event.release.tag_name }} is out, <${{ github.event.release.html_url }}|check it out now>'
           webhook: ${{ secrets.SLACK_WEBHOOK }}
