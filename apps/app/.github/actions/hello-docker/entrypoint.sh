@@ -1,8 +1,8 @@
 #!/bin/sh -l
 
-echo "::debug ::Debug Message"
-echo "::error ::Error Messag"
-echo "::warning ::Warning Message"
+echo "::debug:: Debug Message"
+echo "::error:: Error Messag"
+echo "::warning:: Warning Message"
 
 echo "::add-mask::$1"
 
