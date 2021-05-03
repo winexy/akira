@@ -2054,7 +2054,7 @@ async function run() {
     const assignees = parseAssignees(core.getInput('assignees'))
 
     const octokit = github.getOctokit(token)
-    const {context} = github.context
+    const {context} = github
 
     const response = await octokit.issues.create({
       ...context.repo,
