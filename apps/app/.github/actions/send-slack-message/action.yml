@@ -5,7 +5,7 @@ inputs:
   message:
     description: Message content
     required: true
-  webhook_url:
+  webhook:
     description: Slack Webhook URL
     required: true
 runs:
