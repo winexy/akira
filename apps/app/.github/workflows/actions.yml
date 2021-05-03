@@ -2,3 +2,11 @@ on: push
 jobs: 
   testing-action:
     runs-on: ubuntu-latest
+    steps:
+      - uses: ./.github/actions/hello-docker
+        id: hello
+        with:
+          name: Docker
+      - run: |
+          echo "Time: ${{ steps.hello.outputs.time }}"
+          echo $HELLO
