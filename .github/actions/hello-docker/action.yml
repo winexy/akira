@@ -1,0 +1,12 @@
+name: Hello Docker
+author: Olzhas Seitmagambet
+description: Create Github Issue
+inputs:
+  name:
+    description: Name
+    required: true
+runs:
+  using: docker
+  image: Dockerfile
+  args:
+    - ${{ inputs.name }}
