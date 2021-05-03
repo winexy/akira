@@ -88,4 +88,4 @@ jobs:
             ---
             The commit hash was: _${{ github.sha }}_."
           assignees: |
-            ${{ github.event.pull_request.user.login }}"
+            ${{ github.event.pull_request.user.login }}
