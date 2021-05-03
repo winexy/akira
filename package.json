@@ -17,10 +17,6 @@
     "_compile-action": "ncc build .github/actions/${npm_config_action}/index.js -o .github/actions/${npm_config_action}/dist",
     "compile-action": "npm run _compile-action"
   },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx}": "eslint --fix",
-    "*.{js,jsx,ts,tsx,json,css,md,yml}": "prettier --write"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/winexy/akira"

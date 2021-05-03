@@ -15,6 +15,8 @@ async function run() {
         blocks: getBlocks()
       })
     })
+
+    core.debug('message sent')
   } catch (error) {
     core.error(error)
     core.setFailed(error.message)
