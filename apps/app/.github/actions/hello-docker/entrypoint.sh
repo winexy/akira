@@ -16,4 +16,4 @@ echo "::group::Some expandable logs"
 echo "hello there"
 echo "::endgroup::"
 
-echo "::set-env name=HELLO::helo"
+echo "HELLO=helo" >> $GITHUB_ENV
