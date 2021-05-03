@@ -8,6 +8,9 @@ jobs:
   slack-message:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: Send Slack Message
-        run: |
-          curl -X POST -H 'Content-Type: application/json' --data '{"text":"New Release: ${{ github.event.release.tag_name }} is out, <${{ github.event.release.html_url }}|check it out now>"}' ${{ secrets.SLACK_WEBHOOK }}
+      - uses: ./.github/actions/send-slack-message
+        with:
+          message: 'New Release: ${{ github.event.release.tag_name }} is out, <${{ github.event.release.html_url }}|check it out now>'
+          webhook: ${{ secrets.SLACK_WEBHOOK }}
