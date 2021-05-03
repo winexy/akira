@@ -1,13 +1,12 @@
-const https = require('https')
+const fetch = require('node-fetch')
 const core = require('@actions/core')
 const github = require('@actions/github')
 
 async function run() {
-  const webhook = core.getInput('webhook')
+  try {
+    const webhook = core.getInput('webhook')
 
-  const res = https.request(
-    webhook,
-    {
+    const response = await fetch(webhook, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -15,19 +14,13 @@ async function run() {
       body: JSON.stringify({
         blocks: getBlocks()
       })
-    },
-    res => {
-      res.on('end', () => {
-        core.debug(`Status code: ${res.statusCode}`)
-        global.console.log('Message sent')
-      })
-    }
-  )
+    })
 
-  res.on('error', error => {
+    const result = await response.json()
+  } catch (error) {
     core.error(error)
     core.setFailed(error.message)
-  })
+  }
 
   function getBlocks() {
     const message = core.getInput('message')
