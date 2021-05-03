@@ -9288,7 +9288,7 @@ async function run() {
   try {
     const webhook = core.getInput('webhook')
 
-    const response = await fetch(webhook, {
+    await fetch(webhook, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -9298,7 +9298,7 @@ async function run() {
       })
     })
 
-    const result = await response.json()
+    core.debug('message sent')
   } catch (error) {
     core.error(error)
     core.setFailed(error.message)
