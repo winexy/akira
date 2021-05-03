@@ -2,6 +2,7 @@ const core = require('@actions/core')
 const github = require('@actions/github')
 
 try {
+  throw new Error('some error')
   const name = core.getInput('who-to-greet')
 
   global.console.log(`Hello ${name}`)
