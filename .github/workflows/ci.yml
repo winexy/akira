@@ -82,7 +82,7 @@ jobs:
         uses: ./.github/actions/create-issue
         with:
           token: ${{ secrets.AKIRA_GITHUB_TOKEN }}
-          title: "Automated issue for commit: ${{ github.sha }}"
+          title: 'Automated issue for commit: ${{ github.sha }}'
           body: |
             This issue was automatically created by the Github Action workflow **${{ github.workflow }}**.
             ---
