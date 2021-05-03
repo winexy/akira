@@ -4,6 +4,4 @@ import {Checkbox} from './Checkbox'
 
 test('Checkbox', () => {
   render(<Checkbox />)
-
-  expect(2).toBe(4)
 })

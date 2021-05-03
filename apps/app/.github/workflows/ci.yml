@@ -78,7 +78,7 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       - name: Open an issue
-        if: failure()
+        if: failure() && github.event_name == 'pull_request'
         uses: ./.github/actions/create-issue
         with:
           token: ${{ secrets.AKIRA_GITHUB_TOKEN }}
