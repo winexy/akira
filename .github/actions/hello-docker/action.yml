@@ -5,8 +5,11 @@ inputs:
   name:
     description: Name
     required: true
+outputs:
+  time:
+    description: the greeting time
 runs:
   using: docker
-  image: ./Dockerfile
+  image: Dockerfile
   args:
     - ${{ inputs.name }}
