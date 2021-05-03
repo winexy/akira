@@ -11,10 +11,10 @@ try {
   const body = core.getInput('body')
   const assignees = parseAssignees(core.getInput('assignees'))
 
-  const octokit = new github.getOctokit(token)
+  const octokit = github.getOctokit(token)
   const {owner, repo} = github.context
 
-  const response = octokit.issues.create({
+  const response = await octokit.issues.create({
     owner,
     repo,
     title,
