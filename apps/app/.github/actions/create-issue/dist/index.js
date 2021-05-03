@@ -2054,11 +2054,10 @@ async function run() {
     const assignees = parseAssignees(core.getInput('assignees'))
 
     const octokit = github.getOctokit(token)
-    const {owner, repo} = github.context
+    const {context} = github.context
 
     const response = await octokit.issues.create({
-      owner,
-      repo,
+      ...context.repo,
       title,
       body,
       assignees
