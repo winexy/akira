@@ -17,9 +17,27 @@ export const TaskView: React.FC = () => {
     }
   }, [id, task, dispatch])
 
+  if (isUndefined(task)) {
+    return <View>loading...</View>
+  }
+
   return (
     <View>
-      <h1 className="font-semibold text-2xl">{task?.title}</h1>
+      <div className="mt-6 px-6">
+        <span
+          className={clsx(
+            'inline-block px-2 py-1',
+            'font-bold text-xs text-white',
+            'rounded shadow-md border',
+            task.completed
+              ? 'bg-green-500 border-green-600'
+              : 'bg-gray-500 border-gray-600'
+          )}
+        >
+          {task.completed ? '' : 'not '}completed
+        </span>
+      </div>
+      <h1 className="mt-4 px-6 font-semibold text-2xl">{task.title}</h1>
     </View>
   )
 }
