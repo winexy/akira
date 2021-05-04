@@ -1,6 +1,7 @@
 {
   "name": "akira",
   "version": "0.0.0",
+  "private": true,
   "scripts": {
     "prepare": "husky install",
     "commit": "cz",
