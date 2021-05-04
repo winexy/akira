@@ -2,17 +2,20 @@ import {call, put, select, takeEvery} from 'redux-saga/effects'
 import {v4 as uuid} from 'uuid'
 import {auth} from '@/firebase/firebase'
 import isUndefined from 'lodash/fp/isUndefined'
+import {fromMaybe} from '@/utils/either'
 import {TaskService} from './service'
 import {
   addTask,
   loadTasks,
+  loadTask,
   prependTask,
   removeTask,
   setTaskCompleted,
   setTasks,
   toggleTask,
   toggleImportant,
-  setTaskImportant
+  setTaskImportant,
+  setTaskById
 } from './slice'
 import {TaskT} from './types'
 import {selectTask} from './selectors'
@@ -24,6 +27,19 @@ function* loadTasksSaga() {
 
   if (tasks.isRight()) {
     yield put(setTasks(tasks.value))
+  }
+}
+
+function* loadTaskSaga({payload: id}: ReturnType<typeof loadTask>) {
+  const result: LazyThen<typeof TaskService.getTask> = yield call(
+    TaskService.getTask,
+    id
+  )
+
+  const task = result.chain(fromMaybe)
+
+  if (task.isRight()) {
+    yield put(setTaskById(task.value))
   }
 }
 
@@ -99,6 +115,7 @@ function* toggleImportantSaga({
 
 export default function* saga() {
   yield takeEvery(loadTasks.toString(), loadTasksSaga)
+  yield takeEvery(loadTask.toString(), loadTaskSaga)
   yield takeEvery(addTask.toString(), addTaskSaga)
   yield takeEvery(removeTask.toString(), removeTaskSaga)
   yield takeEvery(toggleTask.toString(), toggleTaskSaga)
