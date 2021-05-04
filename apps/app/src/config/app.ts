@@ -1,4 +1,8 @@
 export const config = {
+  app: {
+    // @ts-ignore
+    version: __VERSION__
+  },
   firebase: {
     apiKey: 'AIzaSyCBU8b6HX2K75H9ejUkjkLjvFN3y9-3QBg',
     authDomain: 'akira-wnx.firebaseapp.com',

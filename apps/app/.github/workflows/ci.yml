@@ -63,7 +63,11 @@ jobs:
           zip -r coverage.zip ./coverage
       - name: Create a Release
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        run: yarn release
+        run: |
+          yarn release
+          cat package.json
+          git describe --tags --abbrev=0   
+          echo ${{ toJSON(github) }}
         env:
           GITHUB_TOKEN: ${{ secrets.AKIRA_GITHUB_TOKEN }}
       - name: Deploy to Staging

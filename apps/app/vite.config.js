@@ -1,5 +1,6 @@
 import {defineConfig} from 'vite'
 import copy from 'rollup-plugin-copy'
+import pkg from './package.json'
 import alias from './config/alias'
 // import reactRefresh from '@vitejs/plugin-react-refresh'
 
@@ -8,6 +9,9 @@ export default defineConfig({
   // plugins: [reactRefresh()], // Context values lost when refresh happens
   resolve: {
     alias: alias.rollup
+  },
+  define: {
+    __VERSION__: JSON.stringify(pkg.version)
   },
   plugins: [
     {
