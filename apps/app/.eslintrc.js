@@ -60,6 +60,7 @@ module.exports = {
         additionalHooks: 'useDispatch'
       }
     ],
+    'react/destructuring-assignment': 'off',
     'react/jsx-props-no-spreading': 'off',
     'jsx-a11y/label-has-associated-control': 'off',
     'react/button-has-type': 'off',
@@ -69,7 +70,8 @@ module.exports = {
       'error',
       {props: true, ignorePropertyModificationsFor: ['draft']}
     ],
-    'object-curly-newline': 'off' // prefere prettier
+    'object-curly-newline': 'off', // prefere prettier
+    'no-undef': 'off' // false positive error
   },
   settings: {
     'import/resolver': {

@@ -1,11 +1,11 @@
 export const config = {
   firebase: {
-    apiKey: 'AIzaSyASEq73SYkwUyM7Iwjg1pPw5v-RoHtOrX4',
-    authDomain: 'akira-f76fc.firebaseapp.com',
-    projectId: 'akira-f76fc',
-    storageBucket: 'akira-f76fc.appspot.com',
-    messagingSenderId: '270248885542',
-    appId: '1:270248885542:web:111b2c3ebb17a0681515e7',
-    measurementId: 'G-JLW0GXRVGY'
+    apiKey: 'AIzaSyCBU8b6HX2K75H9ejUkjkLjvFN3y9-3QBg',
+    authDomain: 'akira-wnx.firebaseapp.com',
+    projectId: 'akira-wnx',
+    storageBucket: 'akira-wnx.appspot.com',
+    messagingSenderId: '252721708576',
+    appId: '1:252721708576:web:48f406bc8ba729b021c645',
+    measurementId: 'G-DFBDL3KN6W'
   }
 }
