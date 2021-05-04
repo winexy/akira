@@ -26,9 +26,7 @@ module.exports = {
       '@semantic-release/git',
       {
         assets: ['package.json'],
-        message:
-          // eslint-disable-next-line
-          'chore(release): ${nextRelease.version} [skip ci]\n\n\n${nextRelease.notes}'
+        message: `chore(release): \${nextRelease.version}`
       }
     ]
   ]
