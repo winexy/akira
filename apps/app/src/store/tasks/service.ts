@@ -1,10 +1,9 @@
-import {db, auth} from '@/firebase'
+import {db} from '@/firebase'
 import {either} from '@/utils/either'
 import {Either, left, right} from '@sweet-monads/either'
-import {fromNullable, Maybe} from '@sweet-monads/maybe'
+import M, {Maybe} from '@sweet-monads/maybe'
 import {assert, partial} from 'superstruct'
 import {TaskT, Task, TaskIdT} from './types'
-import {CompleteTaskPayloadT} from './slice'
 
 const collection = db.collection('tasks').withConverter({
   fromFirestore(snapshot) {
@@ -27,7 +26,7 @@ async function getTask(
 ): Promise<Either<FirestoreError, Maybe<TaskT>>> {
   try {
     const snapshot = await collection.doc(id).get()
-    return right(fromNullable(snapshot.data()))
+    return right(M.fromNullable(snapshot.data()))
   } catch (error) {
     return left(error)
   }
