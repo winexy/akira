@@ -5,8 +5,9 @@ import clsx from 'clsx'
 import {XIcon, MenuAlt4Icon, StarIcon} from '@heroicons/react/solid'
 import {Swipeable} from '@components/Swipeable/Swipeable'
 import {Checkbox} from '@components/Checkbox/Checkbox'
-import {TaskT, TaskIdT} from '@store/tasks'
+import {TaskT, TaskIdT, selectTask} from '@store/tasks'
 import isNull from 'lodash/isNull'
+import {useSelector} from '@/store'
 
 const ItemType = 'list-item'
 
@@ -71,7 +72,7 @@ function onDragHover(
 }
 
 type TaskProps = {
-  task: TaskT
+  taskId: TaskIdT
   index: number
   onRemove(id: TaskIdT): void
   onCheck(id: TaskIdT): void
@@ -89,13 +90,14 @@ const collectProps = (monitor: DragSourceMonitor) => {
 }
 
 export const Task: React.FC<TaskProps> = ({
-  task,
+  taskId,
   index,
   onRemove,
   onCheck,
   onOrderChange,
   onSetImportant
 }) => {
+  const task = useSelector(selectTask(taskId))
   const dropRef = useRef<Element>()
   const dragRef = useRef<HTMLButtonElement>()
   const [{opacity, isDragging}, connectDragSource] = useDrag<
@@ -105,7 +107,7 @@ export const Task: React.FC<TaskProps> = ({
   >(
     () => ({
       type: ItemType,
-      item: {id: task.id, index},
+      item: {id: taskId, index},
       collect: collectProps
     }),
     [index]

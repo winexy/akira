@@ -11,15 +11,15 @@ import {
 
 export const Tasks: React.FC = () => {
   const dispatch = useDispatch()
-  const tasks = useSelector(selectTasks)
+  const taskIds = useSelector(selectTasks)
 
   return (
     <ul className="space-y-1 px-4">
-      {tasks.map((task, index) => (
+      {taskIds.map((taskId, index) => (
         <Task
-          key={task.id}
-          task={task}
+          key={taskId}
           index={index}
+          taskId={taskId}
           onCheck={id => dispatch(toggleTask(id))}
           onRemove={id => dispatch(removeTask(id))}
           onOrderChange={params => dispatch(changeTaskPosition(params))}

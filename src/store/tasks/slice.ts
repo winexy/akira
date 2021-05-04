@@ -1,5 +1,8 @@
-import findIndex from 'lodash/fp/findIndex'
 import {createAction, createSlice, PayloadAction} from '@reduxjs/toolkit'
+import get from 'lodash/fp/get'
+import map from 'lodash/fp/map'
+import keyBy from 'lodash/fp/keyBy'
+import indexOf from 'lodash/fp/indexOf'
 import {TaskT, TaskIdT} from './types'
 
 type ChangePositionParams = {
@@ -18,10 +21,12 @@ export type ImportantTaskPayloadT = {
 }
 
 interface TasksState {
-  list: TaskT[]
+  byId: Record<TaskIdT, TaskT>
+  list: TaskIdT[]
 }
 
 const initialState: TasksState = {
+  byId: {},
   list: []
 }
 
@@ -30,33 +35,29 @@ const tasksSlice = createSlice({
   initialState,
   reducers: {
     setTasks(draft, action: PayloadAction<TaskT[]>) {
-      draft.list = action.payload
+      draft.byId = keyBy('id', action.payload)
+      draft.list = map(get('id'), action.payload)
     },
-    prependTask(draft, action: PayloadAction<TaskT>) {
-      draft.list.unshift(action.payload)
+    prependTask(draft, {payload: task}: PayloadAction<TaskT>) {
+      draft.byId[task.id] = task
+      draft.list.unshift(task.id)
     },
-    setTaskCompleted(state, {payload}: PayloadAction<CompleteTaskPayloadT>) {
-      const idx = findIndex({id: payload.id}, state.list)
-      const task = state.list[idx]
-
-      task.completed = payload.completed
+    setTaskCompleted(draft, {payload}: PayloadAction<CompleteTaskPayloadT>) {
+      draft.byId[payload.id].completed = payload.completed
     },
-    removeTask(state, {payload: id}: PayloadAction<TaskIdT>) {
-      const idx = findIndex({id}, state.list)
-      state.list.splice(idx, 1)
+    removeTask(draft, {payload: id}: PayloadAction<TaskIdT>) {
+      delete draft.byId[id]
+      draft.list.splice(indexOf(id, draft.list), 1)
     },
     changeTaskPosition(state, action: PayloadAction<ChangePositionParams>) {
       const {fromIndex, toIndex} = action.payload
-      const task = state.list[fromIndex]
+      const id = state.list[fromIndex]
 
       state.list.splice(fromIndex, 1)
-      state.list.splice(toIndex, 0, task)
+      state.list.splice(toIndex, 0, id)
     },
-    setTaskImportant(state, {payload}: PayloadAction<ImportantTaskPayloadT>) {
-      const idx = findIndex({id: payload.id}, state.list)
-      const task = state.list[idx]
-
-      task.important = payload.important
+    setTaskImportant(draft, {payload}: PayloadAction<ImportantTaskPayloadT>) {
+      draft.byId[payload.id].important = payload.important
     }
   }
 })
