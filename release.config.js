@@ -28,7 +28,7 @@ module.exports = {
         assets: ['package.json'],
         message:
           // eslint-disable-next-line
-          'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}'
+          'chore(release): ${nextRelease.version} [skip ci]\n\n\n${nextRelease.notes}'
       }
     ]
   ]
