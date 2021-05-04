@@ -23,7 +23,7 @@ export const TaskView: React.FC = () => {
 
   return (
     <View>
-      <div className="mt-6 px-6">
+      <div className="mt-6 px-6 space-x-2">
         <span
           className={clsx(
             'inline-block px-2 py-1',
@@ -36,6 +36,18 @@ export const TaskView: React.FC = () => {
         >
           {task.completed ? '' : 'not '}completed
         </span>
+        {task.important && (
+          <span
+            className={clsx(
+              'inline-block px-2 py-1',
+              'font-bold text-xs text-white',
+              'rounded shadow-md border',
+              'bg-red-500 border-red-600'
+            )}
+          >
+            important
+          </span>
+        )}
       </div>
       <h1 className="mt-4 px-6 font-semibold text-2xl">{task.title}</h1>
     </View>
