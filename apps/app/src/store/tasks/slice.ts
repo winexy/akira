@@ -38,6 +38,9 @@ const tasksSlice = createSlice({
       draft.byId = keyBy('id', action.payload)
       draft.list = map(get('id'), action.payload)
     },
+    setTaskById(draft, {payload: task}: PayloadAction<TaskT>) {
+      draft.byId[task.id] = task
+    },
     prependTask(draft, {payload: task}: PayloadAction<TaskT>) {
       draft.byId[task.id] = task
       draft.list.unshift(task.id)
@@ -74,6 +77,7 @@ export const {
   setTaskCompleted,
   changeTaskPosition,
   setTasks,
+  setTaskById,
   setTaskImportant
 } = tasksSlice.actions
 
