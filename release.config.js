@@ -17,9 +17,13 @@ module.exports = {
       '@semantic-release/github',
       {
         assets: [
+          'package.json',
           {path: 'build.zip', label: 'Build'},
           {path: 'coverage.zip', label: 'Coverage'}
-        ]
+        ],
+        message:
+          // eslint-disable-next-line
+          'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}'
       }
     ]
   ]
