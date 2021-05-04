@@ -2235,6 +2235,25 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
+"@sweet-monads/either@^2.3.0":
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/@sweet-monads/either/-/either-2.3.0.tgz#71664e479cf537a3df3996a399e1a369dd4c1858"
+  integrity sha512-I44sGdGqJAx8NT5jq4Y6TLL3nVpWpqSKuhj3a/Vwgb4bWMiYUX762F+2lovdGUbiDBWni04MUA7/ZWo4y9Z6bA==
+  dependencies:
+    "@sweet-monads/interfaces" "^2.3.0"
+
+"@sweet-monads/interfaces@^2.3.0":
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/@sweet-monads/interfaces/-/interfaces-2.3.0.tgz#3b8ade592630fe8e9666f227d84549203dafd264"
+  integrity sha512-ou9GHjkca1Zh4dSeIG8nmKE7T6Eao2x4Ouj7YTq0nFHA+WwYfvTnhCiUh9+cRz0BTLBRYOLsFlyax05VegSsYQ==
+
+"@sweet-monads/maybe@^2.3.0":
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/@sweet-monads/maybe/-/maybe-2.3.0.tgz#9606fac4638d1dfb362db0967334dfcc5fe00bfc"
+  integrity sha512-Ofj2mkLJ/+h5mvPvrdA6+MbAzdlmZXFPymIo4jIzvc21wYp/+hQRXi2DAY1CY+BWxxA7zwebeavGmsEeR4SC0Q==
+  dependencies:
+    "@sweet-monads/interfaces" "^2.3.0"
+
 "@testing-library/dom@^7.28.1":
   version "7.30.4"
   resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-7.30.4.tgz#c6a4a91557e92035fd565246bbbfb8107aa4634d"
@@ -2487,6 +2506,11 @@
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-2.0.0.tgz#7036640b4e21cc2f259ae826ce843d277dad8cff"
   integrity sha512-RJJrrySY7A8havqpGObOB4W92QXKJo63/jFLLgpvOtsGUqbQZ9Sbgl35KMm1DjC6j7AvmmU2bIno+3IyEaemaw==
+
+"@types/uuid@^8.3.0":
+  version "8.3.0"
+  resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-8.3.0.tgz#215c231dff736d5ba92410e6d602050cce7e273f"
+  integrity sha512-eQ9qFW/fhfGJF8WKHGEHZEyVWfZxrT+6CLIJGBcZPfxUh/+BnEj+UCGYMlr9qZuX/2AltsvwrGqp0LhEW8D0zQ==
 
 "@types/yargs-parser@*":
   version "20.2.0"
@@ -9800,7 +9824,7 @@ uuid@^3.3.2:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.4.0.tgz#b23e4358afa8a202fe7a100af1f5f883f02007ee"
   integrity sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==
 
-uuid@^8.3.0:
+uuid@^8.3.0, uuid@^8.3.2:
   version "8.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
