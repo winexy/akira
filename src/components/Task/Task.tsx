@@ -2,8 +2,7 @@ import React, {LegacyRef, Ref, useRef} from 'react'
 import {DragSourceMonitor, DropTargetMonitor, useDrag, useDrop} from 'react-dnd'
 import {Link} from 'react-router-dom'
 import clsx from 'clsx'
-import {format, fromUnixTime} from 'date-fns'
-import {XIcon, MenuAlt4Icon, StarIcon} from '@heroicons/react/solid'
+import {XIcon, MenuAlt4Icon, FireIcon} from '@heroicons/react/solid'
 import {Swipeable} from '@components/Swipeable/Swipeable'
 import {Checkbox} from '@components/Checkbox/Checkbox'
 import {TaskT, TaskIdT, selectTask} from '@store/tasks'
@@ -165,7 +164,7 @@ export const Task: React.FC<TaskProps> = ({
             )}
             onClick={() => onSetImportant(task.id)}
           >
-            <StarIcon className="w-5 h-5" />
+            <FireIcon className="w-5 h-5" />
           </button>
         </>
       }
