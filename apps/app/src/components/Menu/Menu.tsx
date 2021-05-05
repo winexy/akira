@@ -11,7 +11,7 @@ import {closeMenu, selectIsMenuOpen} from '@store/menu'
 import {useSelector, useDispatch} from '@store/index'
 import {useFirebaseAuth} from '@/firebase/Provider'
 import {config} from '@config/app'
-import {Tag} from '../Tag/Tag'
+import {Tag, WIP} from '@components/Tag/Tag'
 
 type SVGIcon = (props: React.SVGProps<SVGSVGElement>) => JSX.Element
 
@@ -82,9 +82,18 @@ export const Menu: React.FC = ({children}) => {
           </button>
         </div>
         <ul className="px-4 space-y-1 text-white font-bold text-lg flex-1 overflow-auto">
-          <MenuItem Icon={FireIcon}>Important</MenuItem>
-          <MenuItem Icon={CheckIcon}>Completed</MenuItem>
-          <MenuItem Icon={AdjustmentsIcon}>Preferences</MenuItem>
+          <MenuItem Icon={FireIcon}>
+            Important
+            <WIP className="ml-auto" />
+          </MenuItem>
+          <MenuItem Icon={CheckIcon}>
+            Completed
+            <WIP className="ml-auto" />
+          </MenuItem>
+          <MenuItem Icon={AdjustmentsIcon}>
+            Preferences
+            <WIP className="ml-auto" />
+          </MenuItem>
         </ul>
         <div className="mt-auto px-6 text-white font-semibold">
           Version:{' '}
