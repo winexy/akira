@@ -152,6 +152,7 @@ export const TaskView: React.FC = () => {
           <form onSubmit={onSubmit}>
             <input
               ref={todoInputRef}
+              value={todoTitle}
               placeholder="Add todo..."
               className={clsx(
                 'bg-gray-200 bg-opacity-50 px-4 py-2 rounded-md border shadow-none',
