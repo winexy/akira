@@ -1,10 +1,32 @@
 import React from 'react'
 import clsx from 'clsx'
-import {ChevronLeftIcon, LogoutIcon} from '@heroicons/react/solid'
+import {
+  AdjustmentsIcon,
+  ChevronLeftIcon,
+  FireIcon,
+  LogoutIcon,
+  CheckIcon
+} from '@heroicons/react/solid'
 import {closeMenu, selectIsMenuOpen} from '@store/menu'
 import {useSelector, useDispatch} from '@store/index'
 import {useFirebaseAuth} from '@/firebase/Provider'
 import {config} from '@config/app'
+
+type SVGIcon = (props: React.SVGProps<SVGSVGElement>) => JSX.Element
+
+const MenuItem: React.FC<{Icon: SVGIcon}> = ({Icon, children}) => (
+  <li
+    className={clsx(
+      'flex items-center',
+      'px-4 py-2 rounded select-none',
+      'transition ease-in duration-150',
+      'active:bg-gray-50 active:bg-opacity-10'
+    )}
+  >
+    <Icon className="mr-4 w-6 h-6 text-gray-400" />
+    {children}
+  </li>
+)
 
 export const Menu: React.FC = ({children}) => {
   const isOpened = useSelector(selectIsMenuOpen)
@@ -59,19 +81,9 @@ export const Menu: React.FC = ({children}) => {
           </button>
         </div>
         <ul className="px-4 space-y-1 text-white font-bold text-lg flex-1 overflow-auto">
-          {['Important', 'Completed', 'Preferences'].map((item, index) => (
-            <li
-              // eslint-disable-next-line react/no-array-index-key
-              key={index}
-              className={clsx(
-                'px-4 py-2 rounded',
-                'transition ease-in duration-150',
-                'active:bg-gray-50 active:bg-opacity-20'
-              )}
-            >
-              {item}
-            </li>
-          ))}
+          <MenuItem Icon={FireIcon}>Important</MenuItem>
+          <MenuItem Icon={CheckIcon}>Completed</MenuItem>
+          <MenuItem Icon={AdjustmentsIcon}>Preferences</MenuItem>
         </ul>
         <div className="mt-auto px-6 text-white font-semibold">
           Version:{' '}
