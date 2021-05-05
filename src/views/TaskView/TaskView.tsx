@@ -5,6 +5,7 @@ import {View} from '@views/View/View'
 import {useSelector, useDispatch} from '@store/index'
 import {selectTask, loadTask} from '@store/tasks'
 import isUndefined from 'lodash/fp/isUndefined'
+import {ClipboardCheckIcon} from '@heroicons/react/solid'
 
 export const TaskView: React.FC = () => {
   const {id} = useParams<{id: string}>()
@@ -23,7 +24,7 @@ export const TaskView: React.FC = () => {
 
   return (
     <View>
-      <div className="mt-6 px-6 space-x-2">
+      <div className="mt-4 px-4 space-x-2">
         <span
           className={clsx(
             'inline-block px-2 py-1',
@@ -49,7 +50,23 @@ export const TaskView: React.FC = () => {
           </span>
         )}
       </div>
-      <h1 className="mt-4 px-6 font-semibold text-2xl">{task.title}</h1>
+      <h1 className="mt-4 px-4 font-semibold text-2xl">{task.title}</h1>
+      <section className="mt-4 px-4">
+        <button
+          className={clsx(
+            'flex items-center justify-center',
+            'px-3 py-2 rounded-md shadow-sm',
+            'bg-gray-50 border border-gray-200',
+            'select-none',
+            'transition ease-in duration-150',
+            'active:shadow-inner',
+            'focus:outline-none'
+          )}
+        >
+          <ClipboardCheckIcon className="mr-2 w-4 h-4" />
+          Add Checklist
+        </button>
+      </section>
     </View>
   )
 }
