@@ -74,7 +74,7 @@ export const TaskView: React.FC = () => {
   const todoInputRef = useRef<HTMLInputElement | null>(null)
   const task = useSelector(selectTask(id))
   const dispatch = useDispatch()
-  const [isCheckListMode, setCheckListMode] = useState(false)
+  const [isTodoInputVisible, setIsTodoInputVisible] = useState(false)
   const [todoTitle, setTodoTitle] = useState('')
 
   useEffect(() => {
@@ -82,6 +82,12 @@ export const TaskView: React.FC = () => {
       dispatch(loadTask(id))
     }
   }, [id, task, dispatch])
+
+  useEffect(() => {
+    if (isTodoInputVisible) {
+      todoInputRef.current?.focus()
+    }
+  }, [isTodoInputVisible])
 
   if (isUndefined(task)) {
     return <View>loading...</View>
@@ -126,7 +132,7 @@ export const TaskView: React.FC = () => {
       </div>
       <h1 className="mt-4 px-4 font-semibold text-2xl">{task.title}</h1>
       <section className="mt-4 px-4">
-        {isEmpty(task.checklist) && !isCheckListMode ? (
+        {isEmpty(task.checklist) && !isTodoInputVisible ? (
           <button
             className={clsx(
               'flex items-center justify-center',
@@ -137,10 +143,7 @@ export const TaskView: React.FC = () => {
               'active:shadow-inner',
               'focus:outline-none'
             )}
-            onClick={() => {
-              setCheckListMode(true)
-              todoInputRef.current?.focus()
-            }}
+            onClick={() => setIsTodoInputVisible(true)}
           >
             <ClipboardCheckIcon className="mr-2 w-4 h-4" />
             Add Checklist
