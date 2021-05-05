@@ -48,7 +48,7 @@ function createTask(title: string, uid: string): TaskT {
     id: uuid(),
     title,
     author_uid: uid,
-    timestamp: Date.now(),
+    timestamp: Date.now() / 1000,
     completed: false,
     important: false
   }
