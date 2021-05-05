@@ -17,6 +17,7 @@ import isUndefined from 'lodash/fp/isUndefined'
 import isEmpty from 'lodash/fp/isEmpty'
 import {ClipboardCheckIcon, XIcon} from '@heroicons/react/solid'
 import {Checkbox} from '@components/Checkbox/Checkbox'
+import ContentLoader from 'react-content-loader'
 
 type ChecklistPropsT = {
   taskId: TaskIdT
@@ -92,7 +93,23 @@ export const TaskView: React.FC = () => {
   }, [isTodoInputVisible])
 
   if (isUndefined(task)) {
-    return <View>loading...</View>
+    return (
+      <View className="p-4">
+        <ContentLoader
+          speed={2}
+          width={320}
+          height={160}
+          viewBox="0 0 320 160"
+          backgroundColor="#ffffff"
+          foregroundColor="#e9e9e9"
+        >
+          <rect x="0" y="0" rx="4" ry="4" width="105" height="25" />
+          <rect x="120" y="0" rx="4" ry="4" width="105" height="25" />
+          <rect x="0" y="46" rx="4" ry="4" width="240" height="28" />
+          <rect x="0" y="92" rx="4" ry="4" width="200" height="42" />
+        </ContentLoader>
+      </View>
+    )
   }
 
   const onSubmit: FormEventHandler = event => {
