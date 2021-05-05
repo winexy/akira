@@ -3,7 +3,8 @@ import get from 'lodash/fp/get'
 import map from 'lodash/fp/map'
 import keyBy from 'lodash/fp/keyBy'
 import indexOf from 'lodash/fp/indexOf'
-import {TaskT, TaskIdT} from './types'
+import filter from 'lodash/fp/filter'
+import {TaskT, TaskIdT, TodoT, TodoIdT} from './types'
 
 type ChangePositionParams = {
   fromIndex: number
@@ -18,6 +19,26 @@ export type CompleteTaskPayloadT = {
 export type ImportantTaskPayloadT = {
   id: TaskIdT
   important: boolean
+}
+
+export type AddTodoPayloadT = {
+  taskId: TaskIdT
+  todoTitle: string
+}
+
+export type RemoveTodoPayloadT = {
+  taskId: TaskIdT
+  todoId: TodoIdT
+}
+
+export type TodoAddedPayloadT = {
+  taskId: TaskIdT
+  todo: TodoT
+}
+
+export type TodoRemovedPayloadT = {
+  taskId: TaskIdT
+  todoId: TodoIdT
 }
 
 interface TasksState {
@@ -61,6 +82,21 @@ const tasksSlice = createSlice({
     },
     setTaskImportant(draft, {payload}: PayloadAction<ImportantTaskPayloadT>) {
       draft.byId[payload.id].important = payload.important
+    },
+    todoAdded(draft, action: PayloadAction<TodoAddedPayloadT>) {
+      const {taskId, todo} = action.payload
+      const task = draft.byId[taskId]
+      const newChecklist = task.checklist || []
+
+      newChecklist.push(todo)
+
+      task.checklist = newChecklist
+    },
+    todoRemoved(draft, action: PayloadAction<TodoRemovedPayloadT>) {
+      const {taskId, todoId} = action.payload
+      const task = draft.byId[taskId]
+
+      task.checklist = filter(todo => todo.id !== todoId, task.checklist)
     }
   }
 })
@@ -70,6 +106,8 @@ export const loadTask = createAction<TaskIdT>('loadTask')
 export const addTask = createAction<string>('addTask')
 export const toggleTask = createAction<TaskIdT>('toggleTask')
 export const toggleImportant = createAction<TaskIdT>('toggleImportant')
+export const addTodo = createAction<AddTodoPayloadT>('addTodo')
+export const removeTodo = createAction<RemoveTodoPayloadT>('removeTodo')
 
 export const {
   removeTask,
@@ -78,7 +116,9 @@ export const {
   changeTaskPosition,
   setTasks,
   setTaskById,
-  setTaskImportant
+  setTaskImportant,
+  todoAdded,
+  todoRemoved
 } = tasksSlice.actions
 
 export const tasksReducer = tasksSlice.reducer

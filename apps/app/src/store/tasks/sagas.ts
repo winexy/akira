@@ -15,10 +15,14 @@ import {
   toggleTask,
   toggleImportant,
   setTaskImportant,
-  setTaskById
+  setTaskById,
+  addTodo,
+  todoAdded,
+  todoRemoved,
+  removeTodo
 } from './slice'
-import {TaskT} from './types'
-import {selectTask} from './selectors'
+import {TaskT, TodoT} from './types'
+import {selectTask, selectTaskTodo} from './selectors'
 
 function* loadTasksSaga() {
   const tasks: LazyThen<typeof TaskService.getTasks> = yield call(
@@ -40,6 +44,8 @@ function* loadTaskSaga({payload: id}: ReturnType<typeof loadTask>) {
 
   if (task.isRight()) {
     yield put(setTaskById(task.value))
+  } else {
+    window.console.error(task.value)
   }
 }
 
@@ -113,6 +119,54 @@ function* toggleImportantSaga({
   }
 }
 
+function createTodo(title: string): TodoT {
+  return {
+    id: uuid(),
+    title,
+    completed: false
+  }
+}
+
+function* addTodoSaga(action: ReturnType<typeof addTodo>) {
+  const {taskId, todoTitle} = action.payload
+  const todo = createTodo(todoTitle)
+
+  yield put(todoAdded({taskId, todo}))
+
+  const result: LazyThen<typeof TaskService.addTodo> = yield call(
+    TaskService.addTodo,
+    taskId,
+    todo
+  )
+
+  if (result.isLeft()) {
+    yield put(todoRemoved({taskId, todoId: todo.id}))
+  }
+}
+
+function* removeTodoSaga(action: ReturnType<typeof removeTodo>) {
+  const {taskId, todoId} = action.payload
+  const todo: RT2<typeof selectTaskTodo> = yield select(
+    selectTaskTodo(taskId, todoId)
+  )
+
+  if (isUndefined(todo)) {
+    return
+  }
+
+  yield put(todoRemoved({taskId, todoId}))
+
+  const result: LazyThen<typeof TaskService.removeTodo> = yield call(
+    TaskService.removeTodo,
+    taskId,
+    todo
+  )
+
+  if (result.isLeft()) {
+    yield put(todoAdded({taskId, todo}))
+  }
+}
+
 export default function* saga() {
   yield takeEvery(loadTasks.toString(), loadTasksSaga)
   yield takeEvery(loadTask.toString(), loadTaskSaga)
@@ -120,4 +174,6 @@ export default function* saga() {
   yield takeEvery(removeTask.toString(), removeTaskSaga)
   yield takeEvery(toggleTask.toString(), toggleTaskSaga)
   yield takeEvery(toggleImportant.toString(), toggleImportantSaga)
+  yield takeEvery(addTodo.toString(), addTodoSaga)
+  yield takeEvery(removeTodo.toString(), removeTodoSaga)
 }
