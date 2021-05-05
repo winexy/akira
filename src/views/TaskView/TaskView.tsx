@@ -24,6 +24,7 @@ import isEmpty from 'lodash/fp/isEmpty'
 import {ClipboardCheckIcon, XIcon} from '@heroicons/react/solid'
 import {Checkbox} from '@components/Checkbox/Checkbox'
 import ContentLoader from 'react-content-loader'
+import {Tag, WIP} from '@/components/Tag/Tag'
 
 type ChecklistPropsT = {
   taskId: TaskIdT
@@ -132,30 +133,10 @@ export const TaskView: React.FC = () => {
   return (
     <View>
       <div className="px-4 space-x-2">
-        <span
-          className={clsx(
-            'inline-block px-2 py-1',
-            'font-bold text-xs text-white',
-            'rounded shadow-md border',
-            task.completed
-              ? 'bg-green-500 border-green-600'
-              : 'bg-gray-500 border-gray-600'
-          )}
-        >
+        <Tag variant={task.completed ? 'green' : 'gray'}>
           {task.completed ? '' : 'not '}completed
-        </span>
-        {task.important && (
-          <span
-            className={clsx(
-              'inline-block px-2 py-1',
-              'font-bold text-xs text-white',
-              'rounded shadow-md border',
-              'bg-red-500 border-red-600'
-            )}
-          >
-            important
-          </span>
-        )}
+        </Tag>
+        {task.important && <Tag variant="red">important</Tag>}
       </div>
       <h1 className="mt-4 px-4 font-semibold text-2xl">{task.title}</h1>
       <div className="mt-4 px-4">
@@ -166,6 +147,10 @@ export const TaskView: React.FC = () => {
           {createdAt}
         </time>
       </div>
+      <section className="mt-4 px-4 flex items-center">
+        <WIP className="mr-2" />
+        Tap to add description
+      </section>
       <section className="mt-4 px-4">
         {isEmpty(task.checklist) && !isTodoInputVisible ? (
           <button

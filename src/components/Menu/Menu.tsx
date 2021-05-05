@@ -11,6 +11,7 @@ import {closeMenu, selectIsMenuOpen} from '@store/menu'
 import {useSelector, useDispatch} from '@store/index'
 import {useFirebaseAuth} from '@/firebase/Provider'
 import {config} from '@config/app'
+import {Tag} from '../Tag/Tag'
 
 type SVGIcon = (props: React.SVGProps<SVGSVGElement>) => JSX.Element
 
@@ -87,9 +88,9 @@ export const Menu: React.FC = ({children}) => {
         </ul>
         <div className="mt-auto px-6 text-white font-semibold">
           Version:{' '}
-          <span className="ml-1 bg-indigo-500 rounded px-2 py-1 shadow-md">
+          <Tag variant="purple" className="ml-2">
             {config.app.version}
-          </span>
+          </Tag>
         </div>
         <div className="p-4">
           <button
