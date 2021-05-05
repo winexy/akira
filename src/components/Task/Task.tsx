@@ -119,8 +119,6 @@ export const Task: React.FC<TaskProps> = ({
     hover: onDragHover(dropRef, index, onOrderChange)
   })
 
-  const createdAt = format(fromUnixTime(task.timestamp), 'dd.MM.yy')
-
   connectDropTarget(dropRef)
   connectDragSource(dragRef)
 
@@ -175,7 +173,7 @@ export const Task: React.FC<TaskProps> = ({
       <div
         className={clsx(
           'flex items-center',
-          'bg-white px-4 py-2 text-lg text-black',
+          'bg-white p-4 text-lg text-black',
           'rounded-md',
           'transition ease-in duration-150',
           'active:bg-gray-200',
@@ -191,7 +189,6 @@ export const Task: React.FC<TaskProps> = ({
         />
         <Link to={`/tasks/${task.id}`} className="flex-1 truncate mx-2">
           {task.title}
-          <time className="block text-xs text-gray-500">{createdAt}</time>
         </Link>
         <button
           ref={dragRef as LegacyRef<HTMLButtonElement>}
