@@ -45,7 +45,7 @@ export function MainView() {
   }
 
   return (
-    <View className="bg-gray-100 flex-1 pt-4">
+    <View className="bg-gray-100 flex-1">
       <TaskForm
         ref={formRef}
         title={title}
