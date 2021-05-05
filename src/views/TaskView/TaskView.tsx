@@ -1,4 +1,10 @@
-import React, {FormEventHandler, useEffect, useRef, useState} from 'react'
+import React, {
+  FormEventHandler,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState
+} from 'react'
 import clsx from 'clsx'
 import {useParams} from 'react-router'
 import {View} from '@views/View/View'
@@ -86,7 +92,7 @@ export const TaskView: React.FC = () => {
     }
   }, [id, task, dispatch])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (isTodoInputVisible) {
       todoInputRef.current?.focus()
     }
