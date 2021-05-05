@@ -125,7 +125,7 @@ export const TaskView: React.FC = () => {
 
   return (
     <View>
-      <div className="mt-4 px-4 space-x-2">
+      <div className="px-4 space-x-2">
         <span
           className={clsx(
             'inline-block px-2 py-1',
