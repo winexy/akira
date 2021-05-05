@@ -3,6 +3,8 @@ import clsx from 'clsx'
 import {useParams} from 'react-router'
 import {View} from '@views/View/View'
 import {useSelector, useDispatch} from '@store/index'
+import fromUnixTime from 'date-fns/fromUnixTime'
+import format from 'date-fns/format'
 import {
   selectTask,
   loadTask,
@@ -102,6 +104,8 @@ export const TaskView: React.FC = () => {
     }
   }
 
+  const createdAt = format(fromUnixTime(task.timestamp), 'd LLLL yyyy')
+
   return (
     <View>
       <div className="mt-4 px-4 space-x-2">
@@ -131,6 +135,14 @@ export const TaskView: React.FC = () => {
         )}
       </div>
       <h1 className="mt-4 px-4 font-semibold text-2xl">{task.title}</h1>
+      <div className="mt-4 px-4">
+        <time
+          dateTime={fromUnixTime(task.timestamp).toTimeString()}
+          className="text-gray-500"
+        >
+          {createdAt}
+        </time>
+      </div>
       <section className="mt-4 px-4">
         {isEmpty(task.checklist) && !isTodoInputVisible ? (
           <button
