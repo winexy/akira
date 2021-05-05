@@ -1,7 +1,8 @@
 import size from 'lodash/fp/size'
 import filter from 'lodash/fp/filter'
+import find from 'lodash/fp/find'
 import {RootState} from '..'
-import {TaskIdT} from './types'
+import {TaskIdT, TodoIdT} from './types'
 
 export const selectTasks = (state: RootState) => state.tasks.list
 
@@ -10,3 +11,10 @@ export const selectTask = (id: TaskIdT) => (state: RootState) =>
 
 export const selectCompletedTasksCount = (state: RootState) =>
   size(filter(id => state.tasks.byId[id].completed, state.tasks.list))
+
+export const selectTaskTodo = (taskId: TaskIdT, todoId: TodoIdT) => (
+  state: RootState
+) => {
+  const {checklist} = state.tasks.byId[taskId]
+  return find({id: todoId}, checklist)
+}
