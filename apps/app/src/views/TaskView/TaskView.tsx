@@ -39,7 +39,7 @@ const Checklist: React.FC<ChecklistPropsT> = ({taskId, checklist}) => {
         <li
           key={todo.id}
           className={clsx(
-            'flex items-center px-4 py-2',
+            'flex items-center px-4 py-1',
             'select-none',
             'transitino ease-in duration-150',
             'active:bg-gray-200',
@@ -54,7 +54,7 @@ const Checklist: React.FC<ChecklistPropsT> = ({taskId, checklist}) => {
           {todo.title}
           <button
             className={clsx(
-              'ml-auto -mr-2 w-8 h-8',
+              'ml-auto -mr-3 w-10 h-10',
               'flex items-center justify-center',
               'text-red-500 rounded',
               'transition ease-in duration-150',
