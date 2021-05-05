@@ -126,7 +126,7 @@ export const TaskView: React.FC = () => {
       </div>
       <h1 className="mt-4 px-4 font-semibold text-2xl">{task.title}</h1>
       <section className="mt-4 px-4">
-        {isUndefined(task.checklist) && !isCheckListMode ? (
+        {isEmpty(task.checklist) && !isCheckListMode ? (
           <button
             className={clsx(
               'flex items-center justify-center',
@@ -151,7 +151,7 @@ export const TaskView: React.FC = () => {
               ref={todoInputRef}
               placeholder="Add todo..."
               className={clsx(
-                'bg-gray-200 bg-opacity-50 bg-white px-4 py-2 rounded-md border shadow-none',
+                'bg-gray-200 bg-opacity-50 px-4 py-2 rounded-md border shadow-none',
                 'appearance-none border border-gray-300',
                 'focus:outline-none focus:border-indigo-500'
               )}
