@@ -195,6 +195,7 @@ export const TaskView: React.FC = () => {
                 'focus:outline-none focus:border-indigo-500'
               )}
               onInput={e => setTodoTitle((e.target as HTMLInputElement).value)}
+              onBlur={() => setIsTodoInputVisible(false)}
             />
           </form>
         )}
