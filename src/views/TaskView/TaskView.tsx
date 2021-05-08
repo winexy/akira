@@ -25,6 +25,7 @@ import {ClipboardCheckIcon, XIcon} from '@heroicons/react/solid'
 import {Checkbox} from '@components/Checkbox/Checkbox'
 import ContentLoader from 'react-content-loader'
 import {Tag, WIP} from '@/components/Tag/Tag'
+import {api} from '@lib/api'
 
 type ChecklistPropsT = {
   taskId: TaskIdT
@@ -90,6 +91,8 @@ export const TaskView: React.FC = () => {
   useEffect(() => {
     if (isUndefined(task)) {
       dispatch(loadTask(id))
+
+      api.get().then(window.console.log)
     }
   }, [id, task, dispatch])
 

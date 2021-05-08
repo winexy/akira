@@ -1,8 +1,9 @@
 import {auth} from '@/firebase/firebase'
 import axios from 'axios'
+import {config as appConfig} from '@config/app'
 
 const api = axios.create({
-  baseURL: import.meta.env.AKIRA_API
+  baseURL: appConfig.api.url
 })
 
 api.interceptors.request.use(async config => {
