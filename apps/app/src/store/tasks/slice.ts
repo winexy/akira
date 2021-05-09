@@ -56,7 +56,6 @@ const tasksSlice = createSlice({
   initialState,
   reducers: {
     setTasks(draft, action: PayloadAction<TaskT[]>) {
-      console.log(action)
       draft.byId = keyBy('id', action.payload)
       draft.list = map(get('id'), action.payload)
     },
