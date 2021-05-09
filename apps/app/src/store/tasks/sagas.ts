@@ -35,17 +35,15 @@ function* loadTasksSaga() {
 }
 
 function* loadTaskSaga({payload: id}: ReturnType<typeof loadTask>) {
-  const result: LazyThen<typeof TaskService.getTask> = yield call(
-    TaskService.getTask,
+  const result: LazyThen<typeof akira.tasks.one> = yield call(
+    akira.tasks.one,
     id
   )
 
-  const task = result.chain(fromMaybe)
-
-  if (task.isRight()) {
-    yield put(setTaskById(task.value))
+  if (result.isRight()) {
+    yield put(setTaskById(result.value))
   } else {
-    window.console.error(task.value)
+    window.console.error(result.value)
   }
 }
 
