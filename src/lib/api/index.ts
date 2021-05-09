@@ -3,7 +3,9 @@ import axios from 'axios'
 import {config as appConfig} from '@config/app'
 
 const api = axios.create({
-  baseURL: appConfig.api.url
+  baseURL: appConfig.api.url.endsWith('/')
+    ? appConfig.api.url
+    : `${appConfig.api.url}/`
 })
 
 api.interceptors.request.use(async config => {
