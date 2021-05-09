@@ -81,17 +81,13 @@ function* toggleTaskSaga({payload: id}: ReturnType<typeof toggleTask>) {
     return
   }
 
-  const prevState = task.is_completed
-  const nextState = !prevState
+  const result: LazyThen<typeof akira.tasks.completeToggle> = yield call(
+    akira.tasks.completeToggle,
+    id
+  )
 
-  yield put(setTaskCompleted({id, completed: nextState}))
-
-  const result: LazyThen<
-    typeof TaskService.updateTask
-  > = yield call(TaskService.updateTask, id, {is_completed: nextState})
-
-  if (result.isLeft()) {
-    yield put(setTaskCompleted({id, completed: prevState}))
+  if (result.isRight()) {
+    yield put(setTaskCompleted({id, completed: result.value.is_completed}))
   }
 }
 
