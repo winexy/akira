@@ -9,8 +9,8 @@ import clsx from 'clsx'
 import {useParams} from 'react-router'
 import {View} from '@views/View/View'
 import {useSelector, useDispatch} from '@store/index'
-import fromUnixTime from 'date-fns/fromUnixTime'
 import format from 'date-fns/format'
+import parseISO from 'date-fns/parseISO'
 import {
   selectTask,
   loadTask,
@@ -128,22 +128,19 @@ export const TaskView: React.FC = () => {
     }
   }
 
-  const createdAt = format(fromUnixTime(task.timestamp), 'd LLLL yyyy')
+  const createdAt = format(parseISO(task.created_at), 'd LLLL yyyy')
 
   return (
     <View>
       <div className="px-4 space-x-2">
-        <Tag variant={task.completed ? 'green' : 'gray'}>
-          {task.completed ? '' : 'not '}completed
+        <Tag variant={task.is_completed ? 'green' : 'gray'}>
+          {task.is_completed ? '' : 'not '}completed
         </Tag>
-        {task.important && <Tag variant="red">important</Tag>}
+        {task.is_important && <Tag variant="red">important</Tag>}
       </div>
       <h1 className="mt-4 px-4 font-semibold text-2xl">{task.title}</h1>
       <div className="mt-4 px-4">
-        <time
-          dateTime={fromUnixTime(task.timestamp).toTimeString()}
-          className="text-gray-500"
-        >
+        <time dateTime={task.created_at} className="text-gray-500">
           {createdAt}
         </time>
       </div>

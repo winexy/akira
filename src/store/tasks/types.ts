@@ -1,12 +1,5 @@
-import {
-  object,
-  string,
-  number,
-  boolean,
-  Infer,
-  array,
-  optional
-} from 'superstruct'
+/* eslint-disable camelcase */
+import {object, string, boolean, Infer, array, optional} from 'superstruct'
 
 export const Todo = object({
   id: string(),
@@ -20,9 +13,10 @@ export const Task = object({
   id: string(),
   author_uid: string(),
   title: string(),
-  timestamp: number(),
-  completed: boolean(),
-  important: boolean(),
+  created_at: string(),
+  updated_at: string(),
+  is_completed: boolean(),
+  is_important: boolean(),
   checklist: optional(array(Todo))
 })
 
@@ -33,3 +27,8 @@ export type TaskIdT = TaskT['id']
 export type TodoT = Infer<typeof Todo>
 export type TodoIdT = TodoT['id']
 export type CheckListT = Infer<typeof CheckList>
+
+export type CreateTaskDto = {
+  title: string
+  author_uid: string
+}

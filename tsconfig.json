@@ -25,6 +25,7 @@
       "@hooks/*": ["./src/hooks/*"],
       "@views/*": ["./src/views/*"],
       "@store/*": ["./src/store/*"],
+      "@lib/*": ["./src/lib/*"],
       "@config/*": ["./src/config/*"]
     }
   },
