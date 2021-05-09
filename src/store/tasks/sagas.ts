@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import {call, put, select, takeEvery} from 'redux-saga/effects'
 import {v4 as uuid} from 'uuid'
 import {auth} from '@/firebase/firebase'
@@ -21,13 +22,12 @@ import {
   todoRemoved,
   removeTodo
 } from './slice'
-import {TaskT, TodoT} from './types'
+import {CreateTaskDto, TodoT} from './types'
 import {selectTask, selectTaskTodo} from './selectors'
+import {akira} from '../../lib/akira/index'
 
 function* loadTasksSaga() {
-  const tasks: LazyThen<typeof TaskService.getTasks> = yield call(
-    TaskService.getTasks
-  )
+  const tasks: LazyThen<typeof akira.tasks.all> = yield call(akira.tasks.all)
 
   if (tasks.isRight()) {
     yield put(setTasks(tasks.value))
@@ -49,24 +49,25 @@ function* loadTaskSaga({payload: id}: ReturnType<typeof loadTask>) {
   }
 }
 
-function createTask(title: string, uid: string): TaskT {
+function createTaskDto(title: string, uid: string): CreateTaskDto {
   return {
-    id: uuid(),
     title,
-    author_uid: uid,
-    timestamp: Date.now() / 1000,
-    completed: false,
-    important: false
+    author_uid: uid
   }
 }
 
 function* addTaskSaga(action: ReturnType<typeof addTask>) {
   const title = action.payload
   const {uid} = auth.currentUser!
-  const task = createTask(title, uid)
 
-  yield put(prependTask(task))
-  yield call(TaskService.saveTask, task)
+  const result: LazyThen<typeof akira.tasks.createTask> = yield call(
+    akira.tasks.createTask,
+    createTaskDto(title, uid)
+  )
+
+  if (result.isRight()) {
+    yield put(prependTask(result.value))
+  }
 }
 
 function* removeTaskSaga(action: ReturnType<typeof removeTask>) {
@@ -82,14 +83,14 @@ function* toggleTaskSaga({payload: id}: ReturnType<typeof toggleTask>) {
     return
   }
 
-  const prevState = task.completed
+  const prevState = task.is_completed
   const nextState = !prevState
 
   yield put(setTaskCompleted({id, completed: nextState}))
 
   const result: LazyThen<
     typeof TaskService.updateTask
-  > = yield call(TaskService.updateTask, id, {completed: nextState})
+  > = yield call(TaskService.updateTask, id, {is_completed: nextState})
 
   if (result.isLeft()) {
     yield put(setTaskCompleted({id, completed: prevState}))
@@ -105,14 +106,14 @@ function* toggleImportantSaga({
     return
   }
 
-  const prevState = task.important
+  const prevState = task.is_important
   const nextState = !prevState
 
   yield put(setTaskImportant({id, important: nextState}))
 
   const result: LazyThen<
     typeof TaskService.updateTask
-  > = yield call(TaskService.updateTask, id, {important: nextState})
+  > = yield call(TaskService.updateTask, id, {is_important: nextState})
 
   if (result.isLeft()) {
     yield put(setTaskImportant({id, important: prevState}))
