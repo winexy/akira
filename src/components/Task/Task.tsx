@@ -158,7 +158,7 @@ export const Task: React.FC<TaskProps> = ({
               'transition ease-in duration-100',
               'active:text-2xl',
               'focus:outline-none',
-              task.important
+              task.is_important
                 ? 'bg-yellow-500 active:bg-yellow-400'
                 : 'bg-gray-400 bg-opacity-70 active:bg-opacity-100'
             )}
@@ -177,13 +177,13 @@ export const Task: React.FC<TaskProps> = ({
           'transition ease-in duration-150',
           'active:bg-gray-200',
           {
-            'line-through text-gray-400': task.completed
+            'line-through text-gray-400': task.is_completed
           }
         )}
       >
         <Checkbox
           className="mr-3"
-          isChecked={task.completed}
+          isChecked={task.is_completed}
           onChange={() => onCheck(task.id)}
         />
         <Link to={`/tasks/${task.id}`} className="flex-1 truncate mx-2">

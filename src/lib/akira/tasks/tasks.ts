@@ -5,10 +5,14 @@ import {TaskT, CreateTaskDto} from '@store/tasks'
 export function tasks(api: AxiosInstance) {
   return {
     all() {
-      return either<AxiosError, TaskT[]>(api.get('/tasks'))
+      return either<AxiosError, TaskT[]>(
+        api.get('/tasks').then(res => res.data)
+      )
     },
     createTask(data: CreateTaskDto) {
-      return either<AxiosError, TaskT>(api.post('/tasks', data))
+      return either<AxiosError, TaskT>(
+        api.post('/tasks', data).then(res => res.data)
+      )
     }
   }
 }
