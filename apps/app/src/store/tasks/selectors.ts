@@ -10,7 +10,7 @@ export const selectTask = (id: TaskIdT) => (state: RootState) =>
   state.tasks.byId[id]
 
 export const selectCompletedTasksCount = (state: RootState) =>
-  size(filter(id => state.tasks.byId[id].completed, state.tasks.list))
+  size(filter(id => state.tasks.byId[id].is_completed, state.tasks.list))
 
 export const selectTaskTodo = (taskId: TaskIdT, todoId: TodoIdT) => (
   state: RootState
