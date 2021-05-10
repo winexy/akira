@@ -16,10 +16,18 @@ export function tasks(api: AxiosInstance) {
     one(id: TaskT['id']) {
       return either<AxiosError, TaskT>(api.get(`tasks/${id}`).then(unwrap))
     },
-    completeToggle(id: TaskT['id']) {
+    toggleCompleted(id: TaskT['id']) {
       return either<AxiosError, TaskT>(
         api.patch(`tasks/${id}/complete/toggle`).then(unwrap)
       )
+    },
+    toggleImportant(id: TaskT['id']) {
+      return either<AxiosError, TaskT>(
+        api.patch(`tasks/${id}/important/toggle`).then(unwrap)
+      )
+    },
+    delete(id: TaskT['id']) {
+      return either<AxiosError, true>(api.delete(`tasks/${id}`).then(unwrap))
     }
   }
 }
