@@ -1,15 +1,14 @@
-/* eslint-disable camelcase */
 import {call, put, select, takeEvery} from 'redux-saga/effects'
 import {v4 as uuid} from 'uuid'
 import {auth} from '@/firebase/firebase'
 import isUndefined from 'lodash/fp/isUndefined'
-import {fromMaybe} from '@/utils/either'
 import {TaskService} from './service'
 import {
   addTask,
   loadTasks,
   loadTask,
   prependTask,
+  taskRemoved,
   removeTask,
   setTaskCompleted,
   setTasks,
@@ -71,7 +70,14 @@ function* addTaskSaga(action: ReturnType<typeof addTask>) {
 function* removeTaskSaga(action: ReturnType<typeof removeTask>) {
   const id = action.payload
 
-  yield call(TaskService.removeTask, id)
+  const result: LazyThen<typeof akira.tasks.delete> = yield call(
+    akira.tasks.delete,
+    id
+  )
+
+  if (result.isRight()) {
+    yield put(taskRemoved(id))
+  }
 }
 
 function* toggleTaskSaga({payload: id}: ReturnType<typeof toggleTask>) {
@@ -81,8 +87,8 @@ function* toggleTaskSaga({payload: id}: ReturnType<typeof toggleTask>) {
     return
   }
 
-  const result: LazyThen<typeof akira.tasks.completeToggle> = yield call(
-    akira.tasks.completeToggle,
+  const result: LazyThen<typeof akira.tasks.toggleCompleted> = yield call(
+    akira.tasks.toggleCompleted,
     id
   )
 
@@ -100,17 +106,13 @@ function* toggleImportantSaga({
     return
   }
 
-  const prevState = task.is_important
-  const nextState = !prevState
+  const result: LazyThen<typeof akira.tasks.toggleImportant> = yield call(
+    akira.tasks.toggleImportant,
+    id
+  )
 
-  yield put(setTaskImportant({id, important: nextState}))
-
-  const result: LazyThen<
-    typeof TaskService.updateTask
-  > = yield call(TaskService.updateTask, id, {is_important: nextState})
-
-  if (result.isLeft()) {
-    yield put(setTaskImportant({id, important: prevState}))
+  if (result.isRight()) {
+    yield put(setTaskImportant({id, important: true}))
   }
 }
 

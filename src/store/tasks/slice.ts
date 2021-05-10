@@ -69,7 +69,7 @@ const tasksSlice = createSlice({
     setTaskCompleted(draft, {payload}: PayloadAction<CompleteTaskPayloadT>) {
       draft.byId[payload.id].is_completed = payload.completed
     },
-    removeTask(draft, {payload: id}: PayloadAction<TaskIdT>) {
+    taskRemoved(draft, {payload: id}: PayloadAction<TaskIdT>) {
       delete draft.byId[id]
       draft.list.splice(indexOf(id, draft.list), 1)
     },
@@ -104,13 +104,14 @@ const tasksSlice = createSlice({
 export const loadTasks = createAction('loadTasks')
 export const loadTask = createAction<TaskIdT>('loadTask')
 export const addTask = createAction<string>('addTask')
+export const removeTask = createAction<TaskIdT>('removeTask')
 export const toggleTask = createAction<TaskIdT>('toggleTask')
 export const toggleImportant = createAction<TaskIdT>('toggleImportant')
 export const addTodo = createAction<AddTodoPayloadT>('addTodo')
 export const removeTodo = createAction<RemoveTodoPayloadT>('removeTodo')
 
 export const {
-  removeTask,
+  taskRemoved,
   prependTask,
   setTaskCompleted,
   changeTaskPosition,
