@@ -45,7 +45,8 @@ export const Menu: React.FC = ({children}) => {
           'transition ease-out duration-300',
           {
             '-translate-x-full': !isOpened
-          }
+          },
+          isOpened ? 'delay-100' : 'delay-75'
         )}
         style={{
           maxWidth: '90vw'
@@ -126,7 +127,6 @@ export const Menu: React.FC = ({children}) => {
       <div
         className={clsx(
           'transform flex flex-col',
-          'transition ease-in duration-150',
           'bg-gray-100',
           'transition-transform ease-in duration-300',
           isOpened ? 'max-vh-full' : 'vh-full',
