@@ -66,9 +66,6 @@ const tasksSlice = createSlice({
       draft.byId[task.id] = task
       draft.list.unshift(task.id)
     },
-    setTaskCompleted(draft, {payload}: PayloadAction<CompleteTaskPayloadT>) {
-      draft.byId[payload.id].is_completed = payload.completed
-    },
     taskRemoved(draft, {payload: id}: PayloadAction<TaskIdT>) {
       delete draft.byId[id]
       draft.list.splice(indexOf(id, draft.list), 1)
@@ -80,8 +77,8 @@ const tasksSlice = createSlice({
       state.list.splice(fromIndex, 1)
       state.list.splice(toIndex, 0, id)
     },
-    setTaskImportant(draft, {payload}: PayloadAction<ImportantTaskPayloadT>) {
-      draft.byId[payload.id].is_important = payload.important
+    taskUpdated(draft, {payload}: PayloadAction<TaskT>) {
+      draft.byId[payload.id] = payload
     },
     todoAdded(draft, action: PayloadAction<TodoAddedPayloadT>) {
       const {taskId, todo} = action.payload
@@ -112,12 +109,11 @@ export const removeTodo = createAction<RemoveTodoPayloadT>('removeTodo')
 
 export const {
   taskRemoved,
+  taskUpdated,
   prependTask,
-  setTaskCompleted,
   changeTaskPosition,
   setTasks,
   setTaskById,
-  setTaskImportant,
   todoAdded,
   todoRemoved
 } = tasksSlice.actions

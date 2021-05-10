@@ -10,16 +10,15 @@ import {
   prependTask,
   taskRemoved,
   removeTask,
-  setTaskCompleted,
   setTasks,
   toggleTask,
   toggleImportant,
-  setTaskImportant,
   setTaskById,
   addTodo,
   todoAdded,
   todoRemoved,
-  removeTodo
+  removeTodo,
+  taskUpdated
 } from './slice'
 import {CreateTaskDto, TodoT} from './types'
 import {selectTask, selectTaskTodo} from './selectors'
@@ -93,7 +92,7 @@ function* toggleTaskSaga({payload: id}: ReturnType<typeof toggleTask>) {
   )
 
   if (result.isRight()) {
-    yield put(setTaskCompleted({id, completed: result.value.is_completed}))
+    yield put(taskUpdated(result.value))
   }
 }
 
@@ -112,7 +111,7 @@ function* toggleImportantSaga({
   )
 
   if (result.isRight()) {
-    yield put(setTaskImportant({id, important: true}))
+    yield put(taskUpdated(result.value))
   }
 }
 
