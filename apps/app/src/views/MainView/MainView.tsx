@@ -13,14 +13,15 @@ import {
   addTask,
   loadTasks
 } from '@store/tasks'
-import {selectIsMenuOpen} from '@store/menu'
+import {$isMenuOpen} from '@store/menu'
 import clsx from 'clsx'
+import {useStore} from 'effector-react'
 
 export function MainView() {
   const formRef = useRef<TaskFormRef>(null)
   const [title, setTitle] = useState('')
   const [isAddButtonVisible, setIsAddButtonVisible] = useState(true)
-  const isMenuOpened = useSelector(selectIsMenuOpen)
+  const isMenuOpen = useStore($isMenuOpen)
   const dispatch = useDispatch()
   const completedTasksCount = useSelector(selectCompletedTasksCount)
   const tasks = useSelector(selectTasks)
@@ -90,7 +91,7 @@ export function MainView() {
                 active:scale-95
                 focus:outline-none
               `,
-              isMenuOpened ? 'rounded-2xl' : 'rounded-md'
+              isMenuOpen ? 'rounded-2xl' : 'rounded-md'
             )}
             onClick={onAddItemIntent}
           >
