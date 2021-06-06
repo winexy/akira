@@ -7,11 +7,12 @@ import {
   LogoutIcon,
   CheckIcon
 } from '@heroicons/react/solid'
-import {closeMenu, selectIsMenuOpen} from '@store/menu'
-import {useSelector, useDispatch} from '@store/index'
+import {closeMenu, $isMenuOpen} from '@store/menu'
+import {useDispatch} from '@store/index'
 import {useFirebaseAuth} from '@/firebase/Provider'
 import {config} from '@config/app'
 import {Tag, WIP} from '@components/Tag/Tag'
+import {useStore} from 'effector-react'
 
 type SVGIcon = (props: React.SVGProps<SVGSVGElement>) => JSX.Element
 
@@ -30,7 +31,7 @@ const MenuItem: React.FC<{Icon: SVGIcon}> = ({Icon, children}) => (
 )
 
 export const Menu: React.FC = ({children}) => {
-  const isOpened = useSelector(selectIsMenuOpen)
+  const isOpen = useStore($isMenuOpen)
   const dispatch = useDispatch()
   const auth = useFirebaseAuth()
 
@@ -44,9 +45,9 @@ export const Menu: React.FC = ({children}) => {
           'transform',
           'transition ease-out duration-300',
           {
-            '-translate-x-full': !isOpened
+            '-translate-x-full': !isOpen
           },
-          isOpened ? 'delay-100' : 'delay-75'
+          isOpen ? 'delay-100' : 'delay-75'
         )}
         style={{
           maxWidth: '90vw'
@@ -77,7 +78,7 @@ export const Menu: React.FC = ({children}) => {
               active:bg-gray-50 active:bg-opacity-30
               focus:outline-none
             "
-            onClick={() => dispatch(closeMenu())}
+            onClick={() => closeMenu()}
           >
             <ChevronLeftIcon className="w-8 h-8" />
           </button>
@@ -116,7 +117,7 @@ export const Menu: React.FC = ({children}) => {
             "
             onClick={() => {
               auth.logout()
-              dispatch(closeMenu())
+              closeMenu()
             }}
           >
             <LogoutIcon className="w-6 h-6 mr-2" />
@@ -129,14 +130,13 @@ export const Menu: React.FC = ({children}) => {
           'transform flex flex-col',
           'bg-gray-100',
           'transition-transform ease-in duration-300',
-          isOpened ? 'max-vh-full' : 'vh-full',
+          isOpen ? 'max-vh-full' : 'vh-full',
           {
-            'scale-90 rounded-3xl shadow-2xl h-screen overflow-hidden pointer-events-none': isOpened
+            'scale-90 rounded-3xl shadow-2xl h-screen overflow-hidden pointer-events-none': isOpen
           }
         )}
         style={{
-          // @ts-expect-error
-          '--tw-translate-x': isOpened ? '85%' : 'none'
+          '--tw-translate-x': isOpen ? '85%' : 'none'
         }}
       >
         {children}

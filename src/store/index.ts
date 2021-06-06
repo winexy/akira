@@ -7,15 +7,13 @@ import {
 import createSagaMiddleware from 'redux-saga'
 import {all} from 'redux-saga/effects'
 import {tasksReducer, tasksSaga} from './tasks'
-import {menuReducer} from './menu'
 
 const sagaMiddleware = createSagaMiddleware()
 
 export const store = configureStore({
   devTools: true,
   reducer: {
-    tasks: tasksReducer,
-    menu: menuReducer
+    tasks: tasksReducer
   },
   middleware(getDefaultMiddleware) {
     return getDefaultMiddleware({

@@ -3,12 +3,9 @@ import clsx from 'clsx'
 import {MenuIcon} from '@heroicons/react/solid'
 import isUndefined from 'lodash/fp/isUndefined'
 import {toggleMenu} from '@store/menu'
-import {useDispatch} from '@store/index'
 import {Link} from 'react-router-dom'
 
 export const Header: React.FC = ({children}) => {
-  const dispatch = useDispatch()
-
   return (
     <header
       className={clsx(
@@ -34,7 +31,7 @@ export const Header: React.FC = ({children}) => {
           active:bg-gray-300
           focus:outline-none
         "
-        onClick={() => dispatch(toggleMenu())}
+        onClick={() => toggleMenu()}
       >
         <MenuIcon className="w-6 h-6" />
       </button>
