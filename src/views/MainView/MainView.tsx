@@ -5,13 +5,12 @@ import {TaskForm, TaskFormRef} from '@/components/TaskForm/TaskForm'
 import {Tasks} from '@/components/Tasks/Tasks'
 import size from 'lodash/fp/size'
 
-import {useDispatch, useSelector} from '@store/index'
 import {View} from '@views/View/View'
 import {
-  selectCompletedTasksCount,
-  selectTasks,
-  addTask,
-  loadTasks
+  loadTasksFx,
+  addTaskFx,
+  $tasksIds,
+  $completedTasksCount
 } from '@store/tasks'
 import {$isMenuOpen} from '@store/menu'
 import clsx from 'clsx'
@@ -22,16 +21,15 @@ export function MainView() {
   const [title, setTitle] = useState('')
   const [isAddButtonVisible, setIsAddButtonVisible] = useState(true)
   const isMenuOpen = useStore($isMenuOpen)
-  const dispatch = useDispatch()
-  const completedTasksCount = useSelector(selectCompletedTasksCount)
-  const tasks = useSelector(selectTasks)
+  const completedTasksCount = useStore($completedTasksCount)
+  const tasksIds = useStore($tasksIds)
 
   useEffect(() => {
-    dispatch(loadTasks())
-  }, [dispatch])
+    loadTasksFx()
+  }, [])
 
   function onSubmit() {
-    dispatch(addTask(title))
+    addTaskFx(title)
     setTitle('')
   }
 
@@ -56,7 +54,7 @@ export function MainView() {
       />
       <div className="px-4">
         <span className="text-gray-700 font-bold mr-4">
-          {completedTasksCount} / {size(tasks)}
+          {completedTasksCount} / {size(tasksIds)}
         </span>
         <button
           className="

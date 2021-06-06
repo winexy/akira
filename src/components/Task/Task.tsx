@@ -5,9 +5,11 @@ import clsx from 'clsx'
 import {XIcon, MenuAlt4Icon, FireIcon} from '@heroicons/react/solid'
 import {Swipeable} from '@components/Swipeable/Swipeable'
 import {Checkbox} from '@components/Checkbox/Checkbox'
-import {TaskT, TaskIdT, selectTask} from '@store/tasks'
+import {TaskT, TaskIdT, $tasksById} from '@store/tasks'
 import isNull from 'lodash/isNull'
-import {useSelector} from '@/store'
+import {useStoreMap} from 'effector-react'
+import get from 'lodash/fp/get'
+import isUndefined from 'lodash/fp/isUndefined'
 
 const ItemType = 'list-item'
 
@@ -97,7 +99,7 @@ export const Task: React.FC<TaskProps> = ({
   onOrderChange,
   onSetImportant
 }) => {
-  const task = useSelector(selectTask(taskId))
+  const task = useStoreMap($tasksById, get(taskId))
   const dropRef = useRef<Element>()
   const dragRef = useRef<HTMLButtonElement>()
   const [{opacity, isDragging}, connectDragSource] = useDrag<
@@ -120,6 +122,11 @@ export const Task: React.FC<TaskProps> = ({
 
   connectDropTarget(dropRef)
   connectDragSource(dragRef)
+
+  if (isUndefined(task)) {
+    window.console.error(`Task: ${taskId} is undefined`)
+    return null
+  }
 
   return (
     <Swipeable
