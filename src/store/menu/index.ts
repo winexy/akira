@@ -1,5 +1,5 @@
 import {createEvent, createStore} from 'effector'
-import {always} from '@/utils'
+import {always, invert} from '@/utils'
 
 export const $isMenuOpen = createStore(false)
 export const openMenu = createEvent()
@@ -9,4 +9,4 @@ export const toggleMenu = createEvent()
 $isMenuOpen
   .on(openMenu, always(true))
   .on(closeMenu, always(false))
-  .on(toggleMenu, isOpen => !isOpen)
+  .on(toggleMenu, invert)
