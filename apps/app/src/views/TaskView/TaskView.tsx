@@ -8,16 +8,15 @@ import React, {
 import clsx from 'clsx'
 import {useParams} from 'react-router'
 import {View} from '@views/View/View'
-import {useSelector, useDispatch} from '@store/index'
 import format from 'date-fns/format'
 import parseISO from 'date-fns/parseISO'
 import {
-  selectTask,
-  loadTask,
   TodoT,
-  addTodo,
-  removeTodo,
-  TaskIdT
+  TaskIdT,
+  loadTaskFx,
+  addTodoFx,
+  removeTodoFx,
+  $tasksById
 } from '@store/tasks'
 import isUndefined from 'lodash/fp/isUndefined'
 import isEmpty from 'lodash/fp/isEmpty'
@@ -25,6 +24,8 @@ import {ClipboardCheckIcon, XIcon} from '@heroicons/react/solid'
 import {Checkbox} from '@components/Checkbox/Checkbox'
 import ContentLoader from 'react-content-loader'
 import {Tag, WIP} from '@/components/Tag/Tag'
+import {useStoreMap} from 'effector-react'
+import isNull from 'lodash/fp/isNull'
 
 type ChecklistPropsT = {
   taskId: TaskIdT
@@ -32,8 +33,6 @@ type ChecklistPropsT = {
 }
 
 const Checklist: React.FC<ChecklistPropsT> = ({taskId, checklist}) => {
-  const dispatch = useDispatch()
-
   return (
     <ul className="mt-2 divide-y transition ease-in duration-75">
       {checklist.map(todo => (
@@ -63,12 +62,10 @@ const Checklist: React.FC<ChecklistPropsT> = ({taskId, checklist}) => {
               'focus:outline-none'
             )}
             onClick={() =>
-              dispatch(
-                removeTodo({
-                  taskId,
-                  todoId: todo.id
-                })
-              )
+              removeTodoFx({
+                taskId,
+                todoId: todo.id
+              })
             }
           >
             <XIcon className="w-4 h-4" />
@@ -82,16 +79,15 @@ const Checklist: React.FC<ChecklistPropsT> = ({taskId, checklist}) => {
 export const TaskView: React.FC = () => {
   const {id} = useParams<{id: string}>()
   const todoInputRef = useRef<HTMLInputElement | null>(null)
-  const task = useSelector(selectTask(id))
-  const dispatch = useDispatch()
+  const task = useStoreMap($tasksById, byId => byId[id] ?? null)
   const [isTodoInputVisible, setIsTodoInputVisible] = useState(false)
   const [todoTitle, setTodoTitle] = useState('')
 
   useEffect(() => {
-    if (isUndefined(task)) {
-      dispatch(loadTask(id))
+    if (isNull(task)) {
+      loadTaskFx(id)
     }
-  }, [id, task, dispatch])
+  }, [id, task])
 
   useLayoutEffect(() => {
     if (isTodoInputVisible) {
@@ -99,7 +95,7 @@ export const TaskView: React.FC = () => {
     }
   }, [isTodoInputVisible])
 
-  if (isUndefined(task)) {
+  if (isNull(task)) {
     return (
       <View className="p-4">
         <ContentLoader
@@ -123,7 +119,7 @@ export const TaskView: React.FC = () => {
     event.preventDefault()
 
     if (!isEmpty(todoTitle)) {
-      dispatch(addTodo({taskId: task.id, todoTitle}))
+      addTodoFx({taskId: task.id, todoTitle})
       setTodoTitle('')
     }
   }

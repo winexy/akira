@@ -1,11 +1,9 @@
 import React from 'react'
 import {DndProvider} from 'react-dnd'
 import {TouchBackend} from 'react-dnd-touch-backend'
-import {Provider} from 'react-redux'
 import {MainView} from '@views/MainView/MainView'
 import {TaskView} from '@views/TaskView/TaskView'
 import {Menu} from '@components/Menu/Menu'
-import {store} from '@store/index'
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
 import {AuthView} from './views/AuthView/AuthView'
 import {useFirebaseAuth} from './firebase/Provider'
@@ -107,20 +105,18 @@ function App() {
 
   return (
     <DndProvider backend={TouchBackend} options={dndConfig}>
-      <Provider store={store}>
-        <Router>
-          <Menu>
-            <Switch>
-              <Route path="/" exact>
-                <MainView />
-              </Route>
-              <Route path="/tasks/:id">
-                <TaskView />
-              </Route>
-            </Switch>
-          </Menu>
-        </Router>
-      </Provider>
+      <Router>
+        <Menu>
+          <Switch>
+            <Route path="/" exact>
+              <MainView />
+            </Route>
+            <Route path="/tasks/:id">
+              <TaskView />
+            </Route>
+          </Switch>
+        </Menu>
+      </Router>
     </DndProvider>
   )
 }

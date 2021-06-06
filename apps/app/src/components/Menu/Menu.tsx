@@ -8,7 +8,6 @@ import {
   CheckIcon
 } from '@heroicons/react/solid'
 import {closeMenu, $isMenuOpen} from '@store/menu'
-import {useDispatch} from '@store/index'
 import {useFirebaseAuth} from '@/firebase/Provider'
 import {config} from '@config/app'
 import {Tag, WIP} from '@components/Tag/Tag'
@@ -32,7 +31,6 @@ const MenuItem: React.FC<{Icon: SVGIcon}> = ({Icon, children}) => (
 
 export const Menu: React.FC = ({children}) => {
   const isOpen = useStore($isMenuOpen)
-  const dispatch = useDispatch()
   const auth = useFirebaseAuth()
 
   return (
