@@ -4,7 +4,8 @@ import {object, string, boolean, Infer, array, optional} from 'superstruct'
 export const Todo = object({
   id: string(),
   title: string(),
-  completed: boolean()
+  task_id: string(),
+  is_completed: boolean()
 })
 
 export const CheckList = array(Todo)
@@ -16,8 +17,7 @@ export const Task = object({
   created_at: string(),
   updated_at: string(),
   is_completed: boolean(),
-  is_important: boolean(),
-  checklist: optional(array(Todo))
+  is_important: boolean()
 })
 
 export const Tasks = array(Task)
