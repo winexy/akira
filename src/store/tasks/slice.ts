@@ -88,22 +88,17 @@ export const changeTaskPositionFx = app.effect(
 
 export const $tasksIds = app
   .store<TaskIdT[]>([])
-  .on(loadTasksFx.doneData, (state, payload) => {
-    return payload.isRight() ? map(get('id'), payload.value) : state
+  .on(loadTasksFx.doneData, (_, tasks) => {
+    return map(get('id'), tasks)
   })
-  .on(addTaskFx.doneData, (state, payload) => {
+  .on(addTaskFx.doneData, (state, task) => {
     return produce(state, draft => {
-      if (payload.isRight()) {
-        draft.push(payload.value.id)
-      }
+      draft.push(task.id)
     })
   })
-  .on(removeTaskFx.done, (state, {params, result}) => {
-    const taskId = params
+  .on(removeTaskFx.done, (state, {params: taskId}) => {
     return produce(state, draft => {
-      if (result.isRight()) {
-        draft.splice(indexOf(taskId, draft), 1)
-      }
+      draft.splice(indexOf(taskId, draft), 1)
     })
   })
   .on(changeTaskPositionFx.doneData, (state, payload) => {
@@ -115,31 +110,22 @@ export const $tasksIds = app
 
 export const $tasksById = app
   .store<Record<TaskIdT, TaskT>>({})
-  .on(loadTasksFx.doneData, (state, payload) => {
-    return payload.isRight() ? keyBy('id', payload.value) : state
+  .on(loadTasksFx.doneData, (_, tasks) => {
+    return keyBy('id', tasks)
   })
-  .on([loadTaskFx.doneData, addTaskFx.doneData], (state, payload) => {
+  .on([loadTaskFx.doneData, addTaskFx.doneData], (state, task) => {
     return produce(state, draft => {
-      if (payload.isRight()) {
-        const task = payload.value
-        draft[task.id] = task
-      }
+      draft[task.id] = task
     })
   })
-  .on(removeTaskFx.done, (state, {params, result}) => {
-    const taskId = params
+  .on(removeTaskFx.done, (state, {params: taskId}) => {
     return produce(state, draft => {
-      if (result.isRight()) {
-        delete draft[taskId]
-      }
+      delete draft[taskId]
     })
   })
-  .on([toggleTaskFx.doneData, toggleImportantFx.doneData], (state, payload) => {
+  .on([toggleTaskFx.doneData, toggleImportantFx.doneData], (state, task) => {
     return produce(state, draft => {
-      if (payload.isRight()) {
-        const task = payload.value
-        draft[task.id] = task
-      }
+      draft[task.id] = task
     })
   })
 
