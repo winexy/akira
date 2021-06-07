@@ -3,7 +3,7 @@ import map from 'lodash/fp/map'
 import keyBy from 'lodash/fp/keyBy'
 import indexOf from 'lodash/fp/indexOf'
 import filter from 'lodash/fp/filter'
-import {combine, createEffect, createStore} from 'effector'
+import {combine} from 'effector'
 import {akira} from '@/lib/akira'
 import produce from 'immer'
 import {auth} from '@/firebase'
@@ -11,6 +11,7 @@ import isNull from 'lodash/isNull'
 import size from 'lodash/fp/size'
 import {v4 as uuid} from 'uuid'
 import {rejectNotImplemented} from '@/utils'
+import {app} from '../app'
 import {TaskT, TaskIdT, TodoT, TodoIdT} from './types'
 
 type ChangePositionParams = {
@@ -48,9 +49,9 @@ export type TodoRemovedPayloadT = {
   todoId: TodoIdT
 }
 
-export const loadTasksFx = createEffect(akira.tasks.all)
-export const loadTaskFx = createEffect(akira.tasks.one)
-export const addTaskFx = createEffect((title: string) => {
+export const loadTasksFx = app.effect(akira.tasks.all)
+export const loadTaskFx = app.effect(akira.tasks.one)
+export const addTaskFx = app.effect((title: string) => {
   if (isNull(auth.currentUser)) {
     return Promise.reject(new Error('unauthorized'))
   }
@@ -60,34 +61,33 @@ export const addTaskFx = createEffect((title: string) => {
     title
   })
 })
-export const removeTaskFx = createEffect(akira.tasks.delete)
-export const toggleTaskFx = createEffect(akira.tasks.toggleCompleted)
-export const toggleImportantFx = createEffect(akira.tasks.toggleImportant)
-export const addTodoFx = createEffect(
-  ({taskId, todoTitle}: AddTodoPayloadT) => {
-    const todo: TodoT = {
-      id: uuid(),
-      title: todoTitle,
-      completed: false
-    }
-
-    return rejectNotImplemented()
+export const removeTaskFx = app.effect(akira.tasks.delete)
+export const toggleTaskFx = app.effect(akira.tasks.toggleCompleted)
+export const toggleImportantFx = app.effect(akira.tasks.toggleImportant)
+export const addTodoFx = app.effect(({taskId, todoTitle}: AddTodoPayloadT) => {
+  const todo: TodoT = {
+    id: uuid(),
+    title: todoTitle,
+    completed: false
   }
-)
 
-export const removeTodoFx = createEffect(
+  return rejectNotImplemented()
+})
+
+export const removeTodoFx = app.effect(
   ({taskId, todoId}: RemoveTodoPayloadT) => {
     return rejectNotImplemented()
   }
 )
 
-export const changeTaskPositionFx = createEffect(
+export const changeTaskPositionFx = app.effect(
   (params: ChangePositionParams) => {
     return rejectNotImplemented()
   }
 )
 
-export const $tasksIds = createStore<TaskIdT[]>([])
+export const $tasksIds = app
+  .store<TaskIdT[]>([])
   .on(loadTasksFx.doneData, (state, payload) => {
     return payload.isRight() ? map(get('id'), payload.value) : state
   })
@@ -113,7 +113,8 @@ export const $tasksIds = createStore<TaskIdT[]>([])
     // state.list.splice(toIndex, 0, id)
   })
 
-export const $tasksById = createStore<Record<TaskIdT, TaskT>>({})
+export const $tasksById = app
+  .store<Record<TaskIdT, TaskT>>({})
   .on(loadTasksFx.doneData, (state, payload) => {
     return payload.isRight() ? keyBy('id', payload.value) : state
   })
