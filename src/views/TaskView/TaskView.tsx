@@ -18,7 +18,6 @@ import {
   removeTodoFx,
   $tasksById
 } from '@store/tasks'
-import isUndefined from 'lodash/fp/isUndefined'
 import isEmpty from 'lodash/fp/isEmpty'
 import {ClipboardCheckIcon, XIcon} from '@heroicons/react/solid'
 import {Checkbox} from '@components/Checkbox/Checkbox'
@@ -26,6 +25,7 @@ import ContentLoader from 'react-content-loader'
 import {Tag, WIP} from '@/components/Tag/Tag'
 import {useStoreMap} from 'effector-react'
 import isNull from 'lodash/fp/isNull'
+import {$checklistByTaskId, loadChecklistFx} from '../../store/tasks/slice'
 
 type ChecklistPropsT = {
   taskId: TaskIdT
@@ -80,12 +80,14 @@ export const TaskView: React.FC = () => {
   const {id} = useParams<{id: string}>()
   const todoInputRef = useRef<HTMLInputElement | null>(null)
   const task = useStoreMap($tasksById, byId => byId[id] ?? null)
+  const checklist = useStoreMap($checklistByTaskId, byId => byId[id] ?? null)
   const [isTodoInputVisible, setIsTodoInputVisible] = useState(false)
   const [todoTitle, setTodoTitle] = useState('')
 
   useEffect(() => {
     if (isNull(task)) {
       loadTaskFx(id)
+      loadChecklistFx(id)
     }
   }, [id, task])
 
