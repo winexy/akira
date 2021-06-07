@@ -3,7 +3,7 @@ import map from 'lodash/fp/map'
 import keyBy from 'lodash/fp/keyBy'
 import indexOf from 'lodash/fp/indexOf'
 import filter from 'lodash/fp/filter'
-import {combine} from 'effector'
+import {combine, forward} from 'effector'
 import {akira} from '@/lib/akira'
 import produce from 'immer'
 import {auth} from '@/firebase'
@@ -64,14 +64,14 @@ export const addTaskFx = app.effect((title: string) => {
 export const removeTaskFx = app.effect(akira.tasks.delete)
 export const toggleTaskFx = app.effect(akira.tasks.toggleCompleted)
 export const toggleImportantFx = app.effect(akira.tasks.toggleImportant)
-export const addTodoFx = app.effect(({taskId, todoTitle}: AddTodoPayloadT) => {
-  const todo: TodoT = {
-    id: uuid(),
-    title: todoTitle,
-    completed: false
-  }
 
-  return rejectNotImplemented()
+export const loadChecklistFx = app.effect(akira.checklist.findAllByTaskId)
+
+export const addTodoFx = app.effect((payload: AddTodoPayloadT) => {
+  return akira.checklist.addTodo({
+    taskId: payload.taskId,
+    title: payload.todoTitle
+  })
 })
 
 export const removeTodoFx = app.effect(
@@ -126,6 +126,15 @@ export const $tasksById = app
   .on([toggleTaskFx.doneData, toggleImportantFx.doneData], (state, task) => {
     return produce(state, draft => {
       draft[task.id] = task
+    })
+  })
+
+export const $checklistByTaskId = app
+  .store<Record<TaskIdT, TodoT[]>>({})
+  .on(loadChecklistFx.done, (state, {params, result}) => {
+    const taskId = params
+    return produce(state, draft => {
+      draft[taskId] = result
     })
   })
 
