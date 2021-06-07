@@ -43,11 +43,11 @@ const Checklist: React.FC<ChecklistPropsT> = ({taskId, checklist}) => {
             'select-none',
             'transitino ease-in duration-150',
             'active:bg-gray-200',
-            {underline: todo.completed}
+            {underline: todo.is_completed}
           )}
         >
           <Checkbox
-            isChecked={todo.completed}
+            isChecked={todo.is_completed}
             className="mr-4"
             onChange={() => {}}
           />
@@ -145,7 +145,7 @@ export const TaskView: React.FC = () => {
         Tap to add description
       </section>
       <section className="mt-4 px-4">
-        {isEmpty(task.checklist) && !isTodoInputVisible ? (
+        {isEmpty(checklist) && !isTodoInputVisible ? (
           <button
             className={clsx(
               'flex items-center justify-center',
@@ -178,8 +178,8 @@ export const TaskView: React.FC = () => {
           </form>
         )}
       </section>
-      {!isUndefined(task.checklist) && (
-        <Checklist taskId={task.id} checklist={task.checklist} />
+      {!isNull(checklist) && (
+        <Checklist taskId={task.id} checklist={checklist} />
       )}
     </View>
   )
