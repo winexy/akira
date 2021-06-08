@@ -1,5 +1,5 @@
 import {AxiosInstance} from 'axios'
-import {TaskIdT, TodoT} from '@store/tasks/types'
+import {TaskIdT, TodoIdT, TodoT} from '@store/tasks/types'
 import {get} from 'lodash/fp'
 
 export type CreateTodoDto = {
@@ -16,6 +16,9 @@ export function checklist(api: AxiosInstance) {
     },
     addTodo(dto: CreateTodoDto): Promise<TodoT> {
       return api.post('/checklist', dto).then(unwrap)
+    },
+    removeTodo(taskId: TaskIdT, todoId: TodoIdT) {
+      return api.delete(`/checklist/${taskId}/${todoId}`)
     }
   }
 }

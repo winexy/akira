@@ -3,13 +3,12 @@ import map from 'lodash/fp/map'
 import keyBy from 'lodash/fp/keyBy'
 import indexOf from 'lodash/fp/indexOf'
 import filter from 'lodash/fp/filter'
-import {combine, forward} from 'effector'
+import {combine} from 'effector'
 import {akira} from '@/lib/akira'
 import produce from 'immer'
 import {auth} from '@/firebase'
 import isNull from 'lodash/isNull'
 import size from 'lodash/fp/size'
-import {v4 as uuid} from 'uuid'
 import {rejectNotImplemented} from '@/utils'
 import {app} from '../app'
 import {TaskT, TaskIdT, TodoT, TodoIdT} from './types'
@@ -76,7 +75,7 @@ export const addTodoFx = app.effect((payload: AddTodoPayloadT) => {
 
 export const removeTodoFx = app.effect(
   ({taskId, todoId}: RemoveTodoPayloadT) => {
-    return rejectNotImplemented()
+    return akira.checklist.removeTodo(taskId, todoId)
   }
 )
 
@@ -135,6 +134,22 @@ export const $checklistByTaskId = app
     const taskId = params
     return produce(state, draft => {
       draft[taskId] = result
+    })
+  })
+  .on(addTodoFx.done, (state, {params, result}) => {
+    const {taskId} = params
+    return produce(state, draft => {
+      if (draft[taskId]) {
+        draft[taskId].push(result)
+      }
+    })
+  })
+  .on(removeTodoFx.done, (state, {params}) => {
+    const {taskId, todoId} = params
+    return produce(state, draft => {
+      if (draft[taskId]) {
+        draft[taskId] = filter(todo => todo.id !== todoId, draft[taskId])
+      }
     })
   })
 
