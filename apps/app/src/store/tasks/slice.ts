@@ -141,6 +141,8 @@ export const $checklistByTaskId = app
     return produce(state, draft => {
       if (draft[taskId]) {
         draft[taskId].push(result)
+      } else {
+        draft[taskId] = [result]
       }
     })
   })
