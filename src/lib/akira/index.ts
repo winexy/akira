@@ -6,3 +6,8 @@ export const akira = {
   tasks: tasks(api),
   checklist: checklist(api)
 }
+
+if (import.meta.env.DEV) {
+  // @ts-expect-error
+  window.akira = akira
+}
