@@ -39,6 +39,7 @@ module.exports = {
     'no-unused-vars': 'off',
     'no-trailing-spaces': 'off',
     'no-use-before-define': 'off',
+    'no-shadow': 'off',
     '@typescript-eslint/no-use-before-define': [
       'error',
       {
