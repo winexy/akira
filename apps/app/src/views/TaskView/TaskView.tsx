@@ -1,4 +1,7 @@
 import React, {
+  ChangeEventHandler,
+  EventHandler,
+  FocusEventHandler,
   FormEventHandler,
   useEffect,
   useLayoutEffect,
@@ -22,10 +25,16 @@ import isEmpty from 'lodash/fp/isEmpty'
 import {ClipboardCheckIcon, XIcon} from '@heroicons/react/solid'
 import {Checkbox} from '@components/Checkbox/Checkbox'
 import ContentLoader from 'react-content-loader'
-import {Tag, WIP} from '@/components/Tag/Tag'
+import {Tag} from '@/components/Tag/Tag'
 import {useStoreMap} from 'effector-react'
 import isNull from 'lodash/fp/isNull'
-import {$checklistByTaskId, loadChecklistFx} from '../../store/tasks/slice'
+import size from 'lodash/fp/size'
+import noop from 'lodash/fp/noop'
+import {
+  $checklistByTaskId,
+  loadChecklistFx,
+  patchTaskFx
+} from '@store/tasks/slice'
 
 type ChecklistPropsT = {
   taskId: TaskIdT
@@ -73,6 +82,48 @@ const Checklist: React.FC<ChecklistPropsT> = ({taskId, checklist}) => {
         </li>
       ))}
     </ul>
+  )
+}
+
+type TextAreaProps = {
+  value: string
+  placeholder?: string
+  onChange(value: string): void
+  onInput?(value: string): void
+}
+
+const countRows = (value: string) => size(value.split('\n'))
+
+const TextArea: React.FC<TextAreaProps> = ({
+  value,
+  placeholder = '',
+  onChange,
+  onInput = noop
+}) => {
+  const [rows, setRows] = useState(() => countRows(value))
+  const [localValue, setLocalValue] = useState(value)
+
+  const handleChange: ChangeEventHandler<HTMLTextAreaElement> = event => {
+    const {value} = event.target
+
+    setRows(countRows(value))
+    setLocalValue(value)
+    onInput(value)
+  }
+
+  const handleBlur: FocusEventHandler<HTMLTextAreaElement> = event => {
+    onChange(event.target.value)
+  }
+
+  return (
+    <textarea
+      className="w-full p-0 bg-transparent focus:outline-none"
+      value={localValue}
+      rows={rows}
+      placeholder={placeholder}
+      onChange={handleChange}
+      onBlur={handleBlur}
+    />
   )
 }
 
@@ -143,8 +194,16 @@ export const TaskView: React.FC = () => {
         </time>
       </div>
       <section className="mt-4 px-4 flex items-center">
-        <WIP className="mr-2" />
-        Tap to add description
+        <TextArea
+          value={task.description}
+          placeholder="Tap to add description"
+          onChange={description =>
+            patchTaskFx({
+              taskId: id,
+              patch: {description}
+            })
+          }
+        />
       </section>
       <section className="mt-4 px-4">
         {isEmpty(checklist) && !isTodoInputVisible ? (

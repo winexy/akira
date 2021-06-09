@@ -11,7 +11,7 @@ import isNull from 'lodash/isNull'
 import size from 'lodash/fp/size'
 import {rejectNotImplemented} from '@/utils'
 import {app} from '../app'
-import {TaskT, TaskIdT, TodoT, TodoIdT} from './types'
+import {TaskT, TaskIdT, TodoT, TodoIdT, TaskPatchT} from './types'
 
 type ChangePositionParams = {
   fromIndex: number
@@ -46,6 +46,11 @@ export type TodoAddedPayloadT = {
 export type TodoRemovedPayloadT = {
   taskId: TaskIdT
   todoId: TodoIdT
+}
+
+export type TaskPatchPayloadT = {
+  taskId: TaskIdT
+  patch: TaskPatchT
 }
 
 export const loadTasksFx = app.effect(akira.tasks.all)
@@ -85,6 +90,10 @@ export const changeTaskPositionFx = app.effect(
   }
 )
 
+export const patchTaskFx = app.effect(({taskId, patch}: TaskPatchPayloadT) => {
+  return akira.tasks.patch(taskId, patch)
+})
+
 export const $tasksIds = app
   .store<TaskIdT[]>([])
   .on(loadTasksFx.doneData, (_, tasks) => {
@@ -122,11 +131,14 @@ export const $tasksById = app
       delete draft[taskId]
     })
   })
-  .on([toggleTaskFx.doneData, toggleImportantFx.doneData], (state, task) => {
-    return produce(state, draft => {
-      draft[task.id] = task
-    })
-  })
+  .on(
+    [toggleTaskFx.doneData, toggleImportantFx.doneData, patchTaskFx.doneData],
+    (state, task) => {
+      return produce(state, draft => {
+        draft[task.id] = task
+      })
+    }
+  )
 
 export const $checklistByTaskId = app
   .store<Record<TaskIdT, TodoT[]>>({})
