@@ -1,6 +1,5 @@
 import React, {
   ChangeEventHandler,
-  EventHandler,
   FocusEventHandler,
   FormEventHandler,
   useEffect,
@@ -33,7 +32,8 @@ import noop from 'lodash/fp/noop'
 import {
   $checklistByTaskId,
   loadChecklistFx,
-  patchTaskFx
+  patchTaskFx,
+  patchTodoFx
 } from '@store/tasks/slice'
 
 type ChecklistPropsT = {
@@ -52,13 +52,21 @@ const Checklist: React.FC<ChecklistPropsT> = ({taskId, checklist}) => {
             'select-none',
             'transitino ease-in duration-150',
             'active:bg-gray-200',
-            {underline: todo.is_completed}
+            {'line-through': todo.is_completed}
           )}
         >
           <Checkbox
             isChecked={todo.is_completed}
             className="mr-4"
-            onChange={() => {}}
+            onChange={() =>
+              patchTodoFx({
+                taskId,
+                todoId: todo.id,
+                patch: {
+                  is_completed: !todo.is_completed
+                }
+              })
+            }
           />
           {todo.title}
           <button

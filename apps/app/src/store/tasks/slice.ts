@@ -10,8 +10,11 @@ import {auth} from '@/firebase'
 import isNull from 'lodash/isNull'
 import size from 'lodash/fp/size'
 import {rejectNotImplemented} from '@/utils'
+import defaultTo from 'lodash/defaultTo'
+import {update} from 'lodash/fp'
+import {findIndex} from 'lodash'
+import {TaskT, TaskIdT, TodoT, TodoIdT, TaskPatchT, TodoPatchT} from './types'
 import {app} from '../app'
-import {TaskT, TaskIdT, TodoT, TodoIdT, TaskPatchT} from './types'
 
 type ChangePositionParams = {
   fromIndex: number
@@ -51,6 +54,12 @@ export type TodoRemovedPayloadT = {
 export type TaskPatchPayloadT = {
   taskId: TaskIdT
   patch: TaskPatchT
+}
+
+export type PatchTodoPayloadT = {
+  taskId: TaskIdT
+  todoId: TodoIdT
+  patch: TodoPatchT
 }
 
 export const loadTasksFx = app.effect(akira.tasks.all)
@@ -93,6 +102,12 @@ export const changeTaskPositionFx = app.effect(
 export const patchTaskFx = app.effect(({taskId, patch}: TaskPatchPayloadT) => {
   return akira.tasks.patch(taskId, patch)
 })
+
+export const patchTodoFx = app.effect(
+  ({taskId, todoId, patch}: PatchTodoPayloadT) => {
+    return akira.checklist.patchTodo(taskId, todoId, patch)
+  }
+)
 
 export const $tasksIds = app
   .store<TaskIdT[]>([])
@@ -164,6 +179,15 @@ export const $checklistByTaskId = app
       if (draft[taskId]) {
         draft[taskId] = filter(todo => todo.id !== todoId, draft[taskId])
       }
+    })
+  })
+  .on(patchTodoFx.doneData, (state, todo) => {
+    const listToUpdate = state[todo.task_id] ?? []
+    const index = findIndex(listToUpdate, {id: todo.id})
+
+    return produce(state, draft => {
+      const indexToUpdate = index === -1 ? 0 : index
+      draft[todo.task_id][indexToUpdate] = todo
     })
   })
 
