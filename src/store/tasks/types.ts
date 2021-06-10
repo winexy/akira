@@ -33,6 +33,8 @@ export type TodoT = Infer<typeof Todo>
 export type TodoIdT = TodoT['id']
 export type CheckListT = Infer<typeof CheckList>
 
+export type TodoPatchT = Partial<Omit<TodoT, 'id' | 'task_id'>>
+
 export type CreateTaskDto = {
   title: string
   author_uid: string
