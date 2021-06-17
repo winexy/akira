@@ -3,9 +3,10 @@ import {DndProvider} from 'react-dnd'
 import {TouchBackend} from 'react-dnd-touch-backend'
 import {MainView} from '@views/MainView/MainView'
 import {TaskView} from '@views/TaskView/TaskView'
+import {AuthView} from '@views/AuthView/AuthView'
+import {WipView} from '@views/WipView/WipView'
 import {Menu} from '@components/Menu/Menu'
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
-import {AuthView} from './views/AuthView/AuthView'
 import {useFirebaseAuth} from './firebase/Provider'
 
 const dndConfig = {
@@ -113,6 +114,9 @@ function App() {
             </Route>
             <Route path="/tasks/:id">
               <TaskView />
+            </Route>
+            <Route path="/wip">
+              <WipView />
             </Route>
           </Switch>
         </Menu>
