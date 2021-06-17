@@ -93,9 +93,9 @@ export const Swipeable = forwardRef<Element, SwipeableProps>(
       const node = ref.current
 
       if (node) {
-        node.addEventListener('touchstart', onTouchStart)
-        node.addEventListener('touchmove', onTouchMove)
-        node.addEventListener('touchend', onTouchEnd)
+        node.addEventListener('touchstart', onTouchStart, {passive: true})
+        node.addEventListener('touchmove', onTouchMove, {passive: true})
+        node.addEventListener('touchend', onTouchEnd, {passive: true})
       }
 
       return () => {
