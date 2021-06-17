@@ -15,6 +15,7 @@ import {
 import {$isMenuOpen} from '@store/menu'
 import clsx from 'clsx'
 import {useStore} from 'effector-react'
+import format from 'date-fns/format'
 
 export function MainView() {
   const formRef = useRef<TaskFormRef>(null)
@@ -23,6 +24,8 @@ export function MainView() {
   const isMenuOpen = useStore($isMenuOpen)
   const completedTasksCount = useStore($completedTasksCount)
   const tasksIds = useStore($tasksIds)
+
+  const today = format(new Date(), 'eeee, do MMMM')
 
   useEffect(() => {
     loadTasksFx()
@@ -52,7 +55,11 @@ export function MainView() {
         onSubmit={onSubmit}
         onVisibilityChange={onTaskFormVisiblityChange}
       />
-      <div className="px-4">
+      <div className="px-4 text-gray-600">
+        <h2 className="font-bold text-3xl">Today</h2>
+        <p className="text-sm">{today}</p>
+      </div>
+      <div className="mt-4 px-4">
         <span className="text-gray-700 font-bold mr-4">
           {completedTasksCount} / {size(tasksIds)}
         </span>

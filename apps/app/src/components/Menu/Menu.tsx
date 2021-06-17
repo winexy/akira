@@ -5,29 +5,44 @@ import {
   ChevronLeftIcon,
   FireIcon,
   LogoutIcon,
-  CheckIcon
+  CheckIcon,
+  HomeIcon
 } from '@heroicons/react/solid'
 import {closeMenu, $isMenuOpen} from '@store/menu'
 import {useFirebaseAuth} from '@/firebase/Provider'
 import {config} from '@config/app'
 import {Tag, WIP} from '@components/Tag/Tag'
 import {useStore} from 'effector-react'
+import {Link} from 'react-router-dom'
 
 type SVGIcon = (props: React.SVGProps<SVGSVGElement>) => JSX.Element
 
-const MenuItem: React.FC<{Icon: SVGIcon}> = ({Icon, children}) => (
-  <li
-    className={clsx(
-      'flex items-center',
-      'px-4 py-2 rounded select-none',
-      'transition ease-in duration-150',
-      'active:bg-gray-50 active:bg-opacity-10'
-    )}
-  >
-    <Icon className="mr-4 w-6 h-6 text-gray-400" />
-    {children}
-  </li>
-)
+type MenuItemProps = {
+  Icon: SVGIcon
+  to: string
+}
+
+const MenuItem: React.FC<MenuItemProps> = ({Icon, children, to}) => {
+  const onClick = () => closeMenu()
+
+  return (
+    <li>
+      <Link
+        to={to}
+        className={clsx(
+          'flex items-center',
+          'px-4 py-2 rounded select-none',
+          'transition ease-in duration-150',
+          'active:bg-gray-50 active:bg-opacity-10'
+        )}
+        onClick={onClick}
+      >
+        <Icon className="mr-4 w-6 h-6 text-gray-400" />
+        {children}
+      </Link>
+    </li>
+  )
+}
 
 export const Menu: React.FC = ({children}) => {
   const isOpen = useStore($isMenuOpen)
@@ -82,15 +97,18 @@ export const Menu: React.FC = ({children}) => {
           </button>
         </div>
         <ul className="px-4 space-y-1 text-white font-bold text-lg flex-1 overflow-auto">
-          <MenuItem Icon={FireIcon}>
+          <MenuItem to="/" Icon={HomeIcon}>
+            Today
+          </MenuItem>
+          <MenuItem to="/wip" Icon={FireIcon}>
             Important
             <WIP className="ml-auto" />
           </MenuItem>
-          <MenuItem Icon={CheckIcon}>
+          <MenuItem to="/wip" Icon={CheckIcon}>
             Completed
             <WIP className="ml-auto" />
           </MenuItem>
-          <MenuItem Icon={AdjustmentsIcon}>
+          <MenuItem to="/wip" Icon={AdjustmentsIcon}>
             Preferences
             <WIP className="ml-auto" />
           </MenuItem>
