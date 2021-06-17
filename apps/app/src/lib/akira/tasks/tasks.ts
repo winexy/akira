@@ -7,8 +7,8 @@ export function tasks(api: AxiosInstance) {
   const unwrap = get('data')
 
   return {
-    all(): Promise<TaskT[]> {
-      return api.get('tasks').then(unwrap)
+    today(): Promise<TaskT[]> {
+      return api.get('tasks/today').then(unwrap)
     },
     createTask(data: CreateTaskDto): Promise<TaskT> {
       return api.post('tasks', data).then(unwrap)
