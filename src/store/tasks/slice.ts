@@ -62,7 +62,7 @@ export type PatchTodoPayloadT = {
   patch: TodoPatchT
 }
 
-export const loadTasksFx = app.effect(akira.tasks.all)
+export const loadTasksFx = app.effect(akira.tasks.today)
 export const loadTaskFx = app.effect(akira.tasks.one)
 export const addTaskFx = app.effect((title: string) => {
   if (isNull(auth.currentUser)) {
