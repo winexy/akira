@@ -4,6 +4,7 @@ import React, {
   FormEventHandler,
   useEffect,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState
 } from 'react'
@@ -22,19 +23,21 @@ import {
 } from '@store/tasks'
 import isEmpty from 'lodash/fp/isEmpty'
 import {ClipboardCheckIcon, XIcon} from '@heroicons/react/solid'
-import {Checkbox} from '@components/Checkbox/Checkbox'
 import ContentLoader from 'react-content-loader'
-import {Tag} from '@/components/Tag/Tag'
 import {useStoreMap} from 'effector-react'
+import escape from 'escape-html'
 import isNull from 'lodash/fp/isNull'
 import size from 'lodash/fp/size'
 import noop from 'lodash/fp/noop'
+import isNil from 'lodash/fp/isNil'
 import {
   $checklistByTaskId,
   loadChecklistFx,
   patchTaskFx,
   patchTodoFx
 } from '@store/tasks/slice'
+import {Checkbox} from '@components/Checkbox/Checkbox'
+import {Tag} from '@/components/Tag/Tag'
 
 type ChecklistPropsT = {
   taskId: TaskIdT
@@ -142,6 +145,9 @@ export const TaskView: React.FC = () => {
   const checklist = useStoreMap($checklistByTaskId, byId => byId[id] ?? null)
   const [isTodoInputVisible, setIsTodoInputVisible] = useState(false)
   const [todoTitle, setTodoTitle] = useState('')
+  const title = task?.title ?? ''
+
+  const taskTitle = useMemo(() => escape(title), [title])
 
   useEffect(() => {
     if (isNull(task)) {
@@ -185,6 +191,17 @@ export const TaskView: React.FC = () => {
     }
   }
 
+  const onTitleChange: ChangeEventHandler<HTMLHeadingElement> = event => {
+    const newTitle = event.target.textContent
+
+    if (!isNil(newTitle) && task.title !== newTitle) {
+      patchTaskFx({
+        taskId: id,
+        patch: {title: newTitle}
+      })
+    }
+  }
+
   const createdAt = format(parseISO(task.created_at), 'd LLLL yyyy')
 
   return (
@@ -195,7 +212,20 @@ export const TaskView: React.FC = () => {
         </Tag>
         {task.is_important && <Tag variant="red">important</Tag>}
       </div>
-      <h1 className="mt-4 px-4 font-semibold text-2xl">{task.title}</h1>
+      <h1
+        className="
+          mt-4 px-4 
+          font-semibold text-2xl 
+          focus:outline-none 
+          focus:text-gray-500
+        "
+        contentEditable
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{
+          __html: taskTitle
+        }}
+        onBlur={onTitleChange}
+      />
       <div className="mt-4 px-4">
         <time dateTime={task.created_at} className="text-gray-500">
           {createdAt}
