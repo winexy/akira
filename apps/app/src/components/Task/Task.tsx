@@ -176,7 +176,8 @@ export const Task: React.FC<TaskProps> = ({
         </>
       }
     >
-      <div
+      <Link
+        to={`/tasks/${task.id}`}
         className={clsx(
           'flex items-center',
           'bg-white p-4 text-lg text-black',
@@ -192,10 +193,9 @@ export const Task: React.FC<TaskProps> = ({
           className="mr-3"
           isChecked={task.is_completed}
           onChange={() => onCheck(task.id)}
+          onClick={e => e.stopPropagation()}
         />
-        <Link to={`/tasks/${task.id}`} className="flex-1 truncate mx-2">
-          {task.title}
-        </Link>
+        <p className="flex-1 truncate mx-2">{task.title}</p>
         <button
           ref={dragRef as LegacyRef<HTMLButtonElement>}
           className="
@@ -208,7 +208,7 @@ export const Task: React.FC<TaskProps> = ({
         >
           <MenuAlt4Icon className="w-4 h-4" />
         </button>
-      </div>
+      </Link>
     </Swipeable>
   )
 }
