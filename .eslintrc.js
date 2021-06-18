@@ -64,6 +64,8 @@ module.exports = {
     'react/destructuring-assignment': 'off',
     'react/jsx-props-no-spreading': 'off',
     'jsx-a11y/label-has-associated-control': 'off',
+    'jsx-a11y/no-noninteractive-element-interactions': 'off',
+    'jsx-a11y/click-events-have-key-events': 'off',
     'react/button-has-type': 'off',
     'implicit-arrow-linebreak': 'off',
     'arrow-body-style': 'off',

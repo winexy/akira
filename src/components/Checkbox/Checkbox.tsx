@@ -1,20 +1,23 @@
-import React from 'react'
+import React, {MouseEventHandler} from 'react'
 import clsx from 'clsx'
 import {CheckIcon} from '@heroicons/react/solid'
+import noop from 'lodash/fp/noop'
 
 type CheckboxProps = {
   isChecked: boolean
   onChange(newState: boolean): void
+  onClick?: MouseEventHandler<HTMLLabelElement>
   className?: string
 }
 
 export const Checkbox: React.FC<CheckboxProps> = ({
   isChecked,
   onChange,
+  onClick = noop,
   className = ''
 }) => {
   return (
-    <label className={className}>
+    <label className={className} onClick={onClick}>
       <input
         type="checkbox"
         className="sr-only"
