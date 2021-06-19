@@ -29,7 +29,9 @@ export function MainView() {
   const today = format(new Date(), 'eeee, do MMMM')
 
   useEffect(() => {
-    queryTasksFx()
+    queryTasksFx({
+      is_today: 1
+    })
   }, [])
 
   function onSubmit() {
