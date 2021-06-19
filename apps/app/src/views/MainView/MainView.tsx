@@ -1,11 +1,10 @@
 import React, {useState, useRef, useEffect} from 'react'
 import isNull from 'lodash/isNull'
 import {PlusIcon} from '@heroicons/react/solid'
-import {TaskForm, TaskFormRef} from '@/components/TaskForm/TaskForm'
-import {Tasks} from '@/components/Tasks'
+import {TaskForm, TaskFormRef} from '@components/TaskForm/TaskForm'
+import {Tasks} from '@components/Tasks'
 import size from 'lodash/fp/size'
 
-import {View} from '@views/View/View'
 import {
   queryTasksFx,
   addTaskFx,
@@ -16,6 +15,7 @@ import {$isMenuOpen} from '@store/menu'
 import clsx from 'clsx'
 import {useStore} from 'effector-react'
 import format from 'date-fns/format'
+import {ViewTemplate} from '@views/ViewTemplate'
 
 export function MainView() {
   const formRef = useRef<TaskFormRef>(null)
@@ -48,7 +48,7 @@ export function MainView() {
   }
 
   return (
-    <View className="bg-gray-100 flex-1">
+    <ViewTemplate className="bg-gray-100 flex-1">
       <TaskForm
         ref={formRef}
         title={title}
@@ -105,6 +105,6 @@ export function MainView() {
           </button>
         </div>
       )}
-    </View>
+    </ViewTemplate>
   )
 }
