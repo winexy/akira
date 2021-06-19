@@ -100,7 +100,7 @@ export const Menu: React.FC = ({children}) => {
           <MenuItem to="/" Icon={HomeIcon}>
             Today
           </MenuItem>
-          <MenuItem to="/wip" Icon={FireIcon}>
+          <MenuItem to="/important" Icon={FireIcon}>
             Important
             <WIP className="ml-auto" />
           </MenuItem>
