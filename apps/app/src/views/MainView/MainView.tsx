@@ -7,7 +7,7 @@ import size from 'lodash/fp/size'
 
 import {View} from '@views/View/View'
 import {
-  loadTasksFx,
+  queryTasksFx,
   addTaskFx,
   $tasksIds,
   $completedTasksCount
@@ -28,7 +28,7 @@ export function MainView() {
   const today = format(new Date(), 'eeee, do MMMM')
 
   useEffect(() => {
-    loadTasksFx()
+    queryTasksFx()
   }, [])
 
   function onSubmit() {

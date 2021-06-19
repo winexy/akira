@@ -62,7 +62,7 @@ export type PatchTodoPayloadT = {
   patch: TodoPatchT
 }
 
-export const loadTasksFx = app.effect(akira.tasks.today)
+export const queryTasksFx = app.effect(akira.tasks.query)
 export const loadTaskFx = app.effect(akira.tasks.one)
 export const addTaskFx = app.effect((title: string) => {
   if (isNull(auth.currentUser)) {
@@ -111,7 +111,7 @@ export const patchTodoFx = app.effect(
 
 export const $tasksIds = app
   .store<TaskIdT[]>([])
-  .on(loadTasksFx.doneData, (_, tasks) => {
+  .on(queryTasksFx.doneData, (_, tasks) => {
     return map(get('id'), tasks)
   })
   .on(addTaskFx.doneData, (state, task) => {
@@ -133,7 +133,7 @@ export const $tasksIds = app
 
 export const $tasksById = app
   .store<Record<TaskIdT, TaskT>>({})
-  .on(loadTasksFx.doneData, (_, tasks) => {
+  .on(queryTasksFx.doneData, (_, tasks) => {
     return keyBy('id', tasks)
   })
   .on([loadTaskFx.doneData, addTaskFx.doneData], (state, task) => {
