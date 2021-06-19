@@ -4,6 +4,7 @@ import {useStore} from 'effector-react'
 import {Link} from 'react-router-dom'
 import {$tasksIds, queryTasksFx} from '@store/tasks/slice'
 import {Tasks} from '@components/Tasks'
+import {FireIcon} from '@heroicons/react/solid'
 
 export const ImportantView: React.FC = () => {
   const isPending = useStore(queryTasksFx.pending)
@@ -16,7 +17,10 @@ export const ImportantView: React.FC = () => {
   return (
     <View>
       <div className="px-4 text-gray-600">
-        <h2 className="font-bold text-3xl">Important</h2>
+        <h2 className="flex items-center font-bold text-3xl">
+          Important
+          <FireIcon className="w-8 h-8 ml-2 text-red-500" />
+        </h2>
       </div>
       <section className="mt-4">
         <Tasks
