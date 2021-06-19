@@ -10,6 +10,7 @@ type IntBool = 1 | 0
 type QueryParams = Partial<{
   is_completed: IntBool
   is_important: IntBool
+  is_today: IntBool
 }>
 
 export function tasks(api: AxiosInstance) {
