@@ -5,17 +5,17 @@ import {
   removeTaskFx,
   toggleTaskFx,
   toggleImportantFx,
-  $tasksIds,
-  queryTasksFx
+  TaskIdT
 } from '@/store/tasks'
-import {useStore} from 'effector-react'
 import ContentLoader from 'react-content-loader'
 import {times} from 'lodash/fp'
 
-export const Tasks: React.FC = () => {
-  const tasksIds = useStore($tasksIds)
-  const isPending = useStore(queryTasksFx.pending)
+type Props = {
+  isPending: boolean
+  tasksIds: TaskIdT[]
+}
 
+export const Tasks: React.FC<Props> = ({isPending, tasksIds}) => {
   if (isPending) {
     const taskHeight = 64
     const spacing = 4
