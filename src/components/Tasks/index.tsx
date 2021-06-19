@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {ReactNode} from 'react'
 import {Task} from '@/components/Task/Task'
 import {
   changeTaskPositionFx,
@@ -8,14 +8,17 @@ import {
   TaskIdT
 } from '@/store/tasks'
 import ContentLoader from 'react-content-loader'
-import {times} from 'lodash/fp'
+import isEmpty from 'lodash/fp/isEmpty'
+import times from 'lodash/fp/times'
+import {InboxIcon} from '@heroicons/react/solid'
 
 type Props = {
   isPending: boolean
   tasksIds: TaskIdT[]
+  noTasksSlot?: ReactNode
 }
 
-export const Tasks: React.FC<Props> = ({isPending, tasksIds}) => {
+export const Tasks: React.FC<Props> = ({isPending, tasksIds, noTasksSlot}) => {
   if (isPending) {
     const taskHeight = 64
     const spacing = 4
@@ -46,6 +49,16 @@ export const Tasks: React.FC<Props> = ({isPending, tasksIds}) => {
           )}
         </ContentLoader>
       </section>
+    )
+  }
+
+  if (isEmpty(tasksIds)) {
+    return (
+      <div className="flex flex-col justify-center items-center pt-12 text-gray-700">
+        <InboxIcon className="w-12 h-12" />
+        <h2 className="mt-2 font-semibold text-lg">No tasks</h2>
+        {noTasksSlot}
+      </div>
     )
   }
 

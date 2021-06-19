@@ -102,7 +102,6 @@ export const Menu: React.FC = ({children}) => {
           </MenuItem>
           <MenuItem to="/important" Icon={FireIcon}>
             Important
-            <WIP className="ml-auto" />
           </MenuItem>
           <MenuItem to="/wip" Icon={CheckIcon}>
             Completed
