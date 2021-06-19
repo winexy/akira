@@ -1,13 +1,13 @@
 import React from 'react'
 import {ShieldExclamationIcon} from '@heroicons/react/solid'
-import {View} from '@views/View/View'
+import {ViewTemplate} from '@views/ViewTemplate'
 import {useHistory} from 'react-router'
 
 export const WipView: React.FC = () => {
   const history = useHistory()
 
   return (
-    <View className="h-full flex flex-col items-center justify-center">
+    <ViewTemplate className="h-full flex flex-col items-center justify-center">
       <ShieldExclamationIcon className="w-16 h-16 text-yellow-500" />
       <h2 className="mt-4 font-bold text-3xl text-gray-700">
         Work In Progress
@@ -26,6 +26,6 @@ export const WipView: React.FC = () => {
       >
         Go back
       </button>
-    </View>
+    </ViewTemplate>
   )
 }

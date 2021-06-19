@@ -8,7 +8,11 @@ type ViewProps = {
   header?: React.ReactChild
 }
 
-export const View: React.FC<ViewProps> = ({children, className, header}) => {
+export const ViewTemplate: React.FC<ViewProps> = ({
+  children,
+  className,
+  header
+}) => {
   return (
     <>
       {isUndefined(header) ? <Header /> : header}
