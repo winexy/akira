@@ -3,7 +3,7 @@ import map from 'lodash/fp/map'
 import keyBy from 'lodash/fp/keyBy'
 import indexOf from 'lodash/fp/indexOf'
 import filter from 'lodash/fp/filter'
-import {combine} from 'effector'
+import {combine, forward} from 'effector'
 import {akira} from '@/lib/akira'
 import produce from 'immer'
 import {auth} from '@/firebase'
@@ -109,6 +109,13 @@ export const patchTodoFx = app.effect(
   }
 )
 
+export const optimisticTaskCompletedToggle = app.event<TaskIdT>()
+
+forward({
+  from: optimisticTaskCompletedToggle,
+  to: toggleTaskFx
+})
+
 export const $tasksIds = app
   .store<TaskIdT[]>([])
   .on(queryTasksFx.doneData, (_, tasks) => {
@@ -154,6 +161,16 @@ export const $tasksById = app
       })
     }
   )
+  .on(optimisticTaskCompletedToggle, (state, taskId) => {
+    return produce(state, draft => {
+      draft[taskId].is_completed = !draft[taskId].is_completed
+    })
+  })
+  .on(toggleTaskFx.fail, (state, {params: taskId}) => {
+    return produce(state, draft => {
+      draft[taskId].is_completed = !draft[taskId].is_completed
+    })
+  })
 
 export const $checklistByTaskId = app
   .store<Record<TaskIdT, TodoT[]>>({})
