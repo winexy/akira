@@ -3,9 +3,9 @@ import {Task} from '@/components/Task/Task'
 import {
   changeTaskPositionFx,
   removeTaskFx,
-  toggleTaskFx,
   toggleImportantFx,
-  TaskIdT
+  TaskIdT,
+  optimisticTaskCompletedToggle
 } from '@/store/tasks'
 import ContentLoader from 'react-content-loader'
 import isEmpty from 'lodash/fp/isEmpty'
@@ -69,7 +69,7 @@ export const Tasks: React.FC<Props> = ({isPending, tasksIds, noTasksSlot}) => {
           key={taskId}
           index={index}
           taskId={taskId}
-          onCheck={toggleTaskFx}
+          onCheck={optimisticTaskCompletedToggle}
           onRemove={removeTaskFx}
           onOrderChange={changeTaskPositionFx}
           onSetImportant={toggleImportantFx}
