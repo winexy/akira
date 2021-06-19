@@ -17,7 +17,9 @@ export const Header: React.FC = ({children}) => {
     >
       {isUndefined(children) ? (
         <Link to="/">
-          <h1 className="font-bold text-xl font-mono">Akira</h1>
+          <h1 className="font-bold text-xl font-mono active:text-gray-900">
+            Akira
+          </h1>
         </Link>
       ) : (
         children
