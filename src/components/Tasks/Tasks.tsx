@@ -6,7 +6,7 @@ import {
   toggleTaskFx,
   toggleImportantFx,
   $tasksIds,
-  loadTasksFx
+  queryTasksFx
 } from '@/store/tasks'
 import {useStore} from 'effector-react'
 import ContentLoader from 'react-content-loader'
@@ -14,7 +14,7 @@ import {times} from 'lodash/fp'
 
 export const Tasks: React.FC = () => {
   const tasksIds = useStore($tasksIds)
-  const isPending = useStore(loadTasksFx.pending)
+  const isPending = useStore(queryTasksFx.pending)
 
   if (isPending) {
     const taskHeight = 64
