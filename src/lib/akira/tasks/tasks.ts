@@ -1,12 +1,24 @@
+/* eslint-disable camelcase */
 import {AxiosInstance} from 'axios'
+import qs from 'qs'
 import get from 'lodash/fp/get'
 import {TaskT, CreateTaskDto} from '@store/tasks'
 import {TaskIdT, TaskPatchT} from '@store/tasks/types'
+
+type IntBool = 1 | 0
+
+type QueryParams = Partial<{
+  is_completed: IntBool
+  is_important: IntBool
+}>
 
 export function tasks(api: AxiosInstance) {
   const unwrap = get('data')
 
   return {
+    query(params: QueryParams = {}): Promise<TaskT[]> {
+      return api.get(`tasks?${qs.stringify(params)}`).then(unwrap)
+    },
     today(): Promise<TaskT[]> {
       return api.get('tasks/today').then(unwrap)
     },
