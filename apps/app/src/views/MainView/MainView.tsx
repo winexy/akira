@@ -2,7 +2,7 @@ import React, {useState, useRef, useEffect} from 'react'
 import isNull from 'lodash/isNull'
 import {PlusIcon} from '@heroicons/react/solid'
 import {TaskForm, TaskFormRef} from '@/components/TaskForm/TaskForm'
-import {Tasks} from '@/components/Tasks/Tasks'
+import {Tasks} from '@/components/Tasks'
 import size from 'lodash/fp/size'
 
 import {View} from '@views/View/View'
@@ -23,6 +23,7 @@ export function MainView() {
   const [isAddButtonVisible, setIsAddButtonVisible] = useState(true)
   const isMenuOpen = useStore($isMenuOpen)
   const completedTasksCount = useStore($completedTasksCount)
+  const isPending = useStore(queryTasksFx.pending)
   const tasksIds = useStore($tasksIds)
 
   const today = format(new Date(), 'eeee, do MMMM')
@@ -78,7 +79,7 @@ export function MainView() {
         </button>
       </div>
       <section className="mt-4">
-        <Tasks />
+        <Tasks isPending={isPending} tasksIds={tasksIds} />
       </section>
       {isAddButtonVisible && (
         <div className="z-20 fixed bottom-0 right-0 p-4">
