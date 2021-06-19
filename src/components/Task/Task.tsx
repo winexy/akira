@@ -76,6 +76,7 @@ function onDragHover(
 type TaskProps = {
   taskId: TaskIdT
   index: number
+  sortable?: boolean
   onRemove(id: TaskIdT): void
   onCheck(id: TaskIdT): void
   onOrderChange(params: UpdatePositionParams): void
@@ -94,6 +95,7 @@ const collectProps = (monitor: DragSourceMonitor) => {
 export const Task: React.FC<TaskProps> = ({
   taskId,
   index,
+  sortable,
   onRemove,
   onCheck,
   onOrderChange,
@@ -120,8 +122,10 @@ export const Task: React.FC<TaskProps> = ({
     hover: onDragHover(dropRef, index, onOrderChange)
   })
 
-  connectDropTarget(dropRef)
-  connectDragSource(dragRef)
+  if (sortable) {
+    connectDropTarget(dropRef)
+    connectDragSource(dragRef)
+  }
 
   if (isUndefined(task)) {
     window.console.error(`Task: ${taskId} is undefined`)
@@ -196,18 +200,20 @@ export const Task: React.FC<TaskProps> = ({
           onClick={e => e.stopPropagation()}
         />
         <p className="flex-1 truncate mx-2">{task.title}</p>
-        <button
-          ref={dragRef as LegacyRef<HTMLButtonElement>}
-          className="
+        {sortable && (
+          <button
+            ref={dragRef as LegacyRef<HTMLButtonElement>}
+            className="
           ml-auto w-8 h-8 -mr-2
           flex items-center justify-center
           text-gray-400 
           active:text-gray-300
           focus:outline-none
           "
-        >
-          <MenuAlt4Icon className="w-4 h-4" />
-        </button>
+          >
+            <MenuAlt4Icon className="w-4 h-4" />
+          </button>
+        )}
       </Link>
     </Swipeable>
   )
