@@ -64,21 +64,8 @@ export function TodayView() {
       </div>
       <div className="mt-4 px-4">
         <span className="text-gray-700 font-bold mr-4">
-          {completedTasksCount} / {size(tasksIds)}
+          {completedTasksCount} / {size(tasksIds)} completed
         </span>
-        <button
-          className="
-            px-2 py-1 
-            text-gray-700 rounded 
-            border border-gray-300
-            transition ease-in duration-150
-            active:bg-white 
-            active:border-gray-300
-            focus:outline-none
-          "
-        >
-          All tasks
-        </button>
       </div>
       <section className="mt-4">
         <Tasks isPending={isPending} tasksIds={tasksIds} />
