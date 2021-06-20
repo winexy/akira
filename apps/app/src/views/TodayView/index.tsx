@@ -17,7 +17,7 @@ import {useStore} from 'effector-react'
 import format from 'date-fns/format'
 import {ViewTemplate} from '@views/ViewTemplate'
 
-export function MainView() {
+export function TodayView() {
   const formRef = useRef<TaskFormRef>(null)
   const [title, setTitle] = useState('')
   const [isAddButtonVisible, setIsAddButtonVisible] = useState(true)
