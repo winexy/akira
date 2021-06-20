@@ -1,4 +1,4 @@
-import React, {useRef} from 'react'
+import React, {useEffect, useRef} from 'react'
 import clsx from 'clsx'
 import {
   AdjustmentsIcon,
@@ -35,7 +35,9 @@ const MenuItem: React.FC<MenuItemProps> = ({Icon, children, to}) => {
           'flex items-center',
           'px-4 py-2 rounded select-none',
           'transition ease-in duration-150',
-          'active:bg-gray-50 active:bg-opacity-10'
+          'active:bg-gray-50 active:bg-opacity-10',
+          'focus:outline-none focus:bg-gray-50 focus:bg-opacity-10',
+          'focus:ring-2 focus:ring-gray-600 focus:ring-opacity-50'
         )}
         onClick={onClick}
       >
@@ -72,6 +74,12 @@ export const Menu: React.FC = ({children}) => {
   const auth = useFirebaseAuth()
   const menuRef = useRef<HTMLElement | null>(null)
   const contentRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    if (isOpen) {
+      menuRef.current?.querySelector('ul')?.firstChild?.firstChild?.focus()
+    }
+  }, [isOpen])
 
   return (
     <>
@@ -115,14 +123,14 @@ export const Menu: React.FC = ({children}) => {
               rounded
               transition ease-in duration-150
               active:bg-gray-50 active:bg-opacity-30
-              focus:outline-none
+              focus:outline-none focus:bg-gray-50 focus:bg-opacity-30
             "
             onClick={() => closeMenu()}
           >
             <ChevronLeftIcon className="w-8 h-8" />
           </button>
         </div>
-        <ul className="px-4 space-y-1 text-white font-bold text-lg flex-1 overflow-auto">
+        <ul className="pt-0.5 px-4 space-y-1 text-white font-bold text-lg flex-1 overflow-auto">
           <MenuItem to="/" Icon={HomeIcon}>
             Today
           </MenuItem>
