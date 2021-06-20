@@ -12,7 +12,7 @@ export const Tag: React.FC<TagPropsT> = ({variant, children, className}) => {
   return (
     <span
       className={clsx(
-        'inline-block px-2 py-1',
+        'inline-flex justify-center items-center px-2 py-1',
         'font-bold text-xs text-white',
         'rounded shadow-md border',
         {
