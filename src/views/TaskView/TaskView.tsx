@@ -10,7 +10,7 @@ import React, {
 } from 'react'
 import clsx from 'clsx'
 import {useParams} from 'react-router'
-import {ViewTemplate} from '@views/ViewTemplate'
+import {MainView} from '@views/MainView'
 import format from 'date-fns/format'
 import parseISO from 'date-fns/parseISO'
 import {
@@ -176,7 +176,7 @@ export const TaskView: React.FC = () => {
 
   if (isNull(task)) {
     return (
-      <ViewTemplate className="p-4">
+      <MainView className="p-4">
         <ContentLoader
           speed={2}
           width={320}
@@ -190,7 +190,7 @@ export const TaskView: React.FC = () => {
           <rect x="0" y="46" rx="4" ry="4" width="240" height="28" />
           <rect x="0" y="92" rx="4" ry="4" width="200" height="42" />
         </ContentLoader>
-      </ViewTemplate>
+      </MainView>
     )
   }
 
@@ -217,7 +217,7 @@ export const TaskView: React.FC = () => {
   const createdAt = format(parseISO(task.created_at), 'd LLLL yyyy')
 
   return (
-    <ViewTemplate>
+    <MainView>
       <div className="px-4 space-x-2">
         <Tag variant={task.is_completed ? 'green' : 'gray'}>
           {task.is_completed ? '' : 'not '}completed
@@ -292,6 +292,6 @@ export const TaskView: React.FC = () => {
       {!isNull(checklist) && (
         <Checklist taskId={task.id} checklist={checklist} />
       )}
-    </ViewTemplate>
+    </MainView>
   )
 }

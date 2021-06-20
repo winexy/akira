@@ -8,7 +8,7 @@ type ViewProps = {
   header?: React.ReactChild
 }
 
-export const ViewTemplate: React.FC<ViewProps> = ({
+export const MainView: React.FC<ViewProps> = ({
   children,
   className,
   header
