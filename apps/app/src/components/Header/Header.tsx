@@ -1,6 +1,7 @@
 import React from 'react'
 import clsx from 'clsx'
 import {MenuIcon} from '@heroicons/react/solid'
+import {LightningBoltIcon} from '@heroicons/react/outline'
 import isUndefined from 'lodash/fp/isUndefined'
 import {toggleMenu} from '@store/menu'
 import {Link} from 'react-router-dom'
@@ -16,10 +17,14 @@ export const Header: React.FC = ({children}) => {
       )}
     >
       {isUndefined(children) ? (
-        <Link to="/" className="focus:outline-none focus:text-purple-500">
+        <Link
+          to="/"
+          className="flex items-center focus:outline-none focus:text-purple-500"
+        >
+          <LightningBoltIcon className="w-5 h-5" />
           <h1
             className="
-              font-bold text-xl font-mono 
+              ml-1 font-bold text-xl font-mono 
               active:text-gray-900 
             "
           >
