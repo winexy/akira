@@ -1,7 +1,7 @@
 import React from 'react'
 import {DndProvider} from 'react-dnd'
 import {TouchBackend} from 'react-dnd-touch-backend'
-import {MainView} from '@views/MainView/MainView'
+import {TodayView} from '@/views/TodayView'
 import {TaskView} from '@views/TaskView/TaskView'
 import {AuthView} from '@views/AuthView/AuthView'
 import {WipView} from '@views/WipView/WipView'
@@ -112,7 +112,7 @@ function App() {
         <Menu>
           <Switch>
             <Route path="/" exact>
-              <MainView />
+              <TodayView />
             </Route>
             <Route path="/tasks" exact>
               <TasksView />
