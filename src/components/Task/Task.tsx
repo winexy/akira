@@ -132,6 +132,15 @@ export const Task: React.FC<TaskProps> = ({
     return null
   }
 
+  function onRemoveIntent() {
+    // eslint-disable-next-line
+    const confirmed = confirm('Are you sure? This action cannot be undone')
+
+    if (confirmed) {
+      onRemove(taskId)
+    }
+  }
+
   return (
     <Swipeable
       ref={dropRef as Ref<Element>}
@@ -157,7 +166,7 @@ export const Task: React.FC<TaskProps> = ({
               active:bg-red-600
               focus:outline-none
             "
-            onClick={() => onRemove(task.id)}
+            onClick={onRemoveIntent}
           >
             <XIcon className="w-5 h-5" />
           </button>
