@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import clsx from 'clsx'
 import {
   AdjustmentsIcon,
@@ -14,6 +14,7 @@ import {config} from '@config/app'
 import {Tag, WIP} from '@components/Tag/Tag'
 import {useStore} from 'effector-react'
 import {Link} from 'react-router-dom'
+import isNull from 'lodash/fp/isNull'
 
 type SVGIcon = (props: React.SVGProps<SVGSVGElement>) => JSX.Element
 
@@ -44,13 +45,37 @@ const MenuItem: React.FC<MenuItemProps> = ({Icon, children, to}) => {
   )
 }
 
+const getContentTranslateX = (
+  menuElement: HTMLElement | null,
+  contentElement: HTMLDivElement | null
+) => {
+  if (isNull(menuElement) || isNull(contentElement)) {
+    return '85%'
+  }
+
+  const menuRect = menuElement.getBoundingClientRect()
+  const contentRect = contentElement.getBoundingClientRect()
+
+  const getPercent = (value: number, percent: number) => {
+    return (value * percent) / 100
+  }
+
+  const scaled = getPercent(contentRect.width, 90)
+  const halfDiff = (contentRect.width - scaled) / 2
+
+  return `${menuRect.width - halfDiff}px`
+}
+
 export const Menu: React.FC = ({children}) => {
   const isOpen = useStore($isMenuOpen)
   const auth = useFirebaseAuth()
+  const menuRef = useRef<HTMLElement | null>(null)
+  const contentRef = useRef<HTMLDivElement | null>(null)
 
   return (
     <>
       <nav
+        ref={menuRef}
         className={clsx(
           'z-10 fixed ',
           'left-0 top-0 bottom-0',
@@ -141,6 +166,7 @@ export const Menu: React.FC = ({children}) => {
         </div>
       </nav>
       <div
+        ref={contentRef}
         className={clsx(
           'transform flex flex-col',
           'bg-gray-100',
@@ -151,7 +177,9 @@ export const Menu: React.FC = ({children}) => {
           }
         )}
         style={{
-          '--tw-translate-x': isOpen ? '85%' : 'none'
+          '--tw-translate-x': isOpen
+            ? getContentTranslateX(menuRef.current, contentRef.current)
+            : 'none'
         }}
       >
         {children}
