@@ -220,15 +220,9 @@ export const TaskView: React.FC = () => {
     <ViewTemplate>
       <div className="px-4 space-x-2">
         <Tag variant={task.is_completed ? 'green' : 'gray'}>
-          {task.is_completed && <CheckIcon className="w-3 h-3 mr-1" />}
           {task.is_completed ? '' : 'not '}completed
         </Tag>
-        {task.is_important && (
-          <Tag variant="red">
-            <FireIcon className="w-3 h-3 mr-1" />
-            important
-          </Tag>
-        )}
+        {task.is_important && <Tag variant="red">important</Tag>}
       </div>
       <h1
         className="
