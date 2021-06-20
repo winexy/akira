@@ -4,15 +4,15 @@ import {CheckIcon} from '@heroicons/react/solid'
 import noop from 'lodash/fp/noop'
 
 type CheckboxProps = {
-  isChecked: boolean
-  onChange(newState: boolean): void
+  isChecked?: boolean
+  onChange?(newState: boolean): void
   onClick?: MouseEventHandler<HTMLLabelElement>
   className?: string
 }
 
 export const Checkbox: React.FC<CheckboxProps> = ({
-  isChecked,
-  onChange,
+  isChecked = false,
+  onChange = noop,
   onClick = noop,
   className = ''
 }) => {
