@@ -79,7 +79,7 @@ const Checklist: React.FC<ChecklistPropsT> = ({taskId, checklist}) => {
               'text-red-500 rounded',
               'transition ease-in duration-150',
               'active:text-red-600 active:bg-gray-300',
-              'focus:outline-none'
+              'focus:outline-none focus:bg-gray-200 focus:bg-opacity-75'
             )}
             onClick={() =>
               removeTodoFx({
