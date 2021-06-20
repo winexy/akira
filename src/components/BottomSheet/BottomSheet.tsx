@@ -20,6 +20,7 @@ export const BottomSheet: React.FC<Props> = ({name, children, className}) => {
   const [sheetTouchStart, setSheetTouchStart] = useState(0)
   const [sheetShift, setSheetShift] = useState(0)
   const contentRef = useRef<HTMLDivElement | null>(null)
+  const rootRef = useRef<HTMLDivElement | null>(null)
 
   const onBlackoutTouchStart = () => setIsBlackoutTouchStarted(true)
 
@@ -57,12 +58,13 @@ export const BottomSheet: React.FC<Props> = ({name, children, className}) => {
 
   return (
     <CSSTransition
+      nodeRef={rootRef}
       in={activeBottomSheet === name}
       timeout={500}
       unmountOnExit
       classNames="bottom-sheet-slide-up"
     >
-      <div className="z-50 fixed inset-0 flex">
+      <div ref={rootRef} className="z-50 fixed inset-0 flex">
         <div
           className="blackout fixed inset-0 z-10 bg-black opacity-50"
           role="button"
