@@ -114,16 +114,23 @@ const TextArea: React.FC<TextAreaProps> = ({
   const [rows, setRows] = useState(() => countRows(value))
   const [localValue, setLocalValue] = useState(value)
 
+  const sync = (newValue: string) => {
+    setRows(countRows(newValue))
+    setLocalValue(newValue)
+  }
+
   const handleChange: ChangeEventHandler<HTMLTextAreaElement> = event => {
     const {value} = event.target
 
-    setRows(countRows(value))
-    setLocalValue(value)
     onInput(value)
+    sync(value)
   }
 
   const handleBlur: FocusEventHandler<HTMLTextAreaElement> = event => {
-    onChange(event.target.value)
+    const value = event.target.value.trim()
+
+    onChange(value)
+    sync(value)
   }
 
   return (
@@ -146,6 +153,8 @@ export const TaskView: React.FC = () => {
   const [isTodoInputVisible, setIsTodoInputVisible] = useState(false)
   const [todoTitle, setTodoTitle] = useState('')
   const title = task?.title ?? ''
+
+  console.log(task?.description)
 
   const taskTitle = useMemo(() => escape(title), [title])
 
