@@ -9,6 +9,7 @@ import {Menu} from '@components/Menu/Menu'
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
 import {useFirebaseAuth} from './firebase/Provider'
 import {ImportantView} from './views/ImportantView'
+import {TasksView} from './views/TasksView'
 
 const dndConfig = {
   enableMouseEvents: true
@@ -112,6 +113,9 @@ function App() {
           <Switch>
             <Route path="/" exact>
               <MainView />
+            </Route>
+            <Route path="/tasks" exact>
+              <TasksView />
             </Route>
             <Route path="/tasks/:id">
               <TaskView />

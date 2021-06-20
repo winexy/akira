@@ -128,15 +128,14 @@ export const Menu: React.FC = ({children}) => {
           <MenuItem to="/" Icon={HomeIcon}>
             Today
           </MenuItem>
+          <MenuItem to="/tasks" Icon={CollectionIcon}>
+            Tasks
+          </MenuItem>
           <MenuItem to="/important" Icon={FireIcon}>
             Important
           </MenuItem>
           <MenuItem to="/wip" Icon={CheckIcon}>
             Completed
-            <WIP className="ml-auto" />
-          </MenuItem>
-          <MenuItem to="/wip" Icon={CollectionIcon}>
-            Tasks Lists
             <WIP className="ml-auto" />
           </MenuItem>
           <MenuItem to="/wip" Icon={AdjustmentsIcon}>
