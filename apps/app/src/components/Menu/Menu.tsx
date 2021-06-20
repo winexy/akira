@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react'
+import React, {useRef} from 'react'
 import clsx from 'clsx'
 import {
   AdjustmentsIcon,
@@ -6,7 +6,8 @@ import {
   FireIcon,
   LogoutIcon,
   CheckIcon,
-  HomeIcon
+  HomeIcon,
+  CollectionIcon
 } from '@heroicons/react/solid'
 import {closeMenu, $isMenuOpen} from '@store/menu'
 import {useFirebaseAuth} from '@/firebase/Provider'
@@ -130,6 +131,10 @@ export const Menu: React.FC = ({children}) => {
           </MenuItem>
           <MenuItem to="/wip" Icon={CheckIcon}>
             Completed
+            <WIP className="ml-auto" />
+          </MenuItem>
+          <MenuItem to="/wip" Icon={CollectionIcon}>
+            Tasks Lists
             <WIP className="ml-auto" />
           </MenuItem>
           <MenuItem to="/wip" Icon={AdjustmentsIcon}>
