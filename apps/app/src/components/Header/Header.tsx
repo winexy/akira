@@ -16,8 +16,13 @@ export const Header: React.FC = ({children}) => {
       )}
     >
       {isUndefined(children) ? (
-        <Link to="/">
-          <h1 className="font-bold text-xl font-mono active:text-gray-900">
+        <Link to="/" className="focus:outline-none focus:text-purple-500">
+          <h1
+            className="
+              font-bold text-xl font-mono 
+              active:text-gray-900 
+            "
+          >
             Akira
           </h1>
         </Link>
@@ -32,6 +37,7 @@ export const Header: React.FC = ({children}) => {
           transition ease-in duration-150
           active:bg-gray-300
           focus:outline-none
+          focus:bg-gray-200
         "
         onClick={() => toggleMenu()}
       >

@@ -267,7 +267,7 @@ export const TaskView: React.FC = () => {
               value={todoTitle}
               placeholder="Add todo..."
               className={clsx(
-                'bg-gray-200 bg-opacity-50 px-4 py-2 rounded-md border shadow-none',
+                'bg-gray-200 bg-opacity-50 px-4 py-2 rounded-md border shadow-inner',
                 'appearance-none border border-gray-300',
                 'focus:outline-none focus:border-indigo-500'
               )}
