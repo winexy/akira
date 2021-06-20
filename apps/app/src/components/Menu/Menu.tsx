@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react'
+import React, {useRef} from 'react'
 import clsx from 'clsx'
 import {
   AdjustmentsIcon,
@@ -74,12 +74,6 @@ export const Menu: React.FC = ({children}) => {
   const auth = useFirebaseAuth()
   const menuRef = useRef<HTMLElement | null>(null)
   const contentRef = useRef<HTMLDivElement | null>(null)
-
-  useEffect(() => {
-    if (isOpen) {
-      menuRef.current?.querySelector('ul')?.firstChild?.firstChild?.focus()
-    }
-  }, [isOpen])
 
   return (
     <>
