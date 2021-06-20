@@ -170,16 +170,17 @@ export const Menu: React.FC = ({children}) => {
         className={clsx(
           'transform flex flex-col',
           'bg-gray-100',
-          'transition-transform ease-in duration-300',
+          'transition ease-in duration-300',
           isOpen ? 'max-vh-full' : 'vh-full',
           {
-            'scale-90 rounded-3xl shadow-2xl h-screen overflow-hidden pointer-events-none': isOpen
+            'scale-90 rounded-3xl shadow-2xl h-screen overflow-hidden pointer-events-none filter opacity-75': isOpen
           }
         )}
         style={{
           '--tw-translate-x': isOpen
             ? getContentTranslateX(menuRef.current, contentRef.current)
-            : 'none'
+            : 'none',
+          '--tw-blur': isOpen ? 'blur(2px)' : ''
         }}
       >
         {children}
