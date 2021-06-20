@@ -17,7 +17,13 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   className = ''
 }) => {
   return (
-    <label className={className} onClick={onClick}>
+    <label
+      className={clsx(
+        className,
+        'focus-within:ring-2 rounded transition ease-in duration-150'
+      )}
+      onClick={onClick}
+    >
       <input
         type="checkbox"
         className="sr-only"
