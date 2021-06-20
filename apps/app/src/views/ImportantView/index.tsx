@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react'
-import {ViewTemplate} from '@/views/ViewTemplate'
+import {MainView} from '@/views/MainView'
 import {useStore} from 'effector-react'
 import {Link} from 'react-router-dom'
 import {$tasksIds, queryTasksFx} from '@store/tasks/slice'
@@ -15,7 +15,7 @@ export const ImportantView: React.FC = () => {
   }, [])
 
   return (
-    <ViewTemplate>
+    <MainView>
       <div className="px-4 text-gray-600">
         <h2 className="flex items-center font-bold text-3xl">
           Important
@@ -33,6 +33,6 @@ export const ImportantView: React.FC = () => {
           }
         />
       </section>
-    </ViewTemplate>
+    </MainView>
   )
 }

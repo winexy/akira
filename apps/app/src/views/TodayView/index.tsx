@@ -15,7 +15,7 @@ import {$isMenuOpen} from '@store/menu'
 import clsx from 'clsx'
 import {useStore} from 'effector-react'
 import format from 'date-fns/format'
-import {ViewTemplate} from '@views/ViewTemplate'
+import {MainView} from '@views/MainView'
 
 export function TodayView() {
   const formRef = useRef<TaskFormRef>(null)
@@ -50,7 +50,7 @@ export function TodayView() {
   }
 
   return (
-    <ViewTemplate className="bg-gray-100 flex-1">
+    <MainView className="bg-gray-100 flex-1">
       <TaskForm
         ref={formRef}
         title={title}
@@ -107,6 +107,6 @@ export function TodayView() {
           </button>
         </div>
       )}
-    </ViewTemplate>
+    </MainView>
   )
 }
