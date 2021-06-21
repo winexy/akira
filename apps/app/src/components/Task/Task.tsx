@@ -198,22 +198,21 @@ export const Task: React.FC<TaskProps> = ({
             'flex items-center justify-center',
             'w-10 h-10 rounded',
             'text-white',
-            'transition ease-in duration-100',
-            'active:bg-gray-100',
             'focus:outline-none',
             task.is_important
               ? 'text-red-500 active:text-red-400'
               : 'text-gray-400 bg-opacity-70 active:text-opacity-100'
           )}
-          onTouchStart={e => {
-            e.stopPropagation()
-          }}
           onClick={e => {
             e.preventDefault()
             onSetImportant(task.id)
           }}
         >
-          <FireIcon className={clsx('w-5 h-5')} />
+          <FireIcon
+            className={clsx(
+              'w-5 h-5 transform active:scale-150 transition ease-in duration'
+            )}
+          />
         </button>
         {sortable && (
           <button
