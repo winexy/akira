@@ -185,6 +185,9 @@ export const Menu: React.FC = ({children}) => {
         style={{
           '--tw-translate-x': isOpen
             ? getContentTranslateX(menuRef.current, contentRef.current)
+            : 'none',
+          '-webkit-mask-image': isOpen
+            ? '-webkit-radial-gradient(white, black)'
             : 'none'
         }}
       >
