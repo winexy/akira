@@ -16,11 +16,12 @@ import clsx from 'clsx'
 import {useStore} from 'effector-react'
 import format from 'date-fns/format'
 import {MainView} from '@views/MainView'
-import {showBottomSheet} from '@store/bottom-sheet/index'
+import {showBottomSheet,hideBottomSheet} from '@store/bottom-sheet/index'
 import {BottomSheet} from '@components/BottomSheet/BottomSheet'
 import {Checkbox} from '@components/Checkbox/Checkbox'
 import {WIP} from '@components/Tag/Tag'
 import {FilterIcon} from '@heroicons/react/outline'
+
 
 export function TodayView() {
   const formRef = useRef<TaskFormRef>(null)
@@ -88,12 +89,24 @@ export function TodayView() {
           <WIP className="ml-2" />
         </button>
       </div>
-      <BottomSheet name="filters" className="px-6 pb-6 pt-1 text-gray-800">
+      <BottomSheet name="filters" className="px-4 pb-6 pt-1 text-gray-800">
         <h2 className="font-bold text-2xl">Filters</h2>
-        <ul className="mt-4 space-y-3">
+        <ul className="mt-4 space-y-1">
           {['Completed', 'Important'].map(value => (
             <li className="" key={value}>
-              <label className="flex items-center font-semibold text-lg active:text-gray-500">
+              <label
+                className="
+                  px-3 py-2 
+                  flex items-center 
+                  font-semibold text-lg 
+                  border border-gray-100 
+                  bg-gray-50 rounded
+                  transition ease-in duration-75
+                  select-none
+                  active:bg-gray-100
+                  active:border-gray-200
+                "
+              >
                 <Checkbox
                   className="mr-3"
                   isChecked={filters.includes(value)}
@@ -113,13 +126,16 @@ export function TodayView() {
         <button
           className="
             mt-6 px-6 w-full py-3 
-            text-white bg-indigo-500 
-            border-indigo-600 border
+            text-white bg-blue-600  font-semibold
+            border-blue-400 border
             rounded-md
             transition ease-in duration-150
             focus:outline-none
-            active:bg-indigo-600
+            active:bg-blue-700
+            active:border-blue-700
+            active:shadow-md
           "
+          onClick={() => hideBottomSheet()}
         >
           Apply
         </button>
