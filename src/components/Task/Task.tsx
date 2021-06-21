@@ -146,9 +146,9 @@ export const Task: React.FC<TaskProps> = ({
       ref={dropRef as Ref<Element>}
       Component="li"
       className={clsx(
-        'rounded-md overflow-hidden',
+        'rounded-lg overflow-hidden',
         'shadow-xs bg-white',
-        'transform',
+        'transform border border-gray-200',
         'transition ease-in duration-100',
         {
           'scale-95 -rotate-1': isDragging
@@ -170,22 +170,6 @@ export const Task: React.FC<TaskProps> = ({
           >
             <XIcon className="w-5 h-5" />
           </button>
-          <button
-            className={clsx(
-              'flex items-center justify-center',
-              'h-full px-5',
-              'text-white',
-              'transition ease-in duration-100',
-              'active:text-2xl',
-              'focus:outline-none',
-              task.is_important
-                ? 'bg-yellow-500 active:bg-yellow-400'
-                : 'bg-gray-400 bg-opacity-70 active:bg-opacity-100'
-            )}
-            onClick={() => onSetImportant(task.id)}
-          >
-            <FireIcon className="w-5 h-5" />
-          </button>
         </>
       }
     >
@@ -193,10 +177,10 @@ export const Task: React.FC<TaskProps> = ({
         to={`/tasks/${task.id}`}
         className={clsx(
           'flex items-center',
-          'bg-white p-4 text-lg text-black',
+          'bg-white pl-4 p-2 text-lg text-black',
           'rounded-md',
           'transition ease-in duration-150',
-          'active:bg-gray-200',
+          'active:bg-gray-100',
           {
             'line-through text-gray-400': task.is_completed
           }
@@ -209,6 +193,28 @@ export const Task: React.FC<TaskProps> = ({
           onClick={e => e.stopPropagation()}
         />
         <p className="flex-1 truncate mx-2">{task.title}</p>
+        <button
+          className={clsx(
+            'flex items-center justify-center',
+            'w-10 h-10 rounded',
+            'text-white',
+            'transition ease-in duration-100',
+            'active:bg-gray-100',
+            'focus:outline-none',
+            task.is_important
+              ? 'text-red-500 active:text-red-400'
+              : 'text-gray-400 bg-opacity-70 active:text-opacity-100'
+          )}
+          onTouchStart={e => {
+            e.stopPropagation()
+          }}
+          onClick={e => {
+            e.preventDefault()
+            onSetImportant(task.id)
+          }}
+        >
+          <FireIcon className={clsx('w-5 h-5')} />
+        </button>
         {sortable && (
           <button
             ref={dragRef as LegacyRef<HTMLButtonElement>}
