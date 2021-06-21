@@ -1,9 +1,10 @@
-import React, {useState, useRef, TouchEventHandler} from 'react'
+import React, {useState, useRef, TouchEventHandler, useEffect} from 'react'
 import {useStore} from 'effector-react'
 import get from 'lodash/fp/get'
 import clsx from 'clsx'
 import {CSSTransition} from 'react-transition-group'
 import {$activeBottomSheet, hideBottomSheet} from '@store/bottom-sheet'
+import {disableBodyScroll, enableBodyScroll} from 'body-scroll-lock'
 import './BottomSheet.css'
 
 const extractTouch = get('changedTouches.0.clientY')
@@ -21,6 +22,8 @@ export const BottomSheet: React.FC<Props> = ({name, children, className}) => {
   const [sheetShift, setSheetShift] = useState(0)
   const contentRef = useRef<HTMLDivElement | null>(null)
   const rootRef = useRef<HTMLDivElement | null>(null)
+
+  const isActive = activeBottomSheet === name
 
   const onBlackoutTouchStart = () => setIsBlackoutTouchStarted(true)
 
@@ -56,10 +59,18 @@ export const BottomSheet: React.FC<Props> = ({name, children, className}) => {
     setSheetShift(0)
   }
 
+  useEffect(() => {
+    if (isActive && contentRef.current) {
+      disableBodyScroll(contentRef.current)
+    } else if (contentRef.current) {
+      enableBodyScroll(contentRef.current)
+    }
+  }, [isActive])
+
   return (
     <CSSTransition
       nodeRef={rootRef}
-      in={activeBottomSheet === name}
+      in={isActive}
       timeout={500}
       unmountOnExit
       classNames="bottom-sheet-slide-up"
@@ -75,13 +86,13 @@ export const BottomSheet: React.FC<Props> = ({name, children, className}) => {
         />
         <div
           className="sheet z-10 absolute bottom-0 flex w-full"
-          style={{maxHeight: '95%'}}
+          style={{maxHeight: '90%'}}
         >
           <div
             style={{transform: `translateY(${sheetShift}px)`}}
             className="
               w-full flex flex-col
-              bg-white overflow-hidden rounded-t-md
+              bg-white overflow-hidden rounded-t-xl
               transition duration-300 ease-out
             "
             role="dialog"
