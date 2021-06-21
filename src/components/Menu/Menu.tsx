@@ -185,8 +185,7 @@ export const Menu: React.FC = ({children}) => {
         style={{
           '--tw-translate-x': isOpen
             ? getContentTranslateX(menuRef.current, contentRef.current)
-            : 'none',
-          '--tw-blur': isOpen ? 'blur(2px)' : ''
+            : 'none'
         }}
       >
         {children}
