@@ -63,7 +63,7 @@ export const Tasks: React.FC<Props> = ({isPending, tasksIds, noTasksSlot}) => {
   }
 
   return (
-    <ul className="space-y-1 px-4">
+    <ul className="space-y-0.5 px-4">
       {tasksIds.map((taskId, index) => (
         <Task
           key={taskId}
