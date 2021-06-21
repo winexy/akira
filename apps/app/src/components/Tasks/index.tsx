@@ -22,7 +22,7 @@ export const Tasks: React.FC<Props> = ({isPending, tasksIds, noTasksSlot}) => {
   if (isPending) {
     const taskHeight = 64
     const spacing = 4
-    const count = 3
+    const count = 8
     const height = taskHeight * count + (count - 1) * spacing
     return (
       <section className="px-4">
