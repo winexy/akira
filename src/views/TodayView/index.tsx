@@ -16,12 +16,11 @@ import clsx from 'clsx'
 import {useStore} from 'effector-react'
 import format from 'date-fns/format'
 import {MainView} from '@views/MainView'
-import {showBottomSheet,hideBottomSheet} from '@store/bottom-sheet/index'
+import {showBottomSheet, hideBottomSheet} from '@store/bottom-sheet/index'
 import {BottomSheet} from '@components/BottomSheet/BottomSheet'
 import {Checkbox} from '@components/Checkbox/Checkbox'
 import {WIP} from '@components/Tag/Tag'
 import {FilterIcon} from '@heroicons/react/outline'
-
 
 export function TodayView() {
   const formRef = useRef<TaskFormRef>(null)
