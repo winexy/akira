@@ -1,6 +1,6 @@
-import React, {useState, useRef, useEffect} from 'react'
+import React, {useState, useRef, useEffect, useMemo} from 'react'
 import isNull from 'lodash/isNull'
-import {PlusIcon} from '@heroicons/react/solid'
+import {PlusIcon, SortAscendingIcon} from '@heroicons/react/solid'
 import {TaskForm, TaskFormRef} from '@components/TaskForm/TaskForm'
 import {Tasks} from '@components/Tasks'
 import size from 'lodash/fp/size'
@@ -9,6 +9,7 @@ import {
   queryTasksFx,
   addTaskFx,
   $tasksIds,
+  $tasksById,
   $completedTasksCount
 } from '@store/tasks'
 import {$isMenuOpen} from '@store/menu'
@@ -19,8 +20,14 @@ import {MainView} from '@views/MainView'
 import {showBottomSheet, hideBottomSheet} from '@store/bottom-sheet/index'
 import {BottomSheet} from '@components/BottomSheet/BottomSheet'
 import {Checkbox} from '@components/Checkbox/Checkbox'
-import {WIP} from '@components/Tag/Tag'
 import {FilterIcon} from '@heroicons/react/outline'
+
+enum SortEnum {
+  ImportantASC = 'Important::ASC',
+  ImportantDESC = 'Important::DESC',
+  CompletedASC = 'Completed::ASC',
+  CompletedDESC = 'Completed::DESC'
+}
 
 export function TodayView() {
   const formRef = useRef<TaskFormRef>(null)
@@ -30,7 +37,38 @@ export function TodayView() {
   const completedTasksCount = useStore($completedTasksCount)
   const isPending = useStore(queryTasksFx.pending)
   const tasksIds = useStore($tasksIds)
+  const tasksById = useStore($tasksById)
   const [filters, setFilters] = useState<string[]>([])
+  const [sortSelection, setSortSelection] = useState<string | null>(null)
+  const sorted = tasksIds.slice().sort((taskIdA, taskIdB) => {
+    const taskA = tasksById[taskIdA]
+    const taskB = tasksById[taskIdB]
+
+    switch (sortSelection) {
+      case SortEnum.ImportantASC: {
+        if (taskA.is_important && !taskB.is_important) return -1
+        if (taskB.is_important && !taskA.is_important) return 1
+        return 0
+      }
+      case SortEnum.ImportantDESC: {
+        if (taskA.is_important && !taskB.is_important) return 1
+        if (taskB.is_important && !taskA.is_important) return -1
+        return 0
+      }
+      case SortEnum.CompletedASC: {
+        if (taskA.is_completed && !taskB.is_completed) return 1
+        if (taskB.is_completed && !taskA.is_completed) return -1
+        return 0
+      }
+      case SortEnum.CompletedDESC: {
+        if (taskA.is_completed && !taskB.is_completed) return 1
+        if (taskB.is_completed && !taskA.is_completed) return -1
+        return 0
+      }
+      default:
+        return 0
+    }
+  })
 
   const today = format(new Date(), 'eeee, do MMMM')
 
@@ -64,29 +102,14 @@ export function TodayView() {
         onSubmit={onSubmit}
         onVisibilityChange={onTaskFormVisiblityChange}
       />
-      <div className="px-4 text-gray-600">
-        <h2 className="font-bold text-3xl">Today</h2>
-        <p className="text-sm">{today}</p>
-      </div>
-      <div className="flex justify-between items-center mt-4 px-4">
-        <span className="text-gray-700 font-bold mr-4">
-          {completedTasksCount} / {size(tasksIds)} completed
+      <div className="flex justify-between items-center px-4 text-gray-600">
+        <div>
+          <h2 className="font-bold text-3xl">Today</h2>
+          <p className="text-sm">{today}</p>
+        </div>
+        <span className="text-gray-700 text-4xl font-bold">
+          {completedTasksCount} / {size(tasksIds)}
         </span>
-        <button
-          className="
-            flex items-center pl-2 pr-1 py-1 
-            border border-gray-300
-            font-semibold 
-            rounded-md
-            active:bg-gray-200
-            focus:outline-none 
-          "
-          onClick={() => showBottomSheet('filters')}
-        >
-          <FilterIcon className="w-4 h-4 mr-2" />
-          Filters
-          <WIP className="ml-2" />
-        </button>
       </div>
       <BottomSheet name="filters" className="px-4 pb-6 pt-1 text-gray-800">
         <h2 className="font-bold text-2xl">Filters</h2>
@@ -139,9 +162,85 @@ export function TodayView() {
           Apply
         </button>
       </BottomSheet>
-      <section className="mt-4">
-        <Tasks isPending={isPending} tasksIds={tasksIds} />
+      <BottomSheet name="sorting" className="px-4 pb-6 pt-1 text-gray-800">
+        <h2 className="font-bold text-2xl">Sort</h2>
+        <ul className="mt-4 space-y-1">
+          {[
+            SortEnum.CompletedASC,
+            SortEnum.CompletedDESC,
+            SortEnum.ImportantASC,
+            SortEnum.ImportantDESC
+          ].map(value => (
+            <li className="" key={value}>
+              <label
+                className="
+                  px-3 py-2 
+                  flex items-center 
+                  font-semibold text-lg 
+                  border border-gray-100 
+                  bg-gray-50 rounded
+                  transition ease-in duration-75
+                  select-none
+                  active:bg-gray-100
+                  active:border-gray-200
+                "
+              >
+                <Checkbox
+                  className="mr-3"
+                  isChecked={value === sortSelection}
+                  onChange={checked => {
+                    if (checked) {
+                      setSortSelection(value)
+                    } else {
+                      setSortSelection(null)
+                    }
+                    hideBottomSheet()
+                  }}
+                />
+                {value}
+              </label>
+            </li>
+          ))}
+        </ul>
+      </BottomSheet>
+      <section className="mt-4 pb-24">
+        <Tasks isPending={isPending} tasksIds={sorted} />
       </section>
+      <div className="fixed bottom-0 right-0 left-0 py-7 flex items-center mt-4 px-4 from-gray-100 bg-gradient-to-t">
+        <button
+          className="
+            flex items-center px-3 py-1 
+            border border-gray-300
+            font-semibold 
+            rounded-md shadow-md
+            bg-gray-100
+            active:bg-gray-200
+            active:shadow-lg
+            focus:outline-none 
+          "
+          onClick={() => showBottomSheet('filters')}
+        >
+          <FilterIcon className="w-4 h-4 mr-2" />
+          Filters
+        </button>
+        <button
+          className="
+            ml-4 flex items-center px-3 py-1 
+            border border-gray-300
+            font-semibold 
+            rounded-md shadow-md
+            bg-gray-100
+            active:bg-gray-200
+            active:shadow-lg
+            focus:outline-none 
+          "
+          onClick={() => showBottomSheet('sorting')}
+        >
+          <SortAscendingIcon className="w-4 h-4 mr-2" />
+          Sort
+          {/* <WIP className="ml-2" /> */}
+        </button>
+      </div>
       {isAddButtonVisible && (
         <div className="z-20 fixed bottom-0 right-0 p-4">
           <button
