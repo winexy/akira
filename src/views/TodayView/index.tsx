@@ -39,7 +39,10 @@ export function TodayView() {
   const tasksIds = useStore($tasksIds)
   const tasksById = useStore($tasksById)
   const [filters, setFilters] = useState<string[]>([])
-  const [sortSelection, setSortSelection] = useState<string | null>(null)
+  const [sortSelection, setSortSelection] = useState<string | null>(() => {
+    return localStorage.getItem('sort-selection')
+  })
+
   const sorted = tasksIds.slice().sort((taskIdA, taskIdB) => {
     const taskA = tasksById[taskIdA]
     const taskB = tasksById[taskIdB]
@@ -56,8 +59,8 @@ export function TodayView() {
         return 0
       }
       case SortEnum.CompletedASC: {
-        if (taskA.is_completed && !taskB.is_completed) return 1
-        if (taskB.is_completed && !taskA.is_completed) return -1
+        if (taskA.is_completed && !taskB.is_completed) return -1
+        if (taskB.is_completed && !taskA.is_completed) return 1
         return 0
       }
       case SortEnum.CompletedDESC: {
@@ -191,8 +194,10 @@ export function TodayView() {
                   onChange={checked => {
                     if (checked) {
                       setSortSelection(value)
+                      localStorage.setItem('sort-selection', value)
                     } else {
                       setSortSelection(null)
+                      localStorage.removeItem('sort-selection')
                     }
                     hideBottomSheet()
                   }}
