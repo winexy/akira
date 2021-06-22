@@ -164,8 +164,9 @@ export const TaskView: React.FC = () => {
   useEffect(() => {
     if (isNull(task)) {
       loadTaskFx(id)
-      loadChecklistFx(id)
     }
+
+    loadChecklistFx(id)
   }, [id, task])
 
   useLayoutEffect(() => {
