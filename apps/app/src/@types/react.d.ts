@@ -5,6 +5,5 @@ declare module 'react' {
   interface CSSProperties extends CSS.Properties<string | number> {
     ['--tw-translate-x']?: string
     ['--tw-blur']?: string
-    ['-webkit-mask-image']?: string
   }
 }
