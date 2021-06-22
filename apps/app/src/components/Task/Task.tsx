@@ -10,6 +10,10 @@ import isNull from 'lodash/isNull'
 import {useStoreMap} from 'effector-react'
 import get from 'lodash/fp/get'
 import isUndefined from 'lodash/fp/isUndefined'
+import size from 'lodash/fp/size'
+import filter from 'lodash/fp/filter'
+import isEmpty from 'lodash/fp/isEmpty'
+import {CheckListT} from '@store/tasks/types'
 
 const ItemType = 'list-item'
 
@@ -90,6 +94,26 @@ const collectProps = (monitor: DragSourceMonitor) => {
     isDragging,
     opacity: isDragging ? 0.4 : 1
   }
+}
+
+type ProgressBarProps = {
+  checklist: CheckListT
+}
+
+const ChecklistProgressBar: React.FC<ProgressBarProps> = ({checklist}) => {
+  const completedCount = size(filter('is_completed', checklist))
+  const percentage = (completedCount * 100) / size(checklist)
+
+  return (
+    <div className="mt-1 w-full h-1 flex bg-gray-200 rounded overflow-hidden">
+      <div
+        className="h-1 bg-green-400"
+        style={{
+          width: `${percentage}%`
+        }}
+      />
+    </div>
+  )
 }
 
 export const Task: React.FC<TaskProps> = ({
@@ -192,7 +216,12 @@ export const Task: React.FC<TaskProps> = ({
           onChange={() => onCheck(task.id)}
           onClick={e => e.stopPropagation()}
         />
-        <p className="flex-1 truncate mx-2">{task.title}</p>
+        <div className="flex-1 mx-2 flex flex-col">
+          <p className="truncate">{task.title}</p>
+          {!isEmpty(task.checklist) && (
+            <ChecklistProgressBar checklist={task.checklist} />
+          )}
+        </div>
         <button
           className={clsx(
             'flex items-center justify-center',
