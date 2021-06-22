@@ -18,7 +18,8 @@ export const Task = object({
   created_at: string(),
   updated_at: string(),
   is_completed: boolean(),
-  is_important: boolean()
+  is_important: boolean(),
+  checklist: CheckList
 })
 
 export const Tasks = array(Task)

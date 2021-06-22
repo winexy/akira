@@ -20,7 +20,7 @@ type Props = {
 
 export const Tasks: React.FC<Props> = ({isPending, tasksIds, noTasksSlot}) => {
   if (isPending) {
-    const taskHeight = 64
+    const taskHeight = 56
     const spacing = 4
     const count = 8
     const height = taskHeight * count + (count - 1) * spacing
