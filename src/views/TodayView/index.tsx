@@ -13,6 +13,7 @@ import {
   $completedTasksCount
 } from '@store/tasks'
 import {$isMenuOpen} from '@store/menu'
+import values from 'lodash/fp/values'
 import clsx from 'clsx'
 import {useStore} from 'effector-react'
 import format from 'date-fns/format'
@@ -21,13 +22,25 @@ import {showBottomSheet, hideBottomSheet} from '@store/bottom-sheet/index'
 import {BottomSheet} from '@components/BottomSheet/BottomSheet'
 import {Checkbox} from '@components/Checkbox/Checkbox'
 import {FilterIcon} from '@heroicons/react/outline'
+import {sortTasks, SortEnum} from '@/modules/tasks/utils'
+import {exhaustiveCheck} from '@/utils'
 
-enum SortEnum {
-  ImportantASC = 'Important::ASC',
-  ImportantDESC = 'Important::DESC',
-  CompletedASC = 'Completed::ASC',
-  CompletedDESC = 'Completed::DESC'
+function matchSortTypeTitle(sortType: SortEnum) {
+  switch (sortType) {
+    case SortEnum.CompletedASC:
+      return 'Completed first'
+    case SortEnum.CompletedDESC:
+      return 'Completed last'
+    case SortEnum.ImportantASC:
+      return 'Important first'
+    case SortEnum.ImportantDESC:
+      return 'Important last'
+    default:
+      return exhaustiveCheck(sortType)
+  }
 }
+
+const sortTypes = values(SortEnum)
 
 export function TodayView() {
   const formRef = useRef<TaskFormRef>(null)
@@ -39,39 +52,11 @@ export function TodayView() {
   const tasksIds = useStore($tasksIds)
   const tasksById = useStore($tasksById)
   const [filters, setFilters] = useState<string[]>([])
-  const [sortSelection, setSortSelection] = useState<string | null>(() => {
-    return localStorage.getItem('sort-selection')
+  const [sortType, setSortType] = useState<SortEnum | null>(() => {
+    return localStorage.getItem('sort-selection') as SortEnum
   })
 
-  const sorted = tasksIds.slice().sort((taskIdA, taskIdB) => {
-    const taskA = tasksById[taskIdA]
-    const taskB = tasksById[taskIdB]
-
-    switch (sortSelection) {
-      case SortEnum.ImportantASC: {
-        if (taskA.is_important && !taskB.is_important) return -1
-        if (taskB.is_important && !taskA.is_important) return 1
-        return 0
-      }
-      case SortEnum.ImportantDESC: {
-        if (taskA.is_important && !taskB.is_important) return 1
-        if (taskB.is_important && !taskA.is_important) return -1
-        return 0
-      }
-      case SortEnum.CompletedASC: {
-        if (taskA.is_completed && !taskB.is_completed) return -1
-        if (taskB.is_completed && !taskA.is_completed) return 1
-        return 0
-      }
-      case SortEnum.CompletedDESC: {
-        if (taskA.is_completed && !taskB.is_completed) return 1
-        if (taskB.is_completed && !taskA.is_completed) return -1
-        return 0
-      }
-      default:
-        return 0
-    }
-  })
+  const sorted = sortTasks(tasksIds, tasksById, sortType)
 
   const today = format(new Date(), 'eeee, do MMMM')
 
@@ -168,13 +153,8 @@ export function TodayView() {
       <BottomSheet name="sorting" className="px-4 pb-6 pt-1 text-gray-800">
         <h2 className="font-bold text-2xl">Sort</h2>
         <ul className="mt-4 space-y-1">
-          {[
-            SortEnum.CompletedASC,
-            SortEnum.CompletedDESC,
-            SortEnum.ImportantASC,
-            SortEnum.ImportantDESC
-          ].map(value => (
-            <li className="" key={value}>
+          {sortTypes.map(type => (
+            <li className="" key={type}>
               <label
                 className="
                   px-3 py-2 
@@ -190,19 +170,19 @@ export function TodayView() {
               >
                 <Checkbox
                   className="mr-3"
-                  isChecked={value === sortSelection}
+                  isChecked={type === sortType}
                   onChange={checked => {
                     if (checked) {
-                      setSortSelection(value)
-                      localStorage.setItem('sort-selection', value)
+                      setSortType(type)
+                      localStorage.setItem('sort-selection', type)
                     } else {
-                      setSortSelection(null)
+                      setSortType(null)
                       localStorage.removeItem('sort-selection')
                     }
                     hideBottomSheet()
                   }}
                 />
-                {value}
+                {matchSortTypeTitle(type)}
               </label>
             </li>
           ))}
