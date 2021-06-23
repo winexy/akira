@@ -24,6 +24,7 @@ import {Checkbox} from '@components/Checkbox/Checkbox'
 import {FilterIcon} from '@heroicons/react/outline'
 import {sortTasks, SortEnum} from '@/modules/tasks/utils'
 import {exhaustiveCheck} from '@/utils'
+import {Button} from '@/components/Button'
 
 function matchSortTypeTitle(sortType: SortEnum) {
   switch (sortType) {
@@ -99,7 +100,7 @@ export function TodayView() {
           {completedTasksCount} / {size(tasksIds)}
         </span>
       </div>
-      <BottomSheet name="filters" className="px-4 pb-6 pt-1 text-gray-800">
+      <BottomSheet name="filters" className="px-4 pb-6 pt-4 text-gray-800">
         <h2 className="font-bold text-2xl">Filters</h2>
         <ul className="mt-4 space-y-1">
           {['Completed', 'Important'].map(value => (
@@ -133,24 +134,16 @@ export function TodayView() {
             </li>
           ))}
         </ul>
-        <button
-          className="
-            mt-6 px-6 w-full py-3 
-            text-white bg-blue-600  font-semibold
-            border-blue-400 border
-            rounded-md
-            transition ease-in duration-150
-            focus:outline-none
-            active:bg-blue-700
-            active:border-blue-700
-            active:shadow-md
-          "
+        <Button
+          className="mt-6 w-full"
+          variant="blue"
+          size="md"
           onClick={() => hideBottomSheet()}
         >
           Apply
-        </button>
+        </Button>
       </BottomSheet>
-      <BottomSheet name="sorting" className="px-4 pb-6 pt-1 text-gray-800">
+      <BottomSheet name="sorting" className="px-4 pb-6 pt-4 text-gray-800">
         <h2 className="font-bold text-2xl">Sort</h2>
         <ul className="mt-4 space-y-1">
           {sortTypes.map(type => (
