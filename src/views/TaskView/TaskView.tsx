@@ -22,12 +22,7 @@ import {
   $tasksById
 } from '@store/tasks'
 import isEmpty from 'lodash/fp/isEmpty'
-import {
-  CheckIcon,
-  ClipboardCheckIcon,
-  FireIcon,
-  XIcon
-} from '@heroicons/react/solid'
+import {ClipboardCheckIcon, XIcon, PlusIcon} from '@heroicons/react/solid'
 import ContentLoader from 'react-content-loader'
 import {useStoreMap} from 'effector-react'
 import escape from 'escape-html'
@@ -42,7 +37,10 @@ import {
   patchTodoFx
 } from '@store/tasks/slice'
 import {Checkbox} from '@components/Checkbox/Checkbox'
-import {Tag} from '@/components/Tag/Tag'
+import {Tag, WIP} from '@/components/Tag/Tag'
+import {BottomSheet} from '@/components/BottomSheet/BottomSheet'
+import {Button} from '@components/Button'
+import {showBottomSheet} from '../../store/bottom-sheet/index'
 
 type ChecklistPropsT = {
   taskId: TaskIdT
@@ -244,6 +242,23 @@ export const TaskView: React.FC = () => {
           {createdAt}
         </time>
       </div>
+      <section className="mt-4 px-4">
+        <Button
+          size="sm"
+          variant="blue"
+          className="text-sm"
+          onClick={() => showBottomSheet('tags')}
+        >
+          Add Tag <PlusIcon className="ml-2 w-5 h-5" />
+        </Button>
+        <BottomSheet name="tags" className="p-4">
+          <WIP className="block mb-4" />
+          <input
+            type="text"
+            className="w-full border border-gray-300 px-2 py-1 rounded-md bg-gray-50 focus:outline-none  focus:border-blue-500"
+          />
+        </BottomSheet>
+      </section>
       <section className="mt-4 px-4 flex items-center">
         <TextArea
           value={task.description}
