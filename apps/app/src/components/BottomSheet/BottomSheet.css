@@ -7,9 +7,6 @@
     transition: 200ms ease-in;
   }
 
-  &-exit > .sheet {
-    transform: translateY(0%);
-  }
   &-exit-active > .sheet {
     transform: translateY(100%);
     transition: 200ms ease-in;
