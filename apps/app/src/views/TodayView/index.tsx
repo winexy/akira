@@ -226,13 +226,13 @@ export function TodayView() {
               `
                 flex items-center justify-center
                 p-1 w-12 h-12 box-content
-                bg-blue-500 border-blue-600
-                border border-opacity-20
+                bg-blue-500
                 text-white rounded-full
-                shadow-2xl transform
+                shadow-2xl transform: ;
                 transition ease-in duration-100 
                 active:bg-blue-600
                 active:scale-95
+                active:shadow-md
                 focus:outline-none
               `,
               isMenuOpen ? 'rounded-2xl' : 'rounded-md'
