@@ -279,25 +279,43 @@ export const TaskView: React.FC = () => {
         }}
         onBlur={onTitleChange}
       />
-      <div className="mt-4 px-4">
-        <time dateTime={task.created_at} className="text-gray-500">
-          {createdAt}
-        </time>
-      </div>
-      <section className="mt-4 px-4">
+
+      <section className="mt-2 px-4">
+        <ul className="inline-flex space-x-1">
+          {task.tags.map(tag => (
+            <li
+              key={tag.id}
+              className="
+                rounded-2xl px-2 py-0.5 
+                border border-gray-300 bg-gray-200 
+                text-xs text-gray-500 font-semibold
+              "
+            >
+              #{tag.name}
+            </li>
+          ))}
+        </ul>
         <Button
           size="sm"
           variant="blue"
-          className="text-sm"
+          className="mt-2 text-sm"
           onClick={() => showBottomSheet('tags')}
         >
           Add Tag <PlusIcon className="ml-2 w-5 h-5" />
         </Button>
         <BottomSheet name="tags" className="p-4 py-6">
           <h2 className="font-bold text-2xl text-gray-700">Tags</h2>
-          <CreateTagForm className="mt-4" />
+          <hr className="mt-4" />
+          <CreateTagForm taskId={id} className="mt-4" />
         </BottomSheet>
       </section>
+
+      <div className="mt-4 px-4">
+        <time dateTime={task.created_at} className="text-gray-500">
+          {createdAt}
+        </time>
+      </div>
+
       <section className="mt-4 px-4 flex items-center">
         <TextArea
           value={task.description}
