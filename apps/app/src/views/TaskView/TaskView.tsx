@@ -287,6 +287,12 @@ export const TaskView: React.FC = () => {
         onBlur={onTitleChange}
       />
 
+      <div className="mt-2 px-4">
+        <time dateTime={task.created_at} className="text-gray-500">
+          {createdAt}
+        </time>
+      </div>
+      <hr className="mt-2" />
       <section className="mt-2 px-4">
         {!isEmpty(task.tags) && (
           <ul className="inline-flex space-x-1">
@@ -322,13 +328,7 @@ export const TaskView: React.FC = () => {
           <CreateTagForm taskId={id} className="mt-4" />
         </BottomSheet>
       </section>
-
-      <div className="mt-4 px-4">
-        <time dateTime={task.created_at} className="text-gray-500">
-          {createdAt}
-        </time>
-      </div>
-
+      <hr className="mt-3" />
       <section className="mt-4 px-4 flex items-center">
         <TextArea
           value={task.description}
