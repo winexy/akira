@@ -1,9 +1,11 @@
 import {api} from '@lib/api'
 import {tasks} from './tasks/tasks'
 import {checklist} from './checklist/checklist'
+import {tags} from './tags'
 
 export const akira = {
   tasks: tasks(api),
+  tags: tags(api),
   checklist: checklist(api)
 }
 

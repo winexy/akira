@@ -32,6 +32,7 @@ import noop from 'lodash/fp/noop'
 import isNil from 'lodash/fp/isNil'
 import {
   $checklistByTaskId,
+  createTaskTagFx,
   loadChecklistFx,
   patchTaskFx,
   patchTodoFx
@@ -148,13 +149,19 @@ const TextArea: React.FC<TextAreaProps> = ({
   )
 }
 
-const CreateTagForm: React.FC<{className?: ClassValue}> = ({className}) => {
-  const [value, setValue] = useState<string>('')
+type CreateTagFormProps = {
+  className?: ClassValue
+  taskId: TaskIdT
+}
+
+const CreateTagForm: React.FC<CreateTagFormProps> = ({className, taskId}) => {
+  const [name, setName] = useState<string>('')
   const inputRef = useRef<HTMLInputElement | null>(null)
 
   const onSubmit: FormEventHandler = event => {
     event.preventDefault()
-    setValue('')
+    createTaskTagFx({tagName: name, taskId})
+    setName('')
   }
 
   useEffect(() => {
@@ -165,6 +172,7 @@ const CreateTagForm: React.FC<{className?: ClassValue}> = ({className}) => {
     <form onSubmit={onSubmit}>
       <input
         ref={inputRef}
+        value={name}
         type="text"
         placeholder="name"
         className={clsx(
@@ -173,7 +181,7 @@ const CreateTagForm: React.FC<{className?: ClassValue}> = ({className}) => {
           'focus:outline-none focus:border-blue-500',
           className
         )}
-        onChange={e => setValue(e.target.value)}
+        onChange={e => setName(e.target.value)}
       />
       <Button className="mt-4 w-full" size="md" variant="blue">
         Create
