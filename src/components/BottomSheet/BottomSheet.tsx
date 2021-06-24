@@ -53,6 +53,7 @@ export const BottomSheet: React.FC<Props> = ({name, children, className}) => {
   const onSheetTouchEnd: TouchEventHandler = () => {
     if (isSheetTouchStarted && sheetShift >= 100) {
       hideBottomSheet()
+      return
     }
 
     setIsSheetTouchStarted(false)
@@ -62,6 +63,8 @@ export const BottomSheet: React.FC<Props> = ({name, children, className}) => {
   useEffect(() => {
     if (isActive && contentRef.current) {
       disableBodyScroll(contentRef.current)
+      setIsSheetTouchStarted(false)
+      setSheetShift(0)
     } else if (contentRef.current) {
       enableBodyScroll(contentRef.current)
     }
