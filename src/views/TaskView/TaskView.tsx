@@ -8,7 +8,7 @@ import React, {
   useRef,
   useState
 } from 'react'
-import clsx from 'clsx'
+import clsx, {ClassValue} from 'clsx'
 import {useParams} from 'react-router'
 import {MainView} from '@views/MainView'
 import format from 'date-fns/format'
@@ -148,6 +148,40 @@ const TextArea: React.FC<TextAreaProps> = ({
   )
 }
 
+const CreateTagForm: React.FC<{className?: ClassValue}> = ({className}) => {
+  const [value, setValue] = useState<string>('')
+  const inputRef = useRef<HTMLInputElement | null>(null)
+
+  const onSubmit: FormEventHandler = event => {
+    event.preventDefault()
+    setValue('')
+  }
+
+  useEffect(() => {
+    inputRef.current?.focus()
+  }, [])
+
+  return (
+    <form onSubmit={onSubmit}>
+      <input
+        ref={inputRef}
+        type="text"
+        placeholder="name"
+        className={clsx(
+          'w-full px-3 py-2',
+          'rounded-md border border-gray-300',
+          'focus:outline-none focus:border-blue-500',
+          className
+        )}
+        onChange={e => setValue(e.target.value)}
+      />
+      <Button className="mt-4 w-full" size="md" variant="blue">
+        Create
+      </Button>
+    </form>
+  )
+}
+
 export const TaskView: React.FC = () => {
   const {id} = useParams<{id: string}>()
   const todoInputRef = useRef<HTMLInputElement | null>(null)
@@ -251,12 +285,9 @@ export const TaskView: React.FC = () => {
         >
           Add Tag <PlusIcon className="ml-2 w-5 h-5" />
         </Button>
-        <BottomSheet name="tags" className="p-4">
-          <WIP className="block mb-4" />
-          <input
-            type="text"
-            className="w-full border border-gray-300 px-2 py-1 rounded-md bg-gray-50 focus:outline-none  focus:border-blue-500"
-          />
+        <BottomSheet name="tags" className="p-4 py-6">
+          <h2 className="font-bold text-2xl text-gray-700">Tags</h2>
+          <CreateTagForm className="mt-4" />
         </BottomSheet>
       </section>
       <section className="mt-4 px-4 flex items-center">
