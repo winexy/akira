@@ -205,9 +205,11 @@ export const TaskView: React.FC = () => {
     if (isNull(task)) {
       loadTaskFx(id)
     }
-
-    loadChecklistFx(id)
   }, [id, task])
+
+  useEffect(() => {
+    loadChecklistFx(id)
+  }, [id])
 
   useLayoutEffect(() => {
     if (isTodoInputVisible) {
