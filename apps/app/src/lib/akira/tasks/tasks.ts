@@ -40,6 +40,9 @@ export function tasks(api: AxiosInstance) {
     },
     patch(id: TaskIdT, patch: TaskPatchT): Promise<TaskT> {
       return api.patch(`tasks/${id}`, patch).then(unwrap)
+    },
+    addTag(id: TaskIdT, tagId: number): Promise<void> {
+      return api.post(`tasks/${id}/tags/${tagId}`)
     }
   }
 }

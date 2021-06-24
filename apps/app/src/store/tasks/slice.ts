@@ -109,6 +109,18 @@ export const patchTodoFx = app.effect(
   }
 )
 
+type CreateTaskTagPayload = {
+  tagName: string
+  taskId: TaskIdT
+}
+
+export const createTaskTagFx = app.effect(
+  async ({tagName, taskId}: CreateTaskTagPayload) => {
+    const tag = await akira.tags.create(tagName)
+    return akira.tasks.addTag(taskId, tag.id)
+  }
+)
+
 export const optimisticTaskCompletedToggle = app.event<TaskIdT>()
 
 forward({
