@@ -245,9 +245,14 @@ export const TaskView: React.FC = () => {
   }
 
   const onTitleChange: ChangeEventHandler<HTMLHeadingElement> = event => {
-    const newTitle = event.target.textContent
+    const {textContent} = event.target
 
-    if (!isNil(newTitle) && task.title !== newTitle) {
+    // eslint-disable-next-line
+    event.target.innerHTML = textContent ?? ''
+
+    if (!isNil(textContent) && task.title !== textContent) {
+      const newTitle = textContent.trim()
+
       patchTaskFx({
         taskId: id,
         patch: {title: newTitle}
