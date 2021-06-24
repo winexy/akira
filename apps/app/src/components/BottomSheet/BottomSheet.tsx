@@ -88,9 +88,24 @@ export const BottomSheet: React.FC<Props> = ({name, children, className}) => {
           onClick={() => hideBottomSheet()}
         />
         <div
-          className="sheet z-10 absolute bottom-0 flex w-full"
+          className="sheet z-10 absolute bottom-0 flex w-full justify-center"
           style={{maxHeight: '90%'}}
         >
+          <button
+            style={{transform: `translateY(${sheetShift}px)`}}
+            className="
+              absolute top-0 -mt-7
+              flex items-center justify-center flex-shrink-0
+              transition duration-300 ease-out
+              focus:outline-none
+            "
+            onTouchStart={onSheetTouchStart}
+            onTouchMove={onSheetTouchMove}
+            onTouchEnd={onSheetTouchEnd}
+            onClick={() => hideBottomSheet()}
+          >
+            <div className="my-3 h-1.5 w-12 bg-gray-300 rounded" />
+          </button>
           <div
             style={{transform: `translateY(${sheetShift}px)`}}
             className="
@@ -104,12 +119,6 @@ export const BottomSheet: React.FC<Props> = ({name, children, className}) => {
             onTouchMove={onSheetTouchMove}
             onTouchEnd={onSheetTouchEnd}
           >
-            <button
-              className="w-full flex items-center justify-center flex-shrink-0"
-              onClick={() => hideBottomSheet()}
-            >
-              <div className="my-3 h-1 w-10 bg-gray-300 rounded" />
-            </button>
             <div
               ref={contentRef}
               className={clsx(
