@@ -1,6 +1,5 @@
 import React, {
   ChangeEventHandler,
-  FocusEventHandler,
   FormEventHandler,
   useEffect,
   useLayoutEffect,
@@ -30,8 +29,6 @@ import {useQuery} from 'react-query'
 import escape from 'escape-html'
 import isNull from 'lodash/fp/isNull'
 import isUndefined from 'lodash/fp/isUndefined'
-import size from 'lodash/fp/size'
-import noop from 'lodash/fp/noop'
 import isNil from 'lodash/fp/isNil'
 import {
   $checklistByTaskId,
@@ -41,10 +38,11 @@ import {
   patchTodoFx
 } from '@store/tasks/slice'
 import {Checkbox} from '@components/Checkbox/Checkbox'
-import {Tag, WIP} from '@/components/Tag/Tag'
+import {Tag} from '@/components/Tag/Tag'
 import {BottomSheet} from '@/components/BottomSheet/BottomSheet'
 import {Button} from '@components/Button'
 import {akira} from '@/lib/akira'
+import {TextArea} from '@modules/tasks/components'
 import {showBottomSheet} from '../../store/bottom-sheet/index'
 
 type ChecklistPropsT = {
@@ -101,55 +99,6 @@ const Checklist: React.FC<ChecklistPropsT> = ({taskId, checklist}) => {
         </li>
       ))}
     </ul>
-  )
-}
-
-type TextAreaProps = {
-  value: string
-  placeholder?: string
-  onChange(value: string): void
-  onInput?(value: string): void
-}
-
-const countRows = (value: string) => size(value.split('\n'))
-
-const TextArea: React.FC<TextAreaProps> = ({
-  value,
-  placeholder = '',
-  onChange,
-  onInput = noop
-}) => {
-  const [rows, setRows] = useState(() => countRows(value))
-  const [localValue, setLocalValue] = useState(value)
-
-  const sync = (newValue: string) => {
-    setRows(countRows(newValue))
-    setLocalValue(newValue)
-  }
-
-  const handleChange: ChangeEventHandler<HTMLTextAreaElement> = event => {
-    const {value} = event.target
-
-    onInput(value)
-    sync(value)
-  }
-
-  const handleBlur: FocusEventHandler<HTMLTextAreaElement> = event => {
-    const value = event.target.value.trim()
-
-    onChange(value)
-    sync(value)
-  }
-
-  return (
-    <textarea
-      className="w-full p-0 bg-transparent focus:outline-none"
-      value={localValue}
-      rows={rows}
-      placeholder={placeholder}
-      onChange={handleChange}
-      onBlur={handleBlur}
-    />
   )
 }
 
