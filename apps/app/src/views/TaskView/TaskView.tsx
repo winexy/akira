@@ -12,15 +12,7 @@ import {useParams} from 'react-router'
 import {MainView} from '@views/MainView'
 import format from 'date-fns/format'
 import parseISO from 'date-fns/parseISO'
-import {
-  TodoT,
-  TaskIdT,
-  loadTaskFx,
-  addTodoFx,
-  removeTodoFx,
-  $tasksById,
-  TagT
-} from '@store/tasks'
+import {TodoT, TaskIdT, addTodoFx, removeTodoFx, TagT} from '@store/tasks'
 import isEmpty from 'lodash/fp/isEmpty'
 import {
   ClipboardCheckIcon,
@@ -29,18 +21,12 @@ import {
   ChevronDownIcon
 } from '@heroicons/react/solid'
 import ContentLoader from 'react-content-loader'
-import {useStoreMap} from 'effector-react'
 import {useQuery, useMutation, useQueryClient} from 'react-query'
 import escape from 'escape-html'
 import isNull from 'lodash/fp/isNull'
 import isUndefined from 'lodash/fp/isUndefined'
 import isNil from 'lodash/fp/isNil'
-import {
-  $checklistByTaskId,
-  loadChecklistFx,
-  patchTaskFx,
-  patchTodoFx
-} from '@store/tasks/slice'
+import {patchTaskFx, patchTodoFx} from '@store/tasks/slice'
 import {Checkbox} from '@components/Checkbox/Checkbox'
 import {Tag} from '@/components/Tag/Tag'
 import {BottomSheet} from '@/components/BottomSheet/BottomSheet'
@@ -248,8 +234,6 @@ export const TaskView: React.FC = () => {
 
   const todoInputRef = useRef<HTMLInputElement | null>(null)
 
-  const checklist = useStoreMap($checklistByTaskId, byId => byId[id] ?? null)
-
   const [isTodoInputVisible, setIsTodoInputVisible] = useState(false)
   const [todoTitle, setTodoTitle] = useState('')
   const title = task?.title ?? ''
@@ -372,7 +356,7 @@ export const TaskView: React.FC = () => {
         />
       </section>
       <section className="mt-4 px-4">
-        {isEmpty(checklist) && !isTodoInputVisible ? (
+        {isEmpty(task.checklist) && !isTodoInputVisible ? (
           <button
             className={clsx(
               'flex items-center justify-center',
@@ -405,8 +389,8 @@ export const TaskView: React.FC = () => {
           </form>
         )}
       </section>
-      {!isNull(checklist) && (
-        <Checklist taskId={task.id} checklist={checklist} />
+      {!isNull(task.checklist) && (
+        <Checklist taskId={task.id} checklist={task.checklist} />
       )}
     </MainView>
   )
