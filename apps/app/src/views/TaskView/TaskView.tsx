@@ -133,8 +133,10 @@ const CreateTagForm: React.FC<CreateTagFormProps> = ({className, taskId}) => {
         placeholder="name"
         className={clsx(
           'w-full px-3 py-2',
+          'appearance-none',
           'rounded-md border border-gray-300',
-          'focus:outline-none focus:border-blue-500'
+          'focus:outline-none focus:border-blue-500',
+          'focus:ring'
         )}
         onChange={e => setName(e.target.value)}
       />
