@@ -1,18 +1,24 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import {MainView} from '@/views/MainView'
-import {useStore} from 'effector-react'
 import {Link} from 'react-router-dom'
-import {$tasksIds, queryTasksFx} from '@store/tasks/slice'
 import {Tasks} from '@components/Tasks'
 import {FireIcon} from '@heroicons/react/solid'
+import {useQuery, useQueryClient} from 'react-query'
+import {akira} from '@/lib/akira'
 
 export const ImportantView: React.FC = () => {
-  const isPending = useStore(queryTasksFx.pending)
-  const tasksIds = useStore($tasksIds)
-
-  useEffect(() => {
-    queryTasksFx({is_important: 1})
-  }, [])
+  const queryClient = useQueryClient()
+  const {data: tasks = [], isLoading} = useQuery(
+    'tasks:important',
+    () => akira.tasks.query({is_important: 1}),
+    {
+      onSuccess(tasks) {
+        tasks.forEach(task => {
+          queryClient.setQueryData(['task', task.id], task)
+        })
+      }
+    }
+  )
 
   return (
     <MainView>
@@ -24,8 +30,8 @@ export const ImportantView: React.FC = () => {
       </div>
       <section className="mt-4">
         <Tasks
-          isPending={isPending}
-          tasksIds={tasksIds}
+          isPending={isLoading}
+          tasks={tasks}
           noTasksSlot={
             <Link to="/" className="mt-8 text-blue-500 underline">
               Go to home
