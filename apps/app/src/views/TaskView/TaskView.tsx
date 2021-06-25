@@ -12,7 +12,7 @@ import {useParams} from 'react-router'
 import {MainView} from '@views/MainView'
 import format from 'date-fns/format'
 import parseISO from 'date-fns/parseISO'
-import {TodoT, TaskIdT, addTodoFx, removeTodoFx, TagT} from '@store/tasks'
+import {TodoT, TaskIdT, TagT} from '@store/tasks'
 import isEmpty from 'lodash/fp/isEmpty'
 import {
   ClipboardCheckIcon,
@@ -26,7 +26,6 @@ import escape from 'escape-html'
 import isNull from 'lodash/fp/isNull'
 import isUndefined from 'lodash/fp/isUndefined'
 import isNil from 'lodash/fp/isNil'
-import {patchTodoFx} from '@store/tasks/slice'
 import {Checkbox} from '@components/Checkbox/Checkbox'
 import {Tag} from '@/components/Tag/Tag'
 import {BottomSheet} from '@/components/BottomSheet/BottomSheet'
@@ -34,7 +33,7 @@ import {Button} from '@components/Button'
 import {akira} from '@/lib/akira'
 import {TextArea} from '@modules/tasks/components'
 import {showBottomSheet} from '../../store/bottom-sheet/index'
-import {TaskPatchT, TaskT} from '../../store/tasks/types'
+import {TaskPatchT, TaskT, TodoIdT, TodoPatchT} from '../../store/tasks/types'
 
 type ChecklistPropsT = {
   taskId: TaskIdT
@@ -42,6 +41,29 @@ type ChecklistPropsT = {
 }
 
 const Checklist: React.FC<ChecklistPropsT> = ({taskId, checklist}) => {
+  const queryClient = useQueryClient()
+  const patchTodoMutation = useMutation(
+    ({todoId, patch}: {todoId: TodoIdT; patch: TodoPatchT}) => {
+      return akira.checklist.patchTodo(taskId, todoId, patch)
+    },
+    {
+      onSuccess() {
+        queryClient.invalidateQueries(['task', taskId])
+      }
+    }
+  )
+
+  const removeTodoMutation = useMutation(
+    (todoId: TodoIdT) => {
+      return akira.checklist.removeTodo(taskId, todoId)
+    },
+    {
+      onSuccess() {
+        queryClient.invalidateQueries(['task', taskId])
+      }
+    }
+  )
+
   return (
     <ul className="mt-2 divide-y transition ease-in duration-75">
       {checklist.map(todo => (
@@ -59,8 +81,7 @@ const Checklist: React.FC<ChecklistPropsT> = ({taskId, checklist}) => {
             isChecked={todo.is_completed}
             className="mr-4"
             onChange={() =>
-              patchTodoFx({
-                taskId,
+              patchTodoMutation.mutate({
                 todoId: todo.id,
                 patch: {
                   is_completed: !todo.is_completed
@@ -78,12 +99,7 @@ const Checklist: React.FC<ChecklistPropsT> = ({taskId, checklist}) => {
               'active:text-red-600 active:bg-gray-300',
               'focus:outline-none focus:bg-gray-200 focus:bg-opacity-75'
             )}
-            onClick={() =>
-              removeTodoFx({
-                taskId,
-                todoId: todo.id
-              })
-            }
+            onClick={() => removeTodoMutation.mutate(todo.id)}
           >
             <XIcon className="w-4 h-4" />
           </button>
@@ -254,6 +270,20 @@ export const TaskView: React.FC = () => {
     }
   )
 
+  const addTodoMutation = useMutation(
+    (todoTitle: string) => {
+      return akira.checklist.addTodo({
+        taskId: id,
+        title: todoTitle
+      })
+    },
+    {
+      onSuccess() {
+        queryClient.invalidateQueries(['task', id])
+      }
+    }
+  )
+
   useLayoutEffect(() => {
     if (isTodoInputVisible) {
       todoInputRef.current?.focus()
@@ -284,7 +314,7 @@ export const TaskView: React.FC = () => {
     event.preventDefault()
 
     if (!isEmpty(todoTitle)) {
-      addTodoFx({taskId: task.id, todoTitle})
+      addTodoMutation.mutate(todoTitle)
       setTodoTitle('')
     }
   }
