@@ -10,8 +10,6 @@ import {auth} from '@/firebase'
 import isNull from 'lodash/isNull'
 import size from 'lodash/fp/size'
 import {rejectNotImplemented} from '@/utils'
-import defaultTo from 'lodash/defaultTo'
-import {update} from 'lodash/fp'
 import {findIndex} from 'lodash'
 import {TaskT, TaskIdT, TodoT, TodoIdT, TaskPatchT, TodoPatchT} from './types'
 import {app} from '../app'
@@ -106,18 +104,6 @@ export const patchTaskFx = app.effect(({taskId, patch}: TaskPatchPayloadT) => {
 export const patchTodoFx = app.effect(
   ({taskId, todoId, patch}: PatchTodoPayloadT) => {
     return akira.checklist.patchTodo(taskId, todoId, patch)
-  }
-)
-
-type CreateTaskTagPayload = {
-  tagName: string
-  taskId: TaskIdT
-}
-
-export const createTaskTagFx = app.effect(
-  async ({tagName, taskId}: CreateTaskTagPayload) => {
-    const tag = await akira.tags.create(tagName)
-    return akira.tasks.addTag(taskId, tag.id)
   }
 )
 
