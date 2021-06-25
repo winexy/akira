@@ -16,7 +16,7 @@ export const MainView: React.FC<ViewProps> = ({
   return (
     <>
       {isUndefined(header) ? <Header /> : header}
-      <main className={clsx(className)}>{children}</main>
+      <main className={clsx('bg-gray-100', className)}>{children}</main>
     </>
   )
 }

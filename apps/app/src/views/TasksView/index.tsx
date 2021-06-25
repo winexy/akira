@@ -1,24 +1,28 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import {MainView} from '@/views/MainView'
-import {useStore} from 'effector-react'
-import {$tasksIds, queryTasksFx} from '@store/tasks/slice'
 import {Tasks} from '@components/Tasks'
+import {useQuery, useQueryClient} from 'react-query'
+import {akira} from '@/lib/akira'
 
 export const TasksView: React.FC = () => {
-  const isPending = useStore(queryTasksFx.pending)
-  const tasksIds = useStore($tasksIds)
-
-  useEffect(() => {
-    queryTasksFx()
-  }, [])
+  const queryClient = useQueryClient()
+  const {data: tasks = [], isLoading} = useQuery(
+    'tasks:all',
+    () => akira.tasks.query(),
+    {
+      onSuccess(tasks) {
+        tasks.forEach(task => queryClient.setQueryData(['task', task.id], task))
+      }
+    }
+  )
 
   return (
     <MainView>
       <div className="px-4 text-gray-600">
         <h2 className="flex items-center font-bold text-3xl">Tasks</h2>
       </div>
-      <section className="mt-4">
-        <Tasks isPending={isPending} tasksIds={tasksIds} />
+      <section className="mt-4 pb-4">
+        <Tasks isPending={isLoading} tasks={tasks} />
       </section>
     </MainView>
   )
