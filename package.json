@@ -46,6 +46,7 @@
     "react-dnd": "^14.0.2",
     "react-dnd-touch-backend": "^14.0.0",
     "react-dom": "^17.0.0",
+    "react-query": "^3.17.2",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-transition-group": "^4.4.2",
