@@ -23,15 +23,8 @@ function compareByCreatedAt(taskA: TaskT, taskB: TaskT) {
   return compareAsc(parseISO(taskA.created_at), parseISO(taskB.created_at))
 }
 
-export function sortTasks(
-  tasksIds: TaskIdT[],
-  tasksById: Record<TaskIdT, TaskT>,
-  sortType: SortEnum | null
-) {
-  return tasksIds.slice().sort((taskIdA, taskIdB) => {
-    const taskA = tasksById[taskIdA]
-    const taskB = tasksById[taskIdB]
-
+export function sortTasks(tasks: TaskT[], sortType: SortEnum | null) {
+  return tasks.slice().sort((taskA, taskB) => {
     switch (sortType) {
       case SortEnum.ImportantASC:
         return compareBy('is_important', taskA, taskB)

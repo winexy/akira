@@ -4,8 +4,8 @@ import {
   changeTaskPositionFx,
   removeTaskFx,
   toggleImportantFx,
-  TaskIdT,
-  optimisticTaskCompletedToggle
+  optimisticTaskCompletedToggle,
+  TaskT
 } from '@/store/tasks'
 import ContentLoader from 'react-content-loader'
 import isEmpty from 'lodash/fp/isEmpty'
@@ -14,11 +14,11 @@ import {InboxIcon} from '@heroicons/react/solid'
 
 type Props = {
   isPending: boolean
-  tasksIds: TaskIdT[]
+  tasks: TaskT[]
   noTasksSlot?: ReactNode
 }
 
-export const Tasks: React.FC<Props> = ({isPending, tasksIds, noTasksSlot}) => {
+export const Tasks: React.FC<Props> = ({isPending, tasks, noTasksSlot}) => {
   if (isPending) {
     const taskHeight = 56
     const spacing = 4
@@ -52,7 +52,7 @@ export const Tasks: React.FC<Props> = ({isPending, tasksIds, noTasksSlot}) => {
     )
   }
 
-  if (isEmpty(tasksIds)) {
+  if (isEmpty(tasks)) {
     return (
       <div className="flex flex-col justify-center items-center pt-12 text-gray-700">
         <InboxIcon className="w-12 h-12" />
@@ -64,11 +64,11 @@ export const Tasks: React.FC<Props> = ({isPending, tasksIds, noTasksSlot}) => {
 
   return (
     <ul className="space-y-0.5 px-4">
-      {tasksIds.map((taskId, index) => (
+      {tasks.map((task, index) => (
         <Task
-          key={taskId}
+          key={task.id}
           index={index}
-          taskId={taskId}
+          task={task}
           onCheck={optimisticTaskCompletedToggle}
           onRemove={removeTaskFx}
           onOrderChange={changeTaskPositionFx}
