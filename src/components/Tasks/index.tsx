@@ -2,15 +2,18 @@ import React, {ReactNode} from 'react'
 import {Task} from '@/components/Task/Task'
 import {
   changeTaskPositionFx,
-  removeTaskFx,
   toggleImportantFx,
-  optimisticTaskCompletedToggle,
-  TaskT
+  TaskT,
+  TaskIdT
 } from '@/store/tasks'
 import ContentLoader from 'react-content-loader'
 import isEmpty from 'lodash/fp/isEmpty'
 import times from 'lodash/fp/times'
 import {InboxIcon} from '@heroicons/react/solid'
+import {useMutation, useQueryClient} from 'react-query'
+import {akira} from '@lib/akira/index'
+import produce from 'immer'
+import {findIndex, isUndefined} from 'lodash/fp'
 
 type Props = {
   isPending: boolean
@@ -19,6 +22,73 @@ type Props = {
 }
 
 export const Tasks: React.FC<Props> = ({isPending, tasks, noTasksSlot}) => {
+  const queryClient = useQueryClient()
+  const toggleTaskCompleteMutation = useMutation(
+    (taskId: TaskIdT) => {
+      return akira.tasks.toggleCompleted(taskId)
+    },
+    {
+      onMutate(taskId) {
+        const prevTask: Undefined<TaskT> = queryClient.getQueryData([
+          'task',
+          taskId
+        ])
+
+        if (prevTask) {
+          const newTask = {
+            ...prevTask,
+            is_completed: !prevTask.is_completed
+          }
+
+          queryClient.setQueryData(['task', taskId], newTask)
+          queryClient.setQueryData(
+            'tasks:today',
+            (oldTasks: Undefined<TaskT[]>) => {
+              if (isUndefined(oldTasks)) {
+                return []
+              }
+
+              return produce(oldTasks, draft => {
+                const index = findIndex({id: taskId}, oldTasks)
+
+                draft[index] = newTask
+              })
+            }
+          )
+        }
+
+        return {prevTask}
+      },
+      onSuccess(task) {
+        queryClient.setQueryData(['task', task.id], task)
+      },
+      onError(_, taskId, context: any) {
+        if (context?.prevTask) {
+          queryClient.setQueryData(['task', taskId], context.prevTask)
+        }
+      }
+    }
+  )
+
+  const removeTaskMutation = useMutation(akira.tasks.delete, {
+    onSuccess(_, taskId) {
+      queryClient.removeQueries(['task', taskId])
+      queryClient.setQueryData(
+        'tasks:today',
+        (oldTasks: Undefined<TaskT[]>) => {
+          if (isUndefined(oldTasks)) {
+            return []
+          }
+
+          return produce(oldTasks, draft => {
+            const index = findIndex({id: taskId}, oldTasks)
+            draft.splice(index, 1)
+          })
+        }
+      )
+    }
+  })
+
   if (isPending) {
     const taskHeight = 56
     const spacing = 4
@@ -69,8 +139,8 @@ export const Tasks: React.FC<Props> = ({isPending, tasks, noTasksSlot}) => {
           key={task.id}
           index={index}
           task={task}
-          onCheck={optimisticTaskCompletedToggle}
-          onRemove={removeTaskFx}
+          onCheck={toggleTaskCompleteMutation.mutate}
+          onRemove={removeTaskMutation.mutate}
           onOrderChange={changeTaskPositionFx}
           onSetImportant={toggleImportantFx}
         />

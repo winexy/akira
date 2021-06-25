@@ -8,3 +8,5 @@ type LazyThen<T extends AsyncFunc> = T extends (
   : T
 
 type RT2<F extends AnyFunc> = ReturnType<ReturnType<F>>
+
+type Undefined<T> = T | undefined

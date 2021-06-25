@@ -28,7 +28,7 @@ type DragObject = {
 }
 
 function onDragHover(
-  dropRef: React.MutableRefObject<Element | undefined>,
+  dropRef: React.MutableRefObject<Undefined<Element>>,
   index: number,
   updatePosition: (params: UpdatePositionParams) => void
 ) {
