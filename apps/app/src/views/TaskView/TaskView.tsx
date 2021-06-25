@@ -25,14 +25,13 @@ import isEmpty from 'lodash/fp/isEmpty'
 import {ClipboardCheckIcon, XIcon, PlusIcon} from '@heroicons/react/solid'
 import ContentLoader from 'react-content-loader'
 import {useStoreMap} from 'effector-react'
-import {useQuery} from 'react-query'
+import {useQuery, useMutation, useQueryClient} from 'react-query'
 import escape from 'escape-html'
 import isNull from 'lodash/fp/isNull'
 import isUndefined from 'lodash/fp/isUndefined'
 import isNil from 'lodash/fp/isNil'
 import {
   $checklistByTaskId,
-  createTaskTagFx,
   loadChecklistFx,
   patchTaskFx,
   patchTodoFx
@@ -110,10 +109,22 @@ type CreateTagFormProps = {
 const CreateTagForm: React.FC<CreateTagFormProps> = ({className, taskId}) => {
   const [name, setName] = useState<string>('')
   const inputRef = useRef<HTMLInputElement | null>(null)
+  const queryClient = useQueryClient()
+  const createTaskTagMutation = useMutation(
+    async (name: string) => {
+      const tag = await akira.tags.create(name)
+      return akira.tasks.addTag(taskId, tag.id)
+    },
+    {
+      onSuccess() {
+        queryClient.invalidateQueries(['tags'])
+      }
+    }
+  )
 
   const onSubmit: FormEventHandler = event => {
     event.preventDefault()
-    createTaskTagFx({tagName: name, taskId})
+    createTaskTagMutation.mutate(name)
     setName('')
   }
 
@@ -171,8 +182,6 @@ export const TaskView: React.FC = () => {
   const [isTodoInputVisible, setIsTodoInputVisible] = useState(false)
   const [todoTitle, setTodoTitle] = useState('')
   const title = task?.title ?? ''
-
-  globalThis.console.log(tagsQuery)
 
   const taskTitle = useMemo(() => escape(title), [title])
 
