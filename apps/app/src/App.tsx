@@ -1,4 +1,6 @@
 import React from 'react'
+import {QueryClient, QueryClientProvider} from 'react-query'
+import {ReactQueryDevtools} from 'react-query/devtools'
 import {DndProvider} from 'react-dnd'
 import {TouchBackend} from 'react-dnd-touch-backend'
 import {TodayView} from '@/views/TodayView'
@@ -90,6 +92,8 @@ const SvgLoader = (
   </svg>
 )
 
+const queryClient = new QueryClient()
+
 function App() {
   const {isLoading, isAuthenticated} = useFirebaseAuth()
 
@@ -108,27 +112,30 @@ function App() {
 
   return (
     <DndProvider backend={TouchBackend} options={dndConfig}>
-      <Router>
-        <Menu>
-          <Switch>
-            <Route path="/" exact>
-              <TodayView />
-            </Route>
-            <Route path="/tasks" exact>
-              <TasksView />
-            </Route>
-            <Route path="/tasks/:id">
-              <TaskView />
-            </Route>
-            <Route path="/important">
-              <ImportantView />
-            </Route>
-            <Route path="/wip">
-              <WipView />
-            </Route>
-          </Switch>
-        </Menu>
-      </Router>
+      <QueryClientProvider client={queryClient}>
+        <Router>
+          <Menu>
+            <Switch>
+              <Route path="/" exact>
+                <TodayView />
+              </Route>
+              <Route path="/tasks" exact>
+                <TasksView />
+              </Route>
+              <Route path="/tasks/:id">
+                <TaskView />
+              </Route>
+              <Route path="/important">
+                <ImportantView />
+              </Route>
+              <Route path="/wip">
+                <WipView />
+              </Route>
+            </Switch>
+          </Menu>
+        </Router>
+        <ReactQueryDevtools />
+      </QueryClientProvider>
     </DndProvider>
   )
 }
