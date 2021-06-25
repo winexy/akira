@@ -43,6 +43,9 @@ export function tasks(api: AxiosInstance) {
     },
     addTag(id: TaskIdT, tagId: number): Promise<void> {
       return api.post(`tasks/${id}/tags/${tagId}`)
+    },
+    removeTag(id: TaskIdT, tagId: number): Promise<void> {
+      return api.delete(`tasks/${id}/tags/${tagId}`)
     }
   }
 }

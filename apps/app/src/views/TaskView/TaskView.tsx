@@ -14,6 +14,7 @@ import format from 'date-fns/format'
 import parseISO from 'date-fns/parseISO'
 import {TodoT, TaskIdT, TagT} from '@store/tasks'
 import isEmpty from 'lodash/fp/isEmpty'
+import filter from 'lodash/fp/filter'
 import {
   ClipboardCheckIcon,
   XIcon,
@@ -26,14 +27,16 @@ import escape from 'escape-html'
 import isNull from 'lodash/fp/isNull'
 import isUndefined from 'lodash/fp/isUndefined'
 import isNil from 'lodash/fp/isNil'
+import produce from 'immer'
+import map from 'lodash/fp/map'
 import {Checkbox} from '@components/Checkbox/Checkbox'
 import {Tag} from '@/components/Tag/Tag'
 import {BottomSheet} from '@/components/BottomSheet/BottomSheet'
 import {Button} from '@components/Button'
 import {akira} from '@/lib/akira'
 import {TextArea} from '@modules/tasks/components'
-import {showBottomSheet} from '../../store/bottom-sheet/index'
-import {TaskPatchT, TaskT, TodoIdT, TodoPatchT} from '../../store/tasks/types'
+import {showBottomSheet} from '@store/bottom-sheet/index'
+import {TaskPatchT, TaskT, TodoIdT, TodoPatchT} from '@store/tasks/types'
 
 type ChecklistPropsT = {
   taskId: TaskIdT
@@ -180,9 +183,43 @@ const TaskTag: React.FC<{name: string}> = ({name}) => (
   </button>
 )
 
-const TagsManager: React.FC<{taskId: TaskIdT}> = ({taskId}) => {
+const TagsManager: React.FC<{task: TaskT}> = ({task}) => {
+  const queryClient = useQueryClient()
   const {data: tags, isLoading} = useQuery<TagT[]>('tags', akira.tags.all)
   const [isExpanded, setIsExpanded] = useState(false)
+  const taskTagsIdSet = new Set(map('id', task.tags))
+
+  const addTagMutation = useMutation(
+    (tag: TagT) => {
+      return akira.tasks.addTag(task.id, tag.id)
+    },
+    {
+      onSuccess(_, tag) {
+        queryClient.setQueriesData(
+          ['task', task.id],
+          produce(task, draft => {
+            draft.tags.push(tag)
+          })
+        )
+      }
+    }
+  )
+
+  const removeTaskTagMutation = useMutation(
+    (tag: TagT) => {
+      return akira.tasks.removeTag(task.id, tag.id)
+    },
+    {
+      onSuccess(_, tag) {
+        queryClient.setQueriesData(
+          ['task', task.id],
+          produce(task, draft => {
+            draft.tags = filter(t => t.id !== tag.id, task.tags)
+          })
+        )
+      }
+    }
+  )
 
   return (
     <>
@@ -209,7 +246,22 @@ const TagsManager: React.FC<{taskId: TaskIdT}> = ({taskId}) => {
           {tags.map(tag => (
             <li key={tag.id} className="flex items-center px-4 py-2">
               <TaskTag name={tag.name} />
-              <Button className="ml-auto text-xs">add tag</Button>
+              {taskTagsIdSet.has(tag.id) ? (
+                <Button
+                  className="ml-auto text-xs"
+                  variant="red"
+                  onClick={() => removeTaskTagMutation.mutate(tag)}
+                >
+                  remove
+                </Button>
+              ) : (
+                <Button
+                  className="ml-auto text-xs"
+                  onClick={() => addTagMutation.mutate(tag)}
+                >
+                  add tag
+                </Button>
+              )}
             </li>
           ))}
         </ul>
@@ -240,7 +292,7 @@ const TagsManager: React.FC<{taskId: TaskIdT}> = ({taskId}) => {
             />
           </button>
         </div>
-        {isExpanded && <CreateTagForm taskId={taskId} className="mt-4" />}
+        {isExpanded && <CreateTagForm taskId={task.id} className="mt-4" />}
       </div>
     </>
   )
@@ -383,7 +435,7 @@ export const TaskView: React.FC = () => {
           Add Tag <PlusIcon className="ml-2 w-5 h-5" />
         </Button>
         <BottomSheet name="tags" className="pt-4">
-          <TagsManager taskId={id} />
+          <TagsManager task={task} />
         </BottomSheet>
       </section>
       <section className="mt-4 px-4 flex items-center">
