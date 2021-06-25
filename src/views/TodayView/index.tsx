@@ -4,8 +4,8 @@ import {PlusIcon, SortAscendingIcon} from '@heroicons/react/solid'
 import {TaskForm, TaskFormRef} from '@components/TaskForm/TaskForm'
 import {Tasks} from '@components/Tasks'
 import size from 'lodash/fp/size'
+import filter from 'lodash/fp/filter'
 
-import {addTaskFx, $completedTasksCount} from '@store/tasks'
 import {$isMenuOpen} from '@store/menu'
 import values from 'lodash/fp/values'
 import clsx from 'clsx'
@@ -19,8 +19,9 @@ import {FilterIcon} from '@heroicons/react/outline'
 import {sortTasks, SortEnum} from '@/modules/tasks/utils'
 import {exhaustiveCheck} from '@/utils'
 import {Button} from '@/components/Button'
-import {useQuery, useQueryClient} from 'react-query'
+import {useQuery, useQueryClient, useMutation} from 'react-query'
 import {akira} from '@/lib/akira'
+import {useFirebaseAuth} from '@/firebase'
 
 function matchSortTypeTitle(sortType: SortEnum) {
   switch (sortType) {
@@ -44,12 +45,29 @@ export function TodayView() {
   const [title, setTitle] = useState('')
   const [isAddButtonVisible, setIsAddButtonVisible] = useState(true)
   const isMenuOpen = useStore($isMenuOpen)
-  const completedTasksCount = useStore($completedTasksCount)
   const [filters, setFilters] = useState<string[]>([])
   const [sortType, setSortType] = useState<SortEnum | null>(() => {
     return localStorage.getItem('sort-selection') as SortEnum
   })
+  const {user} = useFirebaseAuth()
   const queryClient = useQueryClient()
+  const createTaskMutation = useMutation(
+    (title: string) => {
+      if (isNull(user)) {
+        return Promise.reject(new Error('unauthorized'))
+      }
+
+      return akira.tasks.createTask({
+        author_uid: user.uid,
+        title
+      })
+    },
+    {
+      onSuccess() {
+        queryClient.invalidateQueries(['tasks:today'])
+      }
+    }
+  )
 
   const {data: tasks = [], isLoading} = useQuery(
     'tasks:today',
@@ -63,12 +81,14 @@ export function TodayView() {
     }
   )
 
+  const completedTasksCount = size(filter({is_completed: true}, tasks))
+
   const sorted = sortTasks(tasks, sortType)
 
   const today = format(new Date(), 'eeee, do MMMM')
 
   function onSubmit() {
-    addTaskFx(title)
+    createTaskMutation.mutate(title)
     setTitle('')
   }
 
