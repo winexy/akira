@@ -13,10 +13,12 @@ type Props = React.DetailedHTMLProps<
 const sm = 'px-2 py-1'
 const md = 'px-6 py-3'
 const blue =
-  'bg-blue-500 border border-blue-600  active:bg-blue-600 active:border-blue-700'
+  'bg-blue-500 border border-blue-600 active:bg-blue-600 active:border-blue-700'
+const red =
+  'bg-red-500 border border-red-600 active:bg-red-600 active:border-red-700'
 
 type ButtonSize = 'sm' | 'md'
-type ButtonVariant = 'blue'
+type ButtonVariant = 'blue' | 'red'
 
 function matchSize(size: ButtonSize) {
   switch (size) {
@@ -33,6 +35,8 @@ function matchVariant(variant: ButtonVariant) {
   switch (variant) {
     case 'blue':
       return blue
+    case 'red':
+      return red
     default:
       return exhaustiveCheck(variant)
   }
