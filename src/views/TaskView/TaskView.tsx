@@ -21,12 +21,12 @@ import {
   ChevronDownIcon
 } from '@heroicons/react/solid'
 import ContentLoader from 'react-content-loader'
-import {useQuery, useMutation, useQueryClient} from 'react-query'
+import {useQuery, useMutation, useQueryClient, QueryClient} from 'react-query'
 import escape from 'escape-html'
 import isNull from 'lodash/fp/isNull'
 import isUndefined from 'lodash/fp/isUndefined'
 import isNil from 'lodash/fp/isNil'
-import {patchTaskFx, patchTodoFx} from '@store/tasks/slice'
+import {patchTodoFx} from '@store/tasks/slice'
 import {Checkbox} from '@components/Checkbox/Checkbox'
 import {Tag} from '@/components/Tag/Tag'
 import {BottomSheet} from '@/components/BottomSheet/BottomSheet'
@@ -34,7 +34,7 @@ import {Button} from '@components/Button'
 import {akira} from '@/lib/akira'
 import {TextArea} from '@modules/tasks/components'
 import {showBottomSheet} from '../../store/bottom-sheet/index'
-import {TaskT} from '../../store/tasks/types'
+import {TaskPatchT, TaskT} from '../../store/tasks/types'
 
 type ChecklistPropsT = {
   taskId: TaskIdT
@@ -240,6 +240,18 @@ export const TaskView: React.FC = () => {
 
   const taskTitle = useMemo(() => escape(title), [title])
 
+  const queryClient = useQueryClient()
+  const patchTaskMutation = useMutation(
+    (patch: TaskPatchT) => {
+      return akira.tasks.patch(id, patch)
+    },
+    {
+      onSuccess(task) {
+        queryClient.setQueryData(['task', id], task)
+      }
+    }
+  )
+
   useLayoutEffect(() => {
     if (isTodoInputVisible) {
       todoInputRef.current?.focus()
@@ -284,9 +296,8 @@ export const TaskView: React.FC = () => {
     if (!isNil(textContent) && task.title !== textContent) {
       const newTitle = textContent.trim()
 
-      patchTaskFx({
-        taskId: id,
-        patch: {title: newTitle}
+      patchTaskMutation.mutate({
+        title: newTitle
       })
     }
   }
@@ -347,12 +358,7 @@ export const TaskView: React.FC = () => {
         <TextArea
           value={task.description}
           placeholder="Tap to add description"
-          onChange={description =>
-            patchTaskFx({
-              taskId: id,
-              patch: {description}
-            })
-          }
+          onChange={description => patchTaskMutation.mutate({description})}
         />
       </section>
       <section className="mt-4 px-4">
