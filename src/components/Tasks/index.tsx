@@ -1,6 +1,6 @@
 import React, {ReactNode} from 'react'
 import {Task} from '@/components/Task/Task'
-import {changeTaskPositionFx, TaskT} from '@/store/tasks'
+import {TaskT} from '@/store/tasks'
 import ContentLoader from 'react-content-loader'
 import isEmpty from 'lodash/fp/isEmpty'
 import times from 'lodash/fp/times'
@@ -8,7 +8,7 @@ import {InboxIcon} from '@heroicons/react/solid'
 import {useMutation, useQueryClient} from 'react-query'
 import {akira} from '@lib/akira/index'
 import produce from 'immer'
-import {findIndex, isUndefined} from 'lodash/fp'
+import {findIndex, isUndefined, noop} from 'lodash/fp'
 
 type Props = {
   isPending: boolean
@@ -173,7 +173,7 @@ export const Tasks: React.FC<Props> = ({isPending, tasks, noTasksSlot}) => {
           task={task}
           onCheck={toggleTaskCompleteMutation.mutate}
           onRemove={removeTaskMutation.mutate}
-          onOrderChange={changeTaskPositionFx}
+          onOrderChange={noop}
           onSetImportant={toggleImportantMutation.mutate}
         />
       ))}
