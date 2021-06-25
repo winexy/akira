@@ -16,6 +16,8 @@ import {Tag, WIP} from '@components/Tag/Tag'
 import {useStore} from 'effector-react'
 import {Link} from 'react-router-dom'
 import isNull from 'lodash/fp/isNull'
+import {useQueryClient} from 'react-query'
+import size from 'lodash/fp/size'
 
 type SVGIcon = (props: React.SVGProps<SVGSVGElement>) => JSX.Element
 
@@ -70,10 +72,12 @@ const getContentTranslateX = (
 }
 
 export const Menu: React.FC = ({children}) => {
+  const queryClient = useQueryClient()
   const isOpen = useStore($isMenuOpen)
   const auth = useFirebaseAuth()
   const menuRef = useRef<HTMLElement | null>(null)
   const contentRef = useRef<HTMLDivElement | null>(null)
+  const todayTasksCount = size(queryClient.getQueryData('tasks:today'))
 
   return (
     <>
@@ -127,6 +131,9 @@ export const Menu: React.FC = ({children}) => {
         <ul className="pt-0.5 px-4 space-y-1 text-white font-bold text-lg flex-1 overflow-auto">
           <MenuItem to="/" Icon={HomeIcon}>
             Today
+            {todayTasksCount && (
+              <span className="ml-auto">{todayTasksCount}</span>
+            )}
           </MenuItem>
           <MenuItem to="/tasks" Icon={CollectionIcon}>
             Tasks
