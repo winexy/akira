@@ -22,7 +22,12 @@ import {
   TagT
 } from '@store/tasks'
 import isEmpty from 'lodash/fp/isEmpty'
-import {ClipboardCheckIcon, XIcon, PlusIcon} from '@heroicons/react/solid'
+import {
+  ClipboardCheckIcon,
+  XIcon,
+  PlusIcon,
+  ChevronDownIcon
+} from '@heroicons/react/solid'
 import ContentLoader from 'react-content-loader'
 import {useStoreMap} from 'effector-react'
 import {useQuery, useMutation, useQueryClient} from 'react-query'
@@ -172,11 +177,29 @@ const TaskTag: React.FC<{name: string}> = ({name}) => (
 )
 
 const TagsManager: React.FC<{taskId: TaskIdT}> = ({taskId}) => {
-  const {data: tags} = useQuery<TagT[]>('tags', akira.tags.all)
+  const {data: tags, isLoading} = useQuery<TagT[]>('tags', akira.tags.all)
+  const [isExpanded, setIsExpanded] = useState(false)
 
   return (
     <>
       <h2 className="px-4 font-bold text-2xl text-gray-700">Tags</h2>
+      {isLoading && (
+        <ContentLoader
+          speed={2}
+          width={320}
+          height={214}
+          className="mt-4"
+          viewBox="0 0 320 214"
+          backgroundColor="#ffffff"
+          foregroundColor="#e9e9e9"
+        >
+          <rect x="0" y="0" width="100%" height="42" />
+          <rect x="0" y="43" width="100%" height="42" />
+          <rect x="0" y="86" width="100%" height="42" />
+          <rect x="0" y="129" width="100%" height="42" />
+          <rect x="0" y="172" width="100%" height="42" />
+        </ContentLoader>
+      )}
       {!isUndefined(tags) && !isEmpty(tags) && (
         <ul className="mt-2 divide-y">
           {tags.map(tag => (
@@ -187,9 +210,33 @@ const TagsManager: React.FC<{taskId: TaskIdT}> = ({taskId}) => {
           ))}
         </ul>
       )}
-      <div className="p-4 sticky bottom-0 bg-white border-t">
-        <h3 className="font-bold text-xl">Add new tag</h3>
-        <CreateTagForm taskId={taskId} className="mt-4" />
+      <div
+        className={clsx('px-4 py-2 sticky bottom-0 bg-white border-t', {
+          'pb-4': isExpanded
+        })}
+      >
+        <div className="flex justify-between items-center ">
+          <h3 className="font-bold text-xl">Add new tag</h3>
+          <button
+            className="
+              flex justify-center items-center w-12 h-12
+              rounded-md
+              transition ease-in duration-75
+              active:bg-gray-100 focus:outline-none
+            "
+            onClick={() => setIsExpanded(!isExpanded)}
+          >
+            <ChevronDownIcon
+              className={clsx(
+                'w-5 h-5 transform transition ease-in duration-150',
+                {
+                  'rotate-180': isExpanded
+                }
+              )}
+            />
+          </button>
+        </div>
+        {isExpanded && <CreateTagForm taskId={taskId} className="mt-4" />}
       </div>
     </>
   )
