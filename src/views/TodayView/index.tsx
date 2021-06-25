@@ -1,17 +1,11 @@
-import React, {useState, useRef, useEffect, useMemo} from 'react'
+import React, {useState, useRef} from 'react'
 import isNull from 'lodash/isNull'
 import {PlusIcon, SortAscendingIcon} from '@heroicons/react/solid'
 import {TaskForm, TaskFormRef} from '@components/TaskForm/TaskForm'
 import {Tasks} from '@components/Tasks'
 import size from 'lodash/fp/size'
 
-import {
-  queryTasksFx,
-  addTaskFx,
-  $tasksIds,
-  $tasksById,
-  $completedTasksCount
-} from '@store/tasks'
+import {addTaskFx, $completedTasksCount} from '@store/tasks'
 import {$isMenuOpen} from '@store/menu'
 import values from 'lodash/fp/values'
 import clsx from 'clsx'
@@ -25,6 +19,8 @@ import {FilterIcon} from '@heroicons/react/outline'
 import {sortTasks, SortEnum} from '@/modules/tasks/utils'
 import {exhaustiveCheck} from '@/utils'
 import {Button} from '@/components/Button'
+import {useQuery, useQueryClient} from 'react-query'
+import {akira} from '@/lib/akira'
 
 function matchSortTypeTitle(sortType: SortEnum) {
   switch (sortType) {
@@ -49,23 +45,27 @@ export function TodayView() {
   const [isAddButtonVisible, setIsAddButtonVisible] = useState(true)
   const isMenuOpen = useStore($isMenuOpen)
   const completedTasksCount = useStore($completedTasksCount)
-  const isPending = useStore(queryTasksFx.pending)
-  const tasksIds = useStore($tasksIds)
-  const tasksById = useStore($tasksById)
   const [filters, setFilters] = useState<string[]>([])
   const [sortType, setSortType] = useState<SortEnum | null>(() => {
     return localStorage.getItem('sort-selection') as SortEnum
   })
+  const queryClient = useQueryClient()
 
-  const sorted = sortTasks(tasksIds, tasksById, sortType)
+  const {data: tasks = [], isLoading} = useQuery(
+    'tasks:today',
+    () => akira.tasks.query({is_today: 1}),
+    {
+      onSuccess(tasks) {
+        tasks.forEach(task => {
+          queryClient.setQueryData(['task', task.id], task)
+        })
+      }
+    }
+  )
+
+  const sorted = sortTasks(tasks, sortType)
 
   const today = format(new Date(), 'eeee, do MMMM')
-
-  useEffect(() => {
-    queryTasksFx({
-      is_today: 1
-    })
-  }, [])
 
   function onSubmit() {
     addTaskFx(title)
@@ -97,7 +97,7 @@ export function TodayView() {
           <p className="text-sm">{today}</p>
         </div>
         <span className="text-gray-700 text-4xl font-bold">
-          {completedTasksCount} / {size(tasksIds)}
+          {completedTasksCount} / {size(tasks)}
         </span>
       </div>
       <BottomSheet name="filters" className="px-4 pb-6 pt-4 text-gray-800">
@@ -182,7 +182,7 @@ export function TodayView() {
         </ul>
       </BottomSheet>
       <section className="mt-4 pb-24">
-        <Tasks isPending={isPending} tasksIds={sorted} />
+        <Tasks isPending={isLoading} tasks={sorted} />
       </section>
       <div className="fixed bottom-0 right-0 left-0 py-7 flex items-center mt-4 px-4 from-gray-100 bg-gradient-to-t">
         <button

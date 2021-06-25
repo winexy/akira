@@ -78,7 +78,7 @@ function onDragHover(
 }
 
 type TaskProps = {
-  taskId: TaskIdT
+  task: TaskT
   index: number
   sortable?: boolean
   onRemove(id: TaskIdT): void
@@ -117,7 +117,7 @@ const ChecklistProgressBar: React.FC<ProgressBarProps> = ({checklist}) => {
 }
 
 export const Task: React.FC<TaskProps> = ({
-  taskId,
+  task,
   index,
   sortable,
   onRemove,
@@ -125,7 +125,6 @@ export const Task: React.FC<TaskProps> = ({
   onOrderChange,
   onSetImportant
 }) => {
-  const task = useStoreMap($tasksById, get(taskId))
   const dropRef = useRef<Element>()
   const dragRef = useRef<HTMLButtonElement>()
   const [{opacity, isDragging}, connectDragSource] = useDrag<
@@ -135,7 +134,7 @@ export const Task: React.FC<TaskProps> = ({
   >(
     () => ({
       type: ItemType,
-      item: {id: taskId, index},
+      item: {id: task.id, index},
       collect: collectProps
     }),
     [index]
@@ -151,17 +150,12 @@ export const Task: React.FC<TaskProps> = ({
     connectDragSource(dragRef)
   }
 
-  if (isUndefined(task)) {
-    window.console.error(`Task: ${taskId} is undefined`)
-    return null
-  }
-
   function onRemoveIntent() {
     // eslint-disable-next-line
     const confirmed = confirm('Are you sure? This action cannot be undone')
 
     if (confirmed) {
-      onRemove(taskId)
+      onRemove(task.id)
     }
   }
 
