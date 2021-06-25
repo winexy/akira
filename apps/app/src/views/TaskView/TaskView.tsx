@@ -43,6 +43,7 @@ import {Button} from '@components/Button'
 import {akira} from '@/lib/akira'
 import {TextArea} from '@modules/tasks/components'
 import {showBottomSheet} from '../../store/bottom-sheet/index'
+import {TaskT} from '../../store/tasks/types'
 
 type ChecklistPropsT = {
   taskId: TaskIdT
@@ -117,7 +118,7 @@ const CreateTagForm: React.FC<CreateTagFormProps> = ({className, taskId}) => {
     },
     {
       onSuccess() {
-        queryClient.invalidateQueries(['tags'])
+        queryClient.invalidateQueries(['tags', ['task', taskId]])
       }
     }
   )
@@ -170,13 +171,36 @@ const TaskTag: React.FC<{name: string}> = ({name}) => (
   </button>
 )
 
+const TagsManager: React.FC<{taskId: TaskIdT}> = ({taskId}) => {
+  const {data: tags} = useQuery<TagT[]>('tags', akira.tags.all)
+
+  return (
+    <>
+      <h2 className="px-4 font-bold text-2xl text-gray-700">Tags</h2>
+      {!isUndefined(tags) && !isEmpty(tags) && (
+        <ul className="mt-2 divide-y">
+          {tags.map(tag => (
+            <li key={tag.id} className="flex items-center px-4 py-2">
+              <TaskTag name={tag.name} />
+              <Button className="ml-auto text-xs">add tag</Button>
+            </li>
+          ))}
+        </ul>
+      )}
+      <div className="p-4 sticky bottom-0 bg-white border-t">
+        <h3 className="font-bold text-xl">Add new tag</h3>
+        <CreateTagForm taskId={taskId} className="mt-4" />
+      </div>
+    </>
+  )
+}
+
 export const TaskView: React.FC = () => {
   const {id} = useParams<{id: string}>()
-  const tagsQuery = useQuery<TagT[]>('tags', akira.tags.all)
+  const {data: task} = useQuery<TaskT>(['task', id], () => akira.tasks.one(id))
 
   const todoInputRef = useRef<HTMLInputElement | null>(null)
 
-  const task = useStoreMap($tasksById, byId => byId[id] ?? null)
   const checklist = useStoreMap($checklistByTaskId, byId => byId[id] ?? null)
 
   const [isTodoInputVisible, setIsTodoInputVisible] = useState(false)
@@ -185,23 +209,13 @@ export const TaskView: React.FC = () => {
 
   const taskTitle = useMemo(() => escape(title), [title])
 
-  useEffect(() => {
-    if (isNull(task)) {
-      loadTaskFx(id)
-    }
-  }, [id, task])
-
-  useEffect(() => {
-    loadChecklistFx(id)
-  }, [id])
-
   useLayoutEffect(() => {
     if (isTodoInputVisible) {
       todoInputRef.current?.focus()
     }
   }, [isTodoInputVisible])
 
-  if (isNull(task)) {
+  if (isNil(task)) {
     return (
       <MainView className="p-4">
         <ContentLoader
@@ -294,21 +308,8 @@ export const TaskView: React.FC = () => {
         >
           Add Tag <PlusIcon className="ml-2 w-5 h-5" />
         </Button>
-        <BottomSheet name="tags" className="py-6">
-          <h2 className="px-4 font-bold text-2xl text-gray-700">Tags</h2>
-          {!isUndefined(tagsQuery.data) && !isEmpty(tagsQuery.data) && (
-            <ul className="mt-2 divide-y">
-              {tagsQuery.data.map(tag => (
-                <li key={tag.id} className="flex items-center px-4 py-2">
-                  <TaskTag name={tag.name} />
-                  <Button className="ml-auto text-xs">add tag</Button>
-                </li>
-              ))}
-            </ul>
-          )}
-          <hr />
-          <h3 className="mt-4 px-4 font-bold text-xl">Add new tag</h3>
-          <CreateTagForm taskId={id} className="mt-4 px-4" />
+        <BottomSheet name="tags" className="pt-4">
+          <TagsManager taskId={id} />
         </BottomSheet>
       </section>
       <section className="mt-4 px-4 flex items-center">
