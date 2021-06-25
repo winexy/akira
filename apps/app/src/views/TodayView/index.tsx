@@ -75,6 +75,7 @@ export function TodayView() {
     {
       onSuccess(tasks) {
         tasks.forEach(task => {
+          console.log('task', task)
           queryClient.setQueryData(['task', task.id], task)
         })
       }
