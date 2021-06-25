@@ -292,10 +292,9 @@ export const TaskView: React.FC = () => {
           {createdAt}
         </time>
       </div>
-      <hr className="mt-2" />
-      <section className="mt-2 px-4">
+      <section className="mt-2 py-3 px-4 border-t border-b">
         {!isEmpty(task.tags) && (
-          <ul className="inline-flex space-x-1">
+          <ul className="mb-2 inline-flex space-x-1">
             {task.tags.map(tag => (
               <li
                 key={tag.id}
@@ -317,7 +316,7 @@ export const TaskView: React.FC = () => {
         <Button
           size="sm"
           variant="blue"
-          className="mt-2 text-sm"
+          className="text-sm"
           onClick={() => showBottomSheet('tags')}
         >
           Add Tag <PlusIcon className="ml-2 w-5 h-5" />
@@ -328,7 +327,6 @@ export const TaskView: React.FC = () => {
           <CreateTagForm taskId={id} className="mt-4" />
         </BottomSheet>
       </section>
-      <hr className="mt-3" />
       <section className="mt-4 px-4 flex items-center">
         <TextArea
           value={task.description}
