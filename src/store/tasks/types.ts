@@ -31,6 +31,8 @@ export const Task = object({
   tags: array(Tag)
 })
 
+export type TagT = Infer<typeof Tag>
+
 export const Tasks = array(Task)
 
 export type TaskT = Infer<typeof Task>
