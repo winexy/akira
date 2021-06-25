@@ -6,8 +6,8 @@ type Props = React.DetailedHTMLProps<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
   HTMLButtonElement
 > & {
-  size: ButtonSize
-  variant: ButtonVariant
+  size?: ButtonSize
+  variant?: ButtonVariant
 }
 
 const sm = 'px-2 py-1'
@@ -39,8 +39,8 @@ function matchVariant(variant: ButtonVariant) {
 }
 
 export const Button: React.FC<Props> = ({
-  size,
-  variant,
+  size = 'sm',
+  variant = 'blue',
   children,
   className,
   ...props

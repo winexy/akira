@@ -19,14 +19,17 @@ import {
   loadTaskFx,
   addTodoFx,
   removeTodoFx,
-  $tasksById
+  $tasksById,
+  TagT
 } from '@store/tasks'
 import isEmpty from 'lodash/fp/isEmpty'
 import {ClipboardCheckIcon, XIcon, PlusIcon} from '@heroicons/react/solid'
 import ContentLoader from 'react-content-loader'
 import {useStoreMap} from 'effector-react'
+import {useQuery} from 'react-query'
 import escape from 'escape-html'
 import isNull from 'lodash/fp/isNull'
+import isUndefined from 'lodash/fp/isUndefined'
 import size from 'lodash/fp/size'
 import noop from 'lodash/fp/noop'
 import isNil from 'lodash/fp/isNil'
@@ -41,6 +44,7 @@ import {Checkbox} from '@components/Checkbox/Checkbox'
 import {Tag, WIP} from '@/components/Tag/Tag'
 import {BottomSheet} from '@/components/BottomSheet/BottomSheet'
 import {Button} from '@components/Button'
+import {akira} from '@/lib/akira'
 import {showBottomSheet} from '../../store/bottom-sheet/index'
 
 type ChecklistPropsT = {
@@ -169,7 +173,7 @@ const CreateTagForm: React.FC<CreateTagFormProps> = ({className, taskId}) => {
   }, [])
 
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={onSubmit} className={clsx(className)}>
       <input
         ref={inputRef}
         value={name}
@@ -178,8 +182,7 @@ const CreateTagForm: React.FC<CreateTagFormProps> = ({className, taskId}) => {
         className={clsx(
           'w-full px-3 py-2',
           'rounded-md border border-gray-300',
-          'focus:outline-none focus:border-blue-500',
-          className
+          'focus:outline-none focus:border-blue-500'
         )}
         onChange={e => setName(e.target.value)}
       />
@@ -190,14 +193,37 @@ const CreateTagForm: React.FC<CreateTagFormProps> = ({className, taskId}) => {
   )
 }
 
+const TaskTag: React.FC<{name: string}> = ({name}) => (
+  <button
+    className="
+      px-2 py-0.5 
+      border border-gray-300 bg-gray-200 
+      text-xs text-gray-500 font-semibold
+      shadow-sm rounded-2xl
+      transition ease-in duration-75
+      active:bg-gray-300 active:border-gray-400
+      active:text-gray-600 active:shadow-inner
+      focus:outline-none
+    "
+  >
+    #{name}
+  </button>
+)
+
 export const TaskView: React.FC = () => {
   const {id} = useParams<{id: string}>()
+  const tagsQuery = useQuery<TagT[]>('tags', akira.tags.all)
+
   const todoInputRef = useRef<HTMLInputElement | null>(null)
+
   const task = useStoreMap($tasksById, byId => byId[id] ?? null)
   const checklist = useStoreMap($checklistByTaskId, byId => byId[id] ?? null)
+
   const [isTodoInputVisible, setIsTodoInputVisible] = useState(false)
   const [todoTitle, setTodoTitle] = useState('')
   const title = task?.title ?? ''
+
+  globalThis.console.log(tagsQuery)
 
   const taskTitle = useMemo(() => escape(title), [title])
 
@@ -296,19 +322,8 @@ export const TaskView: React.FC = () => {
         {!isEmpty(task.tags) && (
           <ul className="mb-2 inline-flex space-x-1">
             {task.tags.map(tag => (
-              <li
-                key={tag.id}
-                className="
-                  px-2 py-0.5 
-                  border border-gray-300 bg-gray-200 
-                  text-xs text-gray-500 font-semibold
-                  shadow-sm rounded-2xl
-                  transition ease-in duration-75
-                  active:bg-gray-300 active:border-gray-400
-                  active:text-gray-600 active:shadow-inner
-                "
-              >
-                #{tag.name}
+              <li key={tag.id}>
+                <TaskTag name={tag.name} />
               </li>
             ))}
           </ul>
@@ -321,10 +336,21 @@ export const TaskView: React.FC = () => {
         >
           Add Tag <PlusIcon className="ml-2 w-5 h-5" />
         </Button>
-        <BottomSheet name="tags" className="p-4 py-6">
-          <h2 className="font-bold text-2xl text-gray-700">Tags</h2>
-          <hr className="mt-4" />
-          <CreateTagForm taskId={id} className="mt-4" />
+        <BottomSheet name="tags" className="py-6">
+          <h2 className="px-4 font-bold text-2xl text-gray-700">Tags</h2>
+          {!isUndefined(tagsQuery.data) && !isEmpty(tagsQuery.data) && (
+            <ul className="mt-2 divide-y">
+              {tagsQuery.data.map(tag => (
+                <li key={tag.id} className="flex items-center px-4 py-2">
+                  <TaskTag name={tag.name} />
+                  <Button className="ml-auto text-xs">add tag</Button>
+                </li>
+              ))}
+            </ul>
+          )}
+          <hr />
+          <h3 className="mt-4 px-4 font-bold text-xl">Add new tag</h3>
+          <CreateTagForm taskId={id} className="mt-4 px-4" />
         </BottomSheet>
       </section>
       <section className="mt-4 px-4 flex items-center">

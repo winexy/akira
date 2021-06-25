@@ -5,6 +5,9 @@ export function tags(api: AxiosInstance) {
   const unwrap = get('data')
 
   return {
+    all() {
+      return api.get('tags').then(unwrap)
+    },
     create(name: string) {
       return api
         .post('tags', {
