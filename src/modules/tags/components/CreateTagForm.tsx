@@ -1,5 +1,5 @@
 import clsx, {ClassValue} from 'clsx'
-import React, {FormEventHandler, useEffect, useRef, useState} from 'react'
+import React, {FormEventHandler, useState} from 'react'
 import {useMutation, useQueryClient} from 'react-query'
 import {Button} from '@components/Button'
 import {akira} from '@lib/akira'

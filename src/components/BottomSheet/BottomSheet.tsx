@@ -4,7 +4,11 @@ import get from 'lodash/fp/get'
 import clsx from 'clsx'
 import {CSSTransition} from 'react-transition-group'
 import {$activeBottomSheet, hideBottomSheet} from '@store/bottom-sheet'
-import {disableBodyScroll, enableBodyScroll} from 'body-scroll-lock'
+import {
+  disableBodyScroll,
+  enableBodyScroll,
+  clearAllBodyScrollLocks
+} from 'body-scroll-lock'
 import './BottomSheet.css'
 
 const extractTouch = get('changedTouches.0.clientY')
@@ -62,9 +66,12 @@ export const BottomSheet: React.FC<Props> = ({name, children, className}) => {
 
   useEffect(() => {
     return () => {
-      hideBottomSheet(name)
+      if (isActive) {
+        hideBottomSheet(name)
+        clearAllBodyScrollLocks()
+      }
     }
-  }, [name])
+  }, [name, isActive])
 
   useEffect(() => {
     if (isActive && contentRef.current) {
