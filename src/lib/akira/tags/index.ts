@@ -1,3 +1,4 @@
+import {TagT} from '@/store/tasks'
 import {AxiosInstance} from 'axios'
 import get from 'lodash/fp/get'
 
@@ -8,7 +9,7 @@ export function tags(api: AxiosInstance) {
     all() {
       return api.get('tags').then(unwrap)
     },
-    create(name: string) {
+    create(name: string): Promise<TagT> {
       return api
         .post('tags', {
           name,
@@ -16,6 +17,9 @@ export function tags(api: AxiosInstance) {
           hex_bg: '#000'
         })
         .then(unwrap)
+    },
+    removeTag(tagId: number): Promise<number> {
+      return api.delete(`tags/${tagId}`).then(unwrap)
     }
   }
 }
