@@ -5,13 +5,11 @@ import ContentLoader from 'react-content-loader'
 import isEmpty from 'lodash/fp/isEmpty'
 import times from 'lodash/fp/times'
 import {InboxIcon} from '@heroicons/react/solid'
-import {useMutation, useQueryClient} from 'react-query'
-import {akira} from '@lib/akira/index'
-import produce from 'immer'
-import {findIndex, isUndefined, noop} from 'lodash/fp'
+import noop from 'lodash/fp/noop'
 import {
   useToggleCompletedMutation,
-  useToggleImportantMutation
+  useToggleImportantMutation,
+  useRemoveTaskMutation
 } from '@modules/tasks/hooks'
 
 type Props = {
@@ -21,28 +19,9 @@ type Props = {
 }
 
 export const Tasks: React.FC<Props> = ({isPending, tasks, noTasksSlot}) => {
-  const queryClient = useQueryClient()
   const toggleTaskCompleteMutation = useToggleCompletedMutation()
   const toggleImportantMutation = useToggleImportantMutation()
-
-  const removeTaskMutation = useMutation(akira.tasks.delete, {
-    onSuccess(_, taskId) {
-      queryClient.removeQueries(['task', taskId])
-      queryClient.setQueryData(
-        'tasks:today',
-        (oldTasks: Undefined<TaskT[]>) => {
-          if (isUndefined(oldTasks)) {
-            return []
-          }
-
-          return produce(oldTasks, draft => {
-            const index = findIndex({id: taskId}, oldTasks)
-            draft.splice(index, 1)
-          })
-        }
-      )
-    }
-  })
+  const removeTaskMutation = useRemoveTaskMutation()
 
   if (isPending) {
     const taskHeight = 56
