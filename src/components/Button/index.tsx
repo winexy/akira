@@ -13,12 +13,14 @@ type Props = React.DetailedHTMLProps<
 const sm = 'px-2 py-1'
 const md = 'px-6 py-3'
 const blue =
-  'bg-blue-500 border border-blue-600 active:bg-blue-600 active:border-blue-700'
+  'bg-blue-500 border border-blue-600 active:bg-blue-600 active:border-blue-700 text-white shadow-md active:shadow'
 const red =
-  'bg-red-500 border border-red-600 active:bg-red-600 active:border-red-700'
+  'bg-red-500 border border-red-600 active:bg-red-600 active:border-red-700 text-white shadow-md active:shadow'
+const outline =
+  'bg-transparent border border-gray-100 text-gray-700 shadow-none active:bg-gray-100 active:border-gray-200 active:shadow-inner'
 
 type ButtonSize = 'sm' | 'md'
-type ButtonVariant = 'blue' | 'red'
+type ButtonVariant = 'blue' | 'red' | 'outline'
 
 function matchSize(size: ButtonSize) {
   switch (size) {
@@ -37,6 +39,8 @@ function matchVariant(variant: ButtonVariant) {
       return blue
     case 'red':
       return red
+    case 'outline':
+      return outline
     default:
       return exhaustiveCheck(variant)
   }
@@ -52,10 +56,9 @@ export const Button: React.FC<Props> = ({
   const classNames = clsx(
     `
     flex justify-center items-center 
-    rounded-md shadow-md
+    rounded-md
     text-white font-semibold
     transition ease-in duration-100
-    active:shadow
     focus:outline-none
   `,
     matchSize(size),
