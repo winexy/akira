@@ -1,11 +1,13 @@
 import clsx, {ClassValue} from 'clsx'
 import React, {useEffect, useRef, useState} from 'react'
 import {CSSTransition} from 'react-transition-group'
+import {Spin} from './Spin'
 import './ActionToast.css'
 
 type ActionToastButtonProps = NativeButtonProps & {
   className?: ClassValue
   Icon: SVGIconElement
+  isLoading?: boolean
 }
 
 export const ActionToast: React.FC & {
@@ -50,7 +52,7 @@ export const ActionToast: React.FC & {
   )
 }
 
-ActionToast.Button = ({className, Icon, ...props}) => {
+ActionToast.Button = ({className, Icon, isLoading = false, ...props}) => {
   return (
     <button
       className={clsx(
@@ -61,7 +63,11 @@ ActionToast.Button = ({className, Icon, ...props}) => {
       type="button"
       {...props}
     >
-      <Icon className="w-8 h-8 transition ease-in duration-75 transform active:scale-110" />
+      {isLoading ? (
+        <Spin className="w-8 h-8 text-gray-300" />
+      ) : (
+        <Icon className="w-8 h-8 transition ease-in duration-75 transform active:scale-110" />
+      )}
     </button>
   )
 }
