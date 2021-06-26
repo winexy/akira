@@ -7,6 +7,7 @@ import {XIcon} from '@heroicons/react/solid'
 import {IconButton} from '@components/IconButton'
 import {Spin} from '@/components/Spin'
 import isEmpty from 'lodash/fp/isEmpty'
+import {Tag} from '@/components/Tag/Tag'
 import {CreateTagForm, TaskTag} from '../components'
 
 export const TagsView: React.FC = () => {
@@ -29,7 +30,9 @@ export const TagsView: React.FC = () => {
       <CreateTagForm className="p-4" />
       {!isEmpty(tags) && (
         <>
-          <h2 className="px-4 font-bold text-2xl">All tags</h2>
+          <h2 className="flex items-center px-4 font-bold text-2xl">
+            All tags <span className="ml-4 text-gray-400">{tags.length}</span>
+          </h2>
           <ul className="mt-2 divide-y">
             {tags.map(tag => (
               <li
