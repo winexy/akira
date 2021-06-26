@@ -61,6 +61,12 @@ export const BottomSheet: React.FC<Props> = ({name, children, className}) => {
   }
 
   useEffect(() => {
+    return () => {
+      hideBottomSheet(name)
+    }
+  }, [name])
+
+  useEffect(() => {
     if (isActive && contentRef.current) {
       disableBodyScroll(contentRef.current)
       setIsSheetTouchStarted(false)

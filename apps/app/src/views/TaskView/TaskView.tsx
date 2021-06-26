@@ -1,13 +1,12 @@
 import React, {
   ChangeEventHandler,
   FormEventHandler,
-  useEffect,
   useLayoutEffect,
   useMemo,
   useRef,
   useState
 } from 'react'
-import clsx, {ClassValue} from 'clsx'
+import clsx from 'clsx'
 import {useParams} from 'react-router'
 import {MainView} from '@views/MainView'
 import format from 'date-fns/format'
@@ -19,7 +18,7 @@ import {
   ClipboardCheckIcon,
   XIcon,
   PlusIcon,
-  ChevronDownIcon
+  PencilAltIcon
 } from '@heroicons/react/solid'
 import ContentLoader from 'react-content-loader'
 import {useQuery, useMutation, useQueryClient, QueryClient} from 'react-query'
@@ -37,6 +36,8 @@ import {akira} from '@/lib/akira'
 import {TextArea} from '@modules/tasks/components'
 import {showBottomSheet} from '@store/bottom-sheet/index'
 import {TaskPatchT, TaskT, TodoIdT, TodoPatchT} from '@store/tasks/types'
+import {Link} from 'react-router-dom'
+import {TaskTag} from '@modules/tags/components'
 
 type ChecklistPropsT = {
   taskId: TaskIdT
@@ -112,81 +113,9 @@ const Checklist: React.FC<ChecklistPropsT> = ({taskId, checklist}) => {
   )
 }
 
-type CreateTagFormProps = {
-  className?: ClassValue
-  taskId: TaskIdT
-}
-
-const CreateTagForm: React.FC<CreateTagFormProps> = ({className, taskId}) => {
-  const [name, setName] = useState<string>('')
-  const inputRef = useRef<HTMLInputElement | null>(null)
-  const queryClient = useQueryClient()
-  const createTaskTagMutation = useMutation(
-    async (name: string) => {
-      const tag = await akira.tags.create(name)
-      return akira.tasks.addTag(taskId, tag.id)
-    },
-    {
-      onSuccess() {
-        queryClient.invalidateQueries(['tags', ['task', taskId]])
-      }
-    }
-  )
-
-  const onSubmit: FormEventHandler = event => {
-    event.preventDefault()
-    createTaskTagMutation.mutate(name)
-    setName('')
-  }
-
-  useEffect(() => {
-    inputRef.current?.focus()
-  }, [])
-
-  return (
-    <form onSubmit={onSubmit} className={clsx(className)}>
-      <input
-        ref={inputRef}
-        value={name}
-        type="text"
-        placeholder="name"
-        className={clsx(
-          'w-full px-3 py-2',
-          'appearance-none',
-          'rounded-md border border-gray-300',
-          'focus:outline-none focus:border-blue-500',
-          'focus:ring'
-        )}
-        onChange={e => setName(e.target.value)}
-      />
-      <Button className="mt-4 w-full" size="md" variant="blue">
-        Create
-      </Button>
-    </form>
-  )
-}
-
-const TaskTag: React.FC<{name: string}> = ({name}) => (
-  <button
-    className="
-      px-2 py-0.5 
-      border border-gray-300 bg-gray-200 
-      text-xs text-gray-500 font-semibold
-      shadow-sm rounded-2xl
-      transition ease-in duration-75
-      active:bg-gray-300 active:border-gray-400
-      active:text-gray-600 active:shadow-inner
-      focus:outline-none
-    "
-  >
-    #{name}
-  </button>
-)
-
 const TagsManager: React.FC<{task: TaskT}> = ({task}) => {
   const queryClient = useQueryClient()
   const {data: tags, isLoading} = useQuery<TagT[]>('tags', akira.tags.all)
-  const [isExpanded, setIsExpanded] = useState(false)
   const taskTagsIdSet = new Set(map('id', task.tags))
 
   const addTagMutation = useMutation(
@@ -267,32 +196,17 @@ const TagsManager: React.FC<{task: TaskT}> = ({task}) => {
         </ul>
       )}
       <div
-        className={clsx('px-4 py-2 sticky bottom-0 bg-white border-t', {
-          'pb-4': isExpanded
-        })}
+        className={clsx(
+          'px-4 py-3 sticky bottom-0',
+          'bg-white border-t',
+          'transition ease-in duration-150',
+          'active:bg-gray-100'
+        )}
       >
-        <div className="flex justify-between items-center ">
-          <h3 className="font-bold text-xl">Add new tag</h3>
-          <button
-            className="
-              flex justify-center items-center w-12 h-12
-              rounded-md
-              transition ease-in duration-75
-              active:bg-gray-100 focus:outline-none
-            "
-            onClick={() => setIsExpanded(!isExpanded)}
-          >
-            <ChevronDownIcon
-              className={clsx(
-                'w-5 h-5 transform transition ease-in duration-150',
-                {
-                  'rotate-180': isExpanded
-                }
-              )}
-            />
-          </button>
-        </div>
-        {isExpanded && <CreateTagForm taskId={task.id} className="mt-4" />}
+        <Link to="/tags" className="flex justify-between items-center ">
+          <h3 className="font-bold text-xl">Edit tags</h3>
+          <PencilAltIcon className="w-5 h-5" />
+        </Link>
       </div>
     </>
   )
