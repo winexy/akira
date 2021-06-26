@@ -19,10 +19,8 @@ import isNull from 'lodash/fp/isNull'
 import {useQueryClient} from 'react-query'
 import size from 'lodash/fp/size'
 
-type SVGIcon = (props: React.SVGProps<SVGSVGElement>) => JSX.Element
-
 type MenuItemProps = {
-  Icon: SVGIcon
+  Icon: SVGIconElement
   to: string
 }
 
