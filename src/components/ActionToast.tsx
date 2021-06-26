@@ -11,7 +11,7 @@ type ActionToastButtonProps = NativeButtonProps & {
 export const ActionToast: React.FC & {
   Button: React.FC<ActionToastButtonProps>
 } = ({children}) => {
-  const [isVisible, setIsVisible] = useState(false)
+  const [isVisible, setIsVisible] = useState(true)
   const prevScrollYRef = useRef(0)
 
   useEffect(() => {
