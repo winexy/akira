@@ -38,6 +38,7 @@ import {showBottomSheet} from '@store/bottom-sheet/index'
 import {TaskPatchT, TaskT, TodoIdT, TodoPatchT} from '@store/tasks/types'
 import {Link} from 'react-router-dom'
 import {TaskTag} from '@modules/tags/components'
+import {findIndex} from 'lodash/fp'
 
 type ChecklistPropsT = {
   taskId: TaskIdT
@@ -51,8 +52,30 @@ const Checklist: React.FC<ChecklistPropsT> = ({taskId, checklist}) => {
       return akira.checklist.patchTodo(taskId, todoId, patch)
     },
     {
-      onSuccess() {
-        queryClient.invalidateQueries(['task', taskId])
+      onMutate({todoId, patch}) {
+        const prevTask = queryClient.getQueryData<TaskT>(['task', taskId])
+
+        if (prevTask) {
+          queryClient.setQueryData(['task', taskId], () =>
+            produce(prevTask, draft => {
+              const index = findIndex({id: todoId}, prevTask.checklist)
+
+              draft.checklist[index] = {
+                ...prevTask.checklist[index],
+                ...patch
+              }
+            })
+          )
+        }
+
+        return {prevTask}
+      },
+      onError(_, todoId, context: any) {
+        const prevTask = context?.prevTask
+
+        if (prevTask) {
+          queryClient.setQueryData(['task', taskId], prevTask)
+        }
       }
     }
   )
@@ -62,8 +85,28 @@ const Checklist: React.FC<ChecklistPropsT> = ({taskId, checklist}) => {
       return akira.checklist.removeTodo(taskId, todoId)
     },
     {
-      onSuccess() {
-        queryClient.invalidateQueries(['task', taskId])
+      onMutate(todoId) {
+        const prevTask = queryClient.getQueryData<TaskT>(['task', taskId])
+
+        if (prevTask) {
+          queryClient.setQueryData(['task', taskId], () =>
+            produce(prevTask, draft => {
+              draft.checklist = filter(
+                todo => todo.id !== todoId,
+                draft.checklist
+              )
+            })
+          )
+        }
+
+        return {prevTask}
+      },
+      onError(_, todoId, context: any) {
+        const prevTask = context?.prevTask
+
+        if (prevTask) {
+          queryClient.setQueryData(['task', taskId], prevTask)
+        }
       }
     }
   )
