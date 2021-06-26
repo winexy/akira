@@ -7,7 +7,7 @@ import React, {
   useState
 } from 'react'
 import clsx from 'clsx'
-import {useParams} from 'react-router'
+import {useParams, useHistory} from 'react-router'
 import {MainView} from '@views/MainView'
 import format from 'date-fns/format'
 import parseISO from 'date-fns/parseISO'
@@ -16,7 +16,8 @@ import {
   CheckIcon,
   ClipboardCheckIcon,
   FireIcon,
-  PlusIcon
+  PlusIcon,
+  TrashIcon
 } from '@heroicons/react/solid'
 import ContentLoader from 'react-content-loader'
 import {useQuery, useMutation, useQueryClient} from 'react-query'
@@ -32,6 +33,7 @@ import {showBottomSheet} from '@store/bottom-sheet/index'
 import {TaskPatchT, TaskT} from '@store/tasks/types'
 import {TagsManager, TaskTag} from '@modules/tags/components'
 import {
+  useRemoveTaskMutation,
   useToggleCompletedMutation,
   useToggleImportantMutation
 } from '@modules/tasks/hooks'
@@ -39,6 +41,7 @@ import {ActionToast} from '@/components/ActionToast'
 
 export const TaskView: React.FC = () => {
   const {id} = useParams<{id: string}>()
+  const history = useHistory()
   const {data: task} = useQuery<TaskT>(['task', id], () => akira.tasks.one(id))
 
   const todoInputRef = useRef<HTMLInputElement | null>(null)
@@ -53,6 +56,7 @@ export const TaskView: React.FC = () => {
 
   const toggleCompletedMutation = useToggleCompletedMutation()
   const toggleImportantMutation = useToggleImportantMutation()
+  const removeTaskMutation = useRemoveTaskMutation()
 
   const patchTaskMutation = useMutation(
     (patch: TaskPatchT) => {
@@ -125,6 +129,15 @@ export const TaskView: React.FC = () => {
 
       patchTaskMutation.mutate({
         title: newTitle
+      })
+    }
+  }
+
+  function onRemove() {
+    // eslint-disable-next-line
+    if (confirm('Are you sure? This action cannot be undone')) {
+      removeTaskMutation.mutateAsync(id).then(() => {
+        history.push('/')
       })
     }
   }
@@ -240,6 +253,12 @@ export const TaskView: React.FC = () => {
             'text-red-500': task.is_important
           })}
           onClick={() => toggleImportantMutation.mutate(id)}
+        />
+        <ActionToast.Button
+          isLoading={removeTaskMutation.isLoading}
+          Icon={TrashIcon}
+          className="text-red-500 active:text-red-600"
+          onClick={onRemove}
         />
       </ActionToast>
     </MainView>

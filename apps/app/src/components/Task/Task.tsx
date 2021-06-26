@@ -149,9 +149,7 @@ export const Task: React.FC<TaskProps> = ({
 
   function onRemoveIntent() {
     // eslint-disable-next-line
-    const confirmed = confirm('Are you sure? This action cannot be undone')
-
-    if (confirmed) {
+    if (confirm('Are you sure? This action cannot be undone')) {
       onRemove(task.id)
     }
   }
