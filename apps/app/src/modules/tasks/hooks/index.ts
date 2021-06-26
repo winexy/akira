@@ -37,9 +37,6 @@ export function useToggleCompletedMutation() {
 
       return {prevTask}
     },
-    onSuccess(task) {
-      queryClient.setQueryData(['task', task.id], task)
-    },
     onError(_, taskId, context: any) {
       if (context?.prevTask) {
         queryClient.setQueryData(['task', taskId], context.prevTask)
@@ -79,9 +76,6 @@ export function useToggleImportantMutation() {
       }
 
       return {prevTask}
-    },
-    onSuccess(task) {
-      queryClient.setQueryData(['task', task.id], task)
     },
     onError(_, taskId, context: any) {
       if (context?.prevTask) {
