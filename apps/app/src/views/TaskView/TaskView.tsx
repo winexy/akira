@@ -11,150 +11,31 @@ import {useParams} from 'react-router'
 import {MainView} from '@views/MainView'
 import format from 'date-fns/format'
 import parseISO from 'date-fns/parseISO'
-import {TodoT, TaskIdT, TagT} from '@store/tasks'
+import {TagT} from '@store/tasks'
 import isEmpty from 'lodash/fp/isEmpty'
 import filter from 'lodash/fp/filter'
 import {
   ClipboardCheckIcon,
-  XIcon,
   PlusIcon,
   PencilAltIcon
 } from '@heroicons/react/solid'
 import ContentLoader from 'react-content-loader'
-import {useQuery, useMutation, useQueryClient, QueryClient} from 'react-query'
+import {useQuery, useMutation, useQueryClient} from 'react-query'
 import escape from 'escape-html'
 import isNull from 'lodash/fp/isNull'
 import isUndefined from 'lodash/fp/isUndefined'
 import isNil from 'lodash/fp/isNil'
 import produce from 'immer'
 import map from 'lodash/fp/map'
-import {Checkbox} from '@components/Checkbox/Checkbox'
 import {Tag} from '@/components/Tag/Tag'
 import {BottomSheet} from '@/components/BottomSheet/BottomSheet'
 import {Button} from '@components/Button'
 import {akira} from '@/lib/akira'
-import {TextArea} from '@modules/tasks/components'
+import {Checklist, TextArea} from '@modules/tasks/components'
 import {showBottomSheet} from '@store/bottom-sheet/index'
-import {TaskPatchT, TaskT, TodoIdT, TodoPatchT} from '@store/tasks/types'
+import {TaskPatchT, TaskT} from '@store/tasks/types'
 import {Link} from 'react-router-dom'
 import {TaskTag} from '@modules/tags/components'
-import {findIndex} from 'lodash/fp'
-
-type ChecklistPropsT = {
-  taskId: TaskIdT
-  checklist: TodoT[]
-}
-
-const Checklist: React.FC<ChecklistPropsT> = ({taskId, checklist}) => {
-  const queryClient = useQueryClient()
-  const patchTodoMutation = useMutation(
-    ({todoId, patch}: {todoId: TodoIdT; patch: TodoPatchT}) => {
-      return akira.checklist.patchTodo(taskId, todoId, patch)
-    },
-    {
-      onMutate({todoId, patch}) {
-        const prevTask = queryClient.getQueryData<TaskT>(['task', taskId])
-
-        if (prevTask) {
-          queryClient.setQueryData(['task', taskId], () =>
-            produce(prevTask, draft => {
-              const index = findIndex({id: todoId}, prevTask.checklist)
-
-              draft.checklist[index] = {
-                ...prevTask.checklist[index],
-                ...patch
-              }
-            })
-          )
-        }
-
-        return {prevTask}
-      },
-      onError(_, todoId, context: any) {
-        const prevTask = context?.prevTask
-
-        if (prevTask) {
-          queryClient.setQueryData(['task', taskId], prevTask)
-        }
-      }
-    }
-  )
-
-  const removeTodoMutation = useMutation(
-    (todoId: TodoIdT) => {
-      return akira.checklist.removeTodo(taskId, todoId)
-    },
-    {
-      onMutate(todoId) {
-        const prevTask = queryClient.getQueryData<TaskT>(['task', taskId])
-
-        if (prevTask) {
-          queryClient.setQueryData(['task', taskId], () =>
-            produce(prevTask, draft => {
-              draft.checklist = filter(
-                todo => todo.id !== todoId,
-                draft.checklist
-              )
-            })
-          )
-        }
-
-        return {prevTask}
-      },
-      onError(_, todoId, context: any) {
-        const prevTask = context?.prevTask
-
-        if (prevTask) {
-          queryClient.setQueryData(['task', taskId], prevTask)
-        }
-      }
-    }
-  )
-
-  return (
-    <ul className="mt-2 divide-y transition ease-in duration-75">
-      {checklist.map(todo => (
-        <li
-          key={todo.id}
-          className={clsx(
-            'flex items-center px-4 py-1',
-            'select-none',
-            'transitino ease-in duration-150',
-            'active:bg-gray-200',
-            {'line-through': todo.is_completed}
-          )}
-        >
-          <Checkbox
-            isChecked={todo.is_completed}
-            className="mr-4"
-            onChange={() =>
-              patchTodoMutation.mutate({
-                todoId: todo.id,
-                patch: {
-                  is_completed: !todo.is_completed
-                }
-              })
-            }
-          />
-          {todo.title}
-          <button
-            className={clsx(
-              'ml-auto -mr-3 w-10 h-10',
-              'flex items-center justify-center',
-              'text-red-500 rounded',
-              'transition ease-in duration-150',
-              'active:text-red-600 active:bg-gray-300',
-              'focus:outline-none focus:bg-gray-200 focus:bg-opacity-75'
-            )}
-            onClick={() => removeTodoMutation.mutate(todo.id)}
-          >
-            <XIcon className="w-4 h-4" />
-          </button>
-        </li>
-      ))}
-    </ul>
-  )
-}
 
 const TagsManager: React.FC<{task: TaskT}> = ({task}) => {
   const queryClient = useQueryClient()
