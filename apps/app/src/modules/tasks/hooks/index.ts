@@ -83,3 +83,25 @@ export function useToggleImportantMutation() {
     }
   })
 }
+
+export function useRemoveTaskMutation() {
+  const queryClient = useQueryClient()
+
+  return useMutation(akira.tasks.delete, {
+    onSuccess(_, taskId) {
+      queryClient.removeQueries(['task', taskId])
+
+      const prevTasks = queryClient.getQueryData<TaskT[]>('tasks:today')
+
+      if (prevTasks) {
+        queryClient.setQueryData(
+          'tasks:today',
+          produce(prevTasks, draft => {
+            const index = findIndex({id: taskId}, prevTasks)
+            draft.splice(index, 1)
+          })
+        )
+      }
+    }
+  })
+}
