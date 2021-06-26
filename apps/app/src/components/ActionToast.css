@@ -1,0 +1,12 @@
+.action-toast {
+  &-enter {
+    transform: translateY(100%);
+  }
+  &-enter-active {
+    transform: translateY(0);
+  }
+
+  &-exit-active {
+    transform: translateY(100%);
+  }
+}

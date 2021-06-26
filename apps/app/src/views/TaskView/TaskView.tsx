@@ -12,7 +12,12 @@ import {MainView} from '@views/MainView'
 import format from 'date-fns/format'
 import parseISO from 'date-fns/parseISO'
 import isEmpty from 'lodash/fp/isEmpty'
-import {ClipboardCheckIcon, PlusIcon} from '@heroicons/react/solid'
+import {
+  CheckIcon,
+  ClipboardCheckIcon,
+  FireIcon,
+  PlusIcon
+} from '@heroicons/react/solid'
 import ContentLoader from 'react-content-loader'
 import {useQuery, useMutation, useQueryClient} from 'react-query'
 import escape from 'escape-html'
@@ -26,6 +31,11 @@ import {Checklist, TextArea} from '@modules/tasks/components'
 import {showBottomSheet} from '@store/bottom-sheet/index'
 import {TaskPatchT, TaskT} from '@store/tasks/types'
 import {TagsManager, TaskTag} from '@modules/tags/components'
+import {
+  useToggleCompletedMutation,
+  useToggleImportantMutation
+} from '@modules/tasks/hooks'
+import {ActionToast} from '@/components/ActionToast'
 
 export const TaskView: React.FC = () => {
   const {id} = useParams<{id: string}>()
@@ -40,6 +50,10 @@ export const TaskView: React.FC = () => {
   const taskTitle = useMemo(() => escape(title), [title])
 
   const queryClient = useQueryClient()
+
+  const toggleCompletedMutation = useToggleCompletedMutation()
+  const toggleImportantMutation = useToggleImportantMutation()
+
   const patchTaskMutation = useMutation(
     (patch: TaskPatchT) => {
       return akira.tasks.patch(id, patch)
@@ -212,6 +226,22 @@ export const TaskView: React.FC = () => {
       {!isNull(task.checklist) && (
         <Checklist taskId={task.id} checklist={task.checklist} />
       )}
+      <ActionToast>
+        <ActionToast.Button
+          Icon={CheckIcon}
+          className={clsx('active:text-green-600', {
+            'text-green-500': task.is_completed
+          })}
+          onClick={() => toggleCompletedMutation.mutate(id)}
+        />
+        <ActionToast.Button
+          Icon={FireIcon}
+          className={clsx('active:text-red-600', {
+            'text-red-500': task.is_important
+          })}
+          onClick={() => toggleImportantMutation.mutate(id)}
+        />
+      </ActionToast>
     </MainView>
   )
 }
