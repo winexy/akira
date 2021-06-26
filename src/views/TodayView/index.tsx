@@ -1,6 +1,11 @@
 import React, {useState, useRef} from 'react'
 import isNull from 'lodash/isNull'
-import {PlusIcon, SortAscendingIcon} from '@heroicons/react/solid'
+import {
+  CheckIcon,
+  PlusIcon,
+  RefreshIcon,
+  SortAscendingIcon
+} from '@heroicons/react/solid'
 import {TaskForm, TaskFormRef} from '@components/TaskForm/TaskForm'
 import {Tasks} from '@components/Tasks'
 import size from 'lodash/fp/size'
@@ -164,7 +169,23 @@ export function TodayView() {
         </Button>
       </BottomSheet>
       <BottomSheet name="sorting" className="px-4 pb-6 pt-4 text-gray-800">
-        <h2 className="font-bold text-2xl">Sort</h2>
+        <div className="flex justify-between">
+          <h2 className="font-bold text-2xl">Sort</h2>
+          {sortType && (
+            <Button
+              variant="outline"
+              className="text-sm"
+              onClick={() => {
+                setSortType(null)
+                localStorage.removeItem('sort-selection')
+                hideBottomSheet()
+              }}
+            >
+              <RefreshIcon className="w-4 h-4 mr-2" />
+              reset
+            </Button>
+          )}
+        </div>
         <ul className="mt-4 space-y-1">
           {sortTypes.map(type => (
             <li className="" key={type}>
@@ -173,17 +194,16 @@ export function TodayView() {
                   px-3 py-2 
                   flex items-center 
                   font-semibold text-lg 
-                  border border-gray-100 
-                  bg-gray-50 rounded
+                  rounded select-none
                   transition ease-in duration-75
-                  select-none
-                  active:bg-gray-100
-                  active:border-gray-200
+                  active:bg-gray-50
                 "
               >
-                <Checkbox
-                  className="mr-3"
-                  isChecked={type === sortType}
+                <input
+                  type="radio"
+                  className="sr-only"
+                  name="sort-type"
+                  checked={type === sortType}
                   onChange={checked => {
                     if (checked) {
                       setSortType(type)
@@ -195,7 +215,17 @@ export function TodayView() {
                     hideBottomSheet()
                   }}
                 />
-                {matchSortTypeTitle(type)}
+                <CheckIcon
+                  className={clsx(
+                    'mr-2 w-6 h-6 ',
+                    type === sortType ? 'text-blue-500' : 'text-gray-200'
+                  )}
+                />
+                <span
+                  className={clsx('pl-2', {'text-blue-500': type === sortType})}
+                >
+                  {matchSortTypeTitle(type)}
+                </span>
               </label>
             </li>
           ))}
