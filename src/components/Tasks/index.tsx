@@ -9,6 +9,10 @@ import {useMutation, useQueryClient} from 'react-query'
 import {akira} from '@lib/akira/index'
 import produce from 'immer'
 import {findIndex, isUndefined, noop} from 'lodash/fp'
+import {
+  useToggleCompletedMutation,
+  useToggleImportantMutation
+} from '@modules/tasks/hooks'
 
 type Props = {
   isPending: boolean
@@ -18,47 +22,8 @@ type Props = {
 
 export const Tasks: React.FC<Props> = ({isPending, tasks, noTasksSlot}) => {
   const queryClient = useQueryClient()
-  const toggleTaskCompleteMutation = useMutation(akira.tasks.toggleCompleted, {
-    onMutate(taskId) {
-      const prevTask: Undefined<TaskT> = queryClient.getQueryData([
-        'task',
-        taskId
-      ])
-
-      if (prevTask) {
-        const newTask = {
-          ...prevTask,
-          is_completed: !prevTask.is_completed
-        }
-
-        queryClient.setQueryData(['task', taskId], newTask)
-        queryClient.setQueryData(
-          'tasks:today',
-          (oldTasks: Undefined<TaskT[]>) => {
-            if (isUndefined(oldTasks)) {
-              return []
-            }
-
-            return produce(oldTasks, draft => {
-              const index = findIndex({id: taskId}, oldTasks)
-
-              draft[index] = newTask
-            })
-          }
-        )
-      }
-
-      return {prevTask}
-    },
-    onSuccess(task) {
-      queryClient.setQueryData(['task', task.id], task)
-    },
-    onError(_, taskId, context: any) {
-      if (context?.prevTask) {
-        queryClient.setQueryData(['task', taskId], context.prevTask)
-      }
-    }
-  })
+  const toggleTaskCompleteMutation = useToggleCompletedMutation()
+  const toggleImportantMutation = useToggleImportantMutation()
 
   const removeTaskMutation = useMutation(akira.tasks.delete, {
     onSuccess(_, taskId) {
@@ -76,48 +41,6 @@ export const Tasks: React.FC<Props> = ({isPending, tasks, noTasksSlot}) => {
           })
         }
       )
-    }
-  })
-
-  const toggleImportantMutation = useMutation(akira.tasks.toggleImportant, {
-    onMutate(taskId) {
-      const prevTask: Undefined<TaskT> = queryClient.getQueryData([
-        'task',
-        taskId
-      ])
-
-      if (prevTask) {
-        const newTask = {
-          ...prevTask,
-          is_important: !prevTask.is_important
-        }
-
-        queryClient.setQueryData(['task', taskId], newTask)
-        queryClient.setQueryData(
-          'tasks:today',
-          (oldTasks: Undefined<TaskT[]>) => {
-            if (isUndefined(oldTasks)) {
-              return []
-            }
-
-            return produce(oldTasks, draft => {
-              const index = findIndex({id: taskId}, oldTasks)
-
-              draft[index] = newTask
-            })
-          }
-        )
-      }
-
-      return {prevTask}
-    },
-    onSuccess(task) {
-      queryClient.setQueryData(['task', task.id], task)
-    },
-    onError(_, taskId, context: any) {
-      if (context?.prevTask) {
-        queryClient.setQueryData(['task', taskId], context.prevTask)
-      }
     }
   })
 
