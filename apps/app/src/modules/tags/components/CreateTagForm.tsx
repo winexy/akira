@@ -3,6 +3,8 @@ import React, {FormEventHandler, useState} from 'react'
 import {useMutation, useQueryClient} from 'react-query'
 import {Button} from '@components/Button'
 import {akira} from '@lib/akira'
+import {Spin} from '@/components/Spin'
+import {TagT} from '../../../store/tasks/types'
 
 type Props = {
   className?: ClassValue
@@ -10,17 +12,30 @@ type Props = {
 
 export const CreateTagForm: React.FC<Props> = ({className}) => {
   const [name, setName] = useState<string>('')
+  const [hasError, setHasError] = useState(false)
   const queryClient = useQueryClient()
-  const createTagMutation = useMutation(akira.tags.create, {
-    onSuccess() {
-      queryClient.invalidateQueries(['tags'])
+  const createTagMutation = useMutation<TagT, Error, string>(
+    akira.tags.create,
+    {
+      onSuccess() {
+        queryClient.invalidateQueries(['tags'])
+      }
     }
-  })
+  )
 
   const onSubmit: FormEventHandler = event => {
     event.preventDefault()
+
+    const hasError = name === ''
+
+    if (hasError) {
+      setHasError(true)
+      return
+    }
+
     createTagMutation.mutate(name)
     setName('')
+    setHasError(false)
   }
 
   return (
@@ -34,13 +49,29 @@ export const CreateTagForm: React.FC<Props> = ({className}) => {
           'appearance-none',
           'rounded-md border border-gray-300',
           'focus:outline-none focus:border-blue-500',
-          'focus:ring'
+          'focus:ring',
+          {
+            'border-red-500': hasError
+          }
         )}
         onChange={e => setName(e.target.value)}
       />
-      <Button className="mt-4 w-full" size="md" variant="blue">
-        Create
+      <Button
+        disabled={createTagMutation.isLoading}
+        className="mt-4 w-full"
+        size="md"
+        variant="blue"
+      >
+        {createTagMutation.isLoading && (
+          <Spin className="w-4 h-4 text-wite mr-2" />
+        )}
+        {createTagMutation.isLoading ? 'Loading...' : 'Create'}
       </Button>
+      {hasError && (
+        <p className="mt-4 text-red-500 font-semibold text-center">
+          {createTagMutation.error?.message ?? 'Tag name cannot be empty'}
+        </p>
+      )}
     </form>
   )
 }
