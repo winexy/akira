@@ -20,6 +20,9 @@ export const TagsView: React.FC = () => {
     }
   })
 
+  const isTagPending = (id: number) =>
+    removeTagMutation.isLoading && removeTagMutation.variables === id
+
   return (
     <MainView withBackNavigation>
       <h2 className="px-4 font-bold text-2xl">Add new tag</h2>
@@ -35,14 +38,10 @@ export const TagsView: React.FC = () => {
               >
                 <TaskTag name={tag.name} />
                 <IconButton
-                  disabled={
-                    removeTagMutation.variables === tag.id &&
-                    removeTagMutation.isLoading
-                  }
+                  disabled={isTagPending(tag.id)}
                   onClick={() => removeTagMutation.mutate(tag.id)}
                 >
-                  {removeTagMutation.variables === tag.id &&
-                  removeTagMutation.isLoading ? (
+                  {isTagPending(tag.id) ? (
                     <Spin className="text-gray-300 w-4 h-4" />
                   ) : (
                     <XIcon className="w-4 h-4 text-red-500" />
