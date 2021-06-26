@@ -11,23 +11,18 @@ export const Header: React.FC = ({children}) => {
   const [isFloating, setIsFloating] = useState(false)
 
   useEffect(() => {
-    const root = document.getElementById('root')
     const headerRect = headerRef.current?.getBoundingClientRect()
 
     const listener = () => {
-      if (root && headerRect) {
-        setIsFloating(root.scrollTop > headerRect.height)
+      if (headerRect) {
+        setIsFloating(window.scrollY > headerRect.height)
       }
     }
 
-    if (root) {
-      root.addEventListener('scroll', listener, false)
-    }
+    window.addEventListener('scroll', listener, false)
 
     return () => {
-      if (root) {
-        root.removeEventListener('scroll', listener)
-      }
+      window.removeEventListener('scroll', listener)
     }
   }, [])
 

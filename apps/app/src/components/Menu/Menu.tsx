@@ -1,4 +1,4 @@
-import React, {useRef} from 'react'
+import React, {useEffect, useRef} from 'react'
 import clsx from 'clsx'
 import {
   AdjustmentsIcon,
@@ -78,6 +78,18 @@ export const Menu: React.FC = ({children}) => {
   const menuRef = useRef<HTMLElement | null>(null)
   const contentRef = useRef<HTMLDivElement | null>(null)
   const todayTasksCount = size(queryClient.getQueryData('tasks:today'))
+
+  useEffect(() => {
+    const root = document.getElementById('root')
+
+    if (root) {
+      if (isOpen) {
+        root.classList.add('overflow-x-hidden')
+      } else {
+        root.classList.remove('overflow-x-hidden')
+      }
+    }
+  }, [isOpen])
 
   return (
     <>
