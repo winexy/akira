@@ -108,6 +108,7 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                   onInput={e => {
                     onTitleChange((e.target as HTMLInputElement).value)
                   }}
+                  enterKeyHint="send"
                 />
                 {!isEmpty(title) && (
                   <button

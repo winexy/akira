@@ -389,6 +389,7 @@ export const TaskView: React.FC = () => {
               )}
               onInput={e => setTodoTitle((e.target as HTMLInputElement).value)}
               onBlur={() => setIsTodoInputVisible(false)}
+              enterKeyHint="send"
             />
           </form>
         )}
