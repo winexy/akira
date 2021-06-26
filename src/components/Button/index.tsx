@@ -59,6 +59,10 @@ export const Button: React.FC<Props> = ({
     rounded-md
     text-white font-semibold
     transition ease-in duration-100
+    disabled:bg-gray-200
+    disabled:border-gray-300
+    disabled:text-gray-300
+    disabled:shadow-sm
     focus:outline-none
   `,
     matchSize(size),

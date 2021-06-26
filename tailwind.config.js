@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 const TailwindCaretColor = require('tailwind-caret-color')
 
 module.exports = {
@@ -8,12 +9,12 @@ module.exports = {
   },
   variants: {
     extend: {
-      textColor: ['active'],
-      backgroundColor: ['active'],
-      borderColor: ['active'],
+      textColor: ['active', 'disabled'],
+      backgroundColor: ['active', 'disabled'],
+      borderColor: ['active', 'disabled'],
       scale: ['active'],
       backgroundOpacity: ['active'],
-      boxShadow: ['active']
+      boxShadow: ['active', 'disabled']
     }
   },
   plugins: [TailwindCaretColor()]
