@@ -1,7 +1,7 @@
-import clsx, {ClassValue} from 'clsx'
+import clsx from 'clsx'
 import React from 'react'
 
-export const Spin: React.FC<{className: ClassValue}> = ({className}) => (
+export const Spin: SVGIconElement = ({className}) => (
   <svg
     className={clsx('animate-spin', className)}
     xmlns="http://www.w3.org/2000/svg"
