@@ -69,7 +69,12 @@ export const CreateTagForm: React.FC<Props> = ({className}) => {
       </Button>
       {hasError && (
         <p className="mt-4 text-red-500 font-semibold text-center">
-          {createTagMutation.error?.message ?? 'Tag name cannot be empty'}
+          Tag name cannot be empty
+        </p>
+      )}
+      {createTagMutation.isError && (
+        <p className="mt-4 text-red-500 font-semibold text-center">
+          {createTagMutation.error?.message}
         </p>
       )}
     </form>
