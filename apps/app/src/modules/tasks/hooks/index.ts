@@ -11,6 +11,10 @@ export function useToggleCompletedMutation() {
   return useMutation(akira.tasks.toggleCompleted, {
     onMutate(taskId) {
       const prevTask = queryClient.getQueryData<TaskT>(['task', taskId])
+      const prevTasksToday = queryClient.getQueryData<TaskT[]>([
+        'tasks:today',
+        taskId
+      ])
 
       if (prevTask) {
         const newTask = {
@@ -19,20 +23,17 @@ export function useToggleCompletedMutation() {
         }
 
         queryClient.setQueryData(['task', taskId], newTask)
-        queryClient.setQueryData(
-          'tasks:today',
-          (oldTasks: Undefined<TaskT[]>) => {
-            if (isUndefined(oldTasks)) {
-              return []
-            }
 
-            return produce(oldTasks, draft => {
-              const index = findIndex({id: taskId}, oldTasks)
+        if (prevTasksToday) {
+          queryClient.setQueryData(
+            'tasks:today',
+            produce(prevTasksToday, draft => {
+              const index = findIndex({id: taskId}, prevTasksToday)
 
               draft[index] = newTask
             })
-          }
-        )
+          )
+        }
       }
 
       return {prevTask}
@@ -51,6 +52,7 @@ export function useToggleImportantMutation() {
   return useMutation(akira.tasks.toggleImportant, {
     onMutate(taskId) {
       const prevTask = queryClient.getQueryData<TaskT>(['task', taskId])
+      const prevTasksToday = queryClient.getQueryData<TaskT[]>('tasks:today')
 
       if (prevTask) {
         const newTask = {
@@ -59,20 +61,17 @@ export function useToggleImportantMutation() {
         }
 
         queryClient.setQueryData(['task', taskId], newTask)
-        queryClient.setQueryData(
-          'tasks:today',
-          (oldTasks: Undefined<TaskT[]>) => {
-            if (isUndefined(oldTasks)) {
-              return []
-            }
 
-            return produce(oldTasks, draft => {
-              const index = findIndex({id: taskId}, oldTasks)
+        if (prevTasksToday) {
+          queryClient.setQueryData(
+            'tasks:today',
+            produce(prevTasksToday, draft => {
+              const index = findIndex({id: taskId}, prevTasksToday)
 
               draft[index] = newTask
             })
-          }
-        )
+          )
+        }
       }
 
       return {prevTask}
