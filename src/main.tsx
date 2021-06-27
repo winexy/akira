@@ -31,11 +31,11 @@ async function prefetchMyDay() {
 
 ReactDOM.render(
   <React.StrictMode>
-    <FirebaseAuthProvider onAuthSuccess={prefetchMyDay}>
-      <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <FirebaseAuthProvider onAuthSuccess={prefetchMyDay}>
         <App />
-      </QueryClientProvider>
-    </FirebaseAuthProvider>
+      </FirebaseAuthProvider>
+    </QueryClientProvider>
   </React.StrictMode>,
   document.getElementById('root')
 )
