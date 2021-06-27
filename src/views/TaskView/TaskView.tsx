@@ -28,7 +28,7 @@ import {Tag} from '@/components/Tag/Tag'
 import {BottomSheet} from '@/components/BottomSheet/BottomSheet'
 import {Button} from '@components/Button'
 import {akira} from '@/lib/akira'
-import {Checklist, TextArea} from '@modules/tasks/components'
+import {Checklist, MyDayToggle, TextArea} from '@modules/tasks/components'
 import {showBottomSheet} from '@store/bottom-sheet/index'
 import {TaskPatchT, TaskT} from '@store/tasks/types'
 import {TagsManager, TaskTag} from '@modules/tags/components'
@@ -167,10 +167,11 @@ export const TaskView: React.FC = () => {
         onBlur={onTitleChange}
       />
 
-      <div className="mt-2 px-4">
+      <div className="mt-2 px-4 flex justify-between items-center">
         <time dateTime={task.created_at} className="text-gray-500">
           {createdAt}
         </time>
+        <MyDayToggle taskId={id} />
       </div>
       <section className="mt-2 py-3 px-4 border-t border-b">
         {!isEmpty(task.tags) && (
