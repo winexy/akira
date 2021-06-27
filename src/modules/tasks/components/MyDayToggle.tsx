@@ -7,7 +7,7 @@ import {
 import {useStoreMap} from 'effector-react'
 import {Spin} from '@/components/Spin'
 import {TaskIdT} from '@store/tasks/types'
-import {useIsFetching, useMutation} from 'react-query'
+import {useIsFetching, useMutation, useQueryClient} from 'react-query'
 import {akira} from '@lib/akira'
 import {Button} from '@components/Button'
 import {SunIcon} from '@heroicons/react/solid'
@@ -15,16 +15,19 @@ import {SunIcon as SunIconOutline} from '@heroicons/react/outline'
 
 export const MyDayToggle: React.FC<{taskId: TaskIdT}> = ({taskId}) => {
   const isOnMyDay = useStoreMap($myDayTasksIds, set => set.has(taskId))
-  const isMyDayFetching = Boolean(useIsFetching(['myday']))
+  const isMyDayFetching = useIsFetching(['myday'])
+  const queryClient = useQueryClient()
 
   const addToMyDayMutation = useMutation(akira.myday.add, {
     onSuccess(_, taskId) {
       onMyDayTaskAdded(taskId)
+      queryClient.refetchQueries(['myday'])
     }
   })
   const removeFromMyDayMutation = useMutation(akira.myday.remove, {
     onSuccess(_, taskId) {
       onMyDayTaskRemoved(taskId)
+      queryClient.refetchQueries(['myday'])
     }
   })
 
