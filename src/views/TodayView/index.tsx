@@ -1,10 +1,11 @@
-import React, {useState, useRef} from 'react'
+import React, {useState, useRef, useReducer} from 'react'
 import isNull from 'lodash/isNull'
 import {
   CheckIcon,
   PlusIcon,
   RefreshIcon,
-  SortAscendingIcon
+  SortAscendingIcon,
+  XIcon
 } from '@heroicons/react/solid'
 import {TaskForm, TaskFormRef} from '@components/TaskForm/TaskForm'
 import {Tasks} from '@components/Tasks'
@@ -21,13 +22,16 @@ import {showBottomSheet, hideBottomSheet} from '@store/bottom-sheet/index'
 import {BottomSheet} from '@components/BottomSheet/BottomSheet'
 import {Checkbox} from '@components/Checkbox/Checkbox'
 import {FilterIcon} from '@heroicons/react/outline'
-import {sortTasks, SortEnum} from '@/modules/tasks/utils'
+import {sortTasks, SortEnum} from '@modules/tasks/utils'
 import {exhaustiveCheck} from '@/utils'
-import {Button} from '@/components/Button'
+import {Button} from '@components/Button'
 import {useQuery, useQueryClient, useMutation} from 'react-query'
-import {akira} from '@/lib/akira'
+import {akira} from '@lib/akira'
 import {useFirebaseAuth} from '@/firebase'
 import {onMyDayFetch} from '@modules/tasks/store'
+import {TagT, TaskT} from '@store/tasks'
+import {Tag, WIP} from '@components/Tag/Tag'
+import produce from 'immer'
 
 function matchSortTypeTitle(sortType: SortEnum) {
   switch (sortType) {
@@ -75,20 +79,38 @@ export function TodayView() {
     }
   )
 
-  const {data: tasks = [], isLoading} = useQuery('myday', akira.myday.tasks, {
-    onSuccess(tasks) {
-      onMyDayFetch(tasks)
-      tasks.forEach(task => {
-        queryClient.setQueryData(['task', task.id], task)
-      })
+  const {data: tasks = [], isLoading} = useQuery<TaskT[]>(
+    'myday',
+    akira.myday.tasks,
+    {
+      onSuccess(tasks) {
+        onMyDayFetch(tasks)
+        tasks.forEach(task => {
+          queryClient.setQueryData(['task', task.id], task)
+        })
+      }
     }
-  })
+  )
+
+  const {data: tags = []} = useQuery<TagT[]>('tags', akira.tags.all)
 
   const completedTasksCount = size(filter({is_completed: true}, tasks))
-
   const sorted = sortTasks(tasks, sortType)
 
   const today = format(new Date(), 'eeee, do MMMM')
+
+  const [selectedTags, dispatch] = useReducer(
+    (state: Set<number>, value: number) => {
+      return produce(state, draft => {
+        if (state.has(value)) {
+          draft.delete(value)
+        } else {
+          draft.add(value)
+        }
+      })
+    },
+    new Set<number>()
+  )
 
   function onSubmit() {
     createTaskMutation.mutate(title)
@@ -124,7 +146,9 @@ export function TodayView() {
         </span>
       </div>
       <BottomSheet name="filters" className="px-4 pb-6 pt-4 text-gray-800">
-        <h2 className="font-bold text-2xl">Filters</h2>
+        <h2 className="flex items-center justify-between font-bold text-2xl">
+          Filters <WIP />
+        </h2>
         <ul className="mt-4 space-y-1">
           {['Completed', 'Important'].map(value => (
             <li className="" key={value}>
@@ -133,12 +157,9 @@ export function TodayView() {
                   px-3 py-2 
                   flex items-center 
                   font-semibold text-lg 
-                  border border-gray-100 
-                  bg-gray-50 rounded
+                  rounded select-none
                   transition ease-in duration-75
-                  select-none
                   active:bg-gray-100
-                  active:border-gray-200
                 "
               >
                 <Checkbox
@@ -154,6 +175,19 @@ export function TodayView() {
                 />
                 {value}
               </label>
+            </li>
+          ))}
+        </ul>
+        <ul className="mt-2 flex flex-wrap space-x-2">
+          {tags.map(tag => (
+            <li key={tag.id}>
+              <Tag
+                variant={selectedTags.has(tag.id) ? 'purple' : 'gray'}
+                onClick={() => dispatch(tag.id)}
+              >
+                {tag.name}
+                {selectedTags.has(tag.id) && <XIcon className="ml-2 w-3 h-3" />}
+              </Tag>
             </li>
           ))}
         </ul>
