@@ -1,5 +1,4 @@
 import React from 'react'
-import {QueryClient, QueryClientProvider} from 'react-query'
 import {ReactQueryDevtools} from 'react-query/devtools'
 import {DndProvider} from 'react-dnd'
 import {TouchBackend} from 'react-dnd-touch-backend'
@@ -93,17 +92,6 @@ const SvgLoader = (
   </svg>
 )
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 1000 * 60 * 2,
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchIntervalInBackground: false
-    }
-  }
-})
-
 function App() {
   const {isLoading, isAuthenticated} = useFirebaseAuth()
 
@@ -122,33 +110,31 @@ function App() {
 
   return (
     <DndProvider backend={TouchBackend} options={dndConfig}>
-      <QueryClientProvider client={queryClient}>
-        <Router>
-          <Menu>
-            <Switch>
-              <Route path="/" exact>
-                <TodayView />
-              </Route>
-              <Route path="/tasks" exact>
-                <TasksView />
-              </Route>
-              <Route path="/tasks/:id">
-                <TaskView />
-              </Route>
-              <Route path="/important">
-                <ImportantView />
-              </Route>
-              <Route path="/wip">
-                <WipView />
-              </Route>
-              <Route path="/tags">
-                <TagsView />
-              </Route>
-            </Switch>
-          </Menu>
-        </Router>
-        <ReactQueryDevtools />
-      </QueryClientProvider>
+      <Router>
+        <Menu>
+          <Switch>
+            <Route path="/" exact>
+              <TodayView />
+            </Route>
+            <Route path="/tasks" exact>
+              <TasksView />
+            </Route>
+            <Route path="/tasks/:id">
+              <TaskView />
+            </Route>
+            <Route path="/important">
+              <ImportantView />
+            </Route>
+            <Route path="/wip">
+              <WipView />
+            </Route>
+            <Route path="/tags">
+              <TagsView />
+            </Route>
+          </Switch>
+        </Menu>
+      </Router>
+      <ReactQueryDevtools />
     </DndProvider>
   )
 }

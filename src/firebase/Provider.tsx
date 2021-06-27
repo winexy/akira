@@ -1,4 +1,5 @@
 import React, {createContext, useContext, useEffect, useState} from 'react'
+import noop from 'lodash/fp/noop'
 import {firebase, auth, GoogleProvider} from './firebase'
 
 type AuthFunctionsT = {
@@ -39,7 +40,14 @@ const Context = createContext<ContextValueT>(defaultContextValue)
 
 Context.displayName = 'FirebaseAuth'
 
-export const FirebaseAuthProvider: React.FC = ({children}) => {
+type Props = {
+  onAuthSuccess?(): void
+}
+
+export const FirebaseAuthProvider: React.FC<Props> = ({
+  children,
+  onAuthSuccess = noop
+}) => {
   const [user, setUser] = useState<ContextValueT['user']>(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -69,12 +77,13 @@ export const FirebaseAuthProvider: React.FC = ({children}) => {
       if (firebaseUser) {
         setUser(firebaseUser)
         setIsAuthenticated(true)
+        onAuthSuccess()
       } else {
         setUser(null)
         setIsAuthenticated(false)
       }
     })
-  }, [setIsLoading])
+  }, [setIsLoading, onAuthSuccess])
 
   return <Context.Provider value={value}>{children}</Context.Provider>
 }
