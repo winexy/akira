@@ -12,7 +12,7 @@ export function useToggleCompletedMutation() {
     onMutate(taskId) {
       const prevTask = queryClient.getQueryData<TaskT>(['task', taskId])
       const prevTasksToday = queryClient.getQueryData<TaskT[]>([
-        'tasks:today',
+        'myday',
         taskId
       ])
 
@@ -26,7 +26,7 @@ export function useToggleCompletedMutation() {
 
         if (prevTasksToday) {
           queryClient.setQueryData(
-            'tasks:today',
+            'myday',
             produce(prevTasksToday, draft => {
               const index = findIndex({id: taskId}, prevTasksToday)
 
@@ -52,7 +52,7 @@ export function useToggleImportantMutation() {
   return useMutation(akira.tasks.toggleImportant, {
     onMutate(taskId) {
       const prevTask = queryClient.getQueryData<TaskT>(['task', taskId])
-      const prevTasksToday = queryClient.getQueryData<TaskT[]>('tasks:today')
+      const prevTasksToday = queryClient.getQueryData<TaskT[]>('myday')
 
       if (prevTask) {
         const newTask = {
@@ -64,7 +64,7 @@ export function useToggleImportantMutation() {
 
         if (prevTasksToday) {
           queryClient.setQueryData(
-            'tasks:today',
+            'myday',
             produce(prevTasksToday, draft => {
               const index = findIndex({id: taskId}, prevTasksToday)
 
@@ -91,11 +91,11 @@ export function useRemoveTaskMutation() {
     onSuccess(_, taskId) {
       queryClient.removeQueries(['task', taskId])
 
-      const prevTasks = queryClient.getQueryData<TaskT[]>('tasks:today')
+      const prevTasks = queryClient.getQueryData<TaskT[]>('myday')
 
       if (prevTasks) {
         queryClient.setQueryData(
-          'tasks:today',
+          'myday',
           produce(prevTasks, draft => {
             const index = findIndex({id: taskId}, prevTasks)
             draft.splice(index, 1)

@@ -75,7 +75,7 @@ export const Menu: React.FC = ({children}) => {
   const auth = useFirebaseAuth()
   const menuRef = useRef<HTMLElement | null>(null)
   const contentRef = useRef<HTMLDivElement | null>(null)
-  const todayTasksCount = size(queryClient.getQueryData('tasks:today'))
+  const todayTasksCount = size(queryClient.getQueryData('myday'))
 
   useEffect(() => {
     const root = document.getElementById('root')

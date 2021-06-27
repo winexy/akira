@@ -70,23 +70,19 @@ export function TodayView() {
     },
     {
       onSuccess() {
-        queryClient.invalidateQueries(['tasks:today'])
+        queryClient.invalidateQueries(['myday'])
       }
     }
   )
 
-  const {data: tasks = [], isLoading} = useQuery(
-    'tasks:today',
-    akira.myday.tasks,
-    {
-      onSuccess(tasks) {
-        onMyDayFetch(tasks)
-        tasks.forEach(task => {
-          queryClient.setQueryData(['task', task.id], task)
-        })
-      }
+  const {data: tasks = [], isLoading} = useQuery('myday', akira.myday.tasks, {
+    onSuccess(tasks) {
+      onMyDayFetch(tasks)
+      tasks.forEach(task => {
+        queryClient.setQueryData(['task', task.id], task)
+      })
     }
-  )
+  })
 
   const completedTasksCount = size(filter({is_completed: true}, tasks))
 

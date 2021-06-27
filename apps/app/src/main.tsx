@@ -20,9 +20,9 @@ const queryClient = new QueryClient({
 })
 
 async function prefetchMyDay() {
-  await queryClient.prefetchQuery('tasks:today', akira.myday.tasks)
+  await queryClient.prefetchQuery('myday', akira.myday.tasks)
 
-  const tasks = queryClient.getQueryData<TaskT[]>('tasks:today')
+  const tasks = queryClient.getQueryData<TaskT[]>('myday')
 
   if (tasks) {
     onMyDayFetch(tasks)
