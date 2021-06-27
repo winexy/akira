@@ -15,7 +15,7 @@ import {SunIcon as SunIconOutline} from '@heroicons/react/outline'
 
 export const MyDayToggle: React.FC<{taskId: TaskIdT}> = ({taskId}) => {
   const isOnMyDay = useStoreMap($myDayTasksIds, set => set.has(taskId))
-  const isMyDayFetching = Boolean(useIsFetching(['tasks:today']))
+  const isMyDayFetching = Boolean(useIsFetching(['myday']))
 
   const addToMyDayMutation = useMutation(akira.myday.add, {
     onSuccess(_, taskId) {
