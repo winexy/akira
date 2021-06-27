@@ -27,6 +27,7 @@ import {Button} from '@/components/Button'
 import {useQuery, useQueryClient, useMutation} from 'react-query'
 import {akira} from '@/lib/akira'
 import {useFirebaseAuth} from '@/firebase'
+import {onMyDayFetch} from '@modules/tasks/store'
 
 function matchSortTypeTitle(sortType: SortEnum) {
   switch (sortType) {
@@ -76,9 +77,10 @@ export function TodayView() {
 
   const {data: tasks = [], isLoading} = useQuery(
     'tasks:today',
-    () => akira.tasks.query({is_today: 1}),
+    akira.myday.tasks,
     {
       onSuccess(tasks) {
+        onMyDayFetch(tasks)
         tasks.forEach(task => {
           queryClient.setQueryData(['task', task.id], task)
         })
