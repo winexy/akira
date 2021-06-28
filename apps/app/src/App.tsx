@@ -9,7 +9,6 @@ import {WipView} from '@views/WipView/WipView'
 import {Menu} from '@components/Menu/Menu'
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
 import {useFirebaseAuth} from './firebase/Provider'
-import {ImportantView} from './views/ImportantView'
 import {TasksView} from './views/TasksView'
 import {TagsView} from './modules/tags/views'
 
@@ -121,9 +120,6 @@ function App() {
             </Route>
             <Route path="/tasks/:id">
               <TaskView />
-            </Route>
-            <Route path="/important">
-              <ImportantView />
             </Route>
             <Route path="/wip">
               <WipView />

@@ -3,7 +3,6 @@ import clsx from 'clsx'
 import {
   AdjustmentsIcon,
   ChevronLeftIcon,
-  FireIcon,
   LogoutIcon,
   CheckIcon,
   HomeIcon,
@@ -147,9 +146,6 @@ export const Menu: React.FC = ({children}) => {
           </MenuItem>
           <MenuItem to="/tasks" Icon={CollectionIcon}>
             Tasks
-          </MenuItem>
-          <MenuItem to="/important" Icon={FireIcon}>
-            Important
           </MenuItem>
           <MenuItem to="/wip" Icon={CheckIcon}>
             Completed
