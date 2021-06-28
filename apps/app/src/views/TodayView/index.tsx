@@ -32,6 +32,7 @@ import {onMyDayFetch} from '@modules/tasks/store'
 import {TagT, TaskT} from '@store/tasks'
 import {Tag, WIP} from '@components/Tag/Tag'
 import produce from 'immer'
+import {TaskQueryKeyEnum} from '@modules/tasks/config/index'
 
 function matchSortTypeTitle(sortType: SortEnum) {
   switch (sortType) {
@@ -80,7 +81,7 @@ export function TodayView() {
   )
 
   const {data: tasks = [], isLoading} = useQuery<TaskT[]>(
-    'myday',
+    TaskQueryKeyEnum.MyDay,
     akira.myday.tasks,
     {
       onSuccess(tasks) {
