@@ -11,10 +11,7 @@ export function useToggleCompletedMutation() {
   return useMutation(akira.tasks.toggleCompleted, {
     onMutate(taskId) {
       const prevTask = queryClient.getQueryData<TaskT>(['task', taskId])
-      const prevTasksToday = queryClient.getQueryData<TaskT[]>([
-        'myday',
-        taskId
-      ])
+      const prevTasksToday = queryClient.getQueryData<TaskT[]>('myday')
 
       if (prevTask) {
         const newTask = {
