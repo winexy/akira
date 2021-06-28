@@ -112,7 +112,6 @@ export function TodayView() {
     new Set<number>()
   )
 
-  const completedTasksCount = size(filter({is_completed: true}, tasks))
   const filtered = tasks.filter(task => {
     if (filters.includes('Completed') && !task.is_completed) {
       return false
@@ -137,6 +136,7 @@ export function TodayView() {
   })
 
   const sorted = sortTasks(filtered, sortType)
+  const completedTasksCount = size(filter({is_completed: true}, sorted))
 
   const today = format(new Date(), 'eeee, do MMMM')
 
@@ -170,7 +170,7 @@ export function TodayView() {
           <p className="text-sm">{today}</p>
         </div>
         <span className="text-gray-700 text-4xl font-bold">
-          {completedTasksCount} / {size(tasks)}
+          {completedTasksCount} / {size(sorted)}
         </span>
       </div>
       <BottomSheet name="filters" className="px-4 pb-6 pt-4 text-gray-800">
@@ -310,32 +310,35 @@ export function TodayView() {
       </section>
       <div className="fixed bottom-0 right-0 left-0 py-7 flex items-center mt-4 px-4 from-gray-100 bg-gradient-to-t">
         <button
-          className="
-            flex items-center px-3 py-1 
-            border border-gray-300
-            font-semibold 
-            rounded-md shadow-md
-            bg-gray-100
-            active:bg-gray-200
-            active:shadow-lg
-            focus:outline-none 
-          "
+          className={clsx(
+            'flex items-center px-3 py-1 ',
+            'border',
+            'font-semibold ',
+            'rounded-md shadow-md',
+            'active:shadow-lg',
+            'focus:outline-none ',
+            size(sorted) !== size(tasks)
+              ? 'text-white bg-blue-500 border-blue-600 active:bg-blue-600 active:border-blue-700'
+              : 'bg-gray-100 border-gray-300 active:bg-gray-200'
+          )}
           onClick={() => showBottomSheet('filters')}
         >
           <FilterIcon className="w-4 h-4 mr-2" />
           Filters
         </button>
         <button
-          className="
-            ml-4 flex items-center px-3 py-1 
-            border border-gray-300
-            font-semibold 
-            rounded-md shadow-md
-            bg-gray-100
-            active:bg-gray-200
-            active:shadow-lg
-            focus:outline-none 
-          "
+          className={clsx(
+            'ml-4 flex items-center px-3 py-1 ',
+            'border',
+            'font-semibold',
+            'rounded-md shadow-md',
+            'active:bg-gray-200',
+            'active:shadow-lg',
+            'focus:outline-none',
+            sortType
+              ? 'text-white bg-blue-500 border-blue-600 active:bg-blue-600 active:border-blue-700'
+              : 'bg-gray-100 border-gray-300 active:bg-gray-200'
+          )}
           onClick={() => showBottomSheet('sorting')}
         >
           <SortAscendingIcon className="w-4 h-4 mr-2" />
