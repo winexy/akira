@@ -23,10 +23,8 @@ const queryClient = new QueryClient({
 })
 
 async function prefetchQueries() {
-  await Promise.all([
-    queryClient.prefetchQuery('myday', akira.myday.tasks),
-    queryClient.prefetchQuery('tags', akira.tags.all)
-  ])
+  queryClient.prefetchQuery('tags', akira.tags.all)
+  await queryClient.prefetchQuery('myday', akira.myday.tasks)
 
   const tasks = queryClient.getQueryData<TaskT[]>('myday')
 
