@@ -1,8 +1,19 @@
 import produce from 'immer'
 import findIndex from 'lodash/fp/findIndex'
-import {useMutation, useQueryClient} from 'react-query'
+import {useMutation, useQuery, useQueryClient} from 'react-query'
 import {akira} from '@lib/akira'
 import {TaskT} from '@store/tasks/types'
+import {TaskQueryKeyEnum} from '@modules/tasks/config'
+
+export function useTasksQuery() {
+  const queryClient = useQueryClient()
+
+  return useQuery(TaskQueryKeyEnum.All, () => akira.tasks.query(), {
+    onSuccess(tasks) {
+      tasks.forEach(task => queryClient.setQueryData(['task', task.id], task))
+    }
+  })
+}
 
 export function useToggleCompletedMutation(tasksQueryKey: string) {
   const queryClient = useQueryClient()

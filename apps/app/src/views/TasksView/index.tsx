@@ -1,21 +1,11 @@
 import React from 'react'
 import {MainView} from '@/views/MainView'
 import {Tasks} from '@components/Tasks'
-import {useQuery, useQueryClient} from 'react-query'
-import {akira} from '@/lib/akira'
-import {TaskQueryKeyEnum} from '@modules/tasks/config/index'
+import {TaskQueryKeyEnum} from '@modules/tasks/config'
+import {useTasksQuery} from '@modules/tasks/hooks'
 
 export const TasksView: React.FC = () => {
-  const queryClient = useQueryClient()
-  const {data: tasks = [], isLoading} = useQuery(
-    TaskQueryKeyEnum.All,
-    () => akira.tasks.query(),
-    {
-      onSuccess(tasks) {
-        tasks.forEach(task => queryClient.setQueryData(['task', task.id], task))
-      }
-    }
-  )
+  const {data: tasks = [], isLoading} = useTasksQuery()
 
   return (
     <MainView>
