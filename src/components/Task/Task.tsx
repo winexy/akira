@@ -205,7 +205,7 @@ export const Task: React.FC<TaskProps> = ({
           onChange={() => onCheck(task.id)}
           onClick={e => e.stopPropagation()}
         />
-        <div className="flex-1 mx-2 flex flex-col">
+        <div className="flex-1 mx-2 flex flex-col truncate">
           <p className="truncate">{task.title}</p>
           {!isEmpty(task.checklist) && (
             <ChecklistProgressBar checklist={task.checklist} />
