@@ -95,13 +95,12 @@ export function TodayView() {
 
   const {data: tags = []} = useQuery<TagT[]>('tags', akira.tags.all)
 
-  const completedTasksCount = size(filter({is_completed: true}, tasks))
-  const sorted = sortTasks(tasks, sortType)
-
-  const today = format(new Date(), 'eeee, do MMMM')
-
   const [selectedTags, dispatch] = useReducer(
     (state: Set<number>, value: number) => {
+      if (value === -1) {
+        return new Set<number>()
+      }
+
       return produce(state, draft => {
         if (state.has(value)) {
           draft.delete(value)
@@ -112,6 +111,34 @@ export function TodayView() {
     },
     new Set<number>()
   )
+
+  const completedTasksCount = size(filter({is_completed: true}, tasks))
+  const filtered = tasks.filter(task => {
+    if (filters.includes('Completed') && !task.is_completed) {
+      return false
+    }
+
+    if (filters.includes('Important') && !task.is_important) {
+      return false
+    }
+
+    if (filters.includes('Not Completed') && task.is_completed) {
+      return false
+    }
+
+    if (
+      selectedTags.size > 0 &&
+      !task.tags.some(tag => selectedTags.has(tag.id))
+    ) {
+      return false
+    }
+
+    return true
+  })
+
+  const sorted = sortTasks(filtered, sortType)
+
+  const today = format(new Date(), 'eeee, do MMMM')
 
   function onSubmit() {
     createTaskMutation.mutate(title)
@@ -148,10 +175,24 @@ export function TodayView() {
       </div>
       <BottomSheet name="filters" className="px-4 pb-6 pt-4 text-gray-800">
         <h2 className="flex items-center justify-between font-bold text-2xl">
-          Filters <WIP />
+          Filters
+          {size(tasks) !== size(sorted) && (
+            <Button
+              variant="outline"
+              className="text-sm"
+              onClick={() => {
+                setFilters([])
+                dispatch(-1)
+                hideBottomSheet()
+              }}
+            >
+              <RefreshIcon className="w-4 h-4 mr-2" />
+              reset
+            </Button>
+          )}
         </h2>
         <ul className="mt-4 space-y-1">
-          {['Completed', 'Important'].map(value => (
+          {['Completed', 'Not Completed', 'Important'].map(value => (
             <li className="" key={value}>
               <label
                 className="
