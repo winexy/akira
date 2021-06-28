@@ -2,7 +2,7 @@ import produce from 'immer'
 import findIndex from 'lodash/fp/findIndex'
 import {useMutation, useQuery, useQueryClient} from 'react-query'
 import {akira} from '@lib/akira'
-import {TaskT} from '@store/tasks/types'
+import {TaskPatchT, TaskT, TaskIdT} from '@store/tasks/types'
 import {TaskQueryKeyEnum} from '@modules/tasks/config'
 
 export function useTasksQuery() {
@@ -13,6 +13,21 @@ export function useTasksQuery() {
       tasks.forEach(task => queryClient.setQueryData(['task', task.id], task))
     }
   })
+}
+
+export function usePatchTaskMutation(taskId: TaskIdT) {
+  const queryClient = useQueryClient()
+
+  return useMutation(
+    (patch: TaskPatchT) => {
+      return akira.tasks.patch(taskId, patch)
+    },
+    {
+      onSuccess(task) {
+        queryClient.setQueryData(['task', taskId], task)
+      }
+    }
+  )
 }
 
 export function useToggleCompletedMutation(tasksQueryKey: string) {
@@ -111,4 +126,22 @@ export function useRemoveTaskMutation(tasksQueryKey: string) {
       }
     }
   })
+}
+
+export function useAddTodoMutation(taskId: TaskIdT) {
+  const queryClient = useQueryClient()
+
+  return useMutation(
+    (todoTitle: string) => {
+      return akira.checklist.addTodo({
+        taskId,
+        title: todoTitle
+      })
+    },
+    {
+      onSuccess() {
+        queryClient.invalidateQueries(['task', taskId])
+      }
+    }
+  )
 }
