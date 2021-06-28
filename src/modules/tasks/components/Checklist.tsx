@@ -1,14 +1,10 @@
 import React from 'react'
-import {useMutation, useQueryClient} from 'react-query'
 import clsx from 'clsx'
-import produce from 'immer'
-import filter from 'lodash/fp/filter'
-import findIndex from 'lodash/fp/findIndex'
 import {XIcon} from '@heroicons/react/solid'
 
 import {Checkbox} from '@components/Checkbox/Checkbox'
-import {akira} from '@lib/akira'
-import {TaskIdT, TaskT, TodoIdT, TodoPatchT, TodoT} from '@store/tasks'
+import {TaskIdT, TodoT} from '@store/tasks'
+import {useRemoveTodoMutation, usePatchTodoMutation} from '../hooks'
 
 type Props = {
   taskId: TaskIdT
@@ -16,70 +12,8 @@ type Props = {
 }
 
 export const Checklist: React.FC<Props> = ({taskId, checklist}) => {
-  const queryClient = useQueryClient()
-  const patchTodoMutation = useMutation(
-    ({todoId, patch}: {todoId: TodoIdT; patch: TodoPatchT}) => {
-      return akira.checklist.patchTodo(taskId, todoId, patch)
-    },
-    {
-      onMutate({todoId, patch}) {
-        const prevTask = queryClient.getQueryData<TaskT>(['task', taskId])
-
-        if (prevTask) {
-          queryClient.setQueryData(['task', taskId], () =>
-            produce(prevTask, draft => {
-              const index = findIndex({id: todoId}, prevTask.checklist)
-
-              draft.checklist[index] = {
-                ...prevTask.checklist[index],
-                ...patch
-              }
-            })
-          )
-        }
-
-        return {prevTask}
-      },
-      onError(_, todoId, context: any) {
-        const prevTask = context?.prevTask
-
-        if (prevTask) {
-          queryClient.setQueryData(['task', taskId], prevTask)
-        }
-      }
-    }
-  )
-
-  const removeTodoMutation = useMutation(
-    (todoId: TodoIdT) => {
-      return akira.checklist.removeTodo(taskId, todoId)
-    },
-    {
-      onMutate(todoId) {
-        const prevTask = queryClient.getQueryData<TaskT>(['task', taskId])
-
-        if (prevTask) {
-          queryClient.setQueryData(['task', taskId], () =>
-            produce(prevTask, draft => {
-              draft.checklist = filter(
-                todo => todo.id !== todoId,
-                draft.checklist
-              )
-            })
-          )
-        }
-
-        return {prevTask}
-      },
-      onError(_, todoId, context: any) {
-        const prevTask = context?.prevTask
-
-        if (prevTask) {
-          queryClient.setQueryData(['task', taskId], prevTask)
-        }
-      }
-    }
-  )
+  const patchTodoMutation = usePatchTodoMutation(taskId)
+  const removeTodoMutation = useRemoveTodoMutation(taskId)
 
   return (
     <ul className="mt-2 divide-y transition ease-in duration-75">

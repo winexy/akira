@@ -7,7 +7,6 @@ import {XIcon} from '@heroicons/react/solid'
 import {IconButton} from '@components/IconButton'
 import {Spin} from '@/components/Spin'
 import isEmpty from 'lodash/fp/isEmpty'
-import {Tag} from '@/components/Tag/Tag'
 import {CreateTagForm, TaskTag} from '../components'
 
 export const TagsView: React.FC = () => {
