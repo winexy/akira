@@ -2,8 +2,15 @@ import produce from 'immer'
 import findIndex from 'lodash/fp/findIndex'
 import {useMutation, useQuery, useQueryClient} from 'react-query'
 import {akira} from '@lib/akira'
-import {TaskPatchT, TaskT, TaskIdT} from '@store/tasks/types'
+import {
+  TaskPatchT,
+  TaskT,
+  TaskIdT,
+  TodoIdT,
+  TodoPatchT
+} from '@store/tasks/types'
 import {TaskQueryKeyEnum} from '@modules/tasks/config'
+import filter from 'lodash/fp/filter'
 
 export function useTasksQuery() {
   const queryClient = useQueryClient()
@@ -141,6 +148,78 @@ export function useAddTodoMutation(taskId: TaskIdT) {
     {
       onSuccess() {
         queryClient.invalidateQueries(['task', taskId])
+      }
+    }
+  )
+}
+
+export function usePatchTodoMutation(taskId: TaskIdT) {
+  const queryClient = useQueryClient()
+
+  return useMutation(
+    ({todoId, patch}: {todoId: TodoIdT; patch: TodoPatchT}) => {
+      return akira.checklist.patchTodo(taskId, todoId, patch)
+    },
+    {
+      onMutate({todoId, patch}) {
+        const prevTask = queryClient.getQueryData<TaskT>(['task', taskId])
+
+        if (prevTask) {
+          queryClient.setQueryData(['task', taskId], () =>
+            produce(prevTask, draft => {
+              const index = findIndex({id: todoId}, prevTask.checklist)
+
+              draft.checklist[index] = {
+                ...prevTask.checklist[index],
+                ...patch
+              }
+            })
+          )
+        }
+
+        return {prevTask}
+      },
+      onError(_, __, context: any) {
+        const prevTask = context?.prevTask
+
+        if (prevTask) {
+          queryClient.setQueryData(['task', taskId], prevTask)
+        }
+      }
+    }
+  )
+}
+
+export function useRemoveTodoMutation(taskId: TaskIdT) {
+  const queryClient = useQueryClient()
+
+  return useMutation(
+    (todoId: TodoIdT) => {
+      return akira.checklist.removeTodo(taskId, todoId)
+    },
+    {
+      onMutate(todoId) {
+        const prevTask = queryClient.getQueryData<TaskT>(['task', taskId])
+
+        if (prevTask) {
+          queryClient.setQueryData(['task', taskId], () =>
+            produce(prevTask, draft => {
+              draft.checklist = filter(
+                todo => todo.id !== todoId,
+                draft.checklist
+              )
+            })
+          )
+        }
+
+        return {prevTask}
+      },
+      onError(_, __, context: any) {
+        const prevTask = context?.prevTask
+
+        if (prevTask) {
+          queryClient.setQueryData(['task', taskId], prevTask)
+        }
       }
     }
   )
