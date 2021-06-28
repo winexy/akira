@@ -33,12 +33,14 @@ import {showBottomSheet} from '@store/bottom-sheet/index'
 import {TaskPatchT, TaskT} from '@store/tasks/types'
 import {TagsManager, TaskTag} from '@modules/tags/components'
 import {
+  useAddTodoMutation,
   useRemoveTaskMutation,
   useToggleCompletedMutation,
   useToggleImportantMutation
-} from '@modules/tasks/hooks'
+,usePatchTaskMutation} from '@modules/tasks/hooks'
 import {ActionToast} from '@components/ActionToast'
 import {TaskQueryKeyEnum} from '@modules/tasks/config'
+
 
 const QUERY_KEY = TaskQueryKeyEnum.MyDay
 
@@ -55,36 +57,11 @@ export const TaskView: React.FC = () => {
 
   const taskTitle = useMemo(() => escape(title), [title])
 
-  const queryClient = useQueryClient()
-
   const toggleCompletedMutation = useToggleCompletedMutation(QUERY_KEY)
   const toggleImportantMutation = useToggleImportantMutation(QUERY_KEY)
   const removeTaskMutation = useRemoveTaskMutation(QUERY_KEY)
-
-  const patchTaskMutation = useMutation(
-    (patch: TaskPatchT) => {
-      return akira.tasks.patch(id, patch)
-    },
-    {
-      onSuccess(task) {
-        queryClient.setQueryData(['task', id], task)
-      }
-    }
-  )
-
-  const addTodoMutation = useMutation(
-    (todoTitle: string) => {
-      return akira.checklist.addTodo({
-        taskId: id,
-        title: todoTitle
-      })
-    },
-    {
-      onSuccess() {
-        queryClient.invalidateQueries(['task', id])
-      }
-    }
-  )
+  const patchTaskMutation = usePatchTaskMutation(id)
+  const addTodoMutation = useAddTodoMutation(id)
 
   useLayoutEffect(() => {
     if (isTodoInputVisible) {
