@@ -1,17 +1,16 @@
 import produce from 'immer'
 import findIndex from 'lodash/fp/findIndex'
-import isUndefined from 'lodash/fp/isUndefined'
 import {useMutation, useQueryClient} from 'react-query'
 import {akira} from '@lib/akira'
 import {TaskT} from '@store/tasks/types'
 
-export function useToggleCompletedMutation() {
+export function useToggleCompletedMutation(tasksQueryKey: string) {
   const queryClient = useQueryClient()
 
   return useMutation(akira.tasks.toggleCompleted, {
     onMutate(taskId) {
       const prevTask = queryClient.getQueryData<TaskT>(['task', taskId])
-      const prevTasksToday = queryClient.getQueryData<TaskT[]>('myday')
+      const prevTasks = queryClient.getQueryData<TaskT[]>(tasksQueryKey)
 
       if (prevTask) {
         const newTask = {
@@ -21,11 +20,11 @@ export function useToggleCompletedMutation() {
 
         queryClient.setQueryData(['task', taskId], newTask)
 
-        if (prevTasksToday) {
+        if (prevTasks) {
           queryClient.setQueryData(
-            'myday',
-            produce(prevTasksToday, draft => {
-              const index = findIndex({id: taskId}, prevTasksToday)
+            tasksQueryKey,
+            produce(prevTasks, draft => {
+              const index = findIndex({id: taskId}, prevTasks)
 
               draft[index] = newTask
             })
@@ -43,13 +42,13 @@ export function useToggleCompletedMutation() {
   })
 }
 
-export function useToggleImportantMutation() {
+export function useToggleImportantMutation(tasksQueryKey: string) {
   const queryClient = useQueryClient()
 
   return useMutation(akira.tasks.toggleImportant, {
     onMutate(taskId) {
       const prevTask = queryClient.getQueryData<TaskT>(['task', taskId])
-      const prevTasksToday = queryClient.getQueryData<TaskT[]>('myday')
+      const prevTasks = queryClient.getQueryData<TaskT[]>(tasksQueryKey)
 
       if (prevTask) {
         const newTask = {
@@ -59,11 +58,11 @@ export function useToggleImportantMutation() {
 
         queryClient.setQueryData(['task', taskId], newTask)
 
-        if (prevTasksToday) {
+        if (prevTasks) {
           queryClient.setQueryData(
-            'myday',
-            produce(prevTasksToday, draft => {
-              const index = findIndex({id: taskId}, prevTasksToday)
+            tasksQueryKey,
+            produce(prevTasks, draft => {
+              const index = findIndex({id: taskId}, prevTasks)
 
               draft[index] = newTask
             })
@@ -81,18 +80,18 @@ export function useToggleImportantMutation() {
   })
 }
 
-export function useRemoveTaskMutation() {
+export function useRemoveTaskMutation(tasksQueryKey: string) {
   const queryClient = useQueryClient()
 
   return useMutation(akira.tasks.delete, {
     onSuccess(_, taskId) {
       queryClient.removeQueries(['task', taskId])
 
-      const prevTasks = queryClient.getQueryData<TaskT[]>('myday')
+      const prevTasks = queryClient.getQueryData<TaskT[]>(tasksQueryKey)
 
       if (prevTasks) {
         queryClient.setQueryData(
-          'myday',
+          tasksQueryKey,
           produce(prevTasks, draft => {
             const index = findIndex({id: taskId}, prevTasks)
             draft.splice(index, 1)

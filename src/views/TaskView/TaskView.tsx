@@ -37,7 +37,10 @@ import {
   useToggleCompletedMutation,
   useToggleImportantMutation
 } from '@modules/tasks/hooks'
-import {ActionToast} from '@/components/ActionToast'
+import {ActionToast} from '@components/ActionToast'
+import {TaskQueryKeyEnum} from '@modules/tasks/config'
+
+const QUERY_KEY = TaskQueryKeyEnum.MyDay
 
 export const TaskView: React.FC = () => {
   const {id} = useParams<{id: string}>()
@@ -54,9 +57,9 @@ export const TaskView: React.FC = () => {
 
   const queryClient = useQueryClient()
 
-  const toggleCompletedMutation = useToggleCompletedMutation()
-  const toggleImportantMutation = useToggleImportantMutation()
-  const removeTaskMutation = useRemoveTaskMutation()
+  const toggleCompletedMutation = useToggleCompletedMutation(QUERY_KEY)
+  const toggleImportantMutation = useToggleImportantMutation(QUERY_KEY)
+  const removeTaskMutation = useRemoveTaskMutation(QUERY_KEY)
 
   const patchTaskMutation = useMutation(
     (patch: TaskPatchT) => {

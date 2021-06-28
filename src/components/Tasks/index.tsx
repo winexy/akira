@@ -6,6 +6,7 @@ import isEmpty from 'lodash/fp/isEmpty'
 import times from 'lodash/fp/times'
 import {InboxIcon} from '@heroicons/react/solid'
 import noop from 'lodash/fp/noop'
+import {TaskQueryKeyEnum} from '@modules/tasks/config/index'
 import {
   useToggleCompletedMutation,
   useToggleImportantMutation,
@@ -16,12 +17,18 @@ type Props = {
   isPending: boolean
   tasks: TaskT[]
   noTasksSlot?: ReactNode
+  tasksQueryKey: string
 }
 
-export const Tasks: React.FC<Props> = ({isPending, tasks, noTasksSlot}) => {
-  const toggleTaskCompleteMutation = useToggleCompletedMutation()
-  const toggleImportantMutation = useToggleImportantMutation()
-  const removeTaskMutation = useRemoveTaskMutation()
+export const Tasks: React.FC<Props> = ({
+  isPending,
+  tasks,
+  noTasksSlot,
+  tasksQueryKey = TaskQueryKeyEnum.MyDay
+}) => {
+  const toggleTaskCompleteMutation = useToggleCompletedMutation(tasksQueryKey)
+  const toggleImportantMutation = useToggleImportantMutation(tasksQueryKey)
+  const removeTaskMutation = useRemoveTaskMutation(tasksQueryKey)
 
   if (isPending) {
     const taskHeight = 56
