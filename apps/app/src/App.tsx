@@ -118,7 +118,7 @@ function App() {
             <Route path="/tasks" exact>
               <TasksView />
             </Route>
-            <Route path="/tasks/:id">
+            <Route path="/tasks/:taskId">
               <TaskView />
             </Route>
             <Route path="/wip">

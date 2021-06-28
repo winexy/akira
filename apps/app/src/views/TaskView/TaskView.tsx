@@ -36,18 +36,20 @@ import {
   useAddTodoMutation,
   useRemoveTaskMutation,
   useToggleCompletedMutation,
-  useToggleImportantMutation
-,usePatchTaskMutation} from '@modules/tasks/hooks'
+  useToggleImportantMutation,
+  usePatchTaskMutation
+} from '@modules/tasks/hooks'
 import {ActionToast} from '@components/ActionToast'
 import {TaskQueryKeyEnum} from '@modules/tasks/config'
-
 
 const QUERY_KEY = TaskQueryKeyEnum.MyDay
 
 export const TaskView: React.FC = () => {
-  const {id} = useParams<{id: string}>()
+  const {taskId} = useParams<{taskId: string}>()
   const history = useHistory()
-  const {data: task} = useQuery<TaskT>(['task', id], () => akira.tasks.one(id))
+  const {data: task} = useQuery<TaskT>(['task', taskId], () =>
+    akira.tasks.one(taskId)
+  )
 
   const todoInputRef = useRef<HTMLInputElement | null>(null)
 
@@ -60,8 +62,8 @@ export const TaskView: React.FC = () => {
   const toggleCompletedMutation = useToggleCompletedMutation(QUERY_KEY)
   const toggleImportantMutation = useToggleImportantMutation(QUERY_KEY)
   const removeTaskMutation = useRemoveTaskMutation(QUERY_KEY)
-  const patchTaskMutation = usePatchTaskMutation(id)
-  const addTodoMutation = useAddTodoMutation(id)
+  const patchTaskMutation = usePatchTaskMutation(taskId)
+  const addTodoMutation = useAddTodoMutation(taskId)
 
   useLayoutEffect(() => {
     if (isTodoInputVisible) {
@@ -116,7 +118,7 @@ export const TaskView: React.FC = () => {
   function onRemove() {
     // eslint-disable-next-line
     if (confirm('Are you sure? This action cannot be undone')) {
-      removeTaskMutation.mutateAsync(id).then(() => {
+      removeTaskMutation.mutateAsync(taskId).then(() => {
         history.push('/')
       })
     }
@@ -151,7 +153,7 @@ export const TaskView: React.FC = () => {
         <time dateTime={task.created_at} className="text-gray-500">
           {createdAt}
         </time>
-        <MyDayToggle taskId={id} />
+        <MyDayToggle taskId={taskId} />
       </div>
       <section className="mt-2 py-3 px-4 border-t border-b">
         {!isEmpty(task.tags) && (
@@ -226,14 +228,14 @@ export const TaskView: React.FC = () => {
           className={clsx('active:text-green-600', {
             'text-green-500': task.is_completed
           })}
-          onClick={() => toggleCompletedMutation.mutate(id)}
+          onClick={() => toggleCompletedMutation.mutate(taskId)}
         />
         <ActionToast.Button
           Icon={FireIcon}
           className={clsx('active:text-red-600', {
             'text-red-500': task.is_important
           })}
-          onClick={() => toggleImportantMutation.mutate(id)}
+          onClick={() => toggleImportantMutation.mutate(taskId)}
         />
         <ActionToast.Button
           isLoading={removeTaskMutation.isLoading}
