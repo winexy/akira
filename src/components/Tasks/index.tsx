@@ -17,7 +17,7 @@ type Props = {
   isPending: boolean
   tasks: TaskT[]
   noTasksSlot?: ReactNode
-  tasksQueryKey: string
+  tasksQueryKey?: string
 }
 
 export const Tasks: React.FC<Props> = ({
