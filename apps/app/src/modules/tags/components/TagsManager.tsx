@@ -1,8 +1,6 @@
 import map from 'lodash/fp/map'
 import React from 'react'
-import {useMutation, useQuery, useQueryClient} from 'react-query'
-import produce from 'immer'
-import filter from 'lodash/fp/filter'
+import {useQuery} from 'react-query'
 import ContentLoader from 'react-content-loader'
 import isUndefined from 'lodash/fp/isUndefined'
 import isEmpty from 'lodash/fp/isEmpty'
@@ -10,47 +8,21 @@ import clsx from 'clsx'
 import {Link} from 'react-router-dom'
 import {PencilAltIcon} from '@heroicons/react/solid'
 
+import {
+  useAddTaskTagMutation,
+  useRemoveTaskTagMutation
+} from '@modules/tasks/hooks'
 import {TagT, TaskT} from '@store/tasks'
 import {akira} from '@lib/akira'
 import {Button} from '@components/Button'
 import {TaskTag} from './TaskTag'
 
 export const TagsManager: React.FC<{task: TaskT}> = ({task}) => {
-  const queryClient = useQueryClient()
   const {data: tags, isLoading} = useQuery<TagT[]>('tags', akira.tags.all)
   const taskTagsIdSet = new Set(map('id', task.tags))
 
-  const addTagMutation = useMutation(
-    (tag: TagT) => {
-      return akira.tasks.addTag(task.id, tag.id)
-    },
-    {
-      onSuccess(_, tag) {
-        queryClient.setQueriesData(
-          ['task', task.id],
-          produce(task, draft => {
-            draft.tags.push(tag)
-          })
-        )
-      }
-    }
-  )
-
-  const removeTaskTagMutation = useMutation(
-    (tag: TagT) => {
-      return akira.tasks.removeTag(task.id, tag.id)
-    },
-    {
-      onSuccess(_, tag) {
-        queryClient.setQueriesData(
-          ['task', task.id],
-          produce(task, draft => {
-            draft.tags = filter(t => t.id !== tag.id, task.tags)
-          })
-        )
-      }
-    }
-  )
+  const addTagMutation = useAddTaskTagMutation(task)
+  const removeTaskTagMutation = useRemoveTaskTagMutation(task)
 
   return (
     <>
