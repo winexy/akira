@@ -17,7 +17,7 @@ import {
 } from '@store/tasks/types'
 import {TaskQueryKeyEnum} from '@modules/tasks/config'
 
-function optimisticTaskMutation(
+function writeTaskCache(
   taskId: TaskIdT,
   queryClient: QueryClient,
   mutateDraft: (draft: Draft<TaskT>, prevTask: Immutable<TaskT>) => void
@@ -33,7 +33,7 @@ function optimisticTaskMutation(
   return [null, null]
 }
 
-function optimisticTaskListMutation(
+function writeTaskListCache(
   tasksQueryKey: TaskQueryKeyEnum,
   queryClient: QueryClient,
   updatedTask: TaskT | null
@@ -97,15 +97,11 @@ export function useToggleCompletedMutation() {
 
   return useMutation(akira.tasks.toggleCompleted, {
     onMutate(taskId) {
-      const [prevTask, newTask] = optimisticTaskMutation(
-        taskId,
-        queryClient,
-        draft => {
-          draft.is_completed = !draft.is_completed
-        }
-      )
+      const [prevTask, newTask] = writeTaskCache(taskId, queryClient, draft => {
+        draft.is_completed = !draft.is_completed
+      })
 
-      const {prevTasks} = optimisticTaskListMutation(
+      const {prevTasks} = writeTaskListCache(
         TaskQueryKeyEnum.MyDay,
         queryClient,
         newTask
@@ -124,15 +120,11 @@ export function useToggleImportantMutation() {
 
   return useMutation(akira.tasks.toggleImportant, {
     onMutate(taskId) {
-      const [prevTask, newTask] = optimisticTaskMutation(
-        taskId,
-        queryClient,
-        draft => {
-          draft.is_important = !draft.is_important
-        }
-      )
+      const [prevTask, newTask] = writeTaskCache(taskId, queryClient, draft => {
+        draft.is_important = !draft.is_important
+      })
 
-      const {prevTasks} = optimisticTaskListMutation(
+      const {prevTasks} = writeTaskListCache(
         TaskQueryKeyEnum.MyDay,
         queryClient,
         newTask
@@ -192,7 +184,7 @@ export function useAddTodoMutation(taskId: TaskIdT) {
           task_id: taskId
         }
 
-        const [prevTask, newTask] = optimisticTaskMutation(
+        const [prevTask, newTask] = writeTaskCache(
           taskId,
           queryClient,
           draft => {
@@ -200,7 +192,7 @@ export function useAddTodoMutation(taskId: TaskIdT) {
           }
         )
 
-        const {prevTasks} = optimisticTaskListMutation(
+        const {prevTasks} = writeTaskListCache(
           TaskQueryKeyEnum.MyDay,
           queryClient,
           newTask
@@ -227,7 +219,7 @@ export function usePatchTodoMutation(taskId: TaskIdT) {
     },
     {
       onMutate({todoId, patch}) {
-        const [prevTask] = optimisticTaskMutation(
+        const [prevTask] = writeTaskCache(
           taskId,
           queryClient,
           (draft, prevTask) => {
@@ -260,7 +252,7 @@ export function useRemoveTodoMutation(taskId: TaskIdT) {
     },
     {
       onMutate(todoId) {
-        const [prevTask, newTask] = optimisticTaskMutation(
+        const [prevTask, newTask] = writeTaskCache(
           taskId,
           queryClient,
           draft => {
@@ -271,7 +263,7 @@ export function useRemoveTodoMutation(taskId: TaskIdT) {
           }
         )
 
-        const {prevTasks} = optimisticTaskListMutation(
+        const {prevTasks} = writeTaskListCache(
           TaskQueryKeyEnum.MyDay,
           queryClient,
           newTask
@@ -295,7 +287,7 @@ export function useAddTaskTagMutation(task: TaskT) {
     },
     {
       onMutate(tag) {
-        const [prevTask, newTask] = optimisticTaskMutation(
+        const [prevTask, newTask] = writeTaskCache(
           task.id,
           queryClient,
           draft => {
@@ -303,7 +295,7 @@ export function useAddTaskTagMutation(task: TaskT) {
           }
         )
 
-        const {prevTasks} = optimisticTaskListMutation(
+        const {prevTasks} = writeTaskListCache(
           TaskQueryKeyEnum.MyDay,
           queryClient,
           newTask
@@ -327,7 +319,7 @@ export function useRemoveTaskTagMutation(task: TaskT) {
     },
     {
       onMutate(tag) {
-        const [prevTask, newTask] = optimisticTaskMutation(
+        const [prevTask, newTask] = writeTaskCache(
           task.id,
           queryClient,
           draft => {
@@ -335,7 +327,7 @@ export function useRemoveTaskTagMutation(task: TaskT) {
           }
         )
 
-        const {prevTasks} = optimisticTaskListMutation(
+        const {prevTasks} = writeTaskListCache(
           TaskQueryKeyEnum.MyDay,
           queryClient,
           newTask
