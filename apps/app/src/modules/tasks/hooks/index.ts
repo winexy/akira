@@ -185,12 +185,18 @@ export function useAddTodoMutation(taskId: TaskIdT) {
           task_id: taskId
         }
 
-        const [prevTask] = optimisticTaskMutation(
+        const [prevTask, newTask] = optimisticTaskMutation(
           taskId,
           queryClient,
           draft => {
             draft.checklist.push(todo)
           }
+        )
+
+        const {prevTasks} = optimisticTaskListMutation(
+          TaskQueryKeyEnum.MyDay,
+          queryClient,
+          newTask
         )
 
         return {prevTask}
@@ -245,7 +251,7 @@ export function useRemoveTodoMutation(taskId: TaskIdT) {
     },
     {
       onMutate(todoId) {
-        const [prevTask] = optimisticTaskMutation(
+        const [prevTask, newTask] = optimisticTaskMutation(
           taskId,
           queryClient,
           draft => {
@@ -254,6 +260,12 @@ export function useRemoveTodoMutation(taskId: TaskIdT) {
               draft.checklist
             )
           }
+        )
+
+        const {prevTasks} = optimisticTaskListMutation(
+          TaskQueryKeyEnum.MyDay,
+          queryClient,
+          newTask
         )
 
         return {prevTask}
@@ -274,12 +286,18 @@ export function useAddTaskTagMutation(task: TaskT) {
     },
     {
       onMutate(tag) {
-        const [prevTask] = optimisticTaskMutation(
+        const [prevTask, newTask] = optimisticTaskMutation(
           task.id,
           queryClient,
           draft => {
             draft.tags.push(tag)
           }
+        )
+
+        const {prevTasks} = optimisticTaskListMutation(
+          TaskQueryKeyEnum.MyDay,
+          queryClient,
+          newTask
         )
 
         return {prevTask}
@@ -300,9 +318,21 @@ export function useRemoveTaskTagMutation(task: TaskT) {
     },
     {
       onMutate(tag) {
-        return optimisticTaskMutation(task.id, queryClient, draft => {
-          draft.tags = filter(t => t.id !== tag.id, task.tags)
-        })
+        const [prevTask, newTask] = optimisticTaskMutation(
+          task.id,
+          queryClient,
+          draft => {
+            draft.tags = filter(t => t.id !== tag.id, task.tags)
+          }
+        )
+
+        const {prevTasks} = optimisticTaskListMutation(
+          TaskQueryKeyEnum.MyDay,
+          queryClient,
+          newTask
+        )
+
+        return {prevTask}
       },
       onError(_, __, context: any) {
         rollbackTaskMutation(task.id, queryClient, context.prevTask)
