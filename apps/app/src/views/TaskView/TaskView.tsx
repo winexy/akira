@@ -42,8 +42,6 @@ import {
 import {ActionToast} from '@components/ActionToast'
 import {TaskQueryKeyEnum} from '@modules/tasks/config'
 
-const QUERY_KEY = TaskQueryKeyEnum.MyDay
-
 export const TaskView: React.FC = () => {
   const {taskId} = useParams<{taskId: string}>()
   const history = useHistory()
@@ -59,9 +57,9 @@ export const TaskView: React.FC = () => {
 
   const taskTitle = useMemo(() => escape(title), [title])
 
-  const toggleCompletedMutation = useToggleCompletedMutation(QUERY_KEY)
-  const toggleImportantMutation = useToggleImportantMutation(QUERY_KEY)
-  const removeTaskMutation = useRemoveTaskMutation(QUERY_KEY)
+  const toggleCompletedMutation = useToggleCompletedMutation()
+  const toggleImportantMutation = useToggleImportantMutation()
+  const removeTaskMutation = useRemoveTaskMutation()
   const patchTaskMutation = usePatchTaskMutation(taskId)
   const addTodoMutation = useAddTodoMutation(taskId)
 

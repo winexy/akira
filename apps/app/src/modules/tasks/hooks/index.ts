@@ -34,7 +34,7 @@ function optimisticTaskMutation(
 }
 
 function optimisticTaskListMutation(
-  tasksQueryKey: string,
+  tasksQueryKey: TaskQueryKeyEnum,
   queryClient: QueryClient,
   updatedTask: TaskT | null
 ): {prevTasks: TaskT[] | null} {
@@ -90,7 +90,7 @@ export function usePatchTaskMutation(taskId: TaskIdT) {
   )
 }
 
-export function useToggleCompletedMutation(tasksQueryKey: string) {
+export function useToggleCompletedMutation() {
   const queryClient = useQueryClient()
 
   return useMutation(akira.tasks.toggleCompleted, {
@@ -104,7 +104,7 @@ export function useToggleCompletedMutation(tasksQueryKey: string) {
       )
 
       const {prevTasks} = optimisticTaskListMutation(
-        tasksQueryKey,
+        TaskQueryKeyEnum.MyDay,
         queryClient,
         newTask
       )
@@ -117,7 +117,7 @@ export function useToggleCompletedMutation(tasksQueryKey: string) {
   })
 }
 
-export function useToggleImportantMutation(tasksQueryKey: string) {
+export function useToggleImportantMutation() {
   const queryClient = useQueryClient()
 
   return useMutation(akira.tasks.toggleImportant, {
@@ -131,7 +131,7 @@ export function useToggleImportantMutation(tasksQueryKey: string) {
       )
 
       const {prevTasks} = optimisticTaskListMutation(
-        tasksQueryKey,
+        TaskQueryKeyEnum.MyDay,
         queryClient,
         newTask
       )
@@ -144,18 +144,20 @@ export function useToggleImportantMutation(tasksQueryKey: string) {
   })
 }
 
-export function useRemoveTaskMutation(tasksQueryKey: string) {
+export function useRemoveTaskMutation() {
   const queryClient = useQueryClient()
 
   return useMutation(akira.tasks.delete, {
     onSuccess(_, taskId) {
       queryClient.removeQueries(['task', taskId])
 
-      const prevTasks = queryClient.getQueryData<TaskT[]>(tasksQueryKey)
+      const prevTasks = queryClient.getQueryData<TaskT[]>(
+        TaskQueryKeyEnum.MyDay
+      )
 
       if (prevTasks) {
         queryClient.setQueryData(
-          tasksQueryKey,
+          TaskQueryKeyEnum.MyDay,
           produce(prevTasks, draft => {
             const index = findIndex({id: taskId}, prevTasks)
             draft.splice(index, 1)

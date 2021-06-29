@@ -17,18 +17,12 @@ type Props = {
   isPending: boolean
   tasks: TaskT[]
   noTasksSlot?: ReactNode
-  tasksQueryKey?: string
 }
 
-export const Tasks: React.FC<Props> = ({
-  isPending,
-  tasks,
-  noTasksSlot,
-  tasksQueryKey = TaskQueryKeyEnum.MyDay
-}) => {
-  const toggleTaskCompleteMutation = useToggleCompletedMutation(tasksQueryKey)
-  const toggleImportantMutation = useToggleImportantMutation(tasksQueryKey)
-  const removeTaskMutation = useRemoveTaskMutation(tasksQueryKey)
+export const Tasks: React.FC<Props> = ({isPending, tasks, noTasksSlot}) => {
+  const toggleTaskCompleteMutation = useToggleCompletedMutation()
+  const toggleImportantMutation = useToggleImportantMutation()
+  const removeTaskMutation = useRemoveTaskMutation()
 
   if (isPending) {
     const taskHeight = 56
