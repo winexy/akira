@@ -37,12 +37,13 @@ function writeTaskListCache(
   tasksQueryKey: TaskQueryKeyEnum,
   queryClient: QueryClient,
   updatedTask: TaskT | null
-): {prevTasks: TaskT[] | null} {
+): TaskT[] | null {
   const prevTasks = queryClient.getQueryData<TaskT[]>(tasksQueryKey)
 
   if (isUndefined(prevTasks) || isNull(updatedTask)) {
-    return {prevTasks: null}
+    return null
   }
+
   queryClient.setQueryData(
     tasksQueryKey,
     produce(prevTasks, draft => {
@@ -54,7 +55,7 @@ function writeTaskListCache(
     })
   )
 
-  return {prevTasks}
+  return prevTasks
 }
 
 function rollbackTaskMutation(
@@ -102,7 +103,7 @@ export function useToggleCompletedMutation() {
         draft.is_completed = !draft.is_completed
       })
 
-      const {prevTasks} = writeTaskListCache(
+      const prevMyDayTasks = writeTaskListCache(
         TaskQueryKeyEnum.MyDay,
         queryClient,
         newTask
@@ -125,7 +126,7 @@ export function useToggleImportantMutation() {
         draft.is_important = !draft.is_important
       })
 
-      const {prevTasks} = writeTaskListCache(
+      const prevMyDayTasks = writeTaskListCache(
         TaskQueryKeyEnum.MyDay,
         queryClient,
         newTask
@@ -193,7 +194,7 @@ export function useAddTodoMutation(taskId: TaskIdT) {
           }
         )
 
-        const {prevTasks} = writeTaskListCache(
+        const prevMyDayTasks = writeTaskListCache(
           TaskQueryKeyEnum.MyDay,
           queryClient,
           newTask
@@ -264,7 +265,7 @@ export function useRemoveTodoMutation(taskId: TaskIdT) {
           }
         )
 
-        const {prevTasks} = writeTaskListCache(
+        const prevMyDayTasks = writeTaskListCache(
           TaskQueryKeyEnum.MyDay,
           queryClient,
           newTask
@@ -296,7 +297,7 @@ export function useAddTaskTagMutation(task: TaskT) {
           }
         )
 
-        const {prevTasks} = writeTaskListCache(
+        const prevMyDayTasks = writeTaskListCache(
           TaskQueryKeyEnum.MyDay,
           queryClient,
           newTask
@@ -328,7 +329,7 @@ export function useRemoveTaskTagMutation(task: TaskT) {
           }
         )
 
-        const {prevTasks} = writeTaskListCache(
+        const prevMyDayTasks = writeTaskListCache(
           TaskQueryKeyEnum.MyDay,
           queryClient,
           newTask
