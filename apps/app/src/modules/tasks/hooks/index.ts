@@ -1,5 +1,9 @@
 import produce, {Draft, Immutable} from 'immer'
 import findIndex from 'lodash/fp/findIndex'
+import filter from 'lodash/fp/filter'
+import uniqueId from 'lodash/fp/uniqueId'
+import isUndefined from 'lodash/fp/isUndefined'
+import isNull from 'lodash/fp/isNull'
 import {useMutation, useQuery, useQueryClient, QueryClient} from 'react-query'
 import {akira} from '@lib/akira'
 import {
@@ -12,15 +16,12 @@ import {
   TodoT
 } from '@store/tasks/types'
 import {TaskQueryKeyEnum} from '@modules/tasks/config'
-import filter from 'lodash/fp/filter'
-import uniqueId from 'lodash/fp/uniqueId'
-import isUndefined from 'lodash/fp/isUndefined'
 
 function optimisticTaskMutation(
   taskId: TaskIdT,
   queryClient: QueryClient,
   mutateDraft: (draft: Draft<TaskT>, prevTask: Immutable<TaskT>) => void
-) {
+): [null, null] | [TaskT, TaskT] {
   const prevTask = queryClient.getQueryData<TaskT>(['task', taskId])
 
   if (!isUndefined(prevTask)) {
@@ -29,7 +30,29 @@ function optimisticTaskMutation(
     return [prevTask, newTask]
   }
 
-  return [prevTask, null]
+  return [null, null]
+}
+
+function optimisticTaskListMutation(
+  tasksQueryKey: string,
+  queryClient: QueryClient,
+  updatedTask: TaskT | null
+): {prevTasks: TaskT[] | null} {
+  const prevTasks = queryClient.getQueryData<TaskT[]>(tasksQueryKey)
+
+  if (isUndefined(prevTasks) || isNull(updatedTask)) {
+    return {prevTasks: null}
+  }
+  queryClient.setQueryData(
+    tasksQueryKey,
+    produce(prevTasks, draft => {
+      const index = findIndex({id: updatedTask.id}, prevTasks)
+
+      draft[index] = updatedTask
+    })
+  )
+
+  return {prevTasks}
 }
 
 function rollbackTaskMutation(
@@ -80,18 +103,11 @@ export function useToggleCompletedMutation(tasksQueryKey: string) {
         }
       )
 
-      const prevTasks = queryClient.getQueryData<TaskT[]>(tasksQueryKey)
-
-      if (prevTasks && newTask) {
-        queryClient.setQueryData(
-          tasksQueryKey,
-          produce(prevTasks, draft => {
-            const index = findIndex({id: taskId}, prevTasks)
-
-            draft[index] = newTask
-          })
-        )
-      }
+      const {prevTasks} = optimisticTaskListMutation(
+        tasksQueryKey,
+        queryClient,
+        newTask
+      )
 
       return {prevTask}
     },
@@ -114,18 +130,11 @@ export function useToggleImportantMutation(tasksQueryKey: string) {
         }
       )
 
-      const prevTasks = queryClient.getQueryData<TaskT[]>(tasksQueryKey)
-
-      if (prevTasks && newTask) {
-        queryClient.setQueryData(
-          tasksQueryKey,
-          produce(prevTasks, draft => {
-            const index = findIndex({id: taskId}, prevTasks)
-
-            draft[index] = newTask
-          })
-        )
-      }
+      const {prevTasks} = optimisticTaskListMutation(
+        tasksQueryKey,
+        queryClient,
+        newTask
+      )
 
       return {prevTask}
     },
