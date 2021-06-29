@@ -87,6 +87,7 @@ export function usePatchTaskMutation(taskId: TaskIdT) {
     {
       onSuccess(task) {
         queryClient.setQueryData(['task', taskId], task)
+        writeTaskListCache(TaskQueryKeyEnum.MyDay, queryClient, task)
       }
     }
   )
