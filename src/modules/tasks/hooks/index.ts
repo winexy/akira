@@ -1,6 +1,6 @@
-import produce from 'immer'
+import produce, {Draft, Immutable} from 'immer'
 import findIndex from 'lodash/fp/findIndex'
-import {useMutation, useQuery, useQueryClient} from 'react-query'
+import {useMutation, useQuery, useQueryClient, QueryClient} from 'react-query'
 import {akira} from '@lib/akira'
 import {
   TaskPatchT,
@@ -14,6 +14,33 @@ import {
 import {TaskQueryKeyEnum} from '@modules/tasks/config'
 import filter from 'lodash/fp/filter'
 import uniqueId from 'lodash/fp/uniqueId'
+import isUndefined from 'lodash/fp/isUndefined'
+
+function optimisticTaskMutation(
+  taskId: TaskIdT,
+  queryClient: QueryClient,
+  mutateDraft: (draft: Draft<TaskT>, prevTask: Immutable<TaskT>) => void
+) {
+  const prevTask = queryClient.getQueryData<TaskT>(['task', taskId])
+
+  if (!isUndefined(prevTask)) {
+    const newTask = produce(prevTask, draft => mutateDraft(draft, prevTask))
+    queryClient.setQueriesData(['task', taskId], newTask)
+    return [prevTask, newTask]
+  }
+
+  return [prevTask, null]
+}
+
+function rollbackTaskMutation(
+  taskId: TaskIdT,
+  queryClient: QueryClient,
+  prevTask: TaskT | undefined
+) {
+  if (prevTask) {
+    queryClient.setQueryData(['task', taskId], prevTask)
+  }
+}
 
 export function useTasksQuery() {
   const queryClient = useQueryClient()
@@ -45,35 +72,31 @@ export function useToggleCompletedMutation(tasksQueryKey: string) {
 
   return useMutation(akira.tasks.toggleCompleted, {
     onMutate(taskId) {
-      const prevTask = queryClient.getQueryData<TaskT>(['task', taskId])
+      const [prevTask, newTask] = optimisticTaskMutation(
+        taskId,
+        queryClient,
+        draft => {
+          draft.is_completed = !draft.is_completed
+        }
+      )
+
       const prevTasks = queryClient.getQueryData<TaskT[]>(tasksQueryKey)
 
-      if (prevTask) {
-        const newTask = {
-          ...prevTask,
-          is_completed: !prevTask.is_completed
-        }
+      if (prevTasks && newTask) {
+        queryClient.setQueryData(
+          tasksQueryKey,
+          produce(prevTasks, draft => {
+            const index = findIndex({id: taskId}, prevTasks)
 
-        queryClient.setQueryData(['task', taskId], newTask)
-
-        if (prevTasks) {
-          queryClient.setQueryData(
-            tasksQueryKey,
-            produce(prevTasks, draft => {
-              const index = findIndex({id: taskId}, prevTasks)
-
-              draft[index] = newTask
-            })
-          )
-        }
+            draft[index] = newTask
+          })
+        )
       }
 
       return {prevTask}
     },
     onError(_, taskId, context: any) {
-      if (context?.prevTask) {
-        queryClient.setQueryData(['task', taskId], context.prevTask)
-      }
+      rollbackTaskMutation(taskId, queryClient, context.prevTask)
     }
   })
 }
@@ -83,35 +106,31 @@ export function useToggleImportantMutation(tasksQueryKey: string) {
 
   return useMutation(akira.tasks.toggleImportant, {
     onMutate(taskId) {
-      const prevTask = queryClient.getQueryData<TaskT>(['task', taskId])
+      const [prevTask, newTask] = optimisticTaskMutation(
+        taskId,
+        queryClient,
+        draft => {
+          draft.is_important = !draft.is_important
+        }
+      )
+
       const prevTasks = queryClient.getQueryData<TaskT[]>(tasksQueryKey)
 
-      if (prevTask) {
-        const newTask = {
-          ...prevTask,
-          is_important: !prevTask.is_important
-        }
+      if (prevTasks && newTask) {
+        queryClient.setQueryData(
+          tasksQueryKey,
+          produce(prevTasks, draft => {
+            const index = findIndex({id: taskId}, prevTasks)
 
-        queryClient.setQueryData(['task', taskId], newTask)
-
-        if (prevTasks) {
-          queryClient.setQueryData(
-            tasksQueryKey,
-            produce(prevTasks, draft => {
-              const index = findIndex({id: taskId}, prevTasks)
-
-              draft[index] = newTask
-            })
-          )
-        }
+            draft[index] = newTask
+          })
+        )
       }
 
       return {prevTask}
     },
     onError(_, taskId, context: any) {
-      if (context?.prevTask) {
-        queryClient.setQueryData(['task', taskId], context.prevTask)
-      }
+      rollbackTaskMutation(taskId, queryClient, context.prevTask)
     }
   })
 }
@@ -157,16 +176,13 @@ export function useAddTodoMutation(taskId: TaskIdT) {
           task_id: taskId
         }
 
-        const prevTask = queryClient.getQueryData<TaskT>(['task', taskId])
-
-        if (prevTask) {
-          queryClient.setQueryData(
-            ['task', taskId],
-            produce(prevTask, draft => {
-              draft.checklist.push(todo)
-            })
-          )
-        }
+        const [prevTask] = optimisticTaskMutation(
+          taskId,
+          queryClient,
+          draft => {
+            draft.checklist.push(todo)
+          }
+        )
 
         return {prevTask}
       },
@@ -174,11 +190,7 @@ export function useAddTodoMutation(taskId: TaskIdT) {
         queryClient.invalidateQueries(['task', taskId])
       },
       onError(_, __, context: any) {
-        const {prevTask} = context
-
-        if (prevTask) {
-          queryClient.setQueryData(['task', taskId], prevTask)
-        }
+        rollbackTaskMutation(taskId, queryClient, context.prevTask)
       }
     }
   )
@@ -193,29 +205,23 @@ export function usePatchTodoMutation(taskId: TaskIdT) {
     },
     {
       onMutate({todoId, patch}) {
-        const prevTask = queryClient.getQueryData<TaskT>(['task', taskId])
+        const [prevTask] = optimisticTaskMutation(
+          taskId,
+          queryClient,
+          (draft, prevTask) => {
+            const index = findIndex({id: todoId}, prevTask.checklist)
 
-        if (prevTask) {
-          queryClient.setQueryData(['task', taskId], () =>
-            produce(prevTask, draft => {
-              const index = findIndex({id: todoId}, prevTask.checklist)
-
-              draft.checklist[index] = {
-                ...prevTask.checklist[index],
-                ...patch
-              }
-            })
-          )
-        }
+            draft.checklist[index] = {
+              ...prevTask.checklist[index],
+              ...patch
+            }
+          }
+        )
 
         return {prevTask}
       },
       onError(_, __, context: any) {
-        const prevTask = context?.prevTask
-
-        if (prevTask) {
-          queryClient.setQueryData(['task', taskId], prevTask)
-        }
+        rollbackTaskMutation(taskId, queryClient, context.prevTask)
       }
     }
   )
@@ -230,27 +236,21 @@ export function useRemoveTodoMutation(taskId: TaskIdT) {
     },
     {
       onMutate(todoId) {
-        const prevTask = queryClient.getQueryData<TaskT>(['task', taskId])
-
-        if (prevTask) {
-          queryClient.setQueryData(['task', taskId], () =>
-            produce(prevTask, draft => {
-              draft.checklist = filter(
-                todo => todo.id !== todoId,
-                draft.checklist
-              )
-            })
-          )
-        }
+        const [prevTask] = optimisticTaskMutation(
+          taskId,
+          queryClient,
+          draft => {
+            draft.checklist = filter(
+              todo => todo.id !== todoId,
+              draft.checklist
+            )
+          }
+        )
 
         return {prevTask}
       },
       onError(_, __, context: any) {
-        const prevTask = context?.prevTask
-
-        if (prevTask) {
-          queryClient.setQueryData(['task', taskId], prevTask)
-        }
+        rollbackTaskMutation(taskId, queryClient, context.prevTask)
       }
     }
   )
@@ -265,25 +265,18 @@ export function useAddTaskTagMutation(task: TaskT) {
     },
     {
       onMutate(tag) {
-        const prevTask = queryClient.getQueryData<TaskT>(['task', task.id])
-
-        if (prevTask) {
-          queryClient.setQueriesData(
-            ['task', task.id],
-            produce(task, draft => {
-              draft.tags.push(tag)
-            })
-          )
-        }
+        const [prevTask] = optimisticTaskMutation(
+          task.id,
+          queryClient,
+          draft => {
+            draft.tags.push(tag)
+          }
+        )
 
         return {prevTask}
       },
       onError(_, __, context: any) {
-        const {prevTask} = context
-
-        if (prevTask) {
-          queryClient.setQueryData(['task', task.id], prevTask)
-        }
+        rollbackTaskMutation(task.id, queryClient, context.prevTask)
       }
     }
   )
@@ -298,25 +291,12 @@ export function useRemoveTaskTagMutation(task: TaskT) {
     },
     {
       onMutate(tag) {
-        const prevTask = queryClient.getQueryData<TaskT>(['task', task.id])
-
-        if (prevTask) {
-          queryClient.setQueriesData(
-            ['task', task.id],
-            produce(task, draft => {
-              draft.tags = filter(t => t.id !== tag.id, task.tags)
-            })
-          )
-        }
-
-        return {prevTask}
+        return optimisticTaskMutation(task.id, queryClient, draft => {
+          draft.tags = filter(t => t.id !== tag.id, task.tags)
+        })
       },
       onError(_, __, context: any) {
-        const {prevTask} = context
-
-        if (prevTask) {
-          queryClient.setQueryData(['task', task.id], prevTask)
-        }
+        rollbackTaskMutation(task.id, queryClient, context.prevTask)
       }
     }
   )
