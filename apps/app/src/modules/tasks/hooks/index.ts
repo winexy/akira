@@ -8,10 +8,12 @@ import {
   TaskIdT,
   TodoIdT,
   TodoPatchT,
-  TagT
+  TagT,
+  TodoT
 } from '@store/tasks/types'
 import {TaskQueryKeyEnum} from '@modules/tasks/config'
 import filter from 'lodash/fp/filter'
+import uniqueId from 'lodash/fp/uniqueId'
 
 export function useTasksQuery() {
   const queryClient = useQueryClient()
@@ -147,8 +149,36 @@ export function useAddTodoMutation(taskId: TaskIdT) {
       })
     },
     {
+      onMutate(todoTitle) {
+        const todo: TodoT = {
+          id: uniqueId(todoTitle),
+          title: todoTitle,
+          is_completed: false,
+          task_id: taskId
+        }
+
+        const prevTask = queryClient.getQueryData<TaskT>(['task', taskId])
+
+        if (prevTask) {
+          queryClient.setQueryData(
+            ['task', taskId],
+            produce(prevTask, draft => {
+              draft.checklist.push(todo)
+            })
+          )
+        }
+
+        return {prevTask}
+      },
       onSuccess() {
         queryClient.invalidateQueries(['task', taskId])
+      },
+      onError(_, __, context: any) {
+        const {prevTask} = context
+
+        if (prevTask) {
+          queryClient.setQueryData(['task', taskId], prevTask)
+        }
       }
     }
   )
