@@ -7,7 +7,8 @@ import {
   TaskT,
   TaskIdT,
   TodoIdT,
-  TodoPatchT
+  TodoPatchT,
+  TagT
 } from '@store/tasks/types'
 import {TaskQueryKeyEnum} from '@modules/tasks/config'
 import filter from 'lodash/fp/filter'
@@ -220,6 +221,46 @@ export function useRemoveTodoMutation(taskId: TaskIdT) {
         if (prevTask) {
           queryClient.setQueryData(['task', taskId], prevTask)
         }
+      }
+    }
+  )
+}
+
+export function useAddTaskTagMutation(task: TaskT) {
+  const queryClient = useQueryClient()
+
+  return useMutation(
+    (tag: TagT) => {
+      return akira.tasks.addTag(task.id, tag.id)
+    },
+    {
+      onSuccess(_, tag) {
+        queryClient.setQueriesData(
+          ['task', task.id],
+          produce(task, draft => {
+            draft.tags.push(tag)
+          })
+        )
+      }
+    }
+  )
+}
+
+export function useRemoveTaskTagMutation(task: TaskT) {
+  const queryClient = useQueryClient()
+
+  return useMutation(
+    (tag: TagT) => {
+      return akira.tasks.removeTag(task.id, tag.id)
+    },
+    {
+      onSuccess(_, tag) {
+        queryClient.setQueriesData(
+          ['task', task.id],
+          produce(task, draft => {
+            draft.tags = filter(t => t.id !== tag.id, task.tags)
+          })
+        )
       }
     }
   )
