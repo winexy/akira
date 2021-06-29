@@ -119,7 +119,13 @@ export function useToggleCompletedMutation() {
         newTask
       )
 
-      return {prevTask, prevMyDayTasks}
+      const prevTasks = writeTaskListCache(
+        TaskQueryKeyEnum.All,
+        queryClient,
+        newTask
+      )
+
+      return {prevTask, prevMyDayTasks, prevTasks}
     },
     onError(_, taskId, context: any) {
       rollbackTaskMutation(taskId, queryClient, context.prevTask)
@@ -127,6 +133,11 @@ export function useToggleCompletedMutation() {
         TaskQueryKeyEnum.MyDay,
         queryClient,
         context.prevMyDayTasks
+      )
+      rollbackTaskListMutation(
+        TaskQueryKeyEnum.All,
+        queryClient,
+        context.prevTasks
       )
     }
   })
@@ -147,7 +158,13 @@ export function useToggleImportantMutation() {
         newTask
       )
 
-      return {prevTask, prevMyDayTasks}
+      const prevTasks = writeTaskListCache(
+        TaskQueryKeyEnum.All,
+        queryClient,
+        newTask
+      )
+
+      return {prevTask, prevMyDayTasks, prevTasks}
     },
     onError(_, taskId, context: any) {
       rollbackTaskMutation(taskId, queryClient, context.prevTask)
@@ -155,6 +172,11 @@ export function useToggleImportantMutation() {
         TaskQueryKeyEnum.MyDay,
         queryClient,
         context.prevMyDayTasks
+      )
+      rollbackTaskListMutation(
+        TaskQueryKeyEnum.All,
+        queryClient,
+        context.prevTasks
       )
     }
   })
@@ -220,7 +242,13 @@ export function useAddTodoMutation(taskId: TaskIdT) {
           newTask
         )
 
-        return {prevTask, prevMyDayTasks}
+        const prevTasks = writeTaskListCache(
+          TaskQueryKeyEnum.All,
+          queryClient,
+          newTask
+        )
+
+        return {prevTask, prevMyDayTasks, prevTasks}
       },
       onSuccess() {
         queryClient.invalidateQueries(['task', taskId])
@@ -231,6 +259,11 @@ export function useAddTodoMutation(taskId: TaskIdT) {
           TaskQueryKeyEnum.MyDay,
           queryClient,
           context.prevMyDayTasks
+        )
+        rollbackTaskListMutation(
+          TaskQueryKeyEnum.All,
+          queryClient,
+          context.prevTasks
         )
       }
     }
@@ -296,7 +329,13 @@ export function useRemoveTodoMutation(taskId: TaskIdT) {
           newTask
         )
 
-        return {prevTask, prevMyDayTasks}
+        const prevTasks = writeTaskListCache(
+          TaskQueryKeyEnum.All,
+          queryClient,
+          newTask
+        )
+
+        return {prevTask, prevMyDayTasks, prevTasks}
       },
       onError(_, __, context: any) {
         rollbackTaskMutation(taskId, queryClient, context.prevTask)
@@ -304,6 +343,11 @@ export function useRemoveTodoMutation(taskId: TaskIdT) {
           TaskQueryKeyEnum.MyDay,
           queryClient,
           context.prevMyDayTasks
+        )
+        rollbackTaskListMutation(
+          TaskQueryKeyEnum.All,
+          queryClient,
+          context.prevTasks
         )
       }
     }
@@ -333,7 +377,13 @@ export function useAddTaskTagMutation(task: TaskT) {
           newTask
         )
 
-        return {prevTask, prevMyDayTasks}
+        const prevTasks = writeTaskListCache(
+          TaskQueryKeyEnum.All,
+          queryClient,
+          newTask
+        )
+
+        return {prevTask, prevMyDayTasks, prevTasks}
       },
       onError(_, __, context: any) {
         rollbackTaskMutation(task.id, queryClient, context.prevTask)
@@ -341,6 +391,11 @@ export function useAddTaskTagMutation(task: TaskT) {
           TaskQueryKeyEnum.MyDay,
           queryClient,
           context.prevMyDayTasks
+        )
+        rollbackTaskListMutation(
+          TaskQueryKeyEnum.All,
+          queryClient,
+          context.prevTasks
         )
       }
     }
@@ -370,7 +425,13 @@ export function useRemoveTaskTagMutation(task: TaskT) {
           newTask
         )
 
-        return {prevTask, prevMyDayTasks}
+        const prevTasks = writeTaskListCache(
+          TaskQueryKeyEnum.All,
+          queryClient,
+          newTask
+        )
+
+        return {prevTask, prevMyDayTasks, prevTasks}
       },
       onError(_, __, context: any) {
         rollbackTaskMutation(task.id, queryClient, context.prevTask)
@@ -378,6 +439,11 @@ export function useRemoveTaskTagMutation(task: TaskT) {
           TaskQueryKeyEnum.MyDay,
           queryClient,
           context.prevMyDayTasks
+        )
+        rollbackTaskListMutation(
+          TaskQueryKeyEnum.All,
+          queryClient,
+          context.prevTasks
         )
       }
     }
