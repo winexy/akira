@@ -48,7 +48,9 @@ function optimisticTaskListMutation(
     produce(prevTasks, draft => {
       const index = findIndex({id: updatedTask.id}, prevTasks)
 
-      draft[index] = updatedTask
+      if (index !== -1) {
+        draft[index] = updatedTask
+      }
     })
   )
 
@@ -160,7 +162,10 @@ export function useRemoveTaskMutation() {
           TaskQueryKeyEnum.MyDay,
           produce(prevTasks, draft => {
             const index = findIndex({id: taskId}, prevTasks)
-            draft.splice(index, 1)
+
+            if (index !== -1) {
+              draft.splice(index, 1)
+            }
           })
         )
       }
@@ -228,9 +233,11 @@ export function usePatchTodoMutation(taskId: TaskIdT) {
           (draft, prevTask) => {
             const index = findIndex({id: todoId}, prevTask.checklist)
 
-            draft.checklist[index] = {
-              ...prevTask.checklist[index],
-              ...patch
+            if (index !== -1) {
+              draft.checklist[index] = {
+                ...prevTask.checklist[index],
+                ...patch
+              }
             }
           }
         )
