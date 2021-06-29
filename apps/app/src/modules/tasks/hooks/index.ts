@@ -234,13 +234,26 @@ export function useAddTaskTagMutation(task: TaskT) {
       return akira.tasks.addTag(task.id, tag.id)
     },
     {
-      onSuccess(_, tag) {
-        queryClient.setQueriesData(
-          ['task', task.id],
-          produce(task, draft => {
-            draft.tags.push(tag)
-          })
-        )
+      onMutate(tag) {
+        const prevTask = queryClient.getQueryData<TaskT>(['task', task.id])
+
+        if (prevTask) {
+          queryClient.setQueriesData(
+            ['task', task.id],
+            produce(task, draft => {
+              draft.tags.push(tag)
+            })
+          )
+        }
+
+        return {prevTask}
+      },
+      onError(_, __, context: any) {
+        const {prevTask} = context
+
+        if (prevTask) {
+          queryClient.setQueryData(['task', task.id], prevTask)
+        }
       }
     }
   )
@@ -254,13 +267,26 @@ export function useRemoveTaskTagMutation(task: TaskT) {
       return akira.tasks.removeTag(task.id, tag.id)
     },
     {
-      onSuccess(_, tag) {
-        queryClient.setQueriesData(
-          ['task', task.id],
-          produce(task, draft => {
-            draft.tags = filter(t => t.id !== tag.id, task.tags)
-          })
-        )
+      onMutate(tag) {
+        const prevTask = queryClient.getQueryData<TaskT>(['task', task.id])
+
+        if (prevTask) {
+          queryClient.setQueriesData(
+            ['task', task.id],
+            produce(task, draft => {
+              draft.tags = filter(t => t.id !== tag.id, task.tags)
+            })
+          )
+        }
+
+        return {prevTask}
+      },
+      onError(_, __, context: any) {
+        const {prevTask} = context
+
+        if (prevTask) {
+          queryClient.setQueryData(['task', task.id], prevTask)
+        }
       }
     }
   )
