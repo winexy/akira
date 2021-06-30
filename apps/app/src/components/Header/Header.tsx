@@ -1,10 +1,10 @@
 import React, {useEffect, useRef, useState} from 'react'
 import clsx from 'clsx'
 import {MenuIcon} from '@heroicons/react/solid'
-import {LightningBoltIcon} from '@heroicons/react/outline'
 import isUndefined from 'lodash/fp/isUndefined'
 import {toggleMenu} from '@store/menu'
 import {Link} from 'react-router-dom'
+import {Akira} from './Akira'
 
 export const Header: React.FC = ({children}) => {
   const headerRef = useRef<HTMLElement | null>(null)
@@ -45,10 +45,10 @@ export const Header: React.FC = ({children}) => {
           to="/"
           className="flex items-center focus:outline-none focus:text-purple-500"
         >
-          <LightningBoltIcon className="w-5 h-5" />
+          <Akira className="w-5 h-5 -mt-px" />
           <h1
             className="
-              ml-1 font-bold text-xl font-mono 
+              ml-2 font-bold text-xl font-mono 
               active:text-gray-900 
             "
           >
