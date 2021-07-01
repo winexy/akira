@@ -1,5 +1,6 @@
 import React from 'react'
 import clsx from 'clsx'
+import isEmpty from 'lodash/fp/isEmpty'
 import {XIcon} from '@heroicons/react/solid'
 
 import {Checkbox} from '@components/Checkbox/Checkbox'
@@ -14,6 +15,10 @@ type Props = {
 export const Checklist: React.FC<Props> = ({taskId, checklist}) => {
   const patchTodoMutation = usePatchTodoMutation(taskId)
   const removeTodoMutation = useRemoveTodoMutation(taskId)
+
+  if (isEmpty(checklist)) {
+    return null
+  }
 
   return (
     <ul className="mt-2 divide-y transition ease-in duration-75">

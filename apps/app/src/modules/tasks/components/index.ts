@@ -1,3 +1,3 @@
 export {TextArea} from './TextArea'
-export {Checklist} from './Checklist'
+export {ChecklistManager} from './ChecklistManager'
 export {MyDayToggle} from './MyDayToggle'

@@ -10,7 +10,8 @@ type Props = React.DetailedHTMLProps<
   variant?: ButtonVariant
 }
 
-const sm = 'px-2 py-1'
+const xs = 'px-2 py-1'
+const sm = 'px-3 py-2'
 const md = 'px-6 py-3'
 const blue =
   'bg-blue-500 border border-blue-600 active:bg-blue-600 active:border-blue-700 text-white shadow-md active:shadow focus-withing:ring'
@@ -19,11 +20,13 @@ const red =
 const outline =
   'bg-transparent border border-gray-200 text-gray-700 shadow-none active:bg-gray-100 active:border-gray-200 active:shadow-inner focus-withing:ring'
 
-type ButtonSize = 'sm' | 'md'
+type ButtonSize = 'xs' | 'sm' | 'md'
 type ButtonVariant = 'blue' | 'red' | 'outline'
 
 function matchSize(size: ButtonSize) {
   switch (size) {
+    case 'xs':
+      return xs
     case 'sm':
       return sm
     case 'md':
@@ -47,7 +50,7 @@ function matchVariant(variant: ButtonVariant) {
 }
 
 export const Button: React.FC<Props> = ({
-  size = 'sm',
+  size = 'xs',
   variant = 'blue',
   children,
   className,
