@@ -1,11 +1,10 @@
 import React, {ChangeEventHandler, useMemo} from 'react'
-import clsx from 'clsx'
-import {useParams, useHistory} from 'react-router'
+import {useParams} from 'react-router'
 import {MainView} from '@views/MainView'
 import format from 'date-fns/format'
 import parseISO from 'date-fns/parseISO'
 import isEmpty from 'lodash/fp/isEmpty'
-import {CheckIcon, FireIcon, PlusIcon, TrashIcon} from '@heroicons/react/solid'
+import {PlusIcon} from '@heroicons/react/solid'
 import ContentLoader from 'react-content-loader'
 import {useQuery} from 'react-query'
 import escape from 'escape-html'
@@ -17,22 +16,16 @@ import {akira} from '@/lib/akira'
 import {
   ChecklistManager,
   MyDayToggle,
+  TaskActionToast,
   TextArea
 } from '@modules/tasks/components'
 import {showBottomSheet} from '@store/bottom-sheet/index'
 import {TaskT} from '@store/tasks/types'
 import {TagsManager, TaskTag} from '@modules/tags/components'
-import {
-  useRemoveTaskMutation,
-  useToggleCompletedMutation,
-  useToggleImportantMutation,
-  usePatchTaskMutation
-} from '@modules/tasks/hooks'
-import {ActionToast} from '@components/ActionToast'
+import {usePatchTaskMutation} from '@modules/tasks/hooks'
 
 export const TaskView: React.FC = () => {
   const {taskId} = useParams<{taskId: string}>()
-  const history = useHistory()
   const {data: task} = useQuery<TaskT>(['task', taskId], () =>
     akira.tasks.one(taskId)
   )
@@ -40,9 +33,6 @@ export const TaskView: React.FC = () => {
   const title = task?.title ?? ''
   const taskTitle = useMemo(() => escape(title), [title])
 
-  const toggleCompletedMutation = useToggleCompletedMutation()
-  const toggleImportantMutation = useToggleImportantMutation()
-  const removeTaskMutation = useRemoveTaskMutation()
   const patchTaskMutation = usePatchTaskMutation(taskId)
 
   if (isNil(task)) {
@@ -76,15 +66,6 @@ export const TaskView: React.FC = () => {
 
       patchTaskMutation.mutate({
         title: newTitle
-      })
-    }
-  }
-
-  function onRemove() {
-    // eslint-disable-next-line
-    if (confirm('Are you sure? This action cannot be undone')) {
-      removeTaskMutation.mutateAsync(taskId).then(() => {
-        history.push('/')
       })
     }
   }
@@ -149,28 +130,11 @@ export const TaskView: React.FC = () => {
         />
       </section>
       {task && <ChecklistManager task={task} />}
-      <ActionToast>
-        <ActionToast.Button
-          Icon={CheckIcon}
-          className={clsx('active:text-green-600', {
-            'text-green-500': task.is_completed
-          })}
-          onClick={() => toggleCompletedMutation.mutate(taskId)}
-        />
-        <ActionToast.Button
-          Icon={FireIcon}
-          className={clsx('active:text-red-600', {
-            'text-red-500': task.is_important
-          })}
-          onClick={() => toggleImportantMutation.mutate(taskId)}
-        />
-        <ActionToast.Button
-          isLoading={removeTaskMutation.isLoading}
-          Icon={TrashIcon}
-          className="text-red-500 active:text-red-600"
-          onClick={onRemove}
-        />
-      </ActionToast>
+      <TaskActionToast
+        taskId={taskId}
+        isCompleted={task.is_completed}
+        isImportant={task.is_important}
+      />
     </MainView>
   )
 }
