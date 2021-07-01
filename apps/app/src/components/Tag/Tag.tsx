@@ -21,7 +21,7 @@ export const Tag: React.FC<TagPropsT> = ({
       className={clsx(
         'inline-flex justify-center items-center px-2 py-1',
         'font-bold text-xs text-white',
-        'rounded shadow-md border',
+        'rounded shadow-sm border',
         'focus:outline-none focus:ring',
         {
           'bg-green-500 border-green-600 focus-within:ring-green-300':
