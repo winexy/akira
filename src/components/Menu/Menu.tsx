@@ -188,7 +188,7 @@ export const Menu: React.FC = ({children}) => {
         ref={contentRef}
         className={clsx(
           'transform flex flex-col',
-          'bg-gray-100',
+          'bg-gray-50',
           'transition ease-in duration-300',
           isOpen ? 'max-vh-full' : 'vh-full',
           {

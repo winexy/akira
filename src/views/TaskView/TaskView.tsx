@@ -125,7 +125,7 @@ export const TaskView: React.FC = () => {
   const createdAt = format(parseISO(task.created_at), 'd LLLL yyyy')
 
   return (
-    <MainView>
+    <MainView className="pb-28">
       <div className="px-4 space-x-2">
         <Tag variant={task.is_completed ? 'green' : 'gray'}>
           {task.is_completed ? '' : 'not '}completed
