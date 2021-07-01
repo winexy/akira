@@ -1,46 +1,34 @@
-import React, {
-  ChangeEventHandler,
-  FormEventHandler,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState
-} from 'react'
+import React, {ChangeEventHandler, useMemo} from 'react'
 import clsx from 'clsx'
 import {useParams, useHistory} from 'react-router'
 import {MainView} from '@views/MainView'
 import format from 'date-fns/format'
 import parseISO from 'date-fns/parseISO'
 import isEmpty from 'lodash/fp/isEmpty'
-import {
-  CheckIcon,
-  ClipboardCheckIcon,
-  FireIcon,
-  PlusIcon,
-  TrashIcon
-} from '@heroicons/react/solid'
+import {CheckIcon, FireIcon, PlusIcon, TrashIcon} from '@heroicons/react/solid'
 import ContentLoader from 'react-content-loader'
-import {useQuery, useMutation, useQueryClient} from 'react-query'
+import {useQuery} from 'react-query'
 import escape from 'escape-html'
-import isNull from 'lodash/fp/isNull'
 import isNil from 'lodash/fp/isNil'
 import {Tag} from '@/components/Tag/Tag'
 import {BottomSheet} from '@/components/BottomSheet/BottomSheet'
 import {Button} from '@components/Button'
 import {akira} from '@/lib/akira'
-import {Checklist, MyDayToggle, TextArea} from '@modules/tasks/components'
+import {
+  ChecklistManager,
+  MyDayToggle,
+  TextArea
+} from '@modules/tasks/components'
 import {showBottomSheet} from '@store/bottom-sheet/index'
-import {TaskPatchT, TaskT} from '@store/tasks/types'
+import {TaskT} from '@store/tasks/types'
 import {TagsManager, TaskTag} from '@modules/tags/components'
 import {
-  useAddTodoMutation,
   useRemoveTaskMutation,
   useToggleCompletedMutation,
   useToggleImportantMutation,
   usePatchTaskMutation
 } from '@modules/tasks/hooks'
 import {ActionToast} from '@components/ActionToast'
-import {TaskQueryKeyEnum} from '@modules/tasks/config'
 
 export const TaskView: React.FC = () => {
   const {taskId} = useParams<{taskId: string}>()
@@ -49,25 +37,13 @@ export const TaskView: React.FC = () => {
     akira.tasks.one(taskId)
   )
 
-  const todoInputRef = useRef<HTMLInputElement | null>(null)
-
-  const [isTodoInputVisible, setIsTodoInputVisible] = useState(false)
-  const [todoTitle, setTodoTitle] = useState('')
   const title = task?.title ?? ''
-
   const taskTitle = useMemo(() => escape(title), [title])
 
   const toggleCompletedMutation = useToggleCompletedMutation()
   const toggleImportantMutation = useToggleImportantMutation()
   const removeTaskMutation = useRemoveTaskMutation()
   const patchTaskMutation = usePatchTaskMutation(taskId)
-  const addTodoMutation = useAddTodoMutation(taskId)
-
-  useLayoutEffect(() => {
-    if (isTodoInputVisible) {
-      todoInputRef.current?.focus()
-    }
-  }, [isTodoInputVisible])
 
   if (isNil(task)) {
     return (
@@ -87,15 +63,6 @@ export const TaskView: React.FC = () => {
         </ContentLoader>
       </MainView>
     )
-  }
-
-  const onSubmit: FormEventHandler = event => {
-    event.preventDefault()
-
-    if (!isEmpty(todoTitle)) {
-      addTodoMutation.mutate(todoTitle)
-      setTodoTitle('')
-    }
   }
 
   const onTitleChange: ChangeEventHandler<HTMLHeadingElement> = event => {
@@ -164,7 +131,6 @@ export const TaskView: React.FC = () => {
           </ul>
         )}
         <Button
-          size="sm"
           variant="blue"
           className="text-sm"
           onClick={() => showBottomSheet('tags')}
@@ -182,44 +148,7 @@ export const TaskView: React.FC = () => {
           onChange={description => patchTaskMutation.mutate({description})}
         />
       </section>
-      <section className="mt-4 px-4">
-        {isEmpty(task.checklist) && !isTodoInputVisible ? (
-          <button
-            className={clsx(
-              'flex items-center justify-center',
-              'px-3 py-2 rounded-md shadow-sm',
-              'bg-gray-50 border border-gray-200',
-              'select-none',
-              'transition ease-in duration-150',
-              'active:shadow-inner',
-              'focus:outline-none'
-            )}
-            onClick={() => setIsTodoInputVisible(true)}
-          >
-            <ClipboardCheckIcon className="mr-2 w-4 h-4" />
-            Add Checklist
-          </button>
-        ) : (
-          <form onSubmit={onSubmit}>
-            <input
-              ref={todoInputRef}
-              value={todoTitle}
-              placeholder="Add todo..."
-              className={clsx(
-                'bg-gray-200 bg-opacity-50 px-4 py-2 rounded-md border shadow-inner',
-                'appearance-none border border-gray-300',
-                'focus:outline-none focus:border-indigo-500'
-              )}
-              onInput={e => setTodoTitle((e.target as HTMLInputElement).value)}
-              onBlur={() => setIsTodoInputVisible(false)}
-              enterKeyHint="send"
-            />
-          </form>
-        )}
-      </section>
-      {!isNull(task.checklist) && (
-        <Checklist taskId={task.id} checklist={task.checklist} />
-      )}
+      {task && <ChecklistManager task={task} />}
       <ActionToast>
         <ActionToast.Button
           Icon={CheckIcon}
