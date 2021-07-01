@@ -1,10 +1,12 @@
 import React, {ChangeEventHandler, FocusEventHandler, useState} from 'react'
 import noop from 'lodash/fp/noop'
 import size from 'lodash/fp/size'
+import clsx from 'clsx'
 
 type Props = {
   value: string
   placeholder?: string
+  className?: string
   onChange(value: string): void
   onInput?(value: string): void
 }
@@ -14,6 +16,7 @@ const countRows = (value: string) => size(value.split('\n'))
 export const TextArea: React.FC<Props> = ({
   value,
   placeholder = '',
+  className = '',
   onChange,
   onInput = noop
 }) => {
@@ -41,7 +44,10 @@ export const TextArea: React.FC<Props> = ({
 
   return (
     <textarea
-      className="w-full p-0 bg-transparent focus:outline-none"
+      className={clsx(
+        'w-full p-0 bg-transparent focus:outline-none',
+        className
+      )}
       value={localValue}
       rows={rows}
       placeholder={placeholder}

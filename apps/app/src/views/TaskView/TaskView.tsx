@@ -122,10 +122,12 @@ export const TaskView: React.FC = () => {
           <TagsManager task={task} />
         </BottomSheet>
       </section>
-      <section className="mt-4 px-4 flex items-center">
+      <section className="mt-4 px-4 flex flex-col items-start">
+        <h2 className="font-semibold text-lg">Note</h2>
         <TextArea
           value={task.description}
-          placeholder="Tap to add description"
+          placeholder="Tap to add note"
+          className="mt-2"
           onChange={description => patchTaskMutation.mutate({description})}
         />
       </section>
