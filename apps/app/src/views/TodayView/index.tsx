@@ -156,7 +156,7 @@ export function TodayView() {
   }
 
   return (
-    <MainView className="bg-gray-100 flex-1">
+    <MainView className="flex-1">
       <TaskForm
         ref={formRef}
         title={title}
