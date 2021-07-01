@@ -4,7 +4,6 @@ import {
   AdjustmentsIcon,
   ChevronLeftIcon,
   LogoutIcon,
-  CheckIcon,
   HomeIcon,
   CollectionIcon
 } from '@heroicons/react/solid'
@@ -146,10 +145,6 @@ export const Menu: React.FC = ({children}) => {
           </MenuItem>
           <MenuItem to="/tasks" Icon={CollectionIcon}>
             Tasks
-          </MenuItem>
-          <MenuItem to="/wip" Icon={CheckIcon}>
-            Completed
-            <WIP className="ml-auto" />
           </MenuItem>
           <MenuItem to="/wip" Icon={AdjustmentsIcon}>
             Preferences
