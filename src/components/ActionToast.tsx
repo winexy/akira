@@ -44,7 +44,7 @@ export const ActionToast: React.FC & {
       classNames="action-toast"
     >
       <div className="fixed bottom-0 pointer-events-none w-full flex justify-center items-center pb-10 transition ease-in duration-300">
-        <div className="flex items-center space-x-4 pointer-events-auto px-4 py-1 rounded-full bg-gray-100 shadow-2xl border border-white">
+        <div className="flex items-center space-x-4 pointer-events-auto px-4 py-1 rounded-full bg-white shadow-2xl border border-gray-50">
           {children}
         </div>
       </div>
