@@ -6,7 +6,7 @@ import {useHistory} from 'react-router'
 import {ChevronLeftIcon} from '@heroicons/react/solid'
 
 type ViewProps = {
-  className?: ClassValue
+  className?: string
   header?: React.ReactChild
   withBackNavigation?: boolean
 }
@@ -38,7 +38,7 @@ export const MainView: React.FC<ViewProps> = ({
   return (
     <>
       {isUndefined(header) ? defaultHeader : header}
-      <main className={clsx('bg-gray-50', className)}>{children}</main>
+      <main className={className}>{children}</main>
     </>
   )
 }
