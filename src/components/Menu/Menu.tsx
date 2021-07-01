@@ -5,7 +5,8 @@ import {
   ChevronLeftIcon,
   LogoutIcon,
   HomeIcon,
-  CollectionIcon
+  CollectionIcon,
+  ViewListIcon
 } from '@heroicons/react/solid'
 import {closeMenu, $isMenuOpen} from '@store/menu'
 import {useFirebaseAuth} from '@/firebase/Provider'
@@ -145,6 +146,10 @@ export const Menu: React.FC = ({children}) => {
           </MenuItem>
           <MenuItem to="/tasks" Icon={CollectionIcon}>
             Tasks
+          </MenuItem>
+          <MenuItem to="/wip" Icon={ViewListIcon}>
+            Lists
+            <WIP className="ml-auto" />
           </MenuItem>
           <MenuItem to="/wip" Icon={AdjustmentsIcon}>
             Preferences
