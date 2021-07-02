@@ -14,6 +14,7 @@ export const ActionToast: React.FC & {
   Button: React.FC<ActionToastButtonProps>
 } = ({children}) => {
   const [isVisible, setIsVisible] = useState(true)
+  const ref = useRef<HTMLDivElement | null>(null)
   const prevScrollYRef = useRef(0)
 
   useEffect(() => {
@@ -38,12 +39,16 @@ export const ActionToast: React.FC & {
 
   return (
     <CSSTransition
+      nodeRef={ref}
       in={isVisible}
       timeout={300}
       unmountOnExit
       classNames="action-toast"
     >
-      <div className="fixed bottom-0 pointer-events-none w-full flex justify-center items-center pb-10 transition ease-in duration-300">
+      <div
+        ref={ref}
+        className="fixed bottom-0 pointer-events-none w-full flex justify-center items-center pb-10 transition ease-in duration-300"
+      >
         <div className="flex items-center space-x-4 pointer-events-auto px-4 py-1 rounded-full bg-white shadow-2xl border border-gray-50">
           {children}
         </div>
