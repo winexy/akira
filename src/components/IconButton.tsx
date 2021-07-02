@@ -18,7 +18,11 @@ function matchSize(size: ButtonSize) {
   }
 }
 
-export const IconButton: React.FC<Props> = ({size = 'sm', ...props}) => (
+export const IconButton: React.FC<Props> = ({
+  size = 'sm',
+  className,
+  ...props
+}) => (
   <button
     className={clsx(
       'flex justify-center items-center',
