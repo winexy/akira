@@ -1,4 +1,4 @@
-import React, {ChangeEventHandler, useMemo} from 'react'
+import React from 'react'
 import {useParams} from 'react-router'
 import {MainView} from '@views/MainView'
 import format from 'date-fns/format'
@@ -7,7 +7,6 @@ import isEmpty from 'lodash/fp/isEmpty'
 import {CalendarIcon, PlusIcon, ClockIcon} from '@heroicons/react/outline'
 import ContentLoader from 'react-content-loader'
 import {useQuery} from 'react-query'
-import escape from 'escape-html'
 import isNil from 'lodash/fp/isNil'
 import {BottomSheet} from '@/components/BottomSheet/BottomSheet'
 import {Button} from '@components/Button'
@@ -24,6 +23,7 @@ import {TaskT} from '@store/tasks/types'
 import {TagsManager, TaskTag} from '@modules/tags/components'
 import {usePatchTaskMutation} from '@modules/tasks/hooks'
 import {WIP, Tag} from '@components/Tag/Tag'
+import {EditableHeading} from '@components/EditableHeading'
 
 export const TaskView: React.FC = () => {
   const {taskId} = useParams<{taskId: string}>()
@@ -32,7 +32,6 @@ export const TaskView: React.FC = () => {
   )
 
   const title = task?.title ?? ''
-  const taskTitle = useMemo(() => escape(title), [title])
 
   const patchTaskMutation = usePatchTaskMutation(taskId)
 
@@ -56,21 +55,6 @@ export const TaskView: React.FC = () => {
     )
   }
 
-  const onTitleChange: ChangeEventHandler<HTMLHeadingElement> = event => {
-    const {textContent} = event.target
-
-    // eslint-disable-next-line
-    event.target.innerHTML = textContent ?? ''
-
-    if (!isNil(textContent) && task.title !== textContent) {
-      const newTitle = textContent.trim()
-
-      patchTaskMutation.mutate({
-        title: newTitle
-      })
-    }
-  }
-
   const createdAt = format(parseISO(task.created_at), 'd LLLL yyyy')
 
   return (
@@ -81,19 +65,13 @@ export const TaskView: React.FC = () => {
         </Tag>
         {task.is_important && <Tag variant="red">important</Tag>}
       </div>
-      <h1
-        className="
-          mt-4 px-4 
-          font-semibold text-2xl 
-          focus:outline-none 
-          focus:text-gray-500
-        "
-        contentEditable
-        // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{
-          __html: taskTitle
+      <EditableHeading
+        value={task.title}
+        onChange={newTitle => {
+          patchTaskMutation.mutate({
+            title: newTitle
+          })
         }}
-        onBlur={onTitleChange}
       />
 
       <div className="mt-2 px-4 flex justify-between items-center">
