@@ -67,6 +67,7 @@ export const TaskView: React.FC = () => {
       </div>
       <EditableHeading
         value={task.title}
+        className="mt-4"
         onChange={newTitle => {
           patchTaskMutation.mutate({
             title: newTitle

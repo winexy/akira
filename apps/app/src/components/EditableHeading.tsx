@@ -1,13 +1,21 @@
 import React, {ChangeEventHandler, useMemo} from 'react'
 import isNil from 'lodash/fp/isNil'
+import clsx from 'clsx'
 
 type Props = {
   value: string
+  placeholder?: string
+  className?: string
   onChange(value: string): void
 }
 
-export const EditableHeading: React.FC<Props> = ({value, onChange}) => {
-  const escaped = useMemo(() => escape(value), [value])
+export const EditableHeading: React.FC<Props> = ({
+  value,
+  placeholder = '',
+  className = '',
+  onChange
+}) => {
+  const escaped = useMemo(() => escape(value), [value]) || placeholder
 
   const handleChange: ChangeEventHandler<HTMLHeadingElement> = event => {
     const {textContent} = event.target
@@ -22,12 +30,15 @@ export const EditableHeading: React.FC<Props> = ({value, onChange}) => {
 
   return (
     <h1
-      className="
-        mt-4 px-4 
+      className={clsx(
+        `
+        px-4 
         font-semibold text-2xl 
         focus:outline-none 
         focus:text-gray-500
-      "
+      `,
+        className
+      )}
       contentEditable
       // eslint-disable-next-line react/no-danger
       dangerouslySetInnerHTML={{
