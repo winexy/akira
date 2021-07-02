@@ -6,7 +6,8 @@ import {
   LogoutIcon,
   HomeIcon,
   CollectionIcon,
-  ViewListIcon
+  ViewListIcon,
+  PlusIcon
 } from '@heroicons/react/solid'
 import {closeMenu, $isMenuOpen} from '@store/menu'
 import {useFirebaseAuth} from '@/firebase/Provider'
@@ -23,7 +24,14 @@ type MenuItemProps = {
   to: string
 }
 
-const MenuItem: React.FC<MenuItemProps> = ({Icon, children, to}) => {
+type ButtonProps = {
+  onClick(): void
+  Icon: SVGIconElement
+}
+
+export const MenuItem: React.FC<MenuItemProps> & {
+  Button: React.FC<ButtonProps>
+} = ({Icon, children, to}) => {
   const onClick = () => closeMenu()
 
   return (
@@ -31,8 +39,8 @@ const MenuItem: React.FC<MenuItemProps> = ({Icon, children, to}) => {
       <Link
         to={to}
         className={clsx(
-          'flex items-center',
-          'px-4 py-2 rounded select-none',
+          'flex items-center max-h-12',
+          'pl-4 py-2 rounded select-none',
           'transition ease-in duration-150',
           'active:bg-gray-50 active:bg-opacity-10',
           'focus:outline-none focus:bg-gray-50 focus:bg-opacity-10',
@@ -67,6 +75,26 @@ const getContentTranslateX = (
 
   return `${menuRect.width - halfDiff}px`
 }
+
+MenuItem.Button = ({onClick, Icon}) => (
+  <button
+    className="
+      ml-auto w-10 h-10 mr-1
+      flex justify-center items-center
+      bg-gray-50 bg-opacity-10 rounded
+      transition ease-in duration-150
+      active:bg-opacity-30
+      focus:outline-none
+    "
+    onClickCapture={event => {
+      event.stopPropagation()
+      event.preventDefault()
+      onClick()
+    }}
+  >
+    <Icon className="w-6 h-6" />
+  </button>
+)
 
 export const Menu: React.FC = ({children}) => {
   const queryClient = useQueryClient()
@@ -149,7 +177,12 @@ export const Menu: React.FC = ({children}) => {
           </MenuItem>
           <MenuItem to="/wip" Icon={ViewListIcon}>
             Lists
-            <WIP className="ml-auto" />
+            <MenuItem.Button
+              Icon={PlusIcon}
+              onClick={() => {
+                window.console.log('click')
+              }}
+            />
           </MenuItem>
           <MenuItem to="/wip" Icon={AdjustmentsIcon}>
             Preferences
