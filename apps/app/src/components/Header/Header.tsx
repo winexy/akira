@@ -7,16 +7,11 @@ import {Link} from 'react-router-dom'
 import {Akira} from './Akira'
 
 export const Header: React.FC = ({children}) => {
-  const headerRef = useRef<HTMLElement | null>(null)
   const [isFloating, setIsFloating] = useState(false)
 
   useEffect(() => {
-    const headerRect = headerRef.current?.getBoundingClientRect()
-
     const listener = () => {
-      if (headerRect) {
-        setIsFloating(window.scrollY > headerRect.height)
-      }
+      setIsFloating(window.scrollY > 0)
     }
 
     window.addEventListener('scroll', listener, false)
@@ -28,7 +23,6 @@ export const Header: React.FC = ({children}) => {
 
   return (
     <header
-      ref={headerRef}
       className={clsx(
         'sticky w-full top-0 z-20 px-4 py-2',
         'flex items-center',
