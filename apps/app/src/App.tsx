@@ -11,6 +11,7 @@ import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
 import {useFirebaseAuth} from './firebase/Provider'
 import {TasksView} from './views/TasksView'
 import {TagsView} from './modules/tags/views'
+import {NewListView} from './views/NewListView'
 
 const dndConfig = {
   enableMouseEvents: true
@@ -126,6 +127,9 @@ function App() {
             </Route>
             <Route path="/tags">
               <TagsView />
+            </Route>
+            <Route path="/list/new">
+              <NewListView />
             </Route>
           </Switch>
         </Menu>

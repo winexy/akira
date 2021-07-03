@@ -14,7 +14,7 @@ import {useFirebaseAuth} from '@/firebase/Provider'
 import {config} from '@config/app'
 import {Tag, WIP} from '@components/Tag/Tag'
 import {useStore} from 'effector-react'
-import {Link} from 'react-router-dom'
+import {Link, useHistory} from 'react-router-dom'
 import isNull from 'lodash/fp/isNull'
 import {useQueryClient} from 'react-query'
 import size from 'lodash/fp/size'
@@ -97,6 +97,7 @@ MenuItem.Button = ({onClick, Icon}) => (
 )
 
 export const Menu: React.FC = ({children}) => {
+  const history = useHistory()
   const queryClient = useQueryClient()
   const isOpen = useStore($isMenuOpen)
   const auth = useFirebaseAuth()
@@ -180,7 +181,8 @@ export const Menu: React.FC = ({children}) => {
             <MenuItem.Button
               Icon={PlusIcon}
               onClick={() => {
-                window.console.log('click')
+                history.push('/list/new')
+                closeMenu()
               }}
             />
           </MenuItem>
