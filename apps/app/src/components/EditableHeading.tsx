@@ -1,5 +1,6 @@
 import React, {ChangeEventHandler, useMemo} from 'react'
 import isNil from 'lodash/fp/isNil'
+import escape from 'escape-html'
 import clsx from 'clsx'
 
 type Props = {
