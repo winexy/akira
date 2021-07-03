@@ -74,7 +74,11 @@ module.exports = {
       {props: true, ignorePropertyModificationsFor: ['draft']}
     ],
     'object-curly-newline': 'off', // prefere prettier
-    'no-undef': 'off' // false positive error
+    'no-undef': 'off', // false positive error,
+    'import/no-extraneous-dependencies': [
+      'error',
+      {devDependencies: ['**/*.test.jsx', '**/*.test.tsx', '**/*.test.js']}
+    ]
   },
   settings: {
     'import/resolver': {
