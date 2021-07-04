@@ -110,9 +110,7 @@ export const TaskView: React.FC = () => {
         />
       </section>
       <TaskActionList className="mt-4">
-        <TaskActionList.Item Icon={PlusIcon}>
-          Add to list <WIP className="ml-auto" />
-        </TaskActionList.Item>
+        <TaskActionList.Item Icon={PlusIcon}>Add to list</TaskActionList.Item>
         <TaskActionList.Item Icon={CalendarIcon}>
           Add due date <WIP className="ml-auto" />
         </TaskActionList.Item>
@@ -126,6 +124,7 @@ export const TaskView: React.FC = () => {
         isCompleted={task.is_completed}
         isImportant={task.is_important}
       />
+      <BottomSheet name="zxc" />
     </MainView>
   )
 }
