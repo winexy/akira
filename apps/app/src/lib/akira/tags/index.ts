@@ -6,7 +6,7 @@ export function tags(api: AxiosInstance) {
   const unwrap = get('data')
 
   return {
-    all() {
+    findAll() {
       return api.get('tags').then(unwrap)
     },
     create(name: string): Promise<TagT> {
@@ -18,7 +18,7 @@ export function tags(api: AxiosInstance) {
         })
         .then(unwrap)
     },
-    removeTag(tagId: number): Promise<number> {
+    remove(tagId: number): Promise<number> {
       return api.delete(`tags/${tagId}`).then(unwrap)
     }
   }

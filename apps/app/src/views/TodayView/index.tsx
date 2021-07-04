@@ -29,10 +29,11 @@ import {useQuery, useQueryClient, useMutation} from 'react-query'
 import {akira} from '@lib/akira'
 import {useFirebaseAuth} from '@/firebase'
 import {onMyDayFetch} from '@modules/tasks/store'
-import {TagT, TaskT} from '@store/tasks'
-import {Tag, WIP} from '@components/Tag/Tag'
+import {TaskT} from '@store/tasks'
+import {Tag} from '@components/Tag/Tag'
 import produce from 'immer'
 import {TaskQueryKeyEnum} from '@modules/tasks/config/index'
+import {useTagsQuery} from '@modules/tags/hooks'
 
 function matchSortTypeTitle(sortType: SortEnum) {
   switch (sortType) {
@@ -93,7 +94,7 @@ export function TodayView() {
     }
   )
 
-  const {data: tags = []} = useQuery<TagT[]>('tags', akira.tags.all)
+  const {data: tags = []} = useTagsQuery()
 
   const [selectedTags, dispatch] = useReducer(
     (state: Set<number>, value: number) => {

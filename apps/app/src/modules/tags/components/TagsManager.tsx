@@ -12,13 +12,13 @@ import {
   useAddTaskTagMutation,
   useRemoveTaskTagMutation
 } from '@modules/tasks/hooks'
-import {TagT, TaskT} from '@store/tasks'
-import {akira} from '@lib/akira'
+import {TaskT} from '@store/tasks'
 import {Button} from '@components/Button'
 import {TaskTag} from './TaskTag'
+import {useTagsQuery} from '../hooks/index'
 
 export const TagsManager: React.FC<{task: TaskT}> = ({task}) => {
-  const {data: tags, isLoading} = useQuery<TagT[]>('tags', akira.tags.all)
+  const {data: tags, isLoading} = useTagsQuery()
   const taskTagsIdSet = new Set(map('id', task.tags))
 
   const addTagMutation = useAddTaskTagMutation(task)
