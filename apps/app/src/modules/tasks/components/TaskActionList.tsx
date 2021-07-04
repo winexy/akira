@@ -5,8 +5,15 @@ type Props = {
   className?: string
 }
 
+type ItemProps = {
+  Icon: SVGIconElement
+} & React.DetailedHTMLProps<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  HTMLButtonElement
+>
+
 export const TaskActionList: React.FC<Props> & {
-  Item: React.FC<{Icon: SVGIconElement}>
+  Item: React.FC<ItemProps>
 } = ({children, className}) => (
   <ul
     className={clsx(
@@ -18,7 +25,7 @@ export const TaskActionList: React.FC<Props> & {
   </ul>
 )
 
-TaskActionList.Item = ({children, Icon}) => (
+TaskActionList.Item = ({children, Icon, ...buttonProps}) => (
   <li>
     <button
       className="
@@ -28,6 +35,7 @@ TaskActionList.Item = ({children, Icon}) => (
         active:text-blue-600 active:bg-gray-50
         focus:outline-none
       "
+      {...buttonProps}
     >
       <Icon className="w-6 h-6 mr-3" />
       {children}
