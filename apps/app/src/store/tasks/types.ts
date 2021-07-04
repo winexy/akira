@@ -1,5 +1,13 @@
 /* eslint-disable camelcase */
-import {object, string, boolean, Infer, array, number} from 'superstruct'
+import {
+  object,
+  string,
+  boolean,
+  Infer,
+  array,
+  number,
+  nullable
+} from 'superstruct'
 
 export const Todo = object({
   id: string(),
@@ -18,6 +26,12 @@ const Tag = object({
   uid: string()
 })
 
+const TaskList = object({
+  id: number(),
+  author_uid: string(),
+  title: string()
+})
+
 export const Task = object({
   id: string(),
   author_uid: string(),
@@ -26,6 +40,8 @@ export const Task = object({
   created_at: string(),
   updated_at: string(),
   is_completed: boolean(),
+  list_id: nullable(number()),
+  list: TaskList,
   is_important: boolean(),
   checklist: array(Todo),
   tags: array(Tag)

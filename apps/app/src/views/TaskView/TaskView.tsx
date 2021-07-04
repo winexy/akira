@@ -22,9 +22,12 @@ import {showBottomSheet} from '@store/bottom-sheet/index'
 import {TaskT} from '@store/tasks/types'
 import {TagsManager, TaskTag} from '@modules/tags/components'
 import {usePatchTaskMutation} from '@modules/tasks/hooks'
-import {WIP, Tag} from '@components/Tag/Tag'
+import {Tag} from '@components/Tag/Tag'
 import {EditableHeading} from '@components/EditableHeading'
-import {TaskLists} from '@/modules/lists/components/TaskLists'
+import {DotsVerticalIcon, ViewListIcon} from '@heroicons/react/solid'
+import {Link} from 'react-router-dom'
+import isNull from 'lodash/fp/isNull'
+import {TaskListPicker} from '@modules/tasks/components/TaskListPicker'
 
 export const TaskView: React.FC = () => {
   const {taskId} = useParams<{taskId: string}>()
@@ -111,17 +114,39 @@ export const TaskView: React.FC = () => {
         />
       </section>
       <TaskActionList className="mt-4">
-        <TaskActionList.Item
-          Icon={PlusIcon}
-          onClick={() => showBottomSheet('lists')}
-        >
-          Add to list
+        {isNull(task.list_id) ? (
+          <TaskActionList.Item>
+            <TaskActionList.Button
+              Icon={PlusIcon}
+              onClick={() => showBottomSheet('lists')}
+            >
+              Add to list
+            </TaskActionList.Button>
+          </TaskActionList.Item>
+        ) : (
+          <TaskActionList.Item>
+            <TaskActionList.Button Icon={ViewListIcon} className="truncate">
+              <Link to={`/lists/${task.list_id}`} className="truncate">
+                {task.list.title}
+              </Link>
+            </TaskActionList.Button>
+            <TaskActionList.Button
+              stretch={false}
+              onClick={() => showBottomSheet('lists')}
+            >
+              <DotsVerticalIcon className="ml-auto w-5 h-5" />
+            </TaskActionList.Button>
+          </TaskActionList.Item>
+        )}
+        <TaskActionList.Item>
+          <TaskActionList.Button Icon={CalendarIcon}>
+            Add due date
+          </TaskActionList.Button>
         </TaskActionList.Item>
-        <TaskActionList.Item Icon={CalendarIcon}>
-          Add due date <WIP className="ml-auto" />
-        </TaskActionList.Item>
-        <TaskActionList.Item Icon={ClockIcon}>
-          Schedule <WIP className="ml-auto" />
+        <TaskActionList.Item>
+          <TaskActionList.Button Icon={ClockIcon}>
+            Schedule
+          </TaskActionList.Button>
         </TaskActionList.Item>
       </TaskActionList>
       {task && <ChecklistManager task={task} />}
@@ -130,9 +155,8 @@ export const TaskView: React.FC = () => {
         isCompleted={task.is_completed}
         isImportant={task.is_important}
       />
-      <BottomSheet name="lists" className="py-4">
-        <h2 className="px-4 text-xl font-semibold">Lists</h2>
-        <TaskLists className="mt-2" allowRemoval={false} />
+      <BottomSheet name="lists" className="">
+        <TaskListPicker taskId={task.id} activeListId={task.list_id} />
       </BottomSheet>
     </MainView>
   )
