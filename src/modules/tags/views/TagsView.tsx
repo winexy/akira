@@ -1,18 +1,18 @@
 import React from 'react'
 import {MainView} from '@views/MainView'
-import {useQuery, useMutation, useQueryClient} from 'react-query'
+import {useMutation, useQueryClient} from 'react-query'
 import {akira} from '@/lib/akira'
-import {TagT} from '@store/tasks/types'
 import {XIcon} from '@heroicons/react/solid'
 import {IconButton} from '@components/IconButton'
 import {Spin} from '@/components/Spin'
 import isEmpty from 'lodash/fp/isEmpty'
 import {CreateTagForm, TaskTag} from '../components'
+import {useTagsQuery} from '../hooks/index'
 
 export const TagsView: React.FC = () => {
   const queryClient = useQueryClient()
-  const {data: tags = []} = useQuery<TagT[]>('tags', akira.tags.all)
-  const removeTagMutation = useMutation(akira.tags.removeTag, {
+  const {data: tags = []} = useTagsQuery()
+  const removeTagMutation = useMutation(akira.tags.remove, {
     onSuccess(_, tagId) {
       queryClient.setQueryData('tags', () => {
         return tags.filter(tag => tag.id !== tagId)
