@@ -12,7 +12,7 @@ function createFiltersState() {
   }
 }
 
-type FiltersState = ReturnType<typeof createFiltersState>
+export type FiltersState = ReturnType<typeof createFiltersState>
 
 type FilterPredicate = (task: TaskT, state: FiltersState) => boolean
 
@@ -58,7 +58,7 @@ export function filterTasks(tasks: TaskT[], state: FiltersState) {
   })
 }
 
-type FilterAction =
+export type FilterAction =
   | {
       type: 'completed' | 'important' | 'notCompleted'
     }

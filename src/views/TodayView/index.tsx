@@ -30,10 +30,10 @@ import {akira} from '@lib/akira'
 import {useFirebaseAuth} from '@/firebase'
 import {onMyDayFetch} from '@modules/tasks/store'
 import {TaskT} from '@store/tasks'
-import {Tag} from '@components/Tag/Tag'
 import {TaskQueryKeyEnum} from '@modules/tasks/config/index'
 import {useTagsQuery} from '@modules/tags/hooks'
 import {filterTasks, useTaskFilters} from '@modules/tasks/filters'
+import {FiltersBottomSheet} from '@modules/tasks/filters/FiltersBottomSheet'
 
 function matchSortTypeTitle(sortType: SortEnum) {
   switch (sortType) {
@@ -134,74 +134,12 @@ export function TodayView() {
           {completedTasksCount} / {size(sorted)}
         </span>
       </div>
-      <BottomSheet name="filters" className="px-4 pb-6 pt-4 text-gray-800">
-        <h2 className="flex items-center justify-between font-bold text-2xl">
-          Filters
-          {size(tasks) !== size(sorted) && (
-            <Button
-              variant="outline"
-              className="text-sm"
-              onClick={() => {
-                dispatch({type: 'reset'})
-                hideBottomSheet()
-              }}
-            >
-              <RefreshIcon className="w-4 h-4 mr-2" />
-              reset
-            </Button>
-          )}
-        </h2>
-        <ul className="mt-4 space-y-1">
-          {(['completed', 'notCompleted', 'important'] as const).map(
-            filterType => (
-              <li className="" key={filterType}>
-                <label
-                  className="
-                  px-3 py-2 
-                  flex items-center 
-                  font-semibold text-lg 
-                  rounded select-none
-                  transition ease-in duration-75
-                  active:bg-gray-100
-                "
-                >
-                  <Checkbox
-                    className="mr-3"
-                    isChecked={filtersState[filterType]}
-                    onChange={() => {
-                      dispatch({type: filterType})
-                    }}
-                  />
-                  {filterType}
-                </label>
-              </li>
-            )
-          )}
-        </ul>
-        <ul className="mt-2 flex flex-wrap space-x-2">
-          {tags.map(tag => (
-            <li key={tag.id}>
-              <Tag
-                variant={filtersState.tags.has(tag.id) ? 'purple' : 'gray'}
-                onClick={() => dispatch({type: 'tags', tagId: tag.id})}
-              >
-                {tag.name}
-                {filtersState.tags.has(tag.id) && (
-                  <XIcon className="ml-2 w-3 h-3" />
-                )}
-              </Tag>
-            </li>
-          ))}
-        </ul>
-        <Button
-          className="mt-6 w-full"
-          variant="blue"
-          size="md"
-          onClick={() => hideBottomSheet()}
-        >
-          Apply
-        </Button>
-      </BottomSheet>
+      <FiltersBottomSheet
+        canReset={size(tasks) !== size(sorted)}
+        state={filtersState}
+        tags={tags}
+        onChange={dispatch}
+      />
       <BottomSheet name="sorting" className="px-4 pb-6 pt-4 text-gray-800">
         <div className="flex justify-between">
           <h2 className="font-bold text-2xl">Sort</h2>
