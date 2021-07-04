@@ -1,12 +1,18 @@
 import React, {useEffect, useLayoutEffect, useRef, useState} from 'react'
-import {useMutation} from 'react-query'
+import {useMutation, useQueryClient} from 'react-query'
 import {akira} from '@lib/akira'
 import {MainView} from '../MainView'
 
 export const NewListView: React.FC = () => {
   const [title, setTitle] = useState('Untitled list')
   const inputRef = useRef<HTMLInputElement | null>(null)
-  const createListMutation = useMutation(akira.list.create)
+  const queryClient = useQueryClient()
+  const createListMutation = useMutation(akira.lists.create, {
+    onSuccess() {
+      queryClient.invalidateQueries(['lists'])
+    }
+  })
+
   const {data: list} = createListMutation
 
   useLayoutEffect(() => {
@@ -21,7 +27,7 @@ export const NewListView: React.FC = () => {
 
   async function onInputBlur() {
     if (createListMutation.isIdle) {
-      createListMutation.mutateAsync(title)
+      createListMutation.mutate(title)
     }
   }
 
