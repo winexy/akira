@@ -2,26 +2,35 @@ import React from 'react'
 import {Swipeable} from '@components/Swipeable/Swipeable'
 import {TrashIcon} from '@heroicons/react/solid'
 import {Link} from 'react-router-dom'
+import isUndefined from 'lodash/fp/isUndefined'
 import clsx from 'clsx'
 import {useMutation, useQueryClient} from 'react-query'
 import {akira} from '@lib/akira'
-import {TaskList} from '../types.d'
+import {useListsQuery} from '../hooks/index'
 
 type Props = {
-  lists: TaskList[]
+  className?: string
   allowRemoval?: boolean
 }
 
-export const TaskLists: React.FC<Props> = ({lists, allowRemoval = true}) => {
+export const TaskLists: React.FC<Props> = ({
+  allowRemoval = true,
+  className
+}) => {
   const queryClient = useQueryClient()
+  const {data: lists} = useListsQuery()
   const removeListMutation = useMutation(akira.lists.remove, {
     onSuccess() {
       queryClient.invalidateQueries(['lists'])
     }
   })
 
+  if (isUndefined(lists)) {
+    return null
+  }
+
   return (
-    <ul className="divide-y divide-gray-100">
+    <ul className={clsx('divide-y divide-gray-100', className)}>
       {lists.map(list => (
         <Swipeable
           Component="li"
