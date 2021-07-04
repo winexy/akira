@@ -176,12 +176,12 @@ export const Menu: React.FC = ({children}) => {
           <MenuItem to="/tasks" Icon={CollectionIcon}>
             Tasks
           </MenuItem>
-          <MenuItem to="/wip" Icon={ViewListIcon}>
+          <MenuItem to="/lists" Icon={ViewListIcon}>
             Lists
             <MenuItem.Button
               Icon={PlusIcon}
               onClick={() => {
-                history.push('/list/new')
+                history.push('/lists/new')
                 closeMenu()
               }}
             />

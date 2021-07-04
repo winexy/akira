@@ -128,7 +128,7 @@ function App() {
             <Route path="/tags">
               <TagsView />
             </Route>
-            <Route path="/list/new">
+            <Route path="/lists/new">
               <NewListView />
             </Route>
           </Switch>
