@@ -81,7 +81,7 @@ function rollbackTaskListMutation(
 export function useTasksQuery() {
   const queryClient = useQueryClient()
 
-  return useQuery(TaskQueryKeyEnum.All, () => akira.tasks.query(), {
+  return useQuery(TaskQueryKeyEnum.All, () => akira.tasks.findAll(), {
     onSuccess(tasks) {
       tasks.forEach(task => queryClient.setQueryData(['task', task.id], task))
     }

@@ -28,7 +28,7 @@ import {EditableHeading} from '@components/EditableHeading'
 export const TaskView: React.FC = () => {
   const {taskId} = useParams<{taskId: string}>()
   const {data: task} = useQuery<TaskT>(['task', taskId], () =>
-    akira.tasks.one(taskId)
+    akira.tasks.findOne(taskId)
   )
 
   const title = task?.title ?? ''
