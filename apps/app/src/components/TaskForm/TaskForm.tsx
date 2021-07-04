@@ -94,7 +94,7 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                 <input
                   ref={inputRef}
                   className="
-                    w-full px-6 py-2 flex items-center
+                    w-full px-6 py-2 pr-12 flex items-center
                     text-2xl font-bold
                     caret-white text-white placeholder-white
                     bg-transparent
