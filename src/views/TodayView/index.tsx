@@ -1,30 +1,19 @@
-import React, {useState, useRef, useReducer} from 'react'
+import React, {useState, useRef} from 'react'
 import isNull from 'lodash/isNull'
-import {
-  CheckIcon,
-  PlusIcon,
-  RefreshIcon,
-  SortAscendingIcon,
-  XIcon
-} from '@heroicons/react/solid'
+import {PlusIcon, SortAscendingIcon} from '@heroicons/react/solid'
 import {TaskForm, TaskFormRef} from '@components/TaskForm/TaskForm'
 import {Tasks} from '@components/Tasks'
 import size from 'lodash/fp/size'
 import filter from 'lodash/fp/filter'
 
 import {$isMenuOpen} from '@store/menu'
-import values from 'lodash/fp/values'
 import clsx from 'clsx'
 import {useStore} from 'effector-react'
 import format from 'date-fns/format'
 import {MainView} from '@views/MainView'
-import {showBottomSheet, hideBottomSheet} from '@store/bottom-sheet/index'
-import {BottomSheet} from '@components/BottomSheet/BottomSheet'
-import {Checkbox} from '@components/Checkbox/Checkbox'
+import {showBottomSheet} from '@store/bottom-sheet/index'
 import {FilterIcon} from '@heroicons/react/outline'
 import {sortTasks, SortEnum} from '@modules/tasks/utils'
-import {exhaustiveCheck} from '@/utils'
-import {Button} from '@components/Button'
 import {useQuery, useQueryClient, useMutation} from 'react-query'
 import {akira} from '@lib/akira'
 import {useFirebaseAuth} from '@/firebase'
@@ -34,23 +23,7 @@ import {TaskQueryKeyEnum} from '@modules/tasks/config/index'
 import {useTagsQuery} from '@modules/tags/hooks'
 import {filterTasks, useTaskFilters} from '@modules/tasks/filters'
 import {FiltersBottomSheet} from '@modules/tasks/filters/FiltersBottomSheet'
-
-function matchSortTypeTitle(sortType: SortEnum) {
-  switch (sortType) {
-    case SortEnum.CompletedASC:
-      return 'Completed first'
-    case SortEnum.CompletedDESC:
-      return 'Completed last'
-    case SortEnum.ImportantASC:
-      return 'Important first'
-    case SortEnum.ImportantDESC:
-      return 'Important last'
-    default:
-      return exhaustiveCheck(sortType)
-  }
-}
-
-const sortTypes = values(SortEnum)
+import {SortingBottomSheet} from '@/modules/tasks/sorting/SortingBottomSheet'
 
 export function TodayView() {
   const formRef = useRef<TaskFormRef>(null)
@@ -140,69 +113,7 @@ export function TodayView() {
         tags={tags}
         onChange={dispatch}
       />
-      <BottomSheet name="sorting" className="px-4 pb-6 pt-4 text-gray-800">
-        <div className="flex justify-between">
-          <h2 className="font-bold text-2xl">Sort</h2>
-          {sortType && (
-            <Button
-              variant="outline"
-              className="text-sm"
-              onClick={() => {
-                setSortType(null)
-                localStorage.removeItem('sort-selection')
-                hideBottomSheet()
-              }}
-            >
-              <RefreshIcon className="w-4 h-4 mr-2" />
-              reset
-            </Button>
-          )}
-        </div>
-        <ul className="mt-4 space-y-1">
-          {sortTypes.map(type => (
-            <li className="" key={type}>
-              <label
-                className="
-                  px-3 py-2 
-                  flex items-center 
-                  font-semibold text-lg 
-                  rounded select-none
-                  transition ease-in duration-75
-                  active:bg-gray-50
-                "
-              >
-                <input
-                  type="radio"
-                  className="sr-only"
-                  name="sort-type"
-                  checked={type === sortType}
-                  onChange={checked => {
-                    if (checked) {
-                      setSortType(type)
-                      localStorage.setItem('sort-selection', type)
-                    } else {
-                      setSortType(null)
-                      localStorage.removeItem('sort-selection')
-                    }
-                    hideBottomSheet()
-                  }}
-                />
-                <CheckIcon
-                  className={clsx(
-                    'mr-2 w-6 h-6 ',
-                    type === sortType ? 'text-blue-500' : 'text-gray-200'
-                  )}
-                />
-                <span
-                  className={clsx('pl-2', {'text-blue-500': type === sortType})}
-                >
-                  {matchSortTypeTitle(type)}
-                </span>
-              </label>
-            </li>
-          ))}
-        </ul>
-      </BottomSheet>
+      <SortingBottomSheet sortType={sortType} onChange={setSortType} />
       <section className="mt-4 pb-24">
         <Tasks isPending={isLoading} tasks={sorted} />
       </section>
