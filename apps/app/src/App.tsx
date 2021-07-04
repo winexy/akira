@@ -12,6 +12,7 @@ import {useFirebaseAuth} from './firebase/Provider'
 import {TasksView} from './views/TasksView'
 import {TagsView} from './modules/tags/views'
 import {NewListView} from './views/NewListView'
+import {ListsView} from './views/ListsView'
 
 const dndConfig = {
   enableMouseEvents: true
@@ -130,6 +131,9 @@ function App() {
             </Route>
             <Route path="/lists/new">
               <NewListView />
+            </Route>
+            <Route path="/lists">
+              <ListsView />
             </Route>
           </Switch>
         </Menu>
