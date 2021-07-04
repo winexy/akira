@@ -1,15 +1,16 @@
 import React from 'react'
 import clsx from 'clsx'
-import {useQuery, useMutation, useQueryClient} from 'react-query'
+import {useMutation, useQueryClient} from 'react-query'
 import {Link} from 'react-router-dom'
 import {akira} from '@lib/akira'
 import {Swipeable} from '@components/Swipeable/Swipeable'
 import {TrashIcon} from '@heroicons/react/solid'
+import {useListsQuery} from '@modules/lists/hooks'
 import {MainView} from '../MainView'
 
 export const ListsView: React.FC = () => {
   const queryClient = useQueryClient()
-  const {data: lists} = useQuery('lists', akira.lists.findAll)
+  const {data: lists} = useListsQuery()
   const removeListMutation = useMutation(akira.lists.remove, {
     onSuccess() {
       queryClient.invalidateQueries(['lists'])
