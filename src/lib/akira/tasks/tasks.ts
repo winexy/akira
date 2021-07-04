@@ -2,7 +2,7 @@
 import {AxiosInstance} from 'axios'
 import qs from 'qs'
 import get from 'lodash/fp/get'
-import {TaskT, CreateTaskDto} from '@store/tasks'
+import {TaskT} from '@store/tasks'
 import {TaskIdT, TaskPatchT} from '@store/tasks/types'
 
 type IntBool = 1 | 0
@@ -20,8 +20,8 @@ export function tasks(api: AxiosInstance) {
     findAll(params: QueryParams = {}): Promise<TaskT[]> {
       return api.get(`tasks?${qs.stringify(params)}`).then(unwrap)
     },
-    create(data: CreateTaskDto): Promise<TaskT> {
-      return api.post('tasks', data).then(unwrap)
+    create(title: string): Promise<TaskT> {
+      return api.post('tasks', {title}).then(unwrap)
     },
     findOne(id: TaskIdT): Promise<TaskT> {
       return api.get(`tasks/${id}`).then(unwrap)

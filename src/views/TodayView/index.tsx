@@ -16,7 +16,6 @@ import {FilterIcon} from '@heroicons/react/outline'
 import {sortTasks, SortEnum} from '@modules/tasks/utils'
 import {useQuery, useQueryClient, useMutation} from 'react-query'
 import {akira} from '@lib/akira'
-import {useFirebaseAuth} from '@/firebase'
 import {onMyDayFetch} from '@modules/tasks/store'
 import {TaskT} from '@store/tasks'
 import {TaskQueryKeyEnum} from '@modules/tasks/config/index'
@@ -33,19 +32,11 @@ export function TodayView() {
   const [sortType, setSortType] = useState<SortEnum | null>(() => {
     return localStorage.getItem('sort-selection') as SortEnum
   })
-  const {user} = useFirebaseAuth()
   const [filtersState, dispatch] = useTaskFilters()
   const queryClient = useQueryClient()
   const createTaskMutation = useMutation(
     (title: string) => {
-      if (isNull(user)) {
-        return Promise.reject(new Error('unauthorized'))
-      }
-
-      return akira.tasks.create({
-        author_uid: user.uid,
-        title
-      })
+      return akira.tasks.create(title)
     },
     {
       onSuccess() {
