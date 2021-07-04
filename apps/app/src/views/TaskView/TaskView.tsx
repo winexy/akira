@@ -24,6 +24,7 @@ import {TagsManager, TaskTag} from '@modules/tags/components'
 import {usePatchTaskMutation} from '@modules/tasks/hooks'
 import {WIP, Tag} from '@components/Tag/Tag'
 import {EditableHeading} from '@components/EditableHeading'
+import {TaskLists} from '@/modules/lists/components/TaskLists'
 
 export const TaskView: React.FC = () => {
   const {taskId} = useParams<{taskId: string}>()
@@ -110,7 +111,12 @@ export const TaskView: React.FC = () => {
         />
       </section>
       <TaskActionList className="mt-4">
-        <TaskActionList.Item Icon={PlusIcon}>Add to list</TaskActionList.Item>
+        <TaskActionList.Item
+          Icon={PlusIcon}
+          onClick={() => showBottomSheet('lists')}
+        >
+          Add to list
+        </TaskActionList.Item>
         <TaskActionList.Item Icon={CalendarIcon}>
           Add due date <WIP className="ml-auto" />
         </TaskActionList.Item>
@@ -124,7 +130,10 @@ export const TaskView: React.FC = () => {
         isCompleted={task.is_completed}
         isImportant={task.is_important}
       />
-      <BottomSheet name="zxc" />
+      <BottomSheet name="lists" className="py-4">
+        <h2 className="px-4 text-xl font-semibold">Lists</h2>
+        <TaskLists className="mt-2" allowRemoval={false} />
+      </BottomSheet>
     </MainView>
   )
 }
