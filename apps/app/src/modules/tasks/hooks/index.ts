@@ -107,7 +107,7 @@ export function usePatchTaskMutation(taskId: TaskIdT) {
 export function useToggleCompletedMutation() {
   const queryClient = useQueryClient()
 
-  return useMutation(akira.tasks.toggleCompleted, {
+  return useMutation(akira.tasks.toggleCompletness, {
     onMutate(taskId) {
       const [prevTask, newTask] = writeTaskCache(taskId, queryClient, draft => {
         draft.is_completed = !draft.is_completed
@@ -146,7 +146,7 @@ export function useToggleCompletedMutation() {
 export function useToggleImportantMutation() {
   const queryClient = useQueryClient()
 
-  return useMutation(akira.tasks.toggleImportant, {
+  return useMutation(akira.tasks.toggleImportance, {
     onMutate(taskId) {
       const [prevTask, newTask] = writeTaskCache(taskId, queryClient, draft => {
         draft.is_important = !draft.is_important

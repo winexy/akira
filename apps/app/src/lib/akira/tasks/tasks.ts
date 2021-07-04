@@ -26,10 +26,10 @@ export function tasks(api: AxiosInstance) {
     findOne(id: TaskIdT): Promise<TaskT> {
       return api.get(`tasks/${id}`).then(unwrap)
     },
-    toggleCompleted(id: TaskIdT): Promise<TaskT> {
+    toggleCompletness(id: TaskIdT): Promise<TaskT> {
       return api.patch(`tasks/${id}/complete/toggle`).then(unwrap)
     },
-    toggleImportant(id: TaskIdT): Promise<TaskT> {
+    toggleImportance(id: TaskIdT): Promise<TaskT> {
       return api.patch(`tasks/${id}/important/toggle`).then(unwrap)
     },
     delete(id: TaskIdT): Promise<true> {
