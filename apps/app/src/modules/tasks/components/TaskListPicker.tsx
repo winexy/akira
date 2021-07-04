@@ -58,7 +58,7 @@ export const TaskListPicker: React.FC<Props> = ({taskId, activeListId}) => {
           ))}
         </ul>
       )}
-      <div className="sticky bottom-0 bg-white px-6 pt-4 pb-6 border-t border-gray-100">
+      <div className="sticky bottom-0 bg-white px-4 pt-4 pb-6 border-t border-gray-100">
         <Link to="/lists/new">
           <Button size="md" className="w-full">
             Create new list <ChevronRightIcon className="ml-auto w-6 h-6" />
