@@ -18,7 +18,7 @@ type SwipeableProps = {
   Component: React.ElementType
   before?: React.ReactChild
   after?: React.ReactChild
-  className: ClassValue
+  className?: ClassValue
   children: React.ReactChild
   style?: CSSProperties
 }
