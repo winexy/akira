@@ -1,12 +1,6 @@
 import {AxiosInstance} from 'axios'
+import {TaskList} from '@modules/lists/types.d'
 import get from 'lodash/fp/get'
-
-type TaskList = {
-  id: number
-  title: string
-  // eslint-disable-next-line
-  author_uid: string
-}
 
 export function lists(api: AxiosInstance) {
   const unwrap = get('data')
