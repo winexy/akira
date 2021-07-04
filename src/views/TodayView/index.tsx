@@ -69,7 +69,7 @@ export function TodayView() {
         return Promise.reject(new Error('unauthorized'))
       }
 
-      return akira.tasks.createTask({
+      return akira.tasks.create({
         author_uid: user.uid,
         title
       })
