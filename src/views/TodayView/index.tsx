@@ -31,9 +31,9 @@ import {useFirebaseAuth} from '@/firebase'
 import {onMyDayFetch} from '@modules/tasks/store'
 import {TaskT} from '@store/tasks'
 import {Tag} from '@components/Tag/Tag'
-import produce from 'immer'
 import {TaskQueryKeyEnum} from '@modules/tasks/config/index'
 import {useTagsQuery} from '@modules/tags/hooks'
+import {filterTasks, useTaskFilters} from '@modules/tasks/filters'
 
 function matchSortTypeTitle(sortType: SortEnum) {
   switch (sortType) {
@@ -57,11 +57,11 @@ export function TodayView() {
   const [title, setTitle] = useState('')
   const [isAddButtonVisible, setIsAddButtonVisible] = useState(true)
   const isMenuOpen = useStore($isMenuOpen)
-  const [filters, setFilters] = useState<string[]>([])
   const [sortType, setSortType] = useState<SortEnum | null>(() => {
     return localStorage.getItem('sort-selection') as SortEnum
   })
   const {user} = useFirebaseAuth()
+  const [filtersState, dispatch] = useTaskFilters()
   const queryClient = useQueryClient()
   const createTaskMutation = useMutation(
     (title: string) => {
@@ -96,47 +96,7 @@ export function TodayView() {
 
   const {data: tags = []} = useTagsQuery()
 
-  const [selectedTags, dispatch] = useReducer(
-    (state: Set<number>, value: number) => {
-      if (value === -1) {
-        return new Set<number>()
-      }
-
-      return produce(state, draft => {
-        if (state.has(value)) {
-          draft.delete(value)
-        } else {
-          draft.add(value)
-        }
-      })
-    },
-    new Set<number>()
-  )
-
-  const filtered = tasks.filter(task => {
-    if (filters.includes('Completed') && !task.is_completed) {
-      return false
-    }
-
-    if (filters.includes('Important') && !task.is_important) {
-      return false
-    }
-
-    if (filters.includes('Not Completed') && task.is_completed) {
-      return false
-    }
-
-    if (
-      selectedTags.size > 0 &&
-      !task.tags.some(tag => selectedTags.has(tag.id))
-    ) {
-      return false
-    }
-
-    return true
-  })
-
-  const sorted = sortTasks(filtered, sortType)
+  const sorted = sortTasks(filterTasks(tasks, filtersState), sortType)
   const completedTasksCount = size(filter({is_completed: true}, sorted))
 
   const today = format(new Date(), 'eeee, do MMMM')
@@ -182,8 +142,7 @@ export function TodayView() {
               variant="outline"
               className="text-sm"
               onClick={() => {
-                setFilters([])
-                dispatch(-1)
+                dispatch({type: 'reset'})
                 hideBottomSheet()
               }}
             >
@@ -193,10 +152,11 @@ export function TodayView() {
           )}
         </h2>
         <ul className="mt-4 space-y-1">
-          {['Completed', 'Not Completed', 'Important'].map(value => (
-            <li className="" key={value}>
-              <label
-                className="
+          {(['completed', 'notCompleted', 'important'] as const).map(
+            filterType => (
+              <li className="" key={filterType}>
+                <label
+                  className="
                   px-3 py-2 
                   flex items-center 
                   font-semibold text-lg 
@@ -204,32 +164,31 @@ export function TodayView() {
                   transition ease-in duration-75
                   active:bg-gray-100
                 "
-              >
-                <Checkbox
-                  className="mr-3"
-                  isChecked={filters.includes(value)}
-                  onChange={checked => {
-                    if (!checked) {
-                      setFilters(filters.filter(v => v !== value))
-                    } else {
-                      setFilters([...filters, value])
-                    }
-                  }}
-                />
-                {value}
-              </label>
-            </li>
-          ))}
+                >
+                  <Checkbox
+                    className="mr-3"
+                    isChecked={filtersState[filterType]}
+                    onChange={() => {
+                      dispatch({type: filterType})
+                    }}
+                  />
+                  {filterType}
+                </label>
+              </li>
+            )
+          )}
         </ul>
         <ul className="mt-2 flex flex-wrap space-x-2">
           {tags.map(tag => (
             <li key={tag.id}>
               <Tag
-                variant={selectedTags.has(tag.id) ? 'purple' : 'gray'}
-                onClick={() => dispatch(tag.id)}
+                variant={filtersState.tags.has(tag.id) ? 'purple' : 'gray'}
+                onClick={() => dispatch({type: 'tags', tagId: tag.id})}
               >
                 {tag.name}
-                {selectedTags.has(tag.id) && <XIcon className="ml-2 w-3 h-3" />}
+                {filtersState.tags.has(tag.id) && (
+                  <XIcon className="ml-2 w-3 h-3" />
+                )}
               </Tag>
             </li>
           ))}
