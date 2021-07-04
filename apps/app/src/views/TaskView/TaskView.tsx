@@ -31,8 +31,6 @@ export const TaskView: React.FC = () => {
     akira.tasks.findOne(taskId)
   )
 
-  const title = task?.title ?? ''
-
   const patchTaskMutation = usePatchTaskMutation(taskId)
 
   if (isNil(task)) {
