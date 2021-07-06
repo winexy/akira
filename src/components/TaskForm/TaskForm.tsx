@@ -8,13 +8,11 @@ import React, {
   useEffect
 } from 'react'
 import isEmpty from 'lodash/fp/isEmpty'
-import {ChevronLeftIcon, XCircleIcon, XIcon} from '@heroicons/react/solid'
+import {ChevronLeftIcon, XCircleIcon} from '@heroicons/react/solid'
 import clsx from 'clsx'
 
 type TaskFormProps = {
-  title: string
-  onTitleChange(title: string): void
-  onSubmit(): void
+  onSubmit(title: string): void
   onVisibilityChange(isVisible: boolean): void
 }
 
@@ -23,7 +21,8 @@ export type TaskFormRef = {
 }
 
 export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
-  ({title, onTitleChange, onSubmit, onVisibilityChange}, ref) => {
+  ({onSubmit, onVisibilityChange}, ref) => {
+    const [title, setTitle] = useState('')
     const inputRef = useRef<HTMLInputElement>(null)
     const backdropRef = useRef<HTMLDivElement>(null)
     const [isVisible, setIsVisible] = useState(false)
@@ -49,11 +48,12 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
         return
       }
 
-      onSubmit()
+      onSubmit(title)
+      setTitle('')
     }
 
     function onReset() {
-      onTitleChange('')
+      setTitle('')
 
       if (inputRef.current) {
         inputRef.current.focus()
@@ -106,7 +106,7 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                   type="text"
                   value={title}
                   onInput={e => {
-                    onTitleChange((e.target as HTMLInputElement).value)
+                    setTitle((e.target as HTMLInputElement).value)
                   }}
                   enterKeyHint="send"
                 />
@@ -157,7 +157,7 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                   "
                   onClick={() => {
                     setIsVisible(false)
-                    onSubmit()
+                    onSubmit(title)
                   }}
                 >
                   Submit
