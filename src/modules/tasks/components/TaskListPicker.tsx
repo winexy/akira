@@ -58,7 +58,7 @@ export const TaskListPicker: React.FC<Props> = ({taskId, activeListId}) => {
         <h2 className="text-xl font-semibold">Add to list</h2>
       </div>
       <Match>
-        <Match.Case when={isLoading || patchTaskMutation.isLoading}>
+        <Match.Case when={isLoading}>
           <div className="flex items-center justify-center flex-col py-12">
             <Spin className="text-gray-100 w-8 h-8" />
             <p className="mt-4 text-xl font-semibold text-gray-400">
@@ -95,9 +95,19 @@ export const TaskListPicker: React.FC<Props> = ({taskId, activeListId}) => {
                   disabled={list.id === activeListId}
                 >
                   {list.title}
-                  {list.id === activeListId && (
-                    <CheckIcon className="ml-auto w-5 h-5" />
-                  )}
+                  <Match>
+                    <Match.Case
+                      when={
+                        patchTaskMutation.isLoading &&
+                        patchTaskMutation.variables?.list_id === list.id
+                      }
+                    >
+                      <Spin className="ml-auto text-gray-200 w-5 h-5" />
+                    </Match.Case>
+                    <Match.Case when={list.id === activeListId}>
+                      <CheckIcon className="ml-auto w-5 h-5" />
+                    </Match.Case>
+                  </Match>
                 </button>
               </li>
             ))}
