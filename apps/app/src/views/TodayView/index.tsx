@@ -1,14 +1,11 @@
-import React, {useState, useRef} from 'react'
-import isNull from 'lodash/isNull'
-import {PlusIcon, SortAscendingIcon} from '@heroicons/react/solid'
-import {TaskForm, TaskFormRef} from '@components/TaskForm/TaskForm'
+import React, {useState} from 'react'
+import {SortAscendingIcon} from '@heroicons/react/solid'
+import {TaskForm} from '@components/TaskForm/TaskForm'
 import {Tasks} from '@components/Tasks'
 import size from 'lodash/fp/size'
 import filter from 'lodash/fp/filter'
 
-import {$isMenuOpen} from '@store/menu'
 import clsx from 'clsx'
-import {useStore} from 'effector-react'
 import format from 'date-fns/format'
 import {MainView} from '@views/MainView'
 import {showBottomSheet} from '@store/bottom-sheet/index'
@@ -23,12 +20,13 @@ import {useTagsQuery} from '@modules/tags/hooks'
 import {filterTasks, useTaskFilters} from '@modules/tasks/filters'
 import {FiltersBottomSheet} from '@modules/tasks/filters/FiltersBottomSheet'
 import {SortingBottomSheet} from '@/modules/tasks/sorting/SortingBottomSheet'
+import {
+  AddTaskButton,
+  useAddTaskControl
+} from '@/modules/tasks/components/AddTaskButton'
 
 export function TodayView() {
-  const formRef = useRef<TaskFormRef>(null)
-  const [title, setTitle] = useState('')
-  const [isAddButtonVisible, setIsAddButtonVisible] = useState(true)
-  const isMenuOpen = useStore($isMenuOpen)
+  const addTaskControl = useAddTaskControl()
   const [sortType, setSortType] = useState<SortEnum | null>(() => {
     return localStorage.getItem('sort-selection') as SortEnum
   })
@@ -65,29 +63,12 @@ export function TodayView() {
 
   const today = format(new Date(), 'eeee, do MMMM')
 
-  function onSubmit() {
-    createTaskMutation.mutate(title)
-    setTitle('')
-  }
-
-  function onAddItemIntent() {
-    if (!isNull(formRef.current)) {
-      formRef.current.show()
-    }
-  }
-
-  function onTaskFormVisiblityChange(isVisible: boolean) {
-    setIsAddButtonVisible(!isVisible)
-  }
-
   return (
     <MainView className="flex-1">
       <TaskForm
-        ref={formRef}
-        title={title}
-        onTitleChange={setTitle}
-        onSubmit={onSubmit}
-        onVisibilityChange={onTaskFormVisiblityChange}
+        ref={addTaskControl.formRef}
+        onSubmit={createTaskMutation.mutate}
+        onVisibilityChange={addTaskControl.onFormVisiblityChange}
       />
       <div className="flex justify-between items-center px-4 text-gray-600">
         <div>
@@ -146,28 +127,9 @@ export function TodayView() {
           {/* <WIP className="ml-2" /> */}
         </button>
       </div>
-      {isAddButtonVisible && (
+      {addTaskControl.isVisible && (
         <div className="z-20 fixed bottom-0 right-0 p-4">
-          <button
-            className={clsx(
-              `
-                flex items-center justify-center
-                p-1 w-12 h-12 box-content
-                bg-blue-500
-                text-white rounded-full
-                shadow-2xl transform: ;
-                transition ease-in duration-100 
-                active:bg-blue-600
-                active:scale-95
-                active:shadow-md
-                focus:outline-none
-              `,
-              isMenuOpen ? 'rounded-2xl' : 'rounded-md'
-            )}
-            onClick={onAddItemIntent}
-          >
-            <PlusIcon className="w-8 h-8" />
-          </button>
+          <AddTaskButton onClick={addTaskControl.onAddIntent} />
         </div>
       )}
     </MainView>
