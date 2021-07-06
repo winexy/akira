@@ -3,6 +3,7 @@ import {useStore} from 'effector-react'
 import get from 'lodash/fp/get'
 import clsx from 'clsx'
 import {CSSTransition} from 'react-transition-group'
+import {ErrorBoundary, FallbackProps} from 'react-error-boundary'
 import {$activeBottomSheet, hideBottomSheet} from '@store/bottom-sheet'
 import {
   disableBodyScroll,
@@ -10,12 +11,34 @@ import {
   clearAllBodyScrollLocks
 } from 'body-scroll-lock'
 import './BottomSheet.css'
+import {ExclamationCircleIcon} from '@heroicons/react/solid'
+import {Button} from '@components/Button'
 
 const extractTouch = get('changedTouches.0.clientY')
 
 type Props = {
   name: string
   className?: string
+}
+
+function Fallback({error}: FallbackProps) {
+  return (
+    <div className="py-8 px-8 flex justify-center items-center flex-col">
+      <ExclamationCircleIcon className="w-16 h-16 text-red-500" />
+      <p className="mt-4 text-xl font-semibold">Something went wrong...</p>
+      {import.meta.env.DEV && (
+        <p className="mt-4 text-gray-700">{error.message}</p>
+      )}
+      <Button
+        variant="red"
+        size="md"
+        className="mt-4 w-full"
+        onClick={() => hideBottomSheet()}
+      >
+        Close
+      </Button>
+    </div>
+  )
 }
 
 export const BottomSheet: React.FC<Props> = ({name, children, className}) => {
@@ -139,7 +162,9 @@ export const BottomSheet: React.FC<Props> = ({name, children, className}) => {
                 className
               )}
             >
-              {children}
+              <ErrorBoundary FallbackComponent={Fallback}>
+                {children}
+              </ErrorBoundary>
             </div>
           </div>
         </div>
