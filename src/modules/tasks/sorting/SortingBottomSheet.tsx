@@ -1,5 +1,5 @@
 import {exhaustiveCheck} from '@/utils'
-import React from 'react'
+import React, {useState} from 'react'
 import values from 'lodash/fp/values'
 import {BottomSheet} from '@components/BottomSheet/BottomSheet'
 import {Button} from '@components/Button'
@@ -7,6 +7,8 @@ import {hideBottomSheet} from '@store/bottom-sheet'
 import {CheckIcon, RefreshIcon} from '@heroicons/react/solid'
 import clsx from 'clsx'
 import isNull from 'lodash/fp/isNull'
+import {sortTasks} from '@modules/tasks/utils'
+import {TaskT} from '@store/tasks'
 import {SortEnum} from '../utils/sorting'
 
 function matchSortTypeTitle(sortType: SortEnum) {
@@ -29,6 +31,18 @@ const sortTypes = values(SortEnum)
 type Props = {
   sortType: SortEnum | null
   onChange(sortType: SortEnum | null): void
+}
+
+export function useTaskSorting() {
+  const [sortType, setSortType] = useState<SortEnum | null>(() => {
+    return localStorage.getItem('sort-selection') as SortEnum
+  })
+
+  function sort(tasks: TaskT[]) {
+    return sortTasks(tasks, sortType)
+  }
+
+  return {sortType, setSortType, sort}
 }
 
 export const SortingBottomSheet: React.FC<Props> = ({sortType, onChange}) => {

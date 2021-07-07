@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {SortAscendingIcon} from '@heroicons/react/solid'
 import {TaskForm} from '@components/TaskForm/TaskForm'
 import {Tasks} from '@components/Tasks'
@@ -10,7 +10,6 @@ import format from 'date-fns/format'
 import {MainView} from '@views/MainView'
 import {showBottomSheet} from '@store/bottom-sheet/index'
 import {FilterIcon} from '@heroicons/react/outline'
-import {sortTasks, SortEnum} from '@modules/tasks/utils'
 import {useQuery, useQueryClient, useMutation} from 'react-query'
 import {akira} from '@lib/akira'
 import {onMyDayFetch} from '@modules/tasks/store'
@@ -19,7 +18,10 @@ import {TaskQueryKeyEnum} from '@modules/tasks/config/index'
 import {useTagsQuery} from '@modules/tags/hooks'
 import {filterTasks, useTaskFilters} from '@modules/tasks/filters'
 import {FiltersBottomSheet} from '@modules/tasks/filters/FiltersBottomSheet'
-import {SortingBottomSheet} from '@/modules/tasks/sorting/SortingBottomSheet'
+import {
+  SortingBottomSheet,
+  useTaskSorting
+} from '@modules/tasks/sorting/SortingBottomSheet'
 import {
   AddTaskButton,
   useAddTaskControl
@@ -27,10 +29,8 @@ import {
 
 export function TodayView() {
   const addTaskControl = useAddTaskControl()
-  const [sortType, setSortType] = useState<SortEnum | null>(() => {
-    return localStorage.getItem('sort-selection') as SortEnum
-  })
-  const [filtersState, dispatch] = useTaskFilters()
+  const {sortType, setSortType, sort} = useTaskSorting()
+  const [filtersState, updateFilters] = useTaskFilters()
   const queryClient = useQueryClient()
   const createTaskMutation = useMutation(
     (title: string) => {
@@ -58,7 +58,7 @@ export function TodayView() {
 
   const {data: tags = []} = useTagsQuery()
 
-  const sorted = sortTasks(filterTasks(tasks, filtersState), sortType)
+  const sorted = sort(filterTasks(tasks, filtersState))
   const completedTasksCount = size(filter({is_completed: true}, sorted))
 
   const today = format(new Date(), 'eeee, do MMMM')
@@ -83,7 +83,7 @@ export function TodayView() {
         canReset={size(tasks) !== size(sorted)}
         state={filtersState}
         tags={tags}
-        onChange={dispatch}
+        onChange={updateFilters}
       />
       <SortingBottomSheet sortType={sortType} onChange={setSortType} />
       <section className="mt-4 pb-24">
