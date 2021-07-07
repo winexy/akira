@@ -182,29 +182,36 @@ export function useToggleImportantMutation() {
   })
 }
 
+function removeTask(tasks: TaskT[], taskId: TaskIdT) {
+  return produce(tasks, draft => {
+    const index = findIndex({id: taskId}, tasks)
+
+    if (index !== -1) {
+      draft.splice(index, 1)
+    }
+  })
+}
+
+function removeTasksFromCache(
+  queryClient: QueryClient,
+  queryKey: TaskQueryKeyEnum,
+  taskId: TaskIdT
+) {
+  const tasks = queryClient.getQueryData<TaskT[]>(queryKey)
+
+  if (tasks) {
+    queryClient.setQueryData(queryKey, removeTask(tasks, taskId))
+  }
+}
+
 export function useRemoveTaskMutation() {
   const queryClient = useQueryClient()
 
   return useMutation(akira.tasks.delete, {
     onSuccess(_, taskId) {
       queryClient.removeQueries(['task', taskId])
-
-      const prevTasks = queryClient.getQueryData<TaskT[]>(
-        TaskQueryKeyEnum.MyDay
-      )
-
-      if (prevTasks) {
-        queryClient.setQueryData(
-          TaskQueryKeyEnum.MyDay,
-          produce(prevTasks, draft => {
-            const index = findIndex({id: taskId}, prevTasks)
-
-            if (index !== -1) {
-              draft.splice(index, 1)
-            }
-          })
-        )
-      }
+      removeTasksFromCache(queryClient, TaskQueryKeyEnum.MyDay, taskId)
+      removeTasksFromCache(queryClient, TaskQueryKeyEnum.All, taskId)
     }
   })
 }
