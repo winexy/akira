@@ -35,7 +35,7 @@ export function sortTasks(tasks: TaskT[], sortType: SortEnum | null) {
       case SortEnum.CompletedDESC:
         return compareBy('is_completed', taskA, taskB) * -1
       default: {
-        return 0
+        return compareByCreatedAt(taskA, taskB)
       }
     }
   })
