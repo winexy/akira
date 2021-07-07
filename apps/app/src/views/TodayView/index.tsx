@@ -1,5 +1,4 @@
 import React from 'react'
-import {SortAscendingIcon} from '@heroicons/react/solid'
 import {TaskForm} from '@components/TaskForm/TaskForm'
 import {Tasks} from '@components/Tasks'
 import size from 'lodash/fp/size'
@@ -32,7 +31,7 @@ export function TodayView() {
   const queryClient = useQueryClient()
   const createTaskMutation = useMutation(
     (title: string) => {
-      return akira.tasks.create(title)
+      return akira.tasks.createForMyDay(title)
     },
     {
       onSuccess() {
