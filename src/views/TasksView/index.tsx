@@ -4,7 +4,7 @@ import {Tasks} from '@components/Tasks'
 import {useTasksQuery} from '@modules/tasks/hooks'
 import {TaskForm} from '@components/TaskForm/TaskForm'
 import {akira} from '@lib/akira'
-import {useMutation} from 'react-query'
+import {useMutation, useQueryClient} from 'react-query'
 import {FiltersBottomSheet} from '@modules/tasks/filters/FiltersBottomSheet'
 import {
   SortingBottomSheet,
@@ -18,6 +18,7 @@ import {useTaskFilters, filterTasks} from '@modules/tasks/filters'
 import size from 'lodash/fp/size'
 import {useTagsQuery} from '@modules/tags/hooks'
 import {TaskListOperations} from '@modules/tasks/components/TaskListOperations'
+import {TaskQueryKeyEnum} from '@modules/tasks/config'
 
 export const TasksView: React.FC = () => {
   const {data: tasks = [], isLoading} = useTasksQuery()
@@ -25,10 +26,18 @@ export const TasksView: React.FC = () => {
   const addTaskControl = useAddTaskControl()
   const [filtersState, updateFilters] = useTaskFilters()
   const {sortType, setSortType, sort} = useTaskSorting()
+  const queryClient = useQueryClient()
 
-  const createTaskMutation = useMutation((title: string) => {
-    return akira.tasks.create(title)
-  })
+  const createTaskMutation = useMutation(
+    (title: string) => {
+      return akira.tasks.create(title)
+    },
+    {
+      onSuccess(task) {
+        queryClient.setQueryData(TaskQueryKeyEnum.All, [task, ...tasks])
+      }
+    }
+  )
 
   const sorted = sort(filterTasks(tasks, filtersState))
 
