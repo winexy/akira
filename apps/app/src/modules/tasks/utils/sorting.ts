@@ -1,5 +1,5 @@
-import {TaskIdT, TaskT} from '@store/tasks/types'
-import compareAsc from 'date-fns/compareAsc'
+import {TaskT} from '@store/tasks/types'
+import compareDesc from 'date-fns/compareDesc'
 import parseISO from 'date-fns/parseISO'
 
 export enum SortEnum {
@@ -20,7 +20,7 @@ function compareBy(
 }
 
 function compareByCreatedAt(taskA: TaskT, taskB: TaskT) {
-  return compareAsc(parseISO(taskA.created_at), parseISO(taskB.created_at))
+  return compareDesc(parseISO(taskA.created_at), parseISO(taskB.created_at))
 }
 
 export function sortTasks(tasks: TaskT[], sortType: SortEnum | null) {
@@ -35,7 +35,7 @@ export function sortTasks(tasks: TaskT[], sortType: SortEnum | null) {
       case SortEnum.CompletedDESC:
         return compareBy('is_completed', taskA, taskB) * -1
       default: {
-        return compareByCreatedAt(taskA, taskB)
+        return 0
       }
     }
   })
