@@ -22,6 +22,7 @@ import {TagsView} from './modules/tags/views'
 import {NewListView} from './views/NewListView'
 import {ListsView} from './views/ListsView'
 import {AkiraLoader} from './components/AkiraLoader'
+import {TaskListView} from './views/TaskListView'
 
 const dndConfig = {
   enableMouseEvents: true
@@ -101,6 +102,9 @@ function App() {
               </Route>
               <Route path="/lists/new">
                 <NewListView />
+              </Route>
+              <Route path="/lists/:listId">
+                <TaskListView />
               </Route>
               <Route path="/lists">
                 <ListsView />
