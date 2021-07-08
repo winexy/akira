@@ -9,7 +9,7 @@ export const NewListView: React.FC = () => {
   const queryClient = useQueryClient()
   const createListMutation = useMutation(akira.lists.create, {
     onSuccess() {
-      queryClient.invalidateQueries(['lists'])
+      queryClient.invalidateQueries('lists')
     }
   })
 

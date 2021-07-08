@@ -21,7 +21,7 @@ export const TaskLists: React.FC<Props> = ({
   const {data: lists} = useListsQuery()
   const removeListMutation = useMutation(akira.lists.remove, {
     onSuccess() {
-      queryClient.invalidateQueries(['lists'])
+      queryClient.invalidateQueries('lists')
     }
   })
 
