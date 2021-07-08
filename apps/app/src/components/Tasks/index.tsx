@@ -6,20 +6,26 @@ import isEmpty from 'lodash/fp/isEmpty'
 import times from 'lodash/fp/times'
 import {InboxIcon} from '@heroicons/react/solid'
 import noop from 'lodash/fp/noop'
-import {TaskQueryKeyEnum} from '@modules/tasks/config/index'
 import {
   useToggleCompletedMutation,
   useToggleImportantMutation,
   useRemoveTaskMutation
 } from '@modules/tasks/hooks'
+import clsx from 'clsx'
 
 type Props = {
   isPending: boolean
   tasks: TaskT[]
   noTasksSlot?: ReactNode
+  className?: string
 }
 
-export const Tasks: React.FC<Props> = ({isPending, tasks, noTasksSlot}) => {
+export const Tasks: React.FC<Props> = ({
+  isPending,
+  tasks,
+  noTasksSlot,
+  className
+}) => {
   const toggleTaskCompleteMutation = useToggleCompletedMutation()
   const toggleImportantMutation = useToggleImportantMutation()
   const removeTaskMutation = useRemoveTaskMutation()
@@ -68,7 +74,7 @@ export const Tasks: React.FC<Props> = ({isPending, tasks, noTasksSlot}) => {
   }
 
   return (
-    <ul className="space-y-0.5 px-4">
+    <ul className={clsx('space-y-0.5 px-4', className)}>
       {tasks.map((task, index) => (
         <Task
           key={task.id}
