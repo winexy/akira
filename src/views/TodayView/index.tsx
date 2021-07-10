@@ -15,6 +15,7 @@ import {useTagsQuery} from '@modules/tags/hooks'
 import {filterTasks, useTaskFilters} from '@modules/tasks/filters'
 import {FiltersBottomSheet} from '@modules/tasks/filters/FiltersBottomSheet'
 import {TaskListOperations} from '@modules/tasks/components/TaskListOperations'
+import {CreateTaskMeta} from '@lib/akira/tasks/tasks'
 import {
   SortingBottomSheet,
   useTaskSorting
@@ -30,8 +31,8 @@ export function TodayView() {
   const [filtersState, updateFilters] = useTaskFilters()
   const queryClient = useQueryClient()
   const createTaskMutation = useMutation(
-    (title: string) => {
-      return akira.tasks.createForMyDay(title)
+    (payload: {title: string; meta: CreateTaskMeta}) => {
+      return akira.tasks.createForMyDay(payload.title, payload.meta)
     },
     {
       onSuccess() {
