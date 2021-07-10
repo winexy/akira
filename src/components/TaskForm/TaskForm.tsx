@@ -8,8 +8,14 @@ import React, {
   useEffect
 } from 'react'
 import isEmpty from 'lodash/fp/isEmpty'
+import isUndefined from 'lodash/fp/isUndefined'
 import {ChevronLeftIcon, XCircleIcon} from '@heroicons/react/solid'
 import clsx from 'clsx'
+import {useTagsQuery} from '@modules/tags/hooks/index'
+import {Button} from '@components/Button'
+import {TagT} from '@store/tasks/types'
+import {TagsGrid} from '@components/TagsGrid/TagsGrid'
+import {Tag} from '../Tag/Tag'
 
 type TaskFormProps = {
   onSubmit(title: string): void
@@ -26,6 +32,8 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
     const inputRef = useRef<HTMLInputElement>(null)
     const backdropRef = useRef<HTMLDivElement>(null)
     const [isVisible, setIsVisible] = useState(false)
+    const {data: tags} = useTagsQuery()
+    const [selectedTags, setSelectedTags] = useState(new Set<number>())
 
     useImperativeHandle(ref, () => ({
       show: () => setIsVisible(true)
@@ -60,6 +68,18 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
       }
     }
 
+    function toggleTag(tag: TagT) {
+      const newSet = new Set(selectedTags)
+
+      if (newSet.has(tag.id)) {
+        newSet.delete(tag.id)
+      } else {
+        newSet.add(tag.id)
+      }
+
+      setSelectedTags(newSet)
+    }
+
     return (
       <div className={clsx('box-content px-4')}>
         {isVisible && (
@@ -90,7 +110,7 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
               </button>
             </div>
             <form onSubmit={handleSubmit}>
-              <div className="relative h-full flex items-center">
+              <div className="relative h-full flex flex-col items-center">
                 <input
                   ref={inputRef}
                   className="
@@ -110,6 +130,22 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                   }}
                   enterKeyHint="send"
                 />
+                {!isUndefined(tags) && (
+                  <TagsGrid HtmlTag="ul" className="px-6 mt-2">
+                    {tags.map(tag => (
+                      <li key={tag.id}>
+                        <Tag
+                          variant={
+                            selectedTags.has(tag.id) ? 'blue' : 'transparent'
+                          }
+                          onClick={() => toggleTag(tag)}
+                        >
+                          {tag.name}
+                        </Tag>
+                      </li>
+                    ))}
+                  </TagsGrid>
+                )}
                 {!isEmpty(title) && (
                   <button
                     type="button"
@@ -129,39 +165,25 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
             </form>
             <div className="mt-auto p-4 bg-gradient-to-t from-gray-600">
               {isEmpty(title) ? (
-                <button
-                  className="
-                    w-full px-4 py-2.5
-                    bg-white bg-opacity-10
-                    border border-white border-opacity-20
-                    text-center font-bold text-white text-lg
-                    shadow-md rounded select-none
-                    transition ease-in duration-75
-                    active:bg-white active:bg-opacity-20
-                    focus:outline-none
-                  "
+                <Button
+                  size="md"
+                  variant="transparent"
+                  className="w-full select-none text-lg"
                   onClick={() => setIsVisible(false)}
                 >
                   Close
-                </button>
+                </Button>
               ) : (
-                <button
-                  className="
-                    w-full px-4 py-2.5
-                    bg-blue-500 border border-blue-600 
-                    text-center font-bold text-white text-lg
-                    shadow-lg rounded select-none
-                    transition ease-in duration-75
-                    active:bg-blue-600
-                    focus:outline-none
-                  "
+                <Button
+                  size="md"
+                  className="w-full select-none text-lg"
                   onClick={() => {
                     setIsVisible(false)
                     onSubmit(title)
                   }}
                 >
                   Submit
-                </button>
+                </Button>
               )}
             </div>
           </div>
