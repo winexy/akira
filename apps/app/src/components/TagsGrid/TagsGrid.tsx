@@ -8,6 +8,6 @@ type Props = {
   className?: string
 }
 
-export const TagsGrid: React.FC<Props> = ({HtmlTag, children}) => {
-  return <HtmlTag className={clsx('tags-grid')}>{children}</HtmlTag>
+export const TagsGrid: React.FC<Props> = ({HtmlTag, className, children}) => {
+  return <HtmlTag className={clsx('tags-grid', className)}>{children}</HtmlTag>
 }
