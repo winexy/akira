@@ -1,7 +1,7 @@
 import React from 'react'
 import clsx, {ClassValue} from 'clsx'
 
-type Variant = 'green' | 'gray' | 'red' | 'purple'
+type Variant = 'green' | 'gray' | 'red' | 'purple' | 'blue' | 'transparent'
 
 export type TagPropsT = {
   variant: Variant
@@ -28,10 +28,14 @@ export const Tag: React.FC<TagPropsT> = ({
             variant === 'green',
           'bg-gray-500 border-gray-600 focus-within:ring-gray-300':
             variant === 'gray',
+          'bg-gray-500 border-gray-200 border-opacity-30 bg-opacity-30 focus-within:ring-blue-300':
+            variant === 'transparent',
           'bg-red-500 border-red-600 focus-within:ring-red-300':
             variant === 'red',
           'bg-indigo-500 border-indigo-600 focus-within:ring-indigo-300':
-            variant === 'purple'
+            variant === 'purple',
+          'bg-blue-500 border-blue-700 focus-within:ring-blue-300':
+            variant === 'blue'
         },
         className
       )}
