@@ -44,7 +44,7 @@ export const TaskLists: React.FC<Props> = ({
             allowRemoval ? (
               <button
                 className="
-                  h-full px-4 
+                  h-full px-6 
                   flex items-center justify-between  
                   text-white bg-red-500
                   transition ease-in duration-100
