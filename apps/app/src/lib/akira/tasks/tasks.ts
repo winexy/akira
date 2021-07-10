@@ -13,6 +13,10 @@ type QueryParams = Partial<{
   is_today: IntBool
 }>
 
+export type CreateTaskMeta = {
+  tags: Array<number>
+}
+
 export function tasks(api: AxiosInstance) {
   const unwrap = get('data')
 
@@ -20,11 +24,11 @@ export function tasks(api: AxiosInstance) {
     findAll(params: QueryParams = {}): Promise<TaskT[]> {
       return api.get(`tasks?${qs.stringify(params)}`).then(unwrap)
     },
-    create(title: string): Promise<TaskT> {
-      return api.post('tasks', {title}).then(unwrap)
+    create(title: string, meta: CreateTaskMeta): Promise<TaskT> {
+      return api.post('tasks', {title, meta}).then(unwrap)
     },
-    createForMyDay(title: string): Promise<TaskT> {
-      return api.post('tasks/myday', {title}).then(unwrap)
+    createForMyDay(title: string, meta: CreateTaskMeta): Promise<TaskT> {
+      return api.post('tasks/myday', {title, meta}).then(unwrap)
     },
     findOne(id: TaskIdT): Promise<TaskT> {
       return api.get(`tasks/${id}`).then(unwrap)

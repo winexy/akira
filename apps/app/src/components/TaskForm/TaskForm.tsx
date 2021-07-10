@@ -15,10 +15,11 @@ import {useTagsQuery} from '@modules/tags/hooks/index'
 import {Button} from '@components/Button'
 import {TagT} from '@store/tasks/types'
 import {TagsGrid} from '@components/TagsGrid/TagsGrid'
+import {CreateTaskMeta} from '@lib/akira/tasks/tasks'
 import {Tag} from '../Tag/Tag'
 
 type TaskFormProps = {
-  onSubmit(title: string): void
+  onSubmit(payload: {title: string; meta: CreateTaskMeta}): void
   onVisibilityChange(isVisible: boolean): void
 }
 
@@ -56,7 +57,12 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
         return
       }
 
-      onSubmit(title)
+      onSubmit({
+        title,
+        meta: {
+          tags: [...selectedTags]
+        }
+      })
       setTitle('')
       setSelectedTags(new Set())
     }
@@ -110,7 +116,7 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                 <ChevronLeftIcon className="w-8 h-8 mr-2" /> Go Back
               </button>
             </div>
-            <form onSubmit={handleSubmit}>
+            <form id="create-task-form" onSubmit={handleSubmit}>
               <div className="relative h-full flex flex-col items-center">
                 <input
                   ref={inputRef}
@@ -178,10 +184,8 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                 <Button
                   size="md"
                   className="w-full select-none text-lg"
-                  onClick={() => {
-                    setIsVisible(false)
-                    onSubmit(title)
-                  }}
+                  form="create-task-form"
+                  type="submit"
                 >
                   Submit
                 </Button>
