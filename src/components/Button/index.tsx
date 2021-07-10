@@ -14,14 +14,15 @@ const xs = 'px-2 py-1'
 const sm = 'px-3 py-2'
 const md = 'px-6 py-3'
 const blue =
-  'bg-blue-500 border border-blue-600 active:bg-blue-600 active:border-blue-700 text-white shadow-md active:shadow focus-withing:ring'
+  'bg-blue-500 border border-blue-600 active:bg-blue-600 active:border-blue-700 text-white shadow-md active:shadow focus-within:ring'
 const red =
   'bg-red-500 border border-red-600 active:bg-red-600 active:border-red-700 text-white shadow-md active:shadow focus-within:ring-red-300'
 const outline =
-  'bg-transparent border border-gray-200 text-gray-700 shadow-none active:bg-gray-100 active:border-gray-200 active:shadow-inner focus-withing:ring'
+  'bg-transparent border border-gray-200 text-gray-700 shadow-none active:bg-gray-100 active:border-gray-200 active:shadow-inner focus-within:ring'
+const transparent = `bg-white bg-opacity-10 border border-white border-opacity-20 active:bg-white active:bg-opacity-20`
 
 type ButtonSize = 'xs' | 'sm' | 'md'
-type ButtonVariant = 'blue' | 'red' | 'outline'
+type ButtonVariant = 'blue' | 'red' | 'outline' | 'transparent'
 
 function matchSize(size: ButtonSize) {
   switch (size) {
@@ -44,6 +45,8 @@ function matchVariant(variant: ButtonVariant) {
       return red
     case 'outline':
       return outline
+    case 'transparent':
+      return transparent
     default:
       return exhaustiveCheck(variant)
   }
