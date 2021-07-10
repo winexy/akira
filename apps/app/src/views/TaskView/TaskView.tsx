@@ -126,7 +126,10 @@ export const TaskView: React.FC = () => {
         ) : (
           <TaskActionList.Item>
             <TaskActionList.Button Icon={ViewListIcon} className="truncate">
-              <Link to={`/lists/${task.list_id}`} className="truncate">
+              <Link
+                to={`/lists/${task.list_id}`}
+                className="w-full text-left truncate"
+              >
                 {task.list.title}
               </Link>
             </TaskActionList.Button>
