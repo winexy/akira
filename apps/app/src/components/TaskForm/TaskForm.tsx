@@ -58,6 +58,7 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
 
       onSubmit(title)
       setTitle('')
+      setSelectedTags(new Set())
     }
 
     function onReset() {
@@ -116,7 +117,7 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                   className="
                     w-full px-6 py-2 pr-12 flex items-center
                     text-2xl font-bold
-                    caret-white text-white placeholder-white
+                    caret-white text-white placeholder-white placeholder-opacity-80
                     bg-transparent
                     rounded-lg appearance-none
                     transition ease-in duration-150
