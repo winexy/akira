@@ -10,8 +10,7 @@ import pipe from 'lodash/fp/pipe'
 import get from 'lodash/fp/get'
 import defaultTo from 'lodash/defaultTo'
 
-const getBoundingRect = (el: Element) => el.getBoundingClientRect()
-const getWidth = pipe(getBoundingRect, get('width'))
+const getWidth = pipe(getComputedStyle, get('width'), parseInt)
 const getTouch = get('touches.0.pageX')
 
 type SwipeableProps = {
