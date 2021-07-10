@@ -3,8 +3,8 @@ import React, {FormEventHandler, useState} from 'react'
 import {useMutation, useQueryClient} from 'react-query'
 import {Button} from '@components/Button'
 import {akira} from '@lib/akira'
-import {Spin} from '@/components/Spin'
-import {TagT} from '../../../store/tasks/types'
+import {Spin} from '@components/Spin'
+import {TaskTag} from '@modules/tags/types.d'
 
 type Props = {
   className?: ClassValue
@@ -14,7 +14,7 @@ export const CreateTagForm: React.FC<Props> = ({className}) => {
   const [name, setName] = useState<string>('')
   const [hasError, setHasError] = useState(false)
   const queryClient = useQueryClient()
-  const createTagMutation = useMutation<TagT, Error, string>(
+  const createTagMutation = useMutation<TaskTag, Error, string>(
     akira.tags.create,
     {
       onSuccess() {

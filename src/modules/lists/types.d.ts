@@ -1,6 +1,17 @@
+import {ApiTask} from '@modules/tasks/types.d'
+
+/* eslint-disable camelcase */
 export type TaskList = {
   id: number
-  title: string
-  // eslint-disable-next-line
   author_uid: string
+  title: string
+  tasksCount: string
+}
+
+export type ApiList = {
+  id: number
+  title: string
+  // eslint-disable-next-line camelcase
+  author_uid: string
+  tasks: ApiTask[]
 }

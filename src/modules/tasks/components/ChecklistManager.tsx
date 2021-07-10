@@ -1,6 +1,6 @@
 import isEmpty from 'lodash/fp/isEmpty'
 import React, {FormEventHandler, useLayoutEffect, useRef, useState} from 'react'
-import {TaskT} from '@store/tasks'
+import {ApiTask} from '@modules/tasks/types.d'
 import {ClipboardCheckIcon} from '@heroicons/react/solid'
 import {Button} from '@components/Button'
 import clsx from 'clsx'
@@ -8,7 +8,7 @@ import {useAddTodoMutation} from '../hooks'
 import {Checklist} from './Checklist'
 
 type Props = {
-  task: TaskT
+  task: ApiTask
 }
 
 export const ChecklistManager: React.FC<Props> = ({task}) => {

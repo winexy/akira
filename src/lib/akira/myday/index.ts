@@ -1,18 +1,18 @@
 import {AxiosInstance} from 'axios'
 import get from 'lodash/fp/get'
-import {TaskIdT, TaskT} from '@store/tasks/types'
+import {TaskId, ApiTask} from '@modules/tasks/types.d'
 
 export function myday(api: AxiosInstance) {
   const unwrap = get('data')
 
   return {
-    tasks(): Promise<TaskT[]> {
+    tasks(): Promise<ApiTask[]> {
       return api.get('myday').then(unwrap)
     },
-    add(taskId: TaskIdT) {
+    add(taskId: TaskId) {
       return api.post(`myday/${taskId}`)
     },
-    remove(taskId: TaskIdT) {
+    remove(taskId: TaskId) {
       return api.delete(`myday/${taskId}`)
     }
   }

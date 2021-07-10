@@ -19,7 +19,7 @@ import {
   TextArea
 } from '@modules/tasks/components'
 import {showBottomSheet} from '@store/bottom-sheet/index'
-import {TaskT} from '@store/tasks/types'
+import {ApiTask} from '@modules/tasks/types.d'
 import {TagsManager, TaskTag} from '@modules/tags/components'
 import {usePatchTaskMutation} from '@modules/tasks/hooks'
 import {Tag} from '@components/Tag/Tag'
@@ -31,7 +31,7 @@ import {TaskListPicker} from '@modules/tasks/components/TaskListPicker'
 
 export const TaskView: React.FC = () => {
   const {taskId} = useParams<{taskId: string}>()
-  const {data: task} = useQuery<TaskT>(['task', taskId], () =>
+  const {data: task} = useQuery<ApiTask>(['task', taskId], () =>
     akira.tasks.findOne(taskId)
   )
 

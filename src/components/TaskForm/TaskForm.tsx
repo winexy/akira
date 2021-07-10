@@ -13,7 +13,7 @@ import {ChevronLeftIcon, XCircleIcon} from '@heroicons/react/solid'
 import clsx from 'clsx'
 import {useTagsQuery} from '@modules/tags/hooks/index'
 import {Button} from '@components/Button'
-import {TagT} from '@store/tasks/types'
+import {TaskTag} from '@modules/tags/types.d'
 import {TagsGrid} from '@components/TagsGrid/TagsGrid'
 import {CreateTaskMeta} from '@lib/akira/tasks/tasks'
 import {Tag} from '../Tag/Tag'
@@ -75,7 +75,7 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
       }
     }
 
-    function toggleTag(tag: TagT) {
+    function toggleTag(tag: TaskTag) {
       const newSet = new Set(selectedTags)
 
       if (newSet.has(tag.id)) {

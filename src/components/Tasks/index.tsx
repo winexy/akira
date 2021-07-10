@@ -1,6 +1,6 @@
 import React, {ReactNode} from 'react'
 import {Task} from '@/components/Task/Task'
-import {TaskT} from '@/store/tasks'
+import {ApiTask} from '@modules/tasks/types.d'
 import ContentLoader from 'react-content-loader'
 import isEmpty from 'lodash/fp/isEmpty'
 import times from 'lodash/fp/times'
@@ -15,7 +15,7 @@ import clsx from 'clsx'
 
 type Props = {
   isPending: boolean
-  tasks: TaskT[]
+  tasks: ApiTask[]
   noTasksSlot?: ReactNode
   className?: string
 }

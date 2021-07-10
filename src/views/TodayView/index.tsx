@@ -9,7 +9,7 @@ import {MainView} from '@views/MainView'
 import {useQuery, useQueryClient, useMutation} from 'react-query'
 import {akira} from '@lib/akira'
 import {onMyDayFetch} from '@modules/tasks/store'
-import {TaskT} from '@store/tasks'
+import {ApiTask} from '@modules/tasks/types.d'
 import {TaskQueryKeyEnum} from '@modules/tasks/config/index'
 import {useTagsQuery} from '@modules/tags/hooks'
 import {filterTasks, useTaskFilters} from '@modules/tasks/filters'
@@ -41,7 +41,7 @@ export function TodayView() {
     }
   )
 
-  const {data: tasks = [], isLoading} = useQuery<TaskT[]>(
+  const {data: tasks = [], isLoading} = useQuery<ApiTask[]>(
     TaskQueryKeyEnum.MyDay,
     akira.myday.tasks,
     {

@@ -5,12 +5,11 @@ import clsx from 'clsx'
 import {XIcon, MenuAlt4Icon, FireIcon} from '@heroicons/react/solid'
 import {Swipeable} from '@components/Swipeable/Swipeable'
 import {Checkbox} from '@components/Checkbox/Checkbox'
-import {TaskT, TaskIdT} from '@store/tasks'
+import {ApiTask, TaskId, CheckList} from '@modules/tasks/types.d'
 import isNull from 'lodash/isNull'
 import size from 'lodash/fp/size'
 import filter from 'lodash/fp/filter'
 import isEmpty from 'lodash/fp/isEmpty'
-import {CheckListT} from '@store/tasks/types'
 
 const ItemType = 'list-item'
 
@@ -20,7 +19,7 @@ type UpdatePositionParams = {
 }
 
 type DragObject = {
-  id: TaskT['id']
+  id: TaskId
   index: number
 }
 
@@ -75,13 +74,13 @@ function onDragHover(
 }
 
 type TaskProps = {
-  task: TaskT
+  task: ApiTask
   index: number
   sortable?: boolean
-  onRemove(id: TaskIdT): void
-  onCheck(id: TaskIdT): void
+  onRemove(id: TaskId): void
+  onCheck(id: TaskId): void
   onOrderChange(params: UpdatePositionParams): void
-  onSetImportant(id: TaskIdT): void
+  onSetImportant(id: TaskId): void
 }
 
 const collectProps = (monitor: DragSourceMonitor) => {
@@ -94,7 +93,7 @@ const collectProps = (monitor: DragSourceMonitor) => {
 }
 
 type ProgressBarProps = {
-  checklist: CheckListT
+  checklist: CheckList
 }
 
 const ChecklistProgressBar: React.FC<ProgressBarProps> = ({checklist}) => {

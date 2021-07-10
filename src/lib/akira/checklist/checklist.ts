@@ -1,9 +1,9 @@
 import {AxiosInstance} from 'axios'
-import {TaskIdT, TodoIdT, TodoPatchT, TodoT} from '@store/tasks/types'
+import {TaskId, TodoId, TodoPatch, Todo} from '@modules/tasks/types.d'
 import {get} from 'lodash/fp'
 
 export type CreateTodoDto = {
-  taskId: TaskIdT
+  taskId: TaskId
   title: string
 }
 
@@ -11,20 +11,16 @@ export function checklist(api: AxiosInstance) {
   const unwrap = get('data')
 
   return {
-    findAllByTaskId(taskId: TaskIdT): Promise<TodoT[]> {
+    findAllByTaskId(taskId: TaskId): Promise<Todo[]> {
       return api.get(`/checklist/${taskId}`).then(unwrap)
     },
-    addTodo(dto: CreateTodoDto): Promise<TodoT> {
+    addTodo(dto: CreateTodoDto): Promise<Todo> {
       return api.post('/checklist', dto).then(unwrap)
     },
-    removeTodo(taskId: TaskIdT, todoId: TodoIdT) {
+    removeTodo(taskId: TaskId, todoId: TodoId) {
       return api.delete(`/checklist/${taskId}/${todoId}`)
     },
-    patchTodo(
-      taskId: TaskIdT,
-      todoId: TodoIdT,
-      patch: TodoPatchT
-    ): Promise<TodoT> {
+    patchTodo(taskId: TaskId, todoId: TodoId, patch: TodoPatch): Promise<Todo> {
       return api.patch(`/checklist/${taskId}/${todoId}`, patch).then(unwrap)
     }
   }

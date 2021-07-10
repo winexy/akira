@@ -3,7 +3,7 @@ import {useParams} from 'react-router'
 import {useQuery} from 'react-query'
 import isUndefined from 'lodash/fp/isUndefined'
 import {api} from '@lib/api'
-import {TaskT} from '@store/tasks/types'
+import {ApiTask} from '@modules/tasks/types.d'
 import {Tasks} from '@components/Tasks'
 import {MainView} from '../MainView'
 
@@ -12,7 +12,7 @@ type ApiList = {
   title: string
   // eslint-disable-next-line camelcase
   author_uid: string
-  tasks: TaskT[]
+  tasks: ApiTask[]
 }
 
 export const TaskListView: React.FC = () => {
