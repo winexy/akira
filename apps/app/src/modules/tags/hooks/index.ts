@@ -1,7 +1,7 @@
 import {useQuery} from 'react-query'
-import {TagT} from '@store/tasks'
+import {TaskTag} from '@modules/tags/types.d'
 import {akira} from '@lib/akira'
 
 export function useTagsQuery() {
-  return useQuery<TagT[]>('tags', akira.tags.findAll)
+  return useQuery<TaskTag[]>('tags', akira.tags.findAll)
 }

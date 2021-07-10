@@ -74,7 +74,7 @@ export const TaskLists: React.FC<Props> = ({
               {list.tasksCount !== '0' && (
                 <span className="text-xs text-gray-400">
                   {list.tasksCount}{' '}
-                  {pluralize(list.tasksCount, 'task', 'tasks')}
+                  {pluralize(parseInt(list.tasksCount, 10), 'task', 'tasks')}
                 </span>
               )}
             </div>

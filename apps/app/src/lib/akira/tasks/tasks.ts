@@ -2,8 +2,7 @@
 import {AxiosInstance} from 'axios'
 import qs from 'qs'
 import get from 'lodash/fp/get'
-import {TaskT} from '@store/tasks'
-import {TaskIdT, TaskPatchT} from '@store/tasks/types'
+import {ApiTask, TaskId, TaskPatch} from '@modules/tasks/types.d'
 
 type IntBool = 1 | 0
 
@@ -21,34 +20,34 @@ export function tasks(api: AxiosInstance) {
   const unwrap = get('data')
 
   return {
-    findAll(params: QueryParams = {}): Promise<TaskT[]> {
+    findAll(params: QueryParams = {}): Promise<ApiTask[]> {
       return api.get(`tasks?${qs.stringify(params)}`).then(unwrap)
     },
-    create(title: string, meta: CreateTaskMeta): Promise<TaskT> {
+    create(title: string, meta: CreateTaskMeta): Promise<ApiTask> {
       return api.post('tasks', {title, meta}).then(unwrap)
     },
-    createForMyDay(title: string, meta: CreateTaskMeta): Promise<TaskT> {
+    createForMyDay(title: string, meta: CreateTaskMeta): Promise<ApiTask> {
       return api.post('tasks/myday', {title, meta}).then(unwrap)
     },
-    findOne(id: TaskIdT): Promise<TaskT> {
+    findOne(id: TaskId): Promise<ApiTask> {
       return api.get(`tasks/${id}`).then(unwrap)
     },
-    toggleCompletness(id: TaskIdT): Promise<TaskT> {
+    toggleCompletness(id: TaskId): Promise<ApiTask> {
       return api.patch(`tasks/${id}/complete/toggle`).then(unwrap)
     },
-    toggleImportance(id: TaskIdT): Promise<TaskT> {
+    toggleImportance(id: TaskId): Promise<ApiTask> {
       return api.patch(`tasks/${id}/important/toggle`).then(unwrap)
     },
-    delete(id: TaskIdT): Promise<true> {
+    delete(id: TaskId): Promise<true> {
       return api.delete(`tasks/${id}`).then(unwrap)
     },
-    patch(id: TaskIdT, patch: TaskPatchT): Promise<TaskT> {
+    patch(id: TaskId, patch: TaskPatch): Promise<ApiTask> {
       return api.patch(`tasks/${id}`, patch).then(unwrap)
     },
-    addTag(id: TaskIdT, tagId: number): Promise<void> {
+    addTag(id: TaskId, tagId: number): Promise<void> {
       return api.post(`tasks/${id}/tags/${tagId}`)
     },
-    removeTag(id: TaskIdT, tagId: number): Promise<void> {
+    removeTag(id: TaskId, tagId: number): Promise<void> {
       return api.delete(`tasks/${id}/tags/${tagId}`)
     }
   }

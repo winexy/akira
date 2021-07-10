@@ -7,22 +7,22 @@ import isNull from 'lodash/fp/isNull'
 import {useMutation, useQuery, useQueryClient, QueryClient} from 'react-query'
 import {akira} from '@lib/akira'
 import {
-  TaskPatchT,
-  TaskT,
-  TaskIdT,
-  TodoIdT,
-  TodoPatchT,
-  TagT,
-  TodoT
-} from '@store/tasks/types'
+  TaskPatch,
+  ApiTask,
+  TaskId,
+  TodoId,
+  TodoPatch,
+  Todo
+} from '@modules/tasks/types.d'
+import {TaskTag} from '@modules/tags/types.d'
 import {TaskQueryKeyEnum} from '@modules/tasks/config'
 
 function writeTaskCache(
-  taskId: TaskIdT,
+  taskId: TaskId,
   queryClient: QueryClient,
-  mutateDraft: (draft: Draft<TaskT>, prevTask: Immutable<TaskT>) => void
-): [null, null] | [TaskT, TaskT] {
-  const prevTask = queryClient.getQueryData<TaskT>(['task', taskId])
+  mutateDraft: (draft: Draft<ApiTask>, prevTask: Immutable<ApiTask>) => void
+): [null, null] | [ApiTask, ApiTask] {
+  const prevTask = queryClient.getQueryData<ApiTask>(['task', taskId])
 
   if (!isUndefined(prevTask)) {
     const newTask = produce(prevTask, draft => mutateDraft(draft, prevTask))
@@ -36,9 +36,9 @@ function writeTaskCache(
 function writeTaskListCache(
   tasksQueryKey: TaskQueryKeyEnum,
   queryClient: QueryClient,
-  updatedTask: TaskT | null
-): TaskT[] | null {
-  const prevTasks = queryClient.getQueryData<TaskT[]>(tasksQueryKey)
+  updatedTask: ApiTask | null
+): ApiTask[] | null {
+  const prevTasks = queryClient.getQueryData<ApiTask[]>(tasksQueryKey)
 
   if (isUndefined(prevTasks) || isNull(updatedTask)) {
     return null
@@ -59,9 +59,9 @@ function writeTaskListCache(
 }
 
 function rollbackTaskMutation(
-  taskId: TaskIdT,
+  taskId: TaskId,
   queryClient: QueryClient,
-  prevTask: TaskT | undefined
+  prevTask: ApiTask | undefined
 ) {
   if (prevTask) {
     queryClient.setQueryData(['task', taskId], prevTask)
@@ -71,7 +71,7 @@ function rollbackTaskMutation(
 function rollbackTaskListMutation(
   tasksQueryKey: TaskQueryKeyEnum,
   queryClient: QueryClient,
-  prevTasks: TaskT[] | null
+  prevTasks: ApiTask[] | null
 ) {
   if (prevTasks) {
     queryClient.setQueryData(tasksQueryKey, prevTasks)
@@ -88,11 +88,11 @@ export function useTasksQuery() {
   })
 }
 
-export function usePatchTaskMutation(taskId: TaskIdT) {
+export function usePatchTaskMutation(taskId: TaskId) {
   const queryClient = useQueryClient()
 
   return useMutation(
-    (patch: TaskPatchT) => {
+    (patch: TaskPatch) => {
       return akira.tasks.patch(taskId, patch)
     },
     {
@@ -182,7 +182,7 @@ export function useToggleImportantMutation() {
   })
 }
 
-function removeTask(tasks: TaskT[], taskId: TaskIdT) {
+function removeTask(tasks: ApiTask[], taskId: TaskId) {
   return produce(tasks, draft => {
     const index = findIndex({id: taskId}, tasks)
 
@@ -195,9 +195,9 @@ function removeTask(tasks: TaskT[], taskId: TaskIdT) {
 function removeTasksFromCache(
   queryClient: QueryClient,
   queryKey: TaskQueryKeyEnum,
-  taskId: TaskIdT
+  taskId: TaskId
 ) {
-  const tasks = queryClient.getQueryData<TaskT[]>(queryKey)
+  const tasks = queryClient.getQueryData<ApiTask[]>(queryKey)
 
   if (tasks) {
     queryClient.setQueryData(queryKey, removeTask(tasks, taskId))
@@ -216,21 +216,21 @@ export function useRemoveTaskMutation() {
   })
 }
 
-export function useAddTodoMutation(taskId: TaskIdT) {
+export function useAddTodoMutation(taskId: TaskId) {
   const queryClient = useQueryClient()
 
   return useMutation(
-    (todoTitle: string) => {
+    (Todoitle: string) => {
       return akira.checklist.addTodo({
         taskId,
-        title: todoTitle
+        title: Todoitle
       })
     },
     {
-      onMutate(todoTitle) {
-        const todo: TodoT = {
-          id: uniqueId(todoTitle),
-          title: todoTitle,
+      onMutate(Todoitle) {
+        const todo: Todo = {
+          id: uniqueId(Todoitle),
+          title: Todoitle,
           is_completed: false,
           task_id: taskId
         }
@@ -277,11 +277,11 @@ export function useAddTodoMutation(taskId: TaskIdT) {
   )
 }
 
-export function usePatchTodoMutation(taskId: TaskIdT) {
+export function usePatchTodoMutation(taskId: TaskId) {
   const queryClient = useQueryClient()
 
   return useMutation(
-    ({todoId, patch}: {todoId: TodoIdT; patch: TodoPatchT}) => {
+    ({todoId, patch}: {todoId: TodoId; patch: TodoPatch}) => {
       return akira.checklist.patchTodo(taskId, todoId, patch)
     },
     {
@@ -310,11 +310,11 @@ export function usePatchTodoMutation(taskId: TaskIdT) {
   )
 }
 
-export function useRemoveTodoMutation(taskId: TaskIdT) {
+export function useRemoveTodoMutation(taskId: TaskId) {
   const queryClient = useQueryClient()
 
   return useMutation(
-    (todoId: TodoIdT) => {
+    (todoId: TodoId) => {
       return akira.checklist.removeTodo(taskId, todoId)
     },
     {
@@ -361,11 +361,11 @@ export function useRemoveTodoMutation(taskId: TaskIdT) {
   )
 }
 
-export function useAddTaskTagMutation(task: TaskT) {
+export function useAddTaskTagMutation(task: ApiTask) {
   const queryClient = useQueryClient()
 
   return useMutation(
-    (tag: TagT) => {
+    (tag: TaskTag) => {
       return akira.tasks.addTag(task.id, tag.id)
     },
     {
@@ -409,11 +409,11 @@ export function useAddTaskTagMutation(task: TaskT) {
   )
 }
 
-export function useRemoveTaskTagMutation(task: TaskT) {
+export function useRemoveTaskTagMutation(task: ApiTask) {
   const queryClient = useQueryClient()
 
   return useMutation(
-    (tag: TagT) => {
+    (tag: TaskTag) => {
       return akira.tasks.removeTag(task.id, tag.id)
     },
     {

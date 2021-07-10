@@ -4,7 +4,7 @@ import {enableMapSet} from 'immer'
 import {QueryClient, QueryClientProvider} from 'react-query'
 import './index.css'
 import {akira} from '@lib/akira'
-import {TaskT} from '@store/tasks/types'
+import {ApiTask} from '@modules/tasks/types.d'
 import {FirebaseAuthProvider} from '@/firebase'
 import App from './App'
 import {onMyDayFetch} from './modules/tasks/store'
@@ -24,7 +24,7 @@ async function prefetchQueries() {
   queryClient.prefetchQuery('tags', akira.tags.findAll)
   await queryClient.prefetchQuery('myday', akira.myday.tasks)
 
-  const tasks = queryClient.getQueryData<TaskT[]>('myday')
+  const tasks = queryClient.getQueryData<ApiTask[]>('myday')
 
   if (tasks) {
     onMyDayFetch(tasks)

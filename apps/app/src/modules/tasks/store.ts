@@ -1,10 +1,10 @@
 import map from 'lodash/fp/map'
 import {app} from '@store/app'
-import {TaskIdT, TaskT} from '@/store/tasks'
+import {TaskId, ApiTask} from '@modules/tasks/types.d'
 
-export const onMyDayTaskAdded = app.event<TaskIdT>()
-export const onMyDayTaskRemoved = app.event<TaskIdT>()
-export const onMyDayFetch = app.event<TaskT[]>()
+export const onMyDayTaskAdded = app.event<TaskId>()
+export const onMyDayTaskRemoved = app.event<TaskId>()
+export const onMyDayFetch = app.event<ApiTask[]>()
 
 export const $myDayTasksIds = app
   .store(new Set())

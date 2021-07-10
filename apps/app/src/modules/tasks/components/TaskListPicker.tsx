@@ -1,7 +1,7 @@
 import React from 'react'
 import {useListsQuery} from '@modules/lists/hooks'
 import {usePatchTaskMutation} from '@modules/tasks/hooks'
-import {TaskT} from '@store/tasks/types'
+import {ApiTask} from '@modules/tasks/types.d'
 import {Spin} from '@components/Spin'
 import clsx from 'clsx'
 import {CheckIcon, ChevronRightIcon, InboxIcon} from '@heroicons/react/solid'
@@ -11,8 +11,8 @@ import isEmpty from 'lodash/fp/isEmpty'
 import get from 'lodash/fp/get'
 
 type Props = {
-  taskId: TaskT['id']
-  activeListId: TaskT['list_id']
+  taskId: ApiTask['id']
+  activeListId: ApiTask['list_id']
 }
 
 type MatchComponent = React.FC & {

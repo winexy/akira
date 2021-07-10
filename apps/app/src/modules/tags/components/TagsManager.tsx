@@ -1,6 +1,5 @@
 import map from 'lodash/fp/map'
 import React from 'react'
-import {useQuery} from 'react-query'
 import ContentLoader from 'react-content-loader'
 import isUndefined from 'lodash/fp/isUndefined'
 import isEmpty from 'lodash/fp/isEmpty'
@@ -12,12 +11,12 @@ import {
   useAddTaskTagMutation,
   useRemoveTaskTagMutation
 } from '@modules/tasks/hooks'
-import {TaskT} from '@store/tasks'
+import {ApiTask} from '@modules/tasks/types.d'
 import {Button} from '@components/Button'
 import {TaskTag} from './TaskTag'
 import {useTagsQuery} from '../hooks/index'
 
-export const TagsManager: React.FC<{task: TaskT}> = ({task}) => {
+export const TagsManager: React.FC<{task: ApiTask}> = ({task}) => {
   const {data: tags, isLoading} = useTagsQuery()
   const taskTagsIdSet = new Set(map('id', task.tags))
 

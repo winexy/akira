@@ -3,7 +3,7 @@ import {ActionToast} from '@components/ActionToast'
 import {CheckIcon, FireIcon, TrashIcon} from '@heroicons/react/solid'
 import clsx from 'clsx'
 import {useHistory} from 'react-router'
-import {TaskIdT} from '@store/tasks'
+import {TaskId} from '@modules/tasks/types.d'
 import {
   useRemoveTaskMutation,
   useToggleCompletedMutation,
@@ -11,7 +11,7 @@ import {
 } from '../hooks'
 
 type Props = {
-  taskId: TaskIdT
+  taskId: TaskId
   isCompleted: boolean
   isImportant: boolean
 }

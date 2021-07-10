@@ -5,7 +5,7 @@ import {Tag} from '@components/Tag/Tag'
 import {Checkbox} from '@components/Checkbox/Checkbox'
 import {hideBottomSheet} from '@store/bottom-sheet'
 import {BottomSheet} from '@components/BottomSheet/BottomSheet'
-import {TagT} from '@store/tasks/types'
+import {TaskTag} from '@modules/tags/types.d'
 import {exhaustiveCheck} from '@/utils'
 import {TagsGrid} from '@/components/TagsGrid/TagsGrid'
 import {FiltersState, FilterAction} from '.'
@@ -13,7 +13,7 @@ import {FiltersState, FilterAction} from '.'
 type Props = {
   canReset: boolean
   state: FiltersState
-  tags: TagT[]
+  tags: TaskTag[]
   onChange(action: FilterAction): void
 }
 

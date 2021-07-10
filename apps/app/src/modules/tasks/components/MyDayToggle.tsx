@@ -6,14 +6,14 @@ import {
 } from '@/modules/tasks/store'
 import {useStoreMap} from 'effector-react'
 import {Spin} from '@/components/Spin'
-import {TaskIdT} from '@store/tasks/types'
+import {TaskId} from '@modules/tasks/types.d'
 import {useIsFetching, useMutation, useQueryClient} from 'react-query'
 import {akira} from '@lib/akira'
 import {Button} from '@components/Button'
 import {SunIcon} from '@heroicons/react/solid'
 import {SunIcon as SunIconOutline} from '@heroicons/react/outline'
 
-export const MyDayToggle: React.FC<{taskId: TaskIdT}> = ({taskId}) => {
+export const MyDayToggle: React.FC<{taskId: TaskId}> = ({taskId}) => {
   const isOnMyDay = useStoreMap($myDayTasksIds, set => set.has(taskId))
   const isMyDayFetching = useIsFetching(['myday'])
   const queryClient = useQueryClient()

@@ -1,6 +1,6 @@
-import {TaskT} from '@store/tasks/types'
 import compareDesc from 'date-fns/compareDesc'
 import parseISO from 'date-fns/parseISO'
+import {ApiTask} from '@modules/tasks/types.d'
 
 export enum SortEnum {
   ImportantASC = 'Important::ASC',
@@ -11,19 +11,19 @@ export enum SortEnum {
 
 function compareBy(
   key: 'is_important' | 'is_completed',
-  taskA: TaskT,
-  taskB: TaskT
+  taskA: ApiTask,
+  taskB: ApiTask
 ) {
   if (taskA[key] && !taskB[key]) return -1
   if (taskB[key] && !taskA[key]) return 1
   return 0
 }
 
-function compareByCreatedAt(taskA: TaskT, taskB: TaskT) {
+function compareByCreatedAt(taskA: ApiTask, taskB: ApiTask) {
   return compareDesc(parseISO(taskA.created_at), parseISO(taskB.created_at))
 }
 
-export function sortTasks(tasks: TaskT[], sortType: SortEnum | null) {
+export function sortTasks(tasks: ApiTask[], sortType: SortEnum | null) {
   return tasks.slice().sort((taskA, taskB) => {
     switch (sortType) {
       case SortEnum.ImportantASC:

@@ -8,7 +8,7 @@ import {CheckIcon, RefreshIcon} from '@heroicons/react/solid'
 import clsx from 'clsx'
 import isNull from 'lodash/fp/isNull'
 import {sortTasks} from '@modules/tasks/utils'
-import {TaskT} from '@store/tasks'
+import {ApiTask} from '@modules/tasks/types.d'
 import {SortEnum} from '../utils/sorting'
 
 function matchSortTypeTitle(sortType: SortEnum) {
@@ -38,7 +38,7 @@ export function useTaskSorting() {
     return localStorage.getItem('sort-selection') as SortEnum
   })
 
-  function sort(tasks: TaskT[]) {
+  function sort(tasks: ApiTask[]) {
     return sortTasks(tasks, sortType)
   }
 

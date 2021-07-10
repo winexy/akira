@@ -1,6 +1,6 @@
 import produce from 'immer'
 import {useReducer} from 'react'
-import {TaskT} from '@store/tasks'
+import {ApiTask} from '@modules/tasks/types.d'
 import {exhaustiveCheck} from '@/utils'
 
 function createFiltersState() {
@@ -14,7 +14,7 @@ function createFiltersState() {
 
 export type FiltersState = ReturnType<typeof createFiltersState>
 
-type FilterPredicate = (task: TaskT, state: FiltersState) => boolean
+type FilterPredicate = (task: ApiTask, state: FiltersState) => boolean
 
 const byCompletness: FilterPredicate = (task, state) => {
   if (!state.completed) {
@@ -48,7 +48,7 @@ const bySomeTags: FilterPredicate = (task, state) => {
   return task.tags.some(tag => state.tags.has(tag.id))
 }
 
-export function filterTasks(tasks: TaskT[], state: FiltersState) {
+export function filterTasks(tasks: ApiTask[], state: FiltersState) {
   const filters = [byCompletness, byImportance, byNotCompleted, bySomeTags]
 
   return tasks.filter(task => {

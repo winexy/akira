@@ -4,12 +4,12 @@ import isEmpty from 'lodash/fp/isEmpty'
 import {XIcon} from '@heroicons/react/solid'
 
 import {Checkbox} from '@components/Checkbox/Checkbox'
-import {TaskIdT, TodoT} from '@store/tasks'
+import {TaskId, Todo} from '@modules/tasks/types.d'
 import {useRemoveTodoMutation, usePatchTodoMutation} from '../hooks'
 
 type Props = {
-  taskId: TaskIdT
-  checklist: TodoT[]
+  taskId: TaskId
+  checklist: Todo[]
 }
 
 export const Checklist: React.FC<Props> = ({taskId, checklist}) => {
