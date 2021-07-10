@@ -1,0 +1,7 @@
+.tags-grid {
+  @apply flex flex-wrap -ml-2;
+
+  & > * {
+    @apply ml-2 mt-2;
+  }
+}

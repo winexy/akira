@@ -7,6 +7,7 @@ import {hideBottomSheet} from '@store/bottom-sheet'
 import {BottomSheet} from '@components/BottomSheet/BottomSheet'
 import {TagT} from '@store/tasks/types'
 import {exhaustiveCheck} from '@/utils'
+import {TagsGrid} from '@/components/TagsGrid/TagsGrid'
 import {FiltersState, FilterAction} from '.'
 
 type Props = {
@@ -80,7 +81,7 @@ export const FiltersBottomSheet: React.FC<Props> = ({
           </li>
         ))}
       </ul>
-      <ul className="mt-2 flex flex-wrap space-x-2">
+      <TagsGrid HtmlTag="ul">
         {tags.map(tag => (
           <li key={tag.id}>
             <Tag
@@ -92,7 +93,7 @@ export const FiltersBottomSheet: React.FC<Props> = ({
             </Tag>
           </li>
         ))}
-      </ul>
+      </TagsGrid>
       <Button
         className="mt-6 w-full"
         variant="blue"
