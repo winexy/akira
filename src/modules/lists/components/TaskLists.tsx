@@ -13,6 +13,11 @@ type Props = {
   allowRemoval?: boolean
 }
 
+function pluralize(count: number, one: string, other: string) {
+  const rule = new Intl.PluralRules('en-US').select(count)
+  return rule === 'one' ? one : other
+}
+
 export const TaskLists: React.FC<Props> = ({
   allowRemoval = true,
   className
@@ -58,13 +63,21 @@ export const TaskLists: React.FC<Props> = ({
           <Link
             to={`/lists/${list.id}`}
             className={clsx(
-              'flex px-4 py-3 bg-white',
+              'flex items-center px-4 py-3 bg-white',
               'font-semibold',
               'transition ease-in duration-150',
               'active:text-blue-500 active:bg-gray-50'
             )}
           >
-            {list.title}
+            <div className="flex flex-col">
+              {list.title}
+              {list.tasksCount !== '0' && (
+                <span className="text-xs text-gray-400">
+                  {list.tasksCount}{' '}
+                  {pluralize(list.tasksCount, 'task', 'tasks')}
+                </span>
+              )}
+            </div>
           </Link>
         </Swipeable>
       ))}
