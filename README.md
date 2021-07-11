@@ -1,4 +1,4 @@
-<img src="./akira.png" width="200" style="margin-bottom: 20px" />
+<img src="./akira.svg" width="200" style="margin-bottom: 20px" />
 
 # **Akira**
 
