@@ -14,6 +14,12 @@ export type CheckList = Todo[]
 export type TodoId = Todo['id']
 export type TodoPatch = Partial<Omit<Todo, 'id' | 'task_id'>>
 
+type TaskSchedule = {
+  id: number
+  task_id: string
+  date: string
+}
+
 export type ApiTask = {
   id: string
   author_uid: string
@@ -27,6 +33,7 @@ export type ApiTask = {
   is_important: boolean
   checklist: Array<Todo>
   tags: Array<TaskTag>
+  schedule: TaskSchedule | null
 }
 
 export type TaskId = ApiTask['id']
