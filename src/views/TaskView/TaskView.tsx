@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import {useParams} from 'react-router'
 import {MainView} from '@views/MainView'
 import format from 'date-fns/format'
@@ -6,7 +6,7 @@ import parseISO from 'date-fns/parseISO'
 import isEmpty from 'lodash/fp/isEmpty'
 import {CalendarIcon, PlusIcon, ClockIcon} from '@heroicons/react/outline'
 import ContentLoader from 'react-content-loader'
-import {useQuery} from 'react-query'
+import {useQuery, useMutation, useQueryClient} from 'react-query'
 import isNil from 'lodash/fp/isNil'
 import {BottomSheet} from '@/components/BottomSheet/BottomSheet'
 import {Button} from '@components/Button'
@@ -19,7 +19,7 @@ import {
   TextArea
 } from '@modules/tasks/components'
 import {showBottomSheet} from '@store/bottom-sheet/index'
-import {ApiTask} from '@modules/tasks/types.d'
+import {ApiTask, TaskId} from '@modules/tasks/types.d'
 import {TagsManager, TaskTag} from '@modules/tags/components'
 import {usePatchTaskMutation} from '@modules/tasks/hooks'
 import {Tag} from '@components/Tag/Tag'
@@ -28,10 +28,119 @@ import {DotsVerticalIcon, ViewListIcon} from '@heroicons/react/solid'
 import {Link} from 'react-router-dom'
 import isNull from 'lodash/fp/isNull'
 import {TaskListPicker} from '@modules/tasks/components/TaskListPicker'
+import {api} from '@lib/api'
+import {Match} from '@/components/Match'
+import {isEqual} from 'date-fns'
+import isUndefined from 'lodash/fp/isUndefined'
+
+type TaskScheduleProps = {
+  taskId: TaskId
+  scheduledTaskDate?: string
+  isFetchingTask: boolean
+}
+
+const toInputDateFormat = (date: string) => {
+  return format(parseISO(date), 'yyyy-MM-dd')
+}
+
+const TaskSchedule: React.FC<TaskScheduleProps> = ({
+  taskId,
+  isFetchingTask,
+  scheduledTaskDate
+}) => {
+  const scheduleDateInput = useRef<HTMLInputElement>(null)
+  const [scheduledDate, setScheduledDate] = useState<string>(() => {
+    return !isUndefined(scheduledTaskDate)
+      ? toInputDateFormat(scheduledTaskDate)
+      : ''
+  })
+
+  useEffect(() => {
+    if (
+      !isUndefined(scheduledTaskDate) &&
+      scheduledDate !== scheduledTaskDate
+    ) {
+      setScheduledDate(toInputDateFormat(scheduledTaskDate))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scheduledTaskDate])
+
+  const queryClient = useQueryClient()
+
+  const scheduleTaskMutation = useMutation(
+    (date: string) =>
+      api.post(`task-scheduler/schedule`, {
+        task_id: taskId,
+        date
+      }),
+    {
+      onSuccess() {
+        queryClient.refetchQueries(['task', taskId])
+      }
+    }
+  )
+
+  function onScheduleInputBlur() {
+    const shouldChangeDate =
+      isUndefined(scheduledTaskDate) ||
+      !isEqual(parseISO(scheduledDate), parseISO(scheduledTaskDate))
+
+    if (scheduledDate && shouldChangeDate) {
+      scheduleTaskMutation.mutate(scheduledDate)
+    }
+  }
+
+  const formattedDate = scheduledTaskDate
+    ? format(parseISO(scheduledTaskDate), 'd.MM.yy')
+    : ''
+
+  return (
+    <TaskActionList.Item>
+      <TaskActionList.Button
+        Icon={ClockIcon}
+        onClick={() => {
+          scheduleDateInput.current?.focus()
+        }}
+      >
+        <Match>
+          <Match.Case when={scheduleTaskMutation.isLoading || isFetchingTask}>
+            <ContentLoader
+              width={160}
+              height={27}
+              viewBox="0 0 160 27"
+              backgroundColor="#ffffff"
+              foregroundColor="#e9e9e9"
+            >
+              <rect rx="5" ry="5" x="0" y="0" width="100%" height="27" />
+            </ContentLoader>
+          </Match.Case>
+          <Match.Case when={isUndefined(scheduledTaskDate)}>
+            Schedule
+          </Match.Case>
+          <Match.Default>
+            Scheduled
+            <span className="ml-auto bg-blue-50 text-blue-600 rounded px-2 py-0.5">
+              {formattedDate}
+            </span>
+          </Match.Default>
+        </Match>
+        <input
+          ref={scheduleDateInput}
+          type="date"
+          name="scheduled-date"
+          className="ml-2 w-10 sr-only"
+          value={scheduledDate}
+          onChange={event => setScheduledDate(event.target.value)}
+          onBlur={onScheduleInputBlur}
+        />
+      </TaskActionList.Button>
+    </TaskActionList.Item>
+  )
+}
 
 export const TaskView: React.FC = () => {
   const {taskId} = useParams<{taskId: string}>()
-  const {data: task} = useQuery<ApiTask>(['task', taskId], () =>
+  const {data: task, isFetching} = useQuery<ApiTask>(['task', taskId], () =>
     akira.tasks.findOne(taskId)
   )
 
@@ -146,11 +255,11 @@ export const TaskView: React.FC = () => {
             Add due date
           </TaskActionList.Button>
         </TaskActionList.Item>
-        <TaskActionList.Item>
-          <TaskActionList.Button Icon={ClockIcon}>
-            Schedule
-          </TaskActionList.Button>
-        </TaskActionList.Item>
+        <TaskSchedule
+          taskId={taskId}
+          scheduledTaskDate={task.schedule?.date}
+          isFetchingTask={isFetching}
+        />
       </TaskActionList>
       {task && <ChecklistManager task={task} />}
       <TaskActionToast
