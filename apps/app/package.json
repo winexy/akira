@@ -102,7 +102,6 @@
     "postcss": "^8.2.9",
     "postcss-nested": "^5.0.5",
     "prettier": "2.2.1",
-    "rollup-plugin-copy": "^3.4.0",
     "semantic-release": "^17.4.2",
     "tailwind-caret-color": "^1.1.0",
     "tailwindcss": "^2.1.1",
