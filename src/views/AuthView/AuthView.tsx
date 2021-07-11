@@ -1,35 +1,30 @@
 import React from 'react'
 import {LoginIcon} from '@heroicons/react/solid'
 import {useFirebaseAuth} from '@/firebase/index'
+import {Akira} from '@/components/Header/Akira'
+import {Button} from '@/components/Button'
 
 export const AuthView: React.FC = () => {
   const {login} = useFirebaseAuth()
 
   return (
-    <div className="flex-1 flex-col flex justify-end items-center p-6">
-      <h1 className="flex items-center text-white font-bold text-4xl mb-4 self-start">
-        Welcome
-      </h1>
-      <button
+    <div className="flex-1 flex-col flex justify-center items-center p-6">
+      <div className="mt-auto">
+        <Akira className="w-48 h-48" />
+        <h2 className="text-white text-4xl font-bold text-center font-mono">
+          Akira
+        </h2>
+      </div>
+      <Button
         type="button"
-        className="
-          z-10
-          w-full flex justify-center items-center
-          px-8 py-3
-          font-bold text-white
-          rounded
-          border border-white
-          transition ease-in duration-150
-          active:bg-white
-          active:text-gray-700
-          active:shadow-xl
-          focus:outline-none
-        "
+        size="md"
+        variant="indigo"
+        className="mt-auto w-full"
         onClick={login}
       >
         <LoginIcon className="w-6 h-6 mr-2" />
-        Sign in
-      </button>
+        Sign in with Google
+      </Button>
     </div>
   )
 }
