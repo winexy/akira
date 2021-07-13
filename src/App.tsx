@@ -23,6 +23,7 @@ import {NewListView} from './views/NewListView'
 import {ListsView} from './views/ListsView'
 import {AkiraLoader} from './components/AkiraLoader'
 import {TaskListView} from './views/TaskListView'
+import {SearchView} from './views/SearchView'
 
 const dndConfig = {
   enableMouseEvents: true
@@ -93,6 +94,9 @@ function App() {
               </Route>
               <Route path="/tasks/:taskId">
                 <TaskView />
+              </Route>
+              <Route path="/search">
+                <SearchView />
               </Route>
               <Route path="/wip">
                 <WipView />
