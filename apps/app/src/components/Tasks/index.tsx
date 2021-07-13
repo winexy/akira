@@ -36,7 +36,7 @@ export const Tasks: React.FC<Props> = ({
     const count = 8
     const height = taskHeight * count + (count - 1) * spacing
     return (
-      <section className="px-4">
+      <section className={className}>
         <ContentLoader
           speed={2}
           width="100%"
@@ -74,7 +74,7 @@ export const Tasks: React.FC<Props> = ({
   }
 
   return (
-    <ul className={clsx('space-y-0.5 px-4', className)}>
+    <ul className={clsx('space-y-0.5', className)}>
       {tasks.map((task, index) => (
         <Task
           key={task.id}

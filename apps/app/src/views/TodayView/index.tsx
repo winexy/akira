@@ -84,7 +84,7 @@ export function TodayView() {
         onChange={updateFilters}
       />
       <SortingBottomSheet sortType={sortType} onChange={setSortType} />
-      <section className="mt-4 pb-24">
+      <section className="mt-4 pb-24 px-4">
         <Tasks isPending={isLoading} tasks={sorted} />
       </section>
       <TaskListOperations

@@ -7,7 +7,8 @@ import {
   HomeIcon,
   CollectionIcon,
   ViewListIcon,
-  PlusIcon
+  PlusIcon,
+  SearchIcon
 } from '@heroicons/react/solid'
 import {closeMenu, $isMenuOpen} from '@store/menu'
 import {useFirebaseAuth} from '@/firebase/Provider'
@@ -167,6 +168,9 @@ export const Menu: React.FC = ({children}) => {
           </button>
         </div>
         <ul className="pt-0.5 px-4 space-y-1 text-white font-bold text-lg flex-1 overflow-auto">
+          <MenuItem to="/search" Icon={SearchIcon}>
+            Search
+          </MenuItem>
           <MenuItem to="/" Icon={HomeIcon}>
             Today
             {todayTasksCount ? (

@@ -4,6 +4,7 @@ import {Tasks} from '@components/Tasks'
 import {useTasksQuery} from '@modules/tasks/hooks'
 import {TaskForm} from '@components/TaskForm/TaskForm'
 import {akira} from '@lib/akira'
+import {Link} from 'react-router-dom'
 import {useMutation, useQueryClient} from 'react-query'
 import {FiltersBottomSheet} from '@modules/tasks/filters/FiltersBottomSheet'
 import {
@@ -20,6 +21,7 @@ import {useTagsQuery} from '@modules/tags/hooks'
 import {TaskListOperations} from '@modules/tasks/components/TaskListOperations'
 import {TaskQueryKeyEnum} from '@modules/tasks/config'
 import {CreateTaskMeta} from '@lib/akira/tasks/tasks'
+import {SearchIcon} from '@heroicons/react/solid'
 
 export const TasksView: React.FC = () => {
   const {data: tasks = [], isLoading} = useTasksQuery()
@@ -49,10 +51,13 @@ export const TasksView: React.FC = () => {
         onSubmit={createTaskMutation.mutate}
         onVisibilityChange={addTaskControl.onFormVisiblityChange}
       />
-      <div className="px-4 text-gray-600">
+      <div className="flex items-center px-4 text-gray-600">
         <h2 className="flex items-center font-bold text-3xl">Tasks</h2>
+        <Link to="/search" className="ml-auto">
+          <SearchIcon className="w-6 h-6" />
+        </Link>
       </div>
-      <section className="mt-4 pb-4">
+      <section className="mt-4 pb-4 px-4">
         <Tasks isPending={isLoading} tasks={sorted} />
       </section>
       <FiltersBottomSheet
