@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import DatePicker from 'react-datepicker'
 import './DatePicker.css'
 import {useParams} from 'react-router'
@@ -37,7 +37,7 @@ import isNull from 'lodash/fp/isNull'
 import {TaskListPicker} from '@modules/tasks/components/TaskListPicker'
 import {api} from '@lib/api'
 import {Match} from '@/components/Match'
-import {isEqual} from 'date-fns'
+import isEqual from 'date-fns/isEqual'
 import isUndefined from 'lodash/fp/isUndefined'
 
 type TaskScheduleProps = {
