@@ -34,7 +34,7 @@
     "axios": "^0.21.1",
     "body-scroll-lock": "^3.1.5",
     "clsx": "^1.1.1",
-    "date-fns": "^2.21.2",
+    "date-fns": "2.22.1",
     "debounce-promise": "^3.1.2",
     "effector": "^21.8.11",
     "effector-react": "^21.3.2",
