@@ -2,17 +2,27 @@ import produce from 'immer'
 import {useReducer} from 'react'
 import {ApiTask} from '@modules/tasks/types.d'
 import {exhaustiveCheck} from '@/utils'
+import isNull from 'lodash/fp/isNull'
+import isAfter from 'date-fns/isAfter'
+import parseISO from 'date-fns/parseISO'
 
-function createFiltersState() {
+export type FiltersState = {
+  completed: boolean
+  important: boolean
+  notCompleted: boolean
+  dateFrom: Date | null
+  tags: Set<number>
+}
+
+function createFiltersState(): FiltersState {
   return {
     completed: false,
     important: false,
     notCompleted: false,
+    dateFrom: null,
     tags: new Set<number>()
   }
 }
-
-export type FiltersState = ReturnType<typeof createFiltersState>
 
 type FilterPredicate = (task: ApiTask, state: FiltersState) => boolean
 
@@ -48,8 +58,22 @@ const bySomeTags: FilterPredicate = (task, state) => {
   return task.tags.some(tag => state.tags.has(tag.id))
 }
 
+const byDateFrom: FilterPredicate = (task, state) => {
+  if (isNull(state.dateFrom)) {
+    return true
+  }
+
+  return isAfter(parseISO(task.created_at), state.dateFrom)
+}
+
 export function filterTasks(tasks: ApiTask[], state: FiltersState) {
-  const filters = [byCompletness, byImportance, byNotCompleted, bySomeTags]
+  const filters = [
+    byCompletness,
+    byImportance,
+    byNotCompleted,
+    bySomeTags,
+    byDateFrom
+  ]
 
   return tasks.filter(task => {
     return filters.every(func => {
@@ -65,6 +89,10 @@ export type FilterAction =
   | {
       type: 'tags'
       tagId: number
+    }
+  | {
+      type: 'date-from'
+      date: Date | null
     }
   | {
       type: 'reset'
@@ -84,6 +112,10 @@ export function useTaskFilters(): [FiltersState, React.Dispatch<FilterAction>] {
         }
         case 'notCompleted': {
           draft.notCompleted = !draft.notCompleted
+          return draft
+        }
+        case 'date-from': {
+          draft.dateFrom = action.date
           return draft
         }
         case 'tags': {
