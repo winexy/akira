@@ -33,7 +33,8 @@ import {Match} from '@/components/Match'
 import isEqual from 'date-fns/isEqual'
 import isUndefined from 'lodash/fp/isUndefined'
 import {DatePickerSheet, DatePicker} from '@components/DatePicker'
-import {Portal} from '@/components/Portal'
+import {Portal} from '@components/Portal'
+import addDays from 'date-fns/addDays'
 
 type TaskScheduleProps = {
   taskId: TaskId
@@ -124,7 +125,11 @@ const TaskSchedule: React.FC<TaskScheduleProps> = ({
 
         <Portal to="schedule-datepicker">
           <DatePickerSheet date={scheduledDate} onApply={apply}>
-            <DatePicker date={scheduledDate} onChange={setScheduledDate} />
+            <DatePicker
+              date={scheduledDate}
+              minDate={addDays(new Date(), 1)}
+              onChange={setScheduledDate}
+            />
           </DatePickerSheet>
         </Portal>
       </TaskActionList.Button>
