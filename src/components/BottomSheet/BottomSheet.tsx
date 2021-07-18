@@ -1,10 +1,14 @@
 import React, {useState, useRef, TouchEventHandler, useEffect} from 'react'
-import {useStore} from 'effector-react'
+import {useStore, useStoreMap} from 'effector-react'
 import get from 'lodash/fp/get'
 import clsx from 'clsx'
 import {CSSTransition} from 'react-transition-group'
 import {ErrorBoundary, FallbackProps} from 'react-error-boundary'
-import {$activeBottomSheet, hideBottomSheet} from '@store/bottom-sheet'
+import {
+  hideBottomSheet,
+  $activeBottomSheet,
+  $bottomSheets
+} from '@store/bottom-sheet'
 import {
   disableBodyScroll,
   enableBodyScroll,
@@ -13,6 +17,8 @@ import {
 import './BottomSheet.css'
 import {ExclamationCircleIcon} from '@heroicons/react/solid'
 import {Button} from '@components/Button'
+import find from 'lodash/fp/find'
+import isNull from 'lodash/fp/isNull'
 
 const extractTouch = get('changedTouches.0.clientY')
 
@@ -42,6 +48,10 @@ function Fallback({error}: FallbackProps) {
 }
 
 export const BottomSheet: React.FC<Props> = ({name, children, className}) => {
+  const sheet = useStoreMap(
+    $bottomSheets,
+    sheets => find({name}, sheets) ?? null
+  )
   const activeBottomSheet = useStore($activeBottomSheet)
   const [isBlackoutTouchStarted, setIsBlackoutTouchStarted] = useState(false)
   const [isSheetTouchStarted, setIsSheetTouchStarted] = useState(false)
@@ -50,9 +60,14 @@ export const BottomSheet: React.FC<Props> = ({name, children, className}) => {
   const contentRef = useRef<HTMLDivElement | null>(null)
   const rootRef = useRef<HTMLDivElement | null>(null)
 
-  const isActive = activeBottomSheet === name
+  const isVisible = !isNull(sheet)
+  const isActive = activeBottomSheet?.name === name
 
-  const onBlackoutTouchStart = () => setIsBlackoutTouchStarted(true)
+  const onBlackoutTouchStart = () => {
+    if (isActive) {
+      setIsBlackoutTouchStarted(true)
+    }
+  }
 
   const onBlackoutTouchEnd = () => {
     if (isBlackoutTouchStarted) {
@@ -62,6 +77,10 @@ export const BottomSheet: React.FC<Props> = ({name, children, className}) => {
   }
 
   const onSheetTouchStart: TouchEventHandler = e => {
+    if (!isActive) {
+      return
+    }
+
     window.console.assert(contentRef.current !== null, 'Content Ref is NULL')
 
     if (contentRef.current) {
@@ -89,32 +108,36 @@ export const BottomSheet: React.FC<Props> = ({name, children, className}) => {
 
   useEffect(() => {
     return () => {
-      if (isActive) {
+      if (isVisible) {
         hideBottomSheet(name)
         clearAllBodyScrollLocks()
       }
     }
-  }, [name, isActive])
+  }, [name, isVisible])
 
   useEffect(() => {
-    if (isActive && contentRef.current) {
+    if (isVisible && contentRef.current) {
       disableBodyScroll(contentRef.current)
       setIsSheetTouchStarted(false)
       setSheetShift(0)
     } else if (contentRef.current) {
       enableBodyScroll(contentRef.current)
     }
-  }, [isActive])
+  }, [isVisible])
 
   return (
     <CSSTransition
       nodeRef={rootRef}
-      in={isActive}
+      in={isVisible}
       timeout={500}
       unmountOnExit
       classNames="bottom-sheet-slide-up"
     >
-      <div ref={rootRef} className="z-50 fixed inset-0 flex">
+      <div
+        ref={rootRef}
+        className="fixed inset-0 flex"
+        style={{zIndex: 50 * (sheet?.index ?? 1)}}
+      >
         <div
           className="blackout fixed inset-0 z-10 bg-black opacity-50"
           role="button"
