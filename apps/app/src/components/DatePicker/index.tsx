@@ -3,6 +3,7 @@ import ReactDatePicker from 'react-datepicker'
 import {BottomSheet} from '@components/BottomSheet/BottomSheet'
 import ChevronLeftIcon from '@heroicons/react/solid/ChevronLeftIcon'
 import format from 'date-fns/format'
+import addDays from 'date-fns/addDays'
 import ChevronRightIcon from '@heroicons/react/solid/ChevronRightIcon'
 import {Button} from '@components/Button'
 import {hideBottomSheet} from '@store/bottom-sheet'
@@ -19,7 +20,7 @@ export const DatePicker: React.FC<Props> = ({date, onChange}) => {
       inline
       selected={date}
       monthsShown={1}
-      minDate={new Date()}
+      minDate={addDays(new Date(), 1)}
       className="flex flex-col justify-center"
       renderCustomHeader={params => {
         return (
@@ -61,7 +62,9 @@ export const DatePickerSheet: React.FC<DatePickerSheetProps> = ({
 }) => {
   return (
     <BottomSheet name="datepicker" className="pb-8">
-      <h2 className="mt-4 font-bold text-2xl text-gray-700">Schedule task</h2>
+      <h2 className="mt-4 px-4 text-center font-bold text-2xl text-gray-700">
+        Schedule task
+      </h2>
       <div className="px-4">{children}</div>
       <div className="sticky bottom-0 mt-6 px-4">
         <Button
