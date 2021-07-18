@@ -7,18 +7,21 @@
 }
 
 .react-datepicker__day-names {
-  @apply h-8 items-center;
-  @apply grid grid-cols-7;
+  @apply h-8 items-center text-center;
+  @apply grid grid-cols-7 text-gray-400 font-bold;
 }
+
 .react-datepicker__month {
   @apply space-y-2;
 }
+
 .react-datepicker__week {
   @apply grid grid-cols-7;
 }
+
 .react-datepicker__day {
   @apply m-0 flex items-center justify-center;
-  @apply rounded;
+  @apply rounded font-semibold;
   @apply focus:outline-none;
   @apply transition ease-in duration-150;
   @apply select-none;
