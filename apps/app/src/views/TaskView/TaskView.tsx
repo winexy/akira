@@ -1,6 +1,4 @@
 import React, {useEffect, useState} from 'react'
-import DatePicker from 'react-datepicker'
-import './DatePicker.css'
 import {useParams} from 'react-router'
 import {MainView} from '@views/MainView'
 import format from 'date-fns/format'
@@ -20,18 +18,13 @@ import {
   TaskActionToast,
   TextArea
 } from '@modules/tasks/components'
-import {showBottomSheet, hideBottomSheet} from '@store/bottom-sheet/index'
+import {showBottomSheet} from '@store/bottom-sheet'
 import {ApiTask, TaskId} from '@modules/tasks/types.d'
 import {TagsManager, TaskTag} from '@modules/tags/components'
 import {usePatchTaskMutation} from '@modules/tasks/hooks'
 import {Tag} from '@components/Tag/Tag'
 import {EditableHeading} from '@components/EditableHeading'
-import {
-  DotsVerticalIcon,
-  ViewListIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon
-} from '@heroicons/react/solid'
+import {DotsVerticalIcon, ViewListIcon} from '@heroicons/react/solid'
 import {Link} from 'react-router-dom'
 import isNull from 'lodash/fp/isNull'
 import {TaskListPicker} from '@modules/tasks/components/TaskListPicker'
@@ -39,6 +32,7 @@ import {api} from '@lib/api'
 import {Match} from '@/components/Match'
 import isEqual from 'date-fns/isEqual'
 import isUndefined from 'lodash/fp/isUndefined'
+import {DatePickerSheet, DatePicker} from '@components/DatePicker'
 
 type TaskScheduleProps = {
   taskId: TaskId
@@ -126,61 +120,9 @@ const TaskSchedule: React.FC<TaskScheduleProps> = ({
             </span>
           </Match.Default>
         </Match>
-        <BottomSheet name="datepicker" className="pb-8">
-          <h2 className="mt-4 font-bold text-2xl text-gray-700">
-            Schedule task
-          </h2>
-          <div className="px-4">
-            <DatePicker
-              inline
-              selected={scheduledDate}
-              monthsShown={1}
-              minDate={new Date()}
-              className="flex flex-col justify-center"
-              renderCustomHeader={params => {
-                return (
-                  <div className="text-gray-700 px-2 py-2 flex items-center justify-between">
-                    <button
-                      className="w-12 h-12 flex items-center justify-center rounded transition ease-in duration-150 active:bg-gray-100 focus:outline-none disabled:text-gray-200 disabled:bg-transparent"
-                      disabled={params.prevMonthButtonDisabled}
-                      onClick={params.decreaseMonth}
-                    >
-                      <ChevronLeftIcon className="w-5 h-5" />
-                    </button>
-                    <strong className="font-semibold">
-                      {format(params.date, 'LLLL')}
-                    </strong>
-                    <button
-                      className="w-12 h-12 flex items-center justify-center rounded transition ease-in duration-150 active:bg-gray-100 focus:outline-none disabled:text-gray-200 disabled:bg-transparent"
-                      disabled={params.nextMonthButtonDisabled}
-                      onClick={params.increaseMonth}
-                    >
-                      <ChevronRightIcon className="w-5 h-5" />
-                    </button>
-                  </div>
-                )
-              }}
-              onChange={date => setScheduledDate(date as Date)}
-            />
-          </div>
-          <div className="sticky bottom-0 mt-6 px-4">
-            <Button
-              size="md"
-              type="button"
-              className="w-full"
-              onClick={event => {
-                event.stopPropagation()
-                hideBottomSheet()
-                apply()
-              }}
-            >
-              Select
-              <span className=" ml-auto">
-                {format(scheduledDate, 'dd.MM.yy')}
-              </span>
-            </Button>
-          </div>
-        </BottomSheet>
+        <DatePickerSheet date={scheduledDate} onApply={apply}>
+          <DatePicker date={scheduledDate} onChange={setScheduledDate} />
+        </DatePickerSheet>
       </TaskActionList.Button>
     </TaskActionList.Item>
   )
