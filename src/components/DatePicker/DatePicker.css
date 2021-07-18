@@ -2,10 +2,6 @@
   @apply text-gray-800 text-sm;
 }
 
-.react-datepicker__header {
-  @apply py-2;
-}
-
 .react-datepicker__day-names {
   @apply h-8 items-center text-center;
   @apply grid grid-cols-7 text-gray-400 font-bold;

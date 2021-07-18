@@ -3,7 +3,6 @@ import ReactDatePicker from 'react-datepicker'
 import {BottomSheet} from '@components/BottomSheet/BottomSheet'
 import ChevronLeftIcon from '@heroicons/react/solid/ChevronLeftIcon'
 import format from 'date-fns/format'
-import addDays from 'date-fns/addDays'
 import ChevronRightIcon from '@heroicons/react/solid/ChevronRightIcon'
 import {Button} from '@components/Button'
 import {hideBottomSheet} from '@store/bottom-sheet'
@@ -11,20 +10,28 @@ import './DatePicker.css'
 
 type Props = {
   date: Date | null
+  minDate?: Date | null
+  maxDate?: Date | null
   onChange(date: Date): void
 }
 
-export const DatePicker: React.FC<Props> = ({date, onChange}) => {
+export const DatePicker: React.FC<Props> = ({
+  date,
+  onChange,
+  minDate = null,
+  maxDate = null
+}) => {
   return (
     <ReactDatePicker
       inline
       selected={date}
       monthsShown={1}
-      minDate={addDays(new Date(), 1)}
+      minDate={minDate}
+      maxDate={maxDate}
       className="flex flex-col justify-center"
       renderCustomHeader={params => {
         return (
-          <div className="text-gray-700 px-2 py-2 flex items-center justify-between">
+          <div className="text-gray-700 px-2 flex items-center justify-between">
             <button
               className="w-12 h-12 flex items-center justify-center rounded transition ease-in duration-150 active:bg-gray-100 focus:outline-none disabled:text-gray-200 disabled:bg-transparent"
               disabled={params.prevMonthButtonDisabled}
