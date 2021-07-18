@@ -33,6 +33,7 @@ import {Match} from '@/components/Match'
 import isEqual from 'date-fns/isEqual'
 import isUndefined from 'lodash/fp/isUndefined'
 import {DatePickerSheet, DatePicker} from '@components/DatePicker'
+import {Portal} from '@/components/Portal'
 
 type TaskScheduleProps = {
   taskId: TaskId
@@ -45,14 +46,13 @@ const TaskSchedule: React.FC<TaskScheduleProps> = ({
   isFetchingTask,
   scheduledTaskDate
 }) => {
-  const [scheduledDate, setScheduledDate] = useState<Date>(() => {
-    return !isUndefined(scheduledTaskDate)
-      ? parseISO(scheduledTaskDate)
-      : new Date()
+  const [scheduledDate, setScheduledDate] = useState<Date | null>(() => {
+    return !isUndefined(scheduledTaskDate) ? parseISO(scheduledTaskDate) : null
   })
 
   useEffect(() => {
     if (
+      scheduledDate &&
       !isUndefined(scheduledTaskDate) &&
       isEqual(parseISO(scheduledTaskDate), scheduledDate)
     ) {
@@ -79,6 +79,7 @@ const TaskSchedule: React.FC<TaskScheduleProps> = ({
   function apply() {
     const shouldChangeDate =
       isUndefined(scheduledTaskDate) ||
+      isNull(scheduledDate) ||
       !isEqual(scheduledDate, parseISO(scheduledTaskDate))
 
     if (scheduledDate && shouldChangeDate) {
@@ -120,9 +121,12 @@ const TaskSchedule: React.FC<TaskScheduleProps> = ({
             </span>
           </Match.Default>
         </Match>
-        <DatePickerSheet date={scheduledDate} onApply={apply}>
-          <DatePicker date={scheduledDate} onChange={setScheduledDate} />
-        </DatePickerSheet>
+
+        <Portal to="schedule-datepicker">
+          <DatePickerSheet date={scheduledDate} onApply={apply}>
+            <DatePicker date={scheduledDate} onChange={setScheduledDate} />
+          </DatePickerSheet>
+        </Portal>
       </TaskActionList.Button>
     </TaskActionList.Item>
   )
@@ -251,6 +255,7 @@ export const TaskView: React.FC = () => {
           isFetchingTask={isFetching}
         />
       </TaskActionList>
+      <div id="schedule-datepicker" />
       {task && <ChecklistManager task={task} />}
       <TaskActionToast
         taskId={taskId}
