@@ -17,8 +17,6 @@ type Props = {
   onInput?(value: string): void
 }
 
-const countRows = (value: string) => size(value.split('\n'))
-
 export const TextArea: React.FC<Props> = ({
   value,
   placeholder = '',
@@ -28,21 +26,32 @@ export const TextArea: React.FC<Props> = ({
 }) => {
   const ref = useRef<HTMLTextAreaElement>(null)
   const [localValue, setLocalValue] = useState(value)
-  const [height, setHeight] = useState<number>()
+  const [height, setHeight] = useState<string | number>()
 
   const sync = (newValue: string) => {
     setLocalValue(newValue)
   }
+
+  const syncHeight = () => {
+    setHeight('auto')
+
+    requestAnimationFrame(() => {
+      if (ref.current) {
+        getComputedStyle(ref.current)
+        setHeight(ref.current.scrollHeight)
+      }
+    })
+  }
+
+  useEffect(() => {
+    syncHeight()
+  }, [localValue])
 
   const handleChange: ChangeEventHandler<HTMLTextAreaElement> = event => {
     const {value} = event.target
 
     onInput(value)
     sync(value)
-
-    if (ref.current) {
-      setHeight(ref.current.scrollHeight)
-    }
   }
 
   const handleBlur: FocusEventHandler<HTMLTextAreaElement> = event => {
@@ -51,12 +60,6 @@ export const TextArea: React.FC<Props> = ({
     onChange(value)
     sync(value)
   }
-
-  useEffect(() => {
-    if (ref.current) {
-      setHeight(ref.current.scrollHeight)
-    }
-  }, [])
 
   return (
     <textarea
