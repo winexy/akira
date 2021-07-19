@@ -1,4 +1,10 @@
-import React, {ChangeEventHandler, FocusEventHandler, useState} from 'react'
+import React, {
+  ChangeEventHandler,
+  FocusEventHandler,
+  useEffect,
+  useRef,
+  useState
+} from 'react'
 import noop from 'lodash/fp/noop'
 import size from 'lodash/fp/size'
 import clsx from 'clsx'
@@ -20,11 +26,11 @@ export const TextArea: React.FC<Props> = ({
   onChange,
   onInput = noop
 }) => {
-  const [rows, setRows] = useState(() => countRows(value))
+  const ref = useRef<HTMLTextAreaElement>(null)
   const [localValue, setLocalValue] = useState(value)
+  const [height, setHeight] = useState<number>()
 
   const sync = (newValue: string) => {
-    setRows(countRows(newValue))
     setLocalValue(newValue)
   }
 
@@ -33,6 +39,10 @@ export const TextArea: React.FC<Props> = ({
 
     onInput(value)
     sync(value)
+
+    if (ref.current) {
+      setHeight(ref.current.scrollHeight)
+    }
   }
 
   const handleBlur: FocusEventHandler<HTMLTextAreaElement> = event => {
@@ -42,14 +52,21 @@ export const TextArea: React.FC<Props> = ({
     sync(value)
   }
 
+  useEffect(() => {
+    if (ref.current) {
+      setHeight(ref.current.scrollHeight)
+    }
+  }, [])
+
   return (
     <textarea
+      ref={ref}
+      style={{height}}
       className={clsx(
         'w-full p-0 bg-transparent focus:outline-none',
         className
       )}
       value={localValue}
-      rows={rows}
       placeholder={placeholder}
       onChange={handleChange}
       onBlur={handleBlur}
