@@ -32,12 +32,14 @@ export const AddTaskButton: React.FC<NativeButtonProps> = ({onClick}) => {
         `
           flex items-center justify-center
           p-1 w-12 h-12 box-content
-          bg-blue-500
           text-white rounded-full
-          shadow-2xl transform: ;
-          transition ease-in duration-100 
-          active:bg-blue-600
-          active:scale-95
+          shadow-2xl transform
+          transition ease-in duration-200 
+          bg-gradient-to-tr
+          from-indigo-300 via-indigo-400 to-blue-500
+          active:from-indigo-500 active:to-blue-500
+          active:ring-8 active:ring-indigo-50
+          active:scale-110
           active:shadow-md
           focus:outline-none
         `,
