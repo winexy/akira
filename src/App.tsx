@@ -24,6 +24,7 @@ import {ListsView} from './views/ListsView'
 import {AkiraLoader} from './components/AkiraLoader'
 import {TaskListView} from './views/TaskListView'
 import {SearchView} from './views/SearchView'
+import {NotificationManager} from './modules/notifications/NotificationManager'
 
 const dndConfig = {
   enableMouseEvents: true
@@ -117,6 +118,7 @@ function App() {
           </Menu>
         </ErrorBoundary>
       </Router>
+      <NotificationManager />
       <ReactQueryDevtools />
     </DndProvider>
   )
