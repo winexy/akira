@@ -159,8 +159,9 @@ export const Task: React.FC<TaskProps> = ({
       Component="li"
       className={clsx(
         'rounded-lg overflow-hidden',
-        'shadow-xs bg-white',
+        'bg-white',
         'transform border border-gray-200',
+        'shadow-xs',
         'transition ease-in duration-100',
         {
           'scale-95 -rotate-1': isDragging
@@ -199,7 +200,8 @@ export const Task: React.FC<TaskProps> = ({
         )}
       >
         <Checkbox
-          className="mr-3"
+          className="mr-1"
+          size="sm"
           isChecked={task.is_completed}
           onChange={() => onCheck(task.id)}
           onClick={e => e.stopPropagation()}
