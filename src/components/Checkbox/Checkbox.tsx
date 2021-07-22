@@ -2,25 +2,35 @@ import React, {MouseEventHandler} from 'react'
 import clsx from 'clsx'
 import {CheckIcon} from '@heroicons/react/solid'
 import noop from 'lodash/fp/noop'
+import {createMatcher} from '../ui/utils'
 
-type CheckboxProps = {
+type Props = {
   isChecked?: boolean
   onChange?(newState: boolean): void
   onClick?: MouseEventHandler<HTMLLabelElement>
   className?: string
+  size?: Size
 }
 
-export const Checkbox: React.FC<CheckboxProps> = ({
+type Size = 'xs' | 'sm'
+
+const xs = 'w-4 h-4'
+const sm = 'w-5 h-5'
+
+const matchSize = createMatcher<Size>('size')({xs, sm})
+
+export const Checkbox: React.FC<Props> = ({
   isChecked = false,
   onChange = noop,
   onClick = noop,
-  className = ''
+  className = '',
+  size = 'xs'
 }) => {
   return (
     <label
       className={clsx(
         className,
-        'focus-within:ring-2 rounded transition ease-in duration-150'
+        'focus-within:ring-2 rounded-md transition ease-in duration-150'
       )}
       onClick={onClick}
     >
@@ -33,12 +43,13 @@ export const Checkbox: React.FC<CheckboxProps> = ({
       <div
         className={clsx(
           'flex items-center justify-center',
-          'w-4 h-4 rounded border',
+          'rounded-md border',
           'transition ease-in duration-75',
           {
-            'bg-blue-500 border-blue-600': isChecked,
+            'bg-indigo-400 border-indigo-500': isChecked,
             'bg-white border-gray-400': !isChecked
-          }
+          },
+          matchSize(size)
         )}
       >
         {isChecked && <CheckIcon className="h-4 w-4 text-white" />}
