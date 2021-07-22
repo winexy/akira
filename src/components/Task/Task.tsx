@@ -193,9 +193,9 @@ export const Task: React.FC<TaskProps> = ({
           'bg-white pl-4 p-2 text-lg text-black',
           'rounded-md',
           'transition ease-in duration-150',
-          'active:bg-gray-100',
+          'active:bg-gray-50',
           {
-            'line-through text-gray-400': task.is_completed
+            'line-through text-gray-300': task.is_completed
           }
         )}
       >
@@ -220,7 +220,7 @@ export const Task: React.FC<TaskProps> = ({
             'focus:outline-none',
             task.is_important
               ? 'text-red-500 active:text-red-400'
-              : 'text-gray-400 bg-opacity-70 active:text-opacity-100'
+              : 'text-gray-300 bg-opacity-70 active:text-opacity-100'
           )}
           onClick={e => {
             e.preventDefault()
