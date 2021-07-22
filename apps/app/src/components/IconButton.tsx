@@ -9,6 +9,7 @@ type Props = React.DetailedHTMLProps<
   HTMLButtonElement
 > & {size?: ButtonSize}
 
+const sm = 'w-8 h-8'
 const matchSize = createMatcher<ButtonSize>('icon-button-size')({sm})
 
 export const IconButton: React.FC<Props> = ({
