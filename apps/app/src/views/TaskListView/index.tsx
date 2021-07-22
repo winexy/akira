@@ -40,7 +40,9 @@ export const TaskListView: React.FC = () => {
       <h1 className="px-4 font-semibold text-2xl text-gray-700">
         {list.title}
       </h1>
-      <Tasks className="mt-4" isPending={isLoading} tasks={list.tasks} />
+      <section className="px-4">
+        <Tasks className="mt-4" isPending={isLoading} tasks={list.tasks} />
+      </section>
     </MainView>
   )
 }
