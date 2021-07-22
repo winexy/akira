@@ -14,7 +14,11 @@ module.exports = {
       borderColor: ['active', 'disabled'],
       scale: ['active'],
       backgroundOpacity: ['active'],
-      boxShadow: ['active', 'disabled']
+      boxShadow: ['active', 'disabled'],
+      backgroundImage: ['active'],
+      gradientColorStops: ['active'],
+      ringWidth: ['active'],
+      ringColor: ['active']
     }
   },
   plugins: [TailwindCaretColor()]
