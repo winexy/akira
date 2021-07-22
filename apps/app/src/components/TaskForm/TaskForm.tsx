@@ -9,14 +9,26 @@ import React, {
 } from 'react'
 import isEmpty from 'lodash/fp/isEmpty'
 import isUndefined from 'lodash/fp/isUndefined'
-import {ChevronLeftIcon, XCircleIcon} from '@heroicons/react/solid'
+import {
+  ChevronLeftIcon,
+  PlusIcon,
+  XCircleIcon,
+  PencilAltIcon
+} from '@heroicons/react/solid'
 import clsx from 'clsx'
 import {useTagsQuery} from '@modules/tags/hooks/index'
 import {Button} from '@components/Button'
 import {TaskTag} from '@modules/tags/types.d'
 import {TagsGrid} from '@components/TagsGrid/TagsGrid'
 import {CreateTaskMeta} from '@lib/akira/tasks/tasks'
+import {TaskList} from '@modules/lists/types.d'
+import filter from 'lodash/fp/filter'
+import lowerCase from 'lodash/fp/lowerCase'
+import toLower from 'lodash/fp/toLower'
 import {Tag} from '../Tag/Tag'
+import {useListsQuery} from '../../modules/lists/hooks/index'
+import {BottomSheet} from '../BottomSheet/BottomSheet'
+import {showBottomSheet, hideBottomSheet} from '../../store/bottom-sheet/index'
 
 type TaskFormProps = {
   onSubmit(payload: {title: string; meta: CreateTaskMeta}): void
@@ -34,7 +46,14 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
     const backdropRef = useRef<HTMLDivElement>(null)
     const [isVisible, setIsVisible] = useState(false)
     const {data: tags} = useTagsQuery()
+    const {data: lists} = useListsQuery()
     const [selectedTags, setSelectedTags] = useState(new Set<number>())
+    const [selectedList, setSelectedList] = useState<TaskList | null>(null)
+    const [search, setSearch] = useState('')
+
+    const filteredList = filter(list => {
+      return lowerCase(list.title).includes(search)
+    }, lists)
 
     useImperativeHandle(ref, () => ({
       show: () => setIsVisible(true)
@@ -153,6 +172,28 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                     ))}
                   </TagsGrid>
                 )}
+                {!isUndefined(lists) && (
+                  <div className="mt-4 w-full px-6 text-white flex justify-between items-center">
+                    <Button
+                      size="sm"
+                      className="w-full text-left justify-between font-bold"
+                      variant="transparent"
+                      onClick={() => showBottomSheet('lists')}
+                    >
+                      {selectedList ? (
+                        <>
+                          {selectedList.title}
+                          <PencilAltIcon className="w-5 h-5" />
+                        </>
+                      ) : (
+                        <>
+                          Add to List
+                          <PlusIcon className="w-6 h-6" />
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                )}
                 {!isEmpty(title) && (
                   <button
                     type="button"
@@ -191,6 +232,42 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                 </Button>
               )}
             </div>
+            <BottomSheet name="lists" className="pt-6">
+              <div className="px-4">
+                <input
+                  className="w-full rounded px-1 appearance-none text-lg font-bold focus:outline-none"
+                  placeholder="Search list..."
+                  onInput={e =>
+                    setSearch(toLower((e.target as HTMLInputElement).value))
+                  }
+                />
+              </div>
+              {lists && (
+                <ul className="mt-4 divide-y divide-gray-100">
+                  {filteredList.map(list => (
+                    <li
+                      key={list.id}
+                      className={clsx(
+                        'px-4 py-3 font-semibold text-lg',
+                        'transition ease-in duration-75',
+                        'active:text-blue-500 active:bg-gray-50',
+                        list.id === selectedList?.id ? 'text-blue-500' : ''
+                      )}
+                      onClick={() => {
+                        if (list.id === selectedList?.id) {
+                          setSelectedList(null)
+                        } else {
+                          setSelectedList(list)
+                        }
+                        hideBottomSheet()
+                      }}
+                    >
+                      {list.title}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </BottomSheet>
           </div>
         )}
       </div>
