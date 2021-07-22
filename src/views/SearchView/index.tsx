@@ -5,6 +5,11 @@ import {api} from '@lib/api'
 import {Tasks} from '@components/Tasks'
 import {AdjustmentsIcon, SearchIcon, XIcon} from '@heroicons/react/solid'
 import clsx from 'clsx'
+import {showBottomSheet} from '@store/bottom-sheet'
+import {DatePicker} from '@components/DatePicker'
+import {BottomSheet} from '@components/BottomSheet/BottomSheet'
+import format from 'date-fns/format'
+import {Button} from '@components/Button'
 import {MainView} from '../MainView'
 
 const search = debounce((searchText: string) => {
@@ -26,6 +31,7 @@ export const SearchView: React.FC = () => {
   const searchQuery = useQuery(['search', searchText], () => {
     return search(searchText)
   })
+  const [createdBefore, setCreatedBefore] = useState<Date | null>(null)
 
   return (
     <MainView>
@@ -84,6 +90,27 @@ export const SearchView: React.FC = () => {
           </button>
         </div>
       </form>
+      <BottomSheet name="search-filters" className="py-4">
+        <h2 className="px-4 font-bold text-2xl">Search Filters</h2>
+        <section className="mt-4 border-t">
+          <div
+            role="button"
+            tabIndex={0}
+            className="flex items-center justify-between p-4"
+          >
+            <h3 className="font-semibold">Created before</h3>
+            {createdBefore && <span>{format(createdBefore, 'dd.MM.yy')}</span>}
+          </div>
+          <div className="px-4">
+            <DatePicker date={createdBefore} onChange={setCreatedBefore} />
+          </div>
+        </section>
+        <div className="p-4 sticky bottom-0">
+          <Button className="w-full" size="md">
+            Apply
+          </Button>
+        </div>
+      </BottomSheet>
       <section className="mt-4 px-4">
         <Tasks isPending={searchQuery.isLoading} tasks={searchQuery.data} />
       </section>
