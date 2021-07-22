@@ -1,6 +1,6 @@
 import React from 'react'
 import clsx from 'clsx'
-import {exhaustiveCheck} from '../../utils/index'
+import {createMatcher} from '../ui/utils'
 
 type Props = React.DetailedHTMLProps<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
@@ -26,35 +26,14 @@ const indigo =
 type ButtonSize = 'xs' | 'sm' | 'md'
 type ButtonVariant = 'blue' | 'red' | 'outline' | 'transparent' | 'indigo'
 
-function matchSize(size: ButtonSize) {
-  switch (size) {
-    case 'xs':
-      return xs
-    case 'sm':
-      return sm
-    case 'md':
-      return md
-    default:
-      return exhaustiveCheck(size)
-  }
-}
-
-function matchVariant(variant: ButtonVariant) {
-  switch (variant) {
-    case 'blue':
-      return blue
-    case 'red':
-      return red
-    case 'outline':
-      return outline
-    case 'transparent':
-      return transparent
-    case 'indigo':
-      return indigo
-    default:
-      return exhaustiveCheck(variant)
-  }
-}
+const matchSize = createMatcher<ButtonSize>('button-size')({xs, sm, md})
+const matchVariant = createMatcher<ButtonVariant>('button-variant')({
+  blue,
+  red,
+  outline,
+  transparent,
+  indigo
+})
 
 export const Button: React.FC<Props> = ({
   size = 'xs',
