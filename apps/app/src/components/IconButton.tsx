@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 import React from 'react'
-import {exhaustiveCheck} from '../utils/index'
+import {createMatcher} from './ui/utils'
 
 type ButtonSize = 'sm'
 
@@ -9,14 +9,7 @@ type Props = React.DetailedHTMLProps<
   HTMLButtonElement
 > & {size?: ButtonSize}
 
-function matchSize(size: ButtonSize) {
-  switch (size) {
-    case 'sm':
-      return 'w-8 h-8'
-    default:
-      return exhaustiveCheck(size)
-  }
-}
+const matchSize = createMatcher<ButtonSize>('icon-button-size')({sm})
 
 export const IconButton: React.FC<Props> = ({
   size = 'sm',
