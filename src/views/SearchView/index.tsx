@@ -35,7 +35,7 @@ export const SearchView: React.FC = () => {
 
   return (
     <MainView>
-      <form className="mt-4 px-4" onSubmit={event => event.preventDefault()}>
+      <form className="mt-2 px-4" onSubmit={event => event.preventDefault()}>
         <div
           className={clsx(
             'flex',
