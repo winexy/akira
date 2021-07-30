@@ -93,47 +93,48 @@ const TaskSchedule: React.FC<TaskScheduleProps> = ({
     : ''
 
   return (
-    <TaskActionList.Item>
-      <TaskActionList.Button
-        Icon={ClockIcon}
-        onClick={() => {
-          showBottomSheet('datepicker')
-        }}
-      >
-        <Match>
-          <Match.Case when={scheduleTaskMutation.isLoading || isFetchingTask}>
-            <ContentLoader
-              width={160}
-              height={27}
-              viewBox="0 0 160 27"
-              backgroundColor="#ffffff"
-              foregroundColor="#e9e9e9"
-            >
-              <rect rx="5" ry="5" x="0" y="0" width="100%" height="27" />
-            </ContentLoader>
-          </Match.Case>
-          <Match.Case when={isUndefined(scheduledTaskDate)}>
-            Schedule
-          </Match.Case>
-          <Match.Default>
-            Scheduled
-            <span className="ml-auto bg-blue-50 text-blue-600 rounded px-2 py-0.5">
-              {formattedDate}
-            </span>
-          </Match.Default>
-        </Match>
-
-        <Portal to="schedule-datepicker">
-          <DatePickerSheet date={scheduledDate} onApply={apply}>
-            <DatePicker
-              date={scheduledDate}
-              minDate={addDays(new Date(), 1)}
-              onChange={setScheduledDate}
-            />
-          </DatePickerSheet>
-        </Portal>
-      </TaskActionList.Button>
-    </TaskActionList.Item>
+    <>
+      <TaskActionList.Item>
+        <TaskActionList.Button
+          Icon={ClockIcon}
+          onClick={() => {
+            showBottomSheet('datepicker')
+          }}
+        >
+          <Match>
+            <Match.Case when={scheduleTaskMutation.isLoading || isFetchingTask}>
+              <ContentLoader
+                width={160}
+                height={27}
+                viewBox="0 0 160 27"
+                backgroundColor="#ffffff"
+                foregroundColor="#e9e9e9"
+              >
+                <rect rx="5" ry="5" x="0" y="0" width="100%" height="27" />
+              </ContentLoader>
+            </Match.Case>
+            <Match.Case when={isUndefined(scheduledTaskDate)}>
+              Schedule
+            </Match.Case>
+            <Match.Default>
+              Scheduled
+              <span className="ml-auto bg-blue-50 text-blue-600 rounded px-2 py-0.5">
+                {formattedDate}
+              </span>
+            </Match.Default>
+          </Match>
+        </TaskActionList.Button>
+      </TaskActionList.Item>
+      <Portal to="schedule-datepicker">
+        <DatePickerSheet date={scheduledDate} onApply={apply}>
+          <DatePicker
+            date={scheduledDate}
+            minDate={addDays(new Date(), 1)}
+            onChange={setScheduledDate}
+          />
+        </DatePickerSheet>
+      </Portal>
+    </>
   )
 }
 
