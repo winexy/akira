@@ -79,11 +79,14 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
       onSubmit({
         title,
         meta: {
-          tags: [...selectedTags]
+          tags: [...selectedTags],
+          list_id: selectedList?.id
         }
       })
+
       setTitle('')
       setSelectedTags(new Set())
+      setSelectedList(null)
     }
 
     function onReset() {
@@ -178,6 +181,7 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                       size="sm"
                       className="w-full text-left justify-between font-bold"
                       variant="transparent"
+                      type="button"
                       onClick={() => showBottomSheet('lists')}
                     >
                       {selectedList ? (

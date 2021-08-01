@@ -14,6 +14,7 @@ type QueryParams = Partial<{
 
 export type CreateTaskMeta = {
   tags: Array<number>
+  list_id?: number
 }
 
 export function tasks(api: AxiosInstance) {
