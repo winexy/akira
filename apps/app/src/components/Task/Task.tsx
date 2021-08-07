@@ -10,6 +10,8 @@ import isNull from 'lodash/isNull'
 import size from 'lodash/fp/size'
 import filter from 'lodash/fp/filter'
 import isEmpty from 'lodash/fp/isEmpty'
+import {useIsMutating} from 'react-query'
+import {Spin} from '@components/Spin'
 
 const ItemType = 'list-item'
 
@@ -136,6 +138,15 @@ export const Task: React.FC<TaskProps> = ({
     [index]
   )
 
+  const isDeleting = Boolean(
+    useIsMutating({
+      mutationKey: 'delete-task',
+      predicate(mutation) {
+        return mutation.options.variables === task.id
+      }
+    })
+  )
+
   const [, connectDropTarget] = useDrop({
     accept: ItemType,
     hover: onDragHover(dropRef, index, onOrderChange)
@@ -179,9 +190,14 @@ export const Task: React.FC<TaskProps> = ({
               active:bg-red-600
               focus:outline-none
             "
+            disabled={isDeleting}
             onClick={onRemoveIntent}
           >
-            <XIcon className="w-5 h-5" />
+            {isDeleting ? (
+              <Spin className="w-5 h-5 text-white" />
+            ) : (
+              <XIcon className="w-5 h-5" />
+            )}
           </button>
         </>
       }
