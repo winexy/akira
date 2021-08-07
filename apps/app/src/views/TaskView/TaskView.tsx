@@ -24,7 +24,11 @@ import {TagsManager, TaskTag} from '@modules/tags/components'
 import {usePatchTaskMutation} from '@modules/tasks/hooks'
 import {Tag} from '@components/Tag/Tag'
 import {EditableHeading} from '@components/EditableHeading'
-import {DotsVerticalIcon, ViewListIcon} from '@heroicons/react/solid'
+import {
+  DotsVerticalIcon,
+  ViewListIcon,
+  RefreshIcon
+} from '@heroicons/react/solid'
 import {Link} from 'react-router-dom'
 import isNull from 'lodash/fp/isNull'
 import {TaskListPicker} from '@modules/tasks/components/TaskListPicker'
@@ -35,11 +39,34 @@ import isUndefined from 'lodash/fp/isUndefined'
 import {DatePickerSheet, DatePicker} from '@components/DatePicker'
 import {Portal} from '@components/Portal'
 import addDays from 'date-fns/addDays'
+import clsx from 'clsx'
+import {exhaustiveCheck} from '../../utils/index'
 
 type TaskScheduleProps = {
   taskId: TaskId
   scheduledTaskDate?: string
   isFetchingTask: boolean
+}
+
+type RepeatPattern = {
+  type: 'daily'
+}
+
+const repeatPatterns = ['daily', 'weekly', 'monthly', 'years'] as const
+
+function matchRepeatPattern(pattern: typeof repeatPatterns[number]) {
+  switch (pattern) {
+    case 'daily':
+      return 'Daily'
+    case 'monthly':
+      return 'Monthly'
+    case 'weekly':
+      return 'Weekly'
+    case 'years':
+      return 'Years'
+    default:
+      return exhaustiveCheck(pattern)
+  }
 }
 
 const TaskSchedule: React.FC<TaskScheduleProps> = ({
@@ -260,8 +287,37 @@ export const TaskView: React.FC = () => {
           scheduledTaskDate={task.schedule?.date}
           isFetchingTask={isFetching}
         />
+        <TaskActionList.Item>
+          <TaskActionList.Button
+            Icon={RefreshIcon}
+            onClick={() => showBottomSheet('repeat-patterns')}
+          >
+            Repeat task
+          </TaskActionList.Button>
+        </TaskActionList.Item>
       </TaskActionList>
       <div id="schedule-datepicker" />
+      <BottomSheet name="repeat-patterns">
+        <div className="text-center py-3">
+          <h2 className="font-semibold text-2xl">Repeat</h2>
+        </div>
+        <ul className="divide-y divide-gray-100">
+          {repeatPatterns.map(pattern => (
+            <li
+              key={pattern}
+              className={clsx(
+                'px-4 py-3 font-semibold',
+                'transition ease-in duration-100',
+                'active:bg-gray-50'
+              )}
+              // eslint-disable-next-line no-alert
+              onClick={() => alert('WIP: not implemented')}
+            >
+              {matchRepeatPattern(pattern)}
+            </li>
+          ))}
+        </ul>
+      </BottomSheet>
       {task && <ChecklistManager task={task} />}
       <TaskActionToast
         taskId={taskId}
