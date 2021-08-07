@@ -11,6 +11,8 @@ import size from 'lodash/fp/size'
 import filter from 'lodash/fp/filter'
 import isEmpty from 'lodash/fp/isEmpty'
 import {useIsMutating} from 'react-query'
+import {ActionSheet} from '@components/ActionSheet/ActionSheet'
+import {openActionSheet} from '@store/action-sheet'
 import {Spin} from '@components/Spin'
 
 const ItemType = 'list-item'
@@ -158,10 +160,11 @@ export const Task: React.FC<TaskProps> = ({
   }
 
   function onRemoveIntent() {
-    // eslint-disable-next-line
-    if (confirm('Are you sure? This action cannot be undone')) {
-      onRemove(task.id)
-    }
+    openActionSheet(`delete-task-sheet-${task.id}`)
+  }
+
+  function onRemoveConfirm() {
+    onRemove(task.id)
   }
 
   return (
@@ -263,6 +266,11 @@ export const Task: React.FC<TaskProps> = ({
             <MenuAlt4Icon className="w-4 h-4" />
           </button>
         )}
+        <ActionSheet name={`delete-task-sheet-${task.id}`}>
+          <ActionSheet.Action destructive onClick={onRemoveConfirm}>
+            Delete task
+          </ActionSheet.Action>
+        </ActionSheet>
       </Link>
     </Swipeable>
   )
