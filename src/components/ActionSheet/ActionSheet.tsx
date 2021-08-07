@@ -89,7 +89,7 @@ const ActionSheet: React.FC<Props> & {Action: typeof Action} = ({
             tabIndex={0}
             onClick={onCancel}
           />
-          <div className="sheet z-10 fixed bottom-0 p-4 flex flex-col left-0 right-0">
+          <div className="sheet z-10 fixed bottom-0 p-2 pb-6-safe flex flex-col left-0 right-0">
             <ul className="overflow-hidden rounded-lg bg-white w-full divide-y divide-gray-200">
               {children}
             </ul>
