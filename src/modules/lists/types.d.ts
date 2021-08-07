@@ -11,7 +11,12 @@ export type TaskList = {
 export type ApiList = {
   id: number
   title: string
-  // eslint-disable-next-line camelcase
   author_uid: string
   tasks: ApiTask[]
+}
+
+export type NewList = {
+  id: number
+  title: string
+  author_uid: string
 }
