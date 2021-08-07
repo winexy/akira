@@ -9508,6 +9508,11 @@ tailwind-caret-color@^1.1.0:
   resolved "https://registry.yarnpkg.com/tailwind-caret-color/-/tailwind-caret-color-1.1.0.tgz#4ce4c26232acd1dd9cebdb11fe4e69cae56a1c64"
   integrity sha512-szIOaJesH/T/Inz8tWyxtTMDr6YBmehjXuVBZYtYaynShm7dKfLXf/DtIyY7dA/AmASHncHTagAhiZFkkvSPsw==
 
+tailwindcss-padding-safe@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/tailwindcss-padding-safe/-/tailwindcss-padding-safe-1.0.5.tgz#0878bca1ec68fbd1664b02547d29f3db8248eede"
+  integrity sha512-ofAhVZ0Et3r3mygLBxaJjpjnmdg4gviovh9nX79+hPZ23evQeSa7BEVRFRmC3w7pE7fgofgm8EjH/LP0xaIJRw==
+
 tailwindcss@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/tailwindcss/-/tailwindcss-2.1.1.tgz#642f6038c9283a8e1454da34585b8b7c1a1e8877"

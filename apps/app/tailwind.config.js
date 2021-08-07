@@ -1,5 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
-const TailwindCaretColor = require('tailwind-caret-color')
+const TwCaretColor = require('tailwind-caret-color')
+const TwPaddingSafe = require('tailwindcss-padding-safe')
 
 module.exports = {
   purge: ['./src/**/*.tsx'],
@@ -21,5 +22,5 @@ module.exports = {
       ringColor: ['active']
     }
   },
-  plugins: [TailwindCaretColor()]
+  plugins: [TwCaretColor(), TwPaddingSafe()]
 }
