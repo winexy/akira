@@ -1,0 +1,30 @@
+.action-sheet-slide-up {
+  &-enter > .sheet {
+    transform: translateY(100%);
+  }
+  &-enter-active > .sheet {
+    transform: translateY(0);
+    transition: 200ms ease-in;
+  }
+
+  &-exit-active > .sheet {
+    transform: translateY(100%);
+    transition: 200ms ease-in;
+  }
+
+  &-enter > .blackout {
+    opacity: 0;
+  }
+  &-enter-active > .blackout {
+    opacity: 0.5;
+    transition: 500ms;
+  }
+
+  &-exit > .blackout {
+    opacity: 0.5;
+  }
+  &-exit-active > .blackout {
+    opacity: 0;
+    transition: 500ms;
+  }
+}
