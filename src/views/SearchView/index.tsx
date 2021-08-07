@@ -46,7 +46,7 @@ export const SearchView: React.FC = () => {
             'focus-within:ring focus-within:ring-indigo-100'
           )}
         >
-          <div className="relative flex items-center">
+          <div className="relative flex flex-1 items-center">
             <SearchIcon className="absolute left-0 ml-4 w-6 h-6" />
             <input
               type="search"
