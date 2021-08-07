@@ -1,5 +1,6 @@
 import React, {useEffect, useLayoutEffect, useRef, useState} from 'react'
 import {useMutation, useQueryClient} from 'react-query'
+import {Redirect} from 'react-router'
 import {akira} from '@lib/akira'
 import {MainView} from '../MainView'
 
@@ -25,7 +26,7 @@ export const NewListView: React.FC = () => {
     }
   }, [list, title])
 
-  async function onInputBlur() {
+  function onInputBlur() {
     if (createListMutation.isIdle) {
       createListMutation.mutate(title)
     }
@@ -33,6 +34,7 @@ export const NewListView: React.FC = () => {
 
   return (
     <MainView>
+      {list ? <Redirect to={`/lists/${list.id}`} /> : null}
       <div className="">
         <input
           ref={inputRef}
