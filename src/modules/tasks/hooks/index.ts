@@ -208,6 +208,7 @@ export function useRemoveTaskMutation() {
   const queryClient = useQueryClient()
 
   return useMutation(akira.tasks.delete, {
+    mutationKey: 'delete-task',
     onSuccess(_, taskId) {
       queryClient.removeQueries(['task', taskId])
       removeTasksFromCache(queryClient, TaskQueryKeyEnum.MyDay, taskId)
