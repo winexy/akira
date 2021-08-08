@@ -25,6 +25,7 @@ import {AkiraLoader} from './components/AkiraLoader'
 import {TaskListView} from './views/TaskListView'
 import {SearchView} from './views/SearchView'
 import {NotificationManager} from './modules/notifications/NotificationManager'
+import {NoteView} from './views/NoteView'
 
 const dndConfig = {
   enableMouseEvents: true
@@ -113,6 +114,9 @@ function App() {
               </Route>
               <Route path="/lists">
                 <ListsView />
+              </Route>
+              <Route path="/note">
+                <NoteView />
               </Route>
             </Switch>
           </Menu>
