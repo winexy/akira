@@ -1,19 +1,28 @@
 import {nanoid} from 'nanoid'
-import React, {createContext, useState, useContext} from 'react'
+import React, {
+  createContext,
+  useState,
+  useContext,
+  useLayoutEffect
+} from 'react'
 import {MainView} from '../MainView'
+
+type ParentRef = string | null
 
 type NoteType = {
   id: string
   type: 'note'
   children: string[]
   meta: {}
+  parent: ParentRef
 }
 
 type NoteTextType = {
   id: string
   type: 'text'
   content: string
-  children: []
+  children: string[]
+  parent: ParentRef
   meta: {}
 }
 
@@ -21,12 +30,18 @@ type NoteHeadingType = {
   id: string
   type: 'heading'
   content: string
+  children: string[]
+  parent: ParentRef
   meta: {
-    level: 1 | 2 | 3 | 4 | 5 | 6
+    level: 1 | 2 | 3
   }
 }
 
-type NodeLike = NoteTextType | NoteHeadingType
+type NodeLike = NoteType | NoteTextType | NoteHeadingType
+
+const findByNodeId = (nodeId: string) => {
+  return document.querySelector(`[data-node-id="${nodeId}"]`)
+}
 
 const TextNode: React.FC<{node: NoteTextType}> = ({node}) => {
   const context = useNoteContext()
@@ -34,21 +49,37 @@ const TextNode: React.FC<{node: NoteTextType}> = ({node}) => {
   return (
     <p
       data-node-id={node.id}
+      data-node-type="text-node"
       contentEditable
       className="focus:outline-none"
       // eslint-disable-next-line react/no-danger
       dangerouslySetInnerHTML={{
         __html: node.content
       }}
+      onFocus={() => context.onFocus(node)}
       onBlur={event => {
         context.onUpdate(node, {
           content: event.target.textContent ?? ''
         })
+
+        context.onBlur()
       }}
       onKeyDown={event => {
-        if (event.key === 'Enter') {
-          event.preventDefault()
-          context.onEnter()
+        // eslint-disable-next-line default-case
+        switch (event.key) {
+          case 'Enter': {
+            event.preventDefault()
+            context.onEnter(node)
+            break
+          }
+          case 'ArrowDown': {
+            context.onArrowDown(node)
+            break
+          }
+          case 'ArrowUp': {
+            context.onArrowUp(node)
+            break
+          }
         }
       }}
     />
@@ -81,10 +112,11 @@ const RenderNode: React.FC<{nodeId: string}> = ({nodeId}) => {
 
 const NoteComponent: React.FC = () => {
   const context = useNoteContext()
+  const root = context.hashTable[context.noteTree.id]
 
   return (
     <div className="px-4">
-      {context.noteTree.children.map(nodeId => (
+      {root.children.map(nodeId => (
         <RenderNode key={nodeId} nodeId={nodeId} />
       ))}
     </div>
@@ -96,20 +128,23 @@ function Note(children: NoteType['children']): NoteType {
     id: nanoid(),
     type: 'note',
     children,
-    meta: {}
+    meta: {},
+    parent: null
   }
 }
 
-function NoteText(
-  content: string,
-  children: NoteTextType['children'] = []
-): NoteTextType {
+function NoteText({
+  content = '',
+  children = [],
+  parent = null
+}: Partial<NoteTextType>): NoteTextType {
   return {
     id: nanoid(),
     type: 'text',
     content,
     children,
-    meta: {}
+    meta: {},
+    parent
   }
 }
 
@@ -123,64 +158,145 @@ function NoteHeading(
     content,
     meta: {
       level
-    }
+    },
+    parent: null,
+    children: []
   }
 }
 
+const textId = nanoid()
+const rootId = nanoid()
+
+const defaultNoteTree: NoteType = {
+  id: rootId,
+  type: 'note',
+  children: [textId],
+  meta: {},
+  parent: null
+}
+
 function useNote() {
-  const textId = nanoid()
+  const [activeNodeId, setActiveNodeId] = useState<string | null>(null)
+  const [noteTree, setNoteTree] = useState<NoteType>(() => {
+    return defaultNoteTree
+  })
+
   const [hashTable, setHashTable] = useState<Record<string, NodeLike>>({
     [textId]: {
       id: textId,
       type: 'text',
       content: 'Hello World',
       children: [],
-      meta: {}
-    }
-  })
-
-  const [noteTree, setNoteTree] = useState(() => {
-    return {
-      id: nanoid(),
-      type: 'note',
-      children: [textId]
-    }
+      meta: {},
+      parent: rootId
+    },
+    [rootId]: noteTree
   })
 
   function onUpdate(node: NodeLike, patch: {content: string}) {
+    const newNode = {
+      ...node,
+      content: patch.content
+    }
+
     setHashTable({
       ...hashTable,
-      [node.id]: {
-        ...node,
-        content: patch.content
-      }
+      [node.id]: newNode
     })
   }
 
-  function onEnter() {
-    const textNode = NoteText('')
+  function onEnter(node: NodeLike) {
+    const textNode = NoteText({parent: node.parent})
 
-    setHashTable({
+    const update = {
       ...hashTable,
       [textNode.id]: textNode
-    })
-    setNoteTree({
-      ...noteTree,
-      children: [...noteTree.children, textNode.id]
-    })
+    }
 
-    requestAnimationFrame(() => {
-      const node = document.querySelector(`[data-node-id="${textNode.id}"]`)
+    if (node.parent) {
+      const parent = hashTable[node.parent]
+      const index = parent.children.indexOf(node.id)
+
+      const newParent: NodeLike = {
+        ...parent,
+        children: [
+          ...parent.children.slice(0, index + 1),
+          textNode.id,
+          ...parent.children.slice(index + 1)
+        ]
+      }
+
+      update[node.parent] = newParent
+    }
+
+    setHashTable(update)
+    setActiveNodeId(textNode.id)
+  }
+
+  function onArrowDown(node: NodeLike) {
+    if (node.parent) {
+      const parent = hashTable[node.parent]
+      const index = parent.children.indexOf(node.id)
+
+      if (index < parent.children.length - 1) {
+        const nextIndex = index + 1
+        const nextNode = parent.children[nextIndex]
+
+        setActiveNodeId(nextNode)
+      } else {
+        window.console.warn(
+          'lower boundary focus navigation is not supported yet'
+        )
+      }
+    }
+  }
+
+  function onArrowUp(node: NodeLike) {
+    if (node.parent) {
+      const parent = hashTable[node.parent]
+      const index = parent.children.indexOf(node.id)
+
+      if (index > 0) {
+        const prevIndex = index - 1
+        const prevNode = parent.children[prevIndex]
+
+        setActiveNodeId(prevNode)
+      } else {
+        window.console.warn(
+          'upper boundary focus navigation is not supported yet'
+        )
+      }
+    }
+  }
+
+  function onFocus(node: NodeLike) {
+    setActiveNodeId(node.id)
+  }
+
+  function onBlur() {
+    setActiveNodeId(null)
+  }
+
+  useLayoutEffect(() => {
+    if (activeNodeId) {
+      const node = findByNodeId(activeNodeId)
 
       if (node !== null && node instanceof HTMLElement) {
         node.focus()
-      } else {
-        console.log('cant find node')
       }
-    })
-  }
+    }
+  }, [activeNodeId])
 
-  return {noteTree, hashTable, onUpdate, onEnter}
+  return {
+    noteTree,
+    hashTable,
+    onUpdate,
+    onEnter,
+    onArrowDown,
+    onFocus,
+    onBlur,
+    onArrowUp
+  }
 }
 
 const NoteContext = createContext<ReturnType<typeof useNote> | null>(null)
