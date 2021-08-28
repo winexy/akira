@@ -8,7 +8,8 @@ import {
   CollectionIcon,
   ViewListIcon,
   PlusIcon,
-  SearchIcon
+  SearchIcon,
+  DocumentTextIcon
 } from '@heroicons/react/solid'
 import {closeMenu, $isMenuOpen} from '@store/menu'
 import {useFirebaseAuth} from '@/firebase/Provider'
@@ -176,6 +177,9 @@ export const Menu: React.FC = ({children}) => {
             {todayTasksCount ? (
               <span className="ml-auto">{todayTasksCount}</span>
             ) : null}
+          </MenuItem>
+          <MenuItem to="/reports" Icon={DocumentTextIcon}>
+            Daily Report
           </MenuItem>
           <MenuItem to="/tasks" Icon={CollectionIcon}>
             Tasks
