@@ -26,6 +26,7 @@ import {TaskListView} from './views/TaskListView'
 import {SearchView} from './views/SearchView'
 import {NotificationManager} from './modules/notifications/NotificationManager'
 import {NoteView} from './views/NoteView'
+import {ReportsView} from './modules/reports/ReportsView'
 
 const dndConfig = {
   enableMouseEvents: true
@@ -117,6 +118,9 @@ function App() {
               </Route>
               <Route path="/note">
                 <NoteView />
+              </Route>
+              <Route path="/reports">
+                <ReportsView />
               </Route>
             </Switch>
           </Menu>
