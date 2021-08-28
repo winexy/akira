@@ -7,19 +7,22 @@ import ChevronRightIcon from '@heroicons/react/solid/ChevronRightIcon'
 import {Button} from '@components/Button'
 import {hideBottomSheet} from '@store/bottom-sheet'
 import './DatePicker.css'
+import clsx from 'clsx'
 
 type Props = {
-  date: Date | null
+  date?: Date | null
   minDate?: Date | null
   maxDate?: Date | null
   onChange(date: Date): void
+  className?: string
 }
 
 export const DatePicker: React.FC<Props> = ({
-  date,
+  date = null,
   onChange,
   minDate = null,
-  maxDate = null
+  maxDate = null,
+  className
 }) => {
   return (
     <ReactDatePicker
@@ -28,7 +31,7 @@ export const DatePicker: React.FC<Props> = ({
       monthsShown={1}
       minDate={minDate}
       maxDate={maxDate}
-      className="flex flex-col justify-center"
+      className={clsx('flex flex-col justify-center', className)}
       renderCustomHeader={params => {
         return (
           <div className="text-gray-700 px-2 flex items-center justify-between">
