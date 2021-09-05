@@ -193,7 +193,7 @@ export const TaskView: React.FC = () => {
     )
   }
 
-  const createdAt = format(parseISO(task.created_at), 'd LLLL yyyy')
+  const createdAt = format(parseISO(task.created_at), 'd LLL yyyy')
 
   return (
     <MainView className="pb-32">
