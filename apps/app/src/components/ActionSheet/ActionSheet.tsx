@@ -1,8 +1,9 @@
-import React, {useEffect, useRef} from 'react'
+import React, {MutableRefObject, useEffect, useRef} from 'react'
 import {$activeActionSheet, closeActionSheet} from '@store/action-sheet'
 import {useStore} from 'effector-react'
 import {CSSTransition} from 'react-transition-group'
 import clsx from 'clsx'
+import {createFocusTrap, FocusTrap} from 'focus-trap'
 import {Portal} from '../Portal'
 import './ActionSheet.css'
 
@@ -38,7 +39,9 @@ const Action: React.FC<ActionProps> = ({
         className={clsx(
           'w-full text-center text-lg py-3',
           'transition ease-in duration-75',
+          'rounded-lg',
           'focus:outline-none active:bg-gray-200',
+          'focus:ring-4 focus:ring-blue-500',
           destructive ? 'text-red-500' : 'text-blue-500'
         )}
         type="button"
@@ -50,14 +53,33 @@ const Action: React.FC<ActionProps> = ({
   )
 }
 
-const ActionSheet: React.FC<Props> & {Action: typeof Action} = ({
-  children,
-  name
-}) => {
-  const ref = useRef<HTMLDivElement>(null)
-  const activeActionSheet = useStore($activeActionSheet)
-  const isVisible = activeActionSheet === name
+function useFocusTrap(isVisible: boolean, ref: MutableRefObject<HTMLElement>) {
+  useEffect(() => {
+    let trap: FocusTrap | undefined
 
+    if (isVisible && ref.current) {
+      trap = createFocusTrap(ref.current)
+      trap.activate()
+    }
+
+    return () => {
+      trap?.deactivate()
+    }
+  }, [isVisible, ref])
+}
+
+function useInitialFocus(
+  isVisible: boolean,
+  ref: MutableRefObject<HTMLElement>
+) {
+  useEffect(() => {
+    if (isVisible && ref.current) {
+      ref.current.focus()
+    }
+  }, [isVisible, ref])
+}
+
+function useCleanup(isVisible: boolean) {
   useEffect(() => {
     return () => {
       if (isVisible) {
@@ -65,6 +87,21 @@ const ActionSheet: React.FC<Props> & {Action: typeof Action} = ({
       }
     }
   }, [isVisible])
+}
+
+const ActionSheet: React.FC<Props> & {Action: typeof Action} = ({
+  children,
+  name
+}) => {
+  const ref = useRef<HTMLDivElement>(null)
+  const cancelRef = useRef<HTMLButtonElement>(null)
+  const actionsRef = useRef<HTMLDivElement>(null)
+  const activeActionSheet = useStore($activeActionSheet)
+  const isVisible = activeActionSheet === name
+
+  useInitialFocus(isVisible, cancelRef)
+  useFocusTrap(isVisible, actionsRef)
+  useCleanup(isVisible)
 
   const onCancel = (event: React.MouseEvent) => {
     event.preventDefault()
@@ -89,11 +126,15 @@ const ActionSheet: React.FC<Props> & {Action: typeof Action} = ({
             tabIndex={0}
             onClick={onCancel}
           />
-          <div className="sheet z-10 fixed bottom-0 p-2 pb-6-safe flex flex-col left-0 right-0">
-            <ul className="overflow-hidden rounded-lg bg-white w-full divide-y divide-gray-200">
+          <div
+            ref={actionsRef}
+            className="sheet z-10 fixed bottom-0 p-2 pb-6-safe flex flex-col left-0 right-0"
+          >
+            <ul className="rounded-lg bg-white w-full divide-y divide-gray-200">
               {children}
             </ul>
             <button
+              ref={cancelRef}
               type="button"
               className={clsx(
                 'mt-2 py-3 w-full',
@@ -101,6 +142,7 @@ const ActionSheet: React.FC<Props> & {Action: typeof Action} = ({
                 'text-lg text-blue-500 font-semibold',
                 'transition ease-in duration-75',
                 'focus:outline-none',
+                'focus:ring-4 focus:ring-blue-500',
                 'active:bg-gray-200'
               )}
               onClick={onCancel}
