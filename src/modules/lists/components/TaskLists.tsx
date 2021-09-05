@@ -7,6 +7,8 @@ import {useMutation, useQueryClient} from 'react-query'
 import clsx from 'clsx'
 import {akira} from '@lib/akira'
 import {closeMenu} from '@store/menu'
+import {ActionSheet} from '@components/ActionSheet/ActionSheet'
+import {openActionSheet} from '@store/action-sheet'
 import {useListsQuery} from '../hooks/index'
 
 type Props = {
@@ -35,6 +37,14 @@ export const TaskLists: React.FC<Props> = ({
     return null
   }
 
+  function onRemoveIntent(listId: number) {
+    openActionSheet(`remove-task-list(${listId})`)
+  }
+
+  function onRemoveConfirm(listId: number) {
+    removeListMutation.mutate(listId)
+  }
+
   return (
     <ul className={clsx('space-y-1 text-base font-semibold', className)}>
       {lists.map(list => (
@@ -56,9 +66,9 @@ export const TaskLists: React.FC<Props> = ({
                   active:bg-red-600
                   focus:outline-none
                   rounded-r-md
-                "
+                  "
                 onClick={() => {
-                  removeListMutation.mutate(list.id)
+                  onRemoveIntent(list.id)
                 }}
               >
                 <TrashIcon className="w-5 h-5" />
@@ -66,26 +76,36 @@ export const TaskLists: React.FC<Props> = ({
             ) : undefined
           }
         >
-          <Link
-            to={`/lists/${list.id}`}
-            className={clsx(
-              'flex items-center justify-between',
-              'bg-gray-700 px-4 py-2',
-              'rounded-md',
-              'transition ease-in duration-150',
-              'active:text-gray-400',
-              'focus:bg-gray-500'
-            )}
-            onClick={() => closeMenu()}
-          >
-            <span className="truncate">{list.title}</span>
-            {list.tasksCount !== '0' && (
-              <span className="ml-4 text-gray-400">
-                {list.tasksCount}{' '}
-                {pluralize(parseInt(list.tasksCount, 10), 'task', 'tasks')}
-              </span>
-            )}
-          </Link>
+          <>
+            <ActionSheet name={`remove-task-list(${list.id})`}>
+              <ActionSheet.Action
+                destructive
+                onClick={() => onRemoveConfirm(list.id)}
+              >
+                Delete task
+              </ActionSheet.Action>
+            </ActionSheet>
+            <Link
+              to={`/lists/${list.id}`}
+              className={clsx(
+                'flex items-center justify-between',
+                'bg-gray-700 px-4 py-2',
+                'rounded-md',
+                'transition ease-in duration-150',
+                'active:text-gray-400',
+                'focus:bg-gray-500'
+              )}
+              onClick={() => closeMenu()}
+            >
+              <span className="truncate">{list.title}</span>
+              {list.tasksCount !== '0' && (
+                <span className="ml-4 text-gray-400">
+                  {list.tasksCount}{' '}
+                  {pluralize(parseInt(list.tasksCount, 10), 'task', 'tasks')}
+                </span>
+              )}
+            </Link>
+          </>
         </Swipeable>
       ))}
     </ul>
