@@ -139,7 +139,7 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
               </button>
             </div>
             <form id="create-task-form" onSubmit={handleSubmit}>
-              <div className="relative h-full flex flex-col items-center">
+              <div className="relative h-full flex flex-col items-start">
                 <input
                   ref={inputRef}
                   className="
