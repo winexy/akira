@@ -53,7 +53,10 @@ const Action: React.FC<ActionProps> = ({
   )
 }
 
-function useFocusTrap(isVisible: boolean, ref: MutableRefObject<HTMLElement>) {
+function useFocusTrap(
+  isVisible: boolean,
+  ref: MutableRefObject<HTMLElement | null>
+) {
   useEffect(() => {
     let trap: FocusTrap | undefined
 
@@ -70,7 +73,7 @@ function useFocusTrap(isVisible: boolean, ref: MutableRefObject<HTMLElement>) {
 
 function useInitialFocus(
   isVisible: boolean,
-  ref: MutableRefObject<HTMLElement>
+  ref: MutableRefObject<HTMLElement | null>
 ) {
   useEffect(() => {
     if (isVisible && ref.current) {
