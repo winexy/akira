@@ -3,9 +3,10 @@ import {Swipeable} from '@components/Swipeable/Swipeable'
 import {TrashIcon} from '@heroicons/react/solid'
 import {Link} from 'react-router-dom'
 import isUndefined from 'lodash/fp/isUndefined'
-import clsx from 'clsx'
 import {useMutation, useQueryClient} from 'react-query'
+import clsx from 'clsx'
 import {akira} from '@lib/akira'
+import {closeMenu} from '@store/menu'
 import {useListsQuery} from '../hooks/index'
 
 type Props = {
@@ -35,7 +36,7 @@ export const TaskLists: React.FC<Props> = ({
   }
 
   return (
-    <ul className={clsx('divide-y divide-gray-100', className)}>
+    <ul className={clsx('text-base font-semibold', className)}>
       {lists.map(list => (
         <Swipeable
           Component="li"
@@ -44,12 +45,13 @@ export const TaskLists: React.FC<Props> = ({
             allowRemoval ? (
               <button
                 className="
-                  h-full px-6 
+                  h-full px-3 
                   flex items-center justify-between  
                   text-white bg-red-500
                   transition ease-in duration-100
                   active:bg-red-600
                   focus:outline-none
+                  rounded-r-md
                 "
                 onClick={() => {
                   removeListMutation.mutate(list.id)
@@ -63,21 +65,19 @@ export const TaskLists: React.FC<Props> = ({
           <Link
             to={`/lists/${list.id}`}
             className={clsx(
-              'flex items-center px-4 py-3 bg-white',
-              'font-semibold',
-              'transition ease-in duration-150',
-              'active:text-blue-500 active:bg-gray-50'
+              'flex items-center justify-between',
+              'bg-gray-700 px-4 py-2',
+              'rounded-md'
             )}
+            onClick={() => closeMenu()}
           >
-            <div className="flex flex-col">
-              {list.title}
-              {list.tasksCount !== '0' && (
-                <span className="text-xs text-gray-400">
-                  {list.tasksCount}{' '}
-                  {pluralize(parseInt(list.tasksCount, 10), 'task', 'tasks')}
-                </span>
-              )}
-            </div>
+            <span className="truncate">{list.title}</span>
+            {list.tasksCount !== '0' && (
+              <span className="ml-4 text-gray-400">
+                {list.tasksCount}{' '}
+                {pluralize(parseInt(list.tasksCount, 10), 'task', 'tasks')}
+              </span>
+            )}
           </Link>
         </Swipeable>
       ))}

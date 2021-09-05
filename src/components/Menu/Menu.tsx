@@ -20,6 +20,13 @@ import {Link, useHistory} from 'react-router-dom'
 import isNull from 'lodash/fp/isNull'
 import {useQueryClient} from 'react-query'
 import size from 'lodash/fp/size'
+import {TaskLists} from '@/modules/lists/components/TaskLists'
+import './Menu.css'
+import {
+  clearAllBodyScrollLocks,
+  disableBodyScroll,
+  enableBodyScroll
+} from 'body-scroll-lock'
 
 type MenuItemProps = {
   Icon: SVGIconElement
@@ -38,18 +45,7 @@ export const MenuItem: React.FC<MenuItemProps> & {
 
   return (
     <li>
-      <Link
-        to={to}
-        className={clsx(
-          'flex items-center max-h-12',
-          'pl-4 py-2 rounded select-none',
-          'transition ease-in duration-150',
-          'active:bg-gray-50 active:bg-opacity-10',
-          'focus:outline-none focus:bg-gray-50 focus:bg-opacity-10',
-          'focus:ring-2 focus:ring-gray-600 focus:ring-opacity-50'
-        )}
-        onClick={onClick}
-      >
+      <Link className="menu-item --interactive" to={to} onClick={onClick}>
         <Icon className="mr-4 w-6 h-6 text-gray-400" />
         {children}
       </Link>
@@ -81,7 +77,7 @@ const getContentTranslateX = (
 MenuItem.Button = ({onClick, Icon}) => (
   <button
     className="
-      ml-auto w-10 h-10 mr-1
+      ml-auto w-10 h-10
       flex justify-center items-center
       bg-gray-50 bg-opacity-10 rounded
       transition ease-in duration-150
@@ -98,6 +94,34 @@ MenuItem.Button = ({onClick, Icon}) => (
   </button>
 )
 
+function useOpenMenuLock(
+  rootId: string,
+  isOpen: boolean,
+  menu: HTMLElement | null
+) {
+  useEffect(() => {
+    const root = document.getElementById(rootId)
+
+    if (root) {
+      if (isOpen) {
+        root.classList.add('overflow-x-hidden')
+        disableBodyScroll(root, {
+          allowTouchMove(el) {
+            return menu?.contains(el)
+          }
+        })
+      } else {
+        enableBodyScroll(root)
+        root.classList.remove('overflow-x-hidden')
+      }
+    }
+
+    return () => {
+      clearAllBodyScrollLocks()
+    }
+  }, [rootId, isOpen, menu])
+}
+
 export const Menu: React.FC = ({children}) => {
   const history = useHistory()
   const queryClient = useQueryClient()
@@ -107,17 +131,7 @@ export const Menu: React.FC = ({children}) => {
   const contentRef = useRef<HTMLDivElement | null>(null)
   const todayTasksCount = size(queryClient.getQueryData('myday'))
 
-  useEffect(() => {
-    const root = document.getElementById('root')
-
-    if (root) {
-      if (isOpen) {
-        root.classList.add('overflow-x-hidden')
-      } else {
-        root.classList.remove('overflow-x-hidden')
-      }
-    }
-  }, [isOpen])
+  useOpenMenuLock('root', isOpen, menuRef.current)
 
   return (
     <>
@@ -129,10 +143,8 @@ export const Menu: React.FC = ({children}) => {
           'flex flex-col',
           'transform',
           'transition ease-out duration-300',
-          {
-            '-translate-x-full': !isOpen
-          },
-          isOpen ? 'delay-100' : 'delay-75'
+          !isOpen && '-translate-x-full',
+          isOpen && 'delay-200'
         )}
         style={{
           maxWidth: '90vw'
@@ -184,20 +196,23 @@ export const Menu: React.FC = ({children}) => {
           <MenuItem to="/tasks" Icon={CollectionIcon}>
             Tasks
           </MenuItem>
-          <MenuItem to="/lists" Icon={ViewListIcon}>
-            Lists
-            <MenuItem.Button
-              Icon={PlusIcon}
-              onClick={() => {
-                history.push('/lists/new')
-                closeMenu()
-              }}
-            />
-          </MenuItem>
           <MenuItem to="/wip" Icon={AdjustmentsIcon}>
             Preferences
             <WIP className="ml-auto" />
           </MenuItem>
+          <li>
+            <div className="flex items-center text-gray-400 pl-4">
+              Task Lists
+              <MenuItem.Button
+                Icon={PlusIcon}
+                onClick={() => {
+                  history.push('/lists/new')
+                  closeMenu()
+                }}
+              />
+            </div>
+            <TaskLists className="mt-2" />
+          </li>
         </ul>
         <div className="mt-auto px-6 text-white font-semibold">
           Version:{' '}
@@ -205,7 +220,7 @@ export const Menu: React.FC = ({children}) => {
             {config.app.version}
           </Tag>
         </div>
-        <div className="p-4">
+        <div className="px-4 py-2">
           <button
             className="
               w-full p-3
@@ -233,7 +248,7 @@ export const Menu: React.FC = ({children}) => {
           'transform flex flex-col',
           'bg-white',
           'transition ease-in duration-300',
-          isOpen ? 'max-vh-full' : 'vh-full',
+          isOpen ? 'max-vh-full ' : 'vh-full',
           {
             'scale-90 rounded-3xl shadow-2xl h-screen overflow-hidden pointer-events-none filter opacity-75': isOpen
           }
