@@ -5,7 +5,8 @@ import React, {
   useLayoutEffect,
   useImperativeHandle,
   FormEventHandler,
-  useEffect
+  useEffect,
+  KeyboardEventHandler
 } from 'react'
 import isEmpty from 'lodash/fp/isEmpty'
 import isUndefined from 'lodash/fp/isUndefined'
@@ -66,6 +67,20 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
     useLayoutEffect(() => {
       if (isVisible && inputRef.current) {
         inputRef.current.focus()
+      }
+    }, [isVisible])
+
+    useEffect(() => {
+      const handler = (event: KeyboardEvent) => {
+        if (event.key === 'Escape') {
+          setIsVisible(false)
+        }
+      }
+
+      window.addEventListener('keydown', handler)
+
+      return () => {
+        window.removeEventListener('keydown', handler)
       }
     }, [isVisible])
 
