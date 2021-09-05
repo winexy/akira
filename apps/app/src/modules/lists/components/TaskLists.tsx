@@ -36,11 +36,15 @@ export const TaskLists: React.FC<Props> = ({
   }
 
   return (
-    <ul className={clsx('text-base font-semibold', className)}>
+    <ul className={clsx('space-y-1 text-base font-semibold', className)}>
       {lists.map(list => (
         <Swipeable
           Component="li"
           key={list.id}
+          className={clsx(
+            'rounded-md',
+            'focus-within:ring-2 focus-within:ring-gray-600'
+          )}
           after={
             allowRemoval ? (
               <button
@@ -67,7 +71,10 @@ export const TaskLists: React.FC<Props> = ({
             className={clsx(
               'flex items-center justify-between',
               'bg-gray-700 px-4 py-2',
-              'rounded-md'
+              'rounded-md',
+              'transition ease-in duration-150',
+              'active:text-gray-400',
+              'focus:bg-gray-500'
             )}
             onClick={() => closeMenu()}
           >
