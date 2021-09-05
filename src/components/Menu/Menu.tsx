@@ -83,6 +83,10 @@ MenuItem.Button = ({onClick, Icon}) => (
       transition ease-in duration-150
       active:bg-opacity-30
       focus:outline-none
+      focus:bg-gray-500
+      focus:text-white
+      focus:ring-2
+      focus:ring-gray-600
     "
     onClickCapture={event => {
       event.stopPropagation()
