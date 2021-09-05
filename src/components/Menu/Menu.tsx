@@ -191,7 +191,7 @@ export const Menu: React.FC = ({children}) => {
           <MenuItem to="/" Icon={HomeIcon}>
             Today
             {todayTasksCount ? (
-              <span className="ml-auto">{todayTasksCount}</span>
+              <span className="ml-auto mr-4">{todayTasksCount}</span>
             ) : null}
           </MenuItem>
           <MenuItem to="/reports" Icon={DocumentTextIcon}>
