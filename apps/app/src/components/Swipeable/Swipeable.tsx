@@ -13,6 +13,9 @@ import defaultTo from 'lodash/defaultTo'
 const getWidth = pipe(getComputedStyle, get('width'), parseInt)
 const getTouch = get('touches.0.pageX')
 
+const withDefaultWidth = (node: HTMLElement | null) =>
+  node ? defaultTo(getWidth(node), 0) : 0
+
 type SwipeableProps = {
   Component: React.ElementType
   before?: React.ReactChild
@@ -36,12 +39,8 @@ export const Swipeable = forwardRef<Element, SwipeableProps>(
     const afterRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
-      const beforeWidth = beforeRef.current
-        ? defaultTo(getWidth(beforeRef.current), 0)
-        : 0
-      const afterWidth = afterRef.current
-        ? defaultTo(getWidth(afterRef.current), 0)
-        : 0
+      const beforeWidth = withDefaultWidth(beforeRef.current)
+      const afterWidth = withDefaultWidth(afterRef.current)
 
       const onTouchStart = (e: TouchEvent) => {
         const touch = getTouch(e)
@@ -106,6 +105,14 @@ export const Swipeable = forwardRef<Element, SwipeableProps>(
       }
     }, [])
 
+    function onAfterBlockFocus() {
+      setShift(-withDefaultWidth(afterRef.current))
+    }
+
+    function onAfterBlockBlur() {
+      setShift(0)
+    }
+
     return (
       <Component
         ref={parentRef}
@@ -125,7 +132,12 @@ export const Swipeable = forwardRef<Element, SwipeableProps>(
           {children}
         </div>
         {after && (
-          <div ref={afterRef} className="absolute right-0 top-0 bottom-0 flex">
+          <div
+            ref={afterRef}
+            className="absolute right-0 top-0 bottom-0 flex"
+            onFocus={onAfterBlockFocus}
+            onBlur={onAfterBlockBlur}
+          >
             {after}
           </div>
         )}
