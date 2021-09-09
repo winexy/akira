@@ -8,6 +8,7 @@ import {ApiTask} from '@modules/tasks/types.d'
 import {FirebaseAuthProvider} from '@/firebase'
 import App from './App'
 import {onMyDayFetch} from './modules/tasks/store'
+import {HotkeyProvider} from './modules/hotkeys/HotKeyContext'
 
 enableMapSet()
 
@@ -35,7 +36,9 @@ ReactDOM.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <FirebaseAuthProvider onAuthSuccess={prefetchQueries}>
-        <App />
+        <HotkeyProvider>
+          <App />
+        </HotkeyProvider>
       </FirebaseAuthProvider>
     </QueryClientProvider>
   </React.StrictMode>,
