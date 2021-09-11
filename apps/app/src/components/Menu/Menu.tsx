@@ -11,7 +11,7 @@ import {
   SearchIcon,
   DocumentTextIcon
 } from '@heroicons/react/solid'
-import {closeMenu, $isMenuOpen} from '@store/menu'
+import {closeMenu, openMenu, $isMenuOpen} from '@store/menu'
 import {useFirebaseAuth} from '@/firebase/Provider'
 import {config} from '@config/app'
 import {Tag, WIP} from '@components/Tag/Tag'
@@ -27,6 +27,8 @@ import {
   disableBodyScroll,
   enableBodyScroll
 } from 'body-scroll-lock'
+import {useHotkey} from '@/modules/hotkeys/HotKeyContext'
+import {HotKey} from '@/modules/hotkeys/HotKey'
 
 type MenuItemProps = {
   Icon: SVGIconElement
@@ -136,6 +138,24 @@ export const Menu: React.FC = ({children}) => {
   const todayTasksCount = size(queryClient.getQueryData('myday'))
 
   useOpenMenuLock('root', isOpen, menuRef.current)
+
+  useHotkey(HotKey.of('m', HotKey.Meta), {
+    description: 'open menu',
+    handler() {
+      if (!isOpen) {
+        openMenu()
+      }
+    }
+  })
+
+  useHotkey(HotKey.of('Escape'), {
+    description: 'close menu with Escape',
+    handler() {
+      if (isOpen) {
+        closeMenu()
+      }
+    }
+  })
 
   return (
     <>
