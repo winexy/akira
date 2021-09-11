@@ -41,7 +41,7 @@ const Action: React.FC<ActionProps> = ({
           'transition ease-in duration-75',
           'rounded-lg',
           'focus:outline-none active:bg-gray-200',
-          'focus:ring-4 focus:ring-blue-500',
+          'focus-visible:ring-4 focus-visible:ring-blue-500',
           destructive ? 'text-red-500' : 'text-blue-500'
         )}
         type="button"
@@ -145,7 +145,7 @@ const ActionSheet: React.FC<Props> & {Action: typeof Action} = ({
                 'text-lg text-blue-500 font-semibold',
                 'transition ease-in duration-75',
                 'focus:outline-none',
-                'focus:ring-4 focus:ring-blue-500',
+                'focus-visible:ring-4 focus-visible:ring-blue-500',
                 'active:bg-gray-200'
               )}
               onClick={onCancel}
