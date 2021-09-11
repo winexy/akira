@@ -18,8 +18,8 @@ module.exports = {
       boxShadow: ['active', 'disabled'],
       backgroundImage: ['active'],
       gradientColorStops: ['active'],
-      ringWidth: ['active'],
-      ringColor: ['active']
+      ringWidth: ['active', 'focus-visible'],
+      ringColor: ['active', 'focus-visible']
     }
   },
   plugins: [TwCaretColor(), TwPaddingSafe()]
