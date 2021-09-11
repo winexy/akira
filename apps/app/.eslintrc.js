@@ -40,6 +40,7 @@ module.exports = {
     'no-trailing-spaces': 'off',
     'no-use-before-define': 'off',
     'no-shadow': 'off',
+    'no-bitwise': 'off',
     '@typescript-eslint/no-use-before-define': [
       'error',
       {

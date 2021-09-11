@@ -27,6 +27,7 @@ import filter from 'lodash/fp/filter'
 import lowerCase from 'lodash/fp/lowerCase'
 import toLower from 'lodash/fp/toLower'
 import {useHotkey} from '@modules/hotkeys/HotKeyContext'
+import {HotKey} from '@modules/hotkeys/HotKey'
 import {Tag} from '../Tag/Tag'
 import {useListsQuery} from '../../modules/lists/hooks/index'
 import {BottomSheet} from '../BottomSheet/BottomSheet'
@@ -71,7 +72,12 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
       }
     }, [isVisible])
 
-    useHotkey('k.meta', () => setIsVisible(true))
+    useHotkey(HotKey.of('k', HotKey.Meta), {
+      description: 'open task form',
+      handler() {
+        setIsVisible(true)
+      }
+    })
 
     useEffect(() => {
       if (!isVisible) {
