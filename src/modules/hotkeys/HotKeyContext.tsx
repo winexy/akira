@@ -1,14 +1,19 @@
 import React, {FC, useEffect, createContext, useContext} from 'react'
 import isNil from 'lodash/isNil'
+import isUndefined from 'lodash/fp/isUndefined'
+import {HotKey} from './HotKey'
 
-type HotkeyDef = string
 type HotkeyHandler = () => void
-type HotkeyMap = Map<HotkeyDef, HotkeyHandler>
+type HotKeyInfo = {
+  description: string
+  handler: HotkeyHandler
+}
+type HotkeyMap = Map<string, HotKeyInfo>
 
-const hotkeyMap = new Map()
+const hotkeyMap: HotkeyMap = new Map()
 const HotkeyContext = createContext<HotkeyMap>(hotkeyMap)
 
-function useHotkey(definition: HotkeyDef, handler: HotkeyHandler) {
+function useHotkey(definition: string, info: HotKeyInfo) {
   const context = useContext(HotkeyContext)
 
   if (isNil(context)) {
@@ -18,21 +23,29 @@ function useHotkey(definition: HotkeyDef, handler: HotkeyHandler) {
   }
 
   useEffect(() => {
-    context.set(definition, handler)
+    context.set(definition, info)
     return () => {
       context.delete(definition)
     }
-  }, [context, definition, handler])
+  }, [context, definition, info])
 }
 
 function Handler(event: KeyboardEvent) {
-  const {key, metaKey} = event
+  const hotkey = HotKey.fromEvent(event)
+  const hotkeyInfo = hotkeyMap.get(hotkey)
 
-  const definition = `${key}${metaKey ? '.meta' : ''}`
-
-  if (hotkeyMap.has(definition)) {
-    hotkeyMap.get(definition)()
+  if (isUndefined(hotkeyInfo)) {
+    return
   }
+
+  if (import.meta.env.DEV) {
+    window.console.debug(
+      `[HotKeyContext]: ${HotKey.inspect(hotkey)} "${hotkeyInfo.description}"`
+    )
+  }
+
+  event.preventDefault()
+  hotkeyInfo.handler()
 }
 
 const HotkeyProvider: FC = ({children}) => {
