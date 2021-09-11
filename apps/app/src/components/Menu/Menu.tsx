@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import clsx from 'clsx'
 import {
   AdjustmentsIcon,
@@ -6,7 +6,6 @@ import {
   LogoutIcon,
   HomeIcon,
   CollectionIcon,
-  ViewListIcon,
   PlusIcon,
   SearchIcon,
   DocumentTextIcon
@@ -20,6 +19,7 @@ import {Link, useHistory} from 'react-router-dom'
 import isNull from 'lodash/fp/isNull'
 import {useQueryClient} from 'react-query'
 import size from 'lodash/fp/size'
+import throttle from 'lodash/throttle'
 import {TaskLists} from '@/modules/lists/components/TaskLists'
 import './Menu.css'
 import {
@@ -128,13 +128,56 @@ function useOpenMenuLock(
   }, [rootId, isOpen, menu])
 }
 
+const ScrollShadow: React.FC = ({children}) => {
+  const ref = useRef<HTMLDivElement>(null)
+  const [state, setState] = useState(0)
+
+  const onScroll = throttle(() => {
+    const node = ref.current
+
+    if (isNull(node)) {
+      return
+    }
+
+    const top = node.scrollTop > 0 ? 0b1 : 0
+    const bot =
+      node.scrollHeight - node.offsetHeight > node.scrollTop ? 0b10 : 0
+
+    setState(top | bot)
+  }, 250)
+
+  return (
+    <div className="relative overflow-hidden">
+      <div
+        className={clsx(
+          'absolute top-0 h-24 w-full',
+          'from-gray-700 bg-gradient-to-b',
+          'transition ease-in duration-75',
+          {'opacity-0': (state & 0b1) !== 0b1}
+        )}
+      />
+      <div ref={ref} className="h-full overflow-auto" onScroll={onScroll}>
+        {children}
+      </div>
+      <div
+        className={clsx(
+          'z-10 absolute bottom-0 h-24 w-full',
+          'from-gray-700 bg-gradient-to-t',
+          'transition ease-in duration-75',
+          {'opacity-0': (state & 0b10) !== 0b10}
+        )}
+      />
+    </div>
+  )
+}
+
 export const Menu: React.FC = ({children}) => {
   const history = useHistory()
   const queryClient = useQueryClient()
   const isOpen = useStore($isMenuOpen)
   const auth = useFirebaseAuth()
-  const menuRef = useRef<HTMLElement | null>(null)
-  const contentRef = useRef<HTMLDivElement | null>(null)
+  const menuRef = useRef<HTMLElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
   const todayTasksCount = size(queryClient.getQueryData('myday'))
 
   useOpenMenuLock('root', isOpen, menuRef.current)
@@ -204,40 +247,48 @@ export const Menu: React.FC = ({children}) => {
             <ChevronLeftIcon className="w-8 h-8" />
           </button>
         </div>
-        <ul className="pt-0.5 px-4 space-y-1 text-white font-bold text-lg flex-1 overflow-auto">
-          <MenuItem to="/search" Icon={SearchIcon}>
-            Search
-          </MenuItem>
-          <MenuItem to="/" Icon={HomeIcon}>
-            Today
-            {todayTasksCount ? (
-              <span className="ml-auto mr-4">{todayTasksCount}</span>
-            ) : null}
-          </MenuItem>
-          <MenuItem to="/reports" Icon={DocumentTextIcon}>
-            Daily Report
-          </MenuItem>
-          <MenuItem to="/tasks" Icon={CollectionIcon}>
-            Tasks
-          </MenuItem>
-          <MenuItem to="/wip" Icon={AdjustmentsIcon}>
-            Preferences
-            <WIP className="ml-auto" />
-          </MenuItem>
-          <li>
-            <div className="flex items-center text-gray-400 pl-4">
-              Task Lists
-              <MenuItem.Button
-                Icon={PlusIcon}
-                onClick={() => {
-                  history.push('/lists/new')
-                  closeMenu()
-                }}
-              />
-            </div>
-            <TaskLists className="mt-2" />
-          </li>
-        </ul>
+        <ScrollShadow>
+          <ul
+            className="
+              pt-0.5 px-4
+              space-y-1
+              text-white font-bold text-lg flex-1;
+            "
+          >
+            <MenuItem to="/search" Icon={SearchIcon}>
+              Search
+            </MenuItem>
+            <MenuItem to="/" Icon={HomeIcon}>
+              Today
+              {todayTasksCount ? (
+                <span className="ml-auto mr-4">{todayTasksCount}</span>
+              ) : null}
+            </MenuItem>
+            <MenuItem to="/reports" Icon={DocumentTextIcon}>
+              Daily Report
+            </MenuItem>
+            <MenuItem to="/tasks" Icon={CollectionIcon}>
+              Tasks
+            </MenuItem>
+            <MenuItem to="/wip" Icon={AdjustmentsIcon}>
+              Preferences
+              <WIP className="ml-auto" />
+            </MenuItem>
+            <li>
+              <div className="flex items-center text-gray-400 pl-4">
+                Task Lists
+                <MenuItem.Button
+                  Icon={PlusIcon}
+                  onClick={() => {
+                    history.push('/lists/new')
+                    closeMenu()
+                  }}
+                />
+              </div>
+              <TaskLists className="mt-2" />
+            </li>
+          </ul>
+        </ScrollShadow>
         <div className="mt-auto px-6 text-white font-semibold">
           Version:{' '}
           <Tag variant="purple" className="ml-2">
