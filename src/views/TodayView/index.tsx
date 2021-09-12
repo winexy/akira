@@ -146,21 +146,21 @@ export function TodayView() {
           <section className="mt-4 pb-24 px-4">
             <Tasks isPending={isLoading} tasks={sorted} />
           </section>
+          <TaskListOperations
+            isFiltered={size(sorted) !== size(tasks)}
+            isSorted={Boolean(sortType)}
+          />
+          <FiltersBottomSheet
+            canReset={size(tasks) !== size(sorted)}
+            state={filtersState}
+            tags={tags}
+            onChange={updateFilters}
+          />
+          <SortingBottomSheet sortType={sortType} onChange={setSortType} />
         </>
       ) : (
         <Week />
       )}
-      <FiltersBottomSheet
-        canReset={size(tasks) !== size(sorted)}
-        state={filtersState}
-        tags={tags}
-        onChange={updateFilters}
-      />
-      <SortingBottomSheet sortType={sortType} onChange={setSortType} />
-      <TaskListOperations
-        isFiltered={size(sorted) !== size(tasks)}
-        isSorted={Boolean(sortType)}
-      />
       {addTaskControl.isVisible && (
         <div className="z-20 fixed bottom-0 right-0 p-4">
           <AddTaskButton onClick={addTaskControl.onAddIntent} />
