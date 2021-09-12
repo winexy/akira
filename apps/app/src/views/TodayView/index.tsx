@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {TaskForm} from '@components/TaskForm/TaskForm'
 import {Tasks} from '@components/Tasks'
 import size from 'lodash/fp/size'
@@ -24,6 +24,58 @@ import {
   AddTaskButton,
   useAddTaskControl
 } from '@/modules/tasks/components/AddTaskButton'
+import clsx from 'clsx'
+import {api} from '@lib/api'
+import groupBy from 'lodash/groupBy'
+import keys from 'lodash/keys'
+import parseISO from 'date-fns/parseISO'
+
+const Control: React.FC<{
+  value: string
+  activeValue: string
+  onClick(value: string): void
+}> = ({activeValue, value, children, onClick}) => (
+  <button
+    type="button"
+    className={clsx(
+      'h-8 flex items-center justify-center',
+      'font-semibold',
+      'flex-1 rounded-md border-none',
+      'focus:outline-none',
+      'transition-all',
+      {'bg-white shadow-sm': activeValue === value}
+    )}
+    onClick={() => onClick(value)}
+  >
+    {children}
+  </button>
+)
+
+const Week: React.FC = () => {
+  const {data: tasks} = useQuery<Array<ApiTask>>(
+    'week',
+    () => api.get('task-scheduler/week').then(response => response.data),
+    {
+      placeholderData: []
+    }
+  )
+
+  const byDay = groupBy(tasks, task => task.schedule?.date ?? '')
+  const days = keys(byDay)
+
+  return (
+    <div className="mt-2 px-4 space-y-2 pb-24">
+      {days.map(day => (
+        <section>
+          <h2 className="font-bold text-2xl text-gray-700">
+            {format(parseISO(day), 'EEEE')}
+          </h2>
+          <Tasks className="mt-2" isPending={false} tasks={byDay[day]} />
+        </section>
+      ))}
+    </div>
+  )
+}
 
 export function TodayView() {
   const addTaskControl = useAddTaskControl()
@@ -61,6 +113,8 @@ export function TodayView() {
 
   const today = format(new Date(), 'eeee, do MMMM')
 
+  const [mode, setMode] = useState('today')
+
   return (
     <MainView className="flex-1">
       <TaskForm
@@ -68,15 +122,34 @@ export function TodayView() {
         onSubmit={createTaskMutation.mutate}
         onVisibilityChange={addTaskControl.onFormVisiblityChange}
       />
-      <div className="flex justify-between items-center px-4 text-gray-600">
-        <div>
-          <h2 className="font-bold text-3xl">Today</h2>
-          <p className="text-sm">{today}</p>
+      <div className="px-4">
+        <div className="flex p-0.5 rounded-md bg-gray-200 text-gray-700">
+          <Control activeValue={mode} value="today" onClick={setMode}>
+            today
+          </Control>
+          <Control activeValue={mode} value="week" onClick={setMode}>
+            week
+          </Control>
         </div>
-        <span className="text-gray-700 text-4xl font-bold">
-          {completedTasksCount} / {size(sorted)}
-        </span>
       </div>
+      {mode === 'today' ? (
+        <>
+          <div className="mt-2 flex justify-between items-center px-4 text-gray-600">
+            <div>
+              <h2 className="font-bold text-3xl">Today</h2>
+              <p className="text-sm">{today}</p>
+            </div>
+            <span className="text-gray-700 text-4xl font-bold">
+              {completedTasksCount} / {size(sorted)}
+            </span>
+          </div>
+          <section className="mt-4 pb-24 px-4">
+            <Tasks isPending={isLoading} tasks={sorted} />
+          </section>
+        </>
+      ) : (
+        <Week />
+      )}
       <FiltersBottomSheet
         canReset={size(tasks) !== size(sorted)}
         state={filtersState}
@@ -84,9 +157,6 @@ export function TodayView() {
         onChange={updateFilters}
       />
       <SortingBottomSheet sortType={sortType} onChange={setSortType} />
-      <section className="mt-4 pb-24 px-4">
-        <Tasks isPending={isLoading} tasks={sorted} />
-      </section>
       <TaskListOperations
         isFiltered={size(sorted) !== size(tasks)}
         isSorted={Boolean(sortType)}
