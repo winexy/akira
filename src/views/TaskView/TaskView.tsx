@@ -156,7 +156,7 @@ const TaskSchedule: React.FC<TaskScheduleProps> = ({
         <DatePickerSheet date={scheduledDate} onApply={apply}>
           <DatePicker
             date={scheduledDate}
-            minDate={addDays(new Date(), 1)}
+            minDate={new Date()}
             onChange={setScheduledDate}
           />
         </DatePickerSheet>
