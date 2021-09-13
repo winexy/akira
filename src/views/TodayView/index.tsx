@@ -42,7 +42,7 @@ const Control: React.FC<{
   <button
     type="button"
     className={clsx(
-      'py-1 px-5 flex items-center justify-center',
+      'py-1 px-4 flex items-center justify-center',
       'font-bold text-xl',
       'bg-transparent border-b-2',
       'transition',
@@ -115,21 +115,10 @@ const Week: React.FC = () => {
   )
 }
 
-export function TodayView() {
-  const addTaskControl = useAddTaskControl()
+const Today: React.FC = () => {
+  const queryClient = useQueryClient()
   const {sortType, setSortType, sort} = useTaskSorting()
   const [filtersState, updateFilters] = useTaskFilters()
-  const queryClient = useQueryClient()
-  const createTaskMutation = useMutation(
-    (payload: {title: string; meta: CreateTaskMeta}) => {
-      return akira.tasks.createForMyDay(payload.title, payload.meta)
-    },
-    {
-      onSuccess() {
-        queryClient.invalidateQueries(['myday'])
-      }
-    }
-  )
 
   const {data: tasks = [], isLoading} = useQuery<ApiTask[]>(
     TaskQueryKeyEnum.MyDay,
@@ -143,13 +132,51 @@ export function TodayView() {
       }
     }
   )
-
   const {data: tags = []} = useTagsQuery()
 
   const sorted = sort(filterTasks(tasks, filtersState))
   const completedTasksCount = size(filter({is_completed: true}, sorted))
-
   const today = format(new Date(), 'eeee, do MMM')
+
+  return (
+    <>
+      <div className="mt-2 flex justify-between items-center px-4 text-gray-700">
+        <p className="font-bold text-2xl">{today}</p>
+        <span className="text-2xl font-bold">
+          {completedTasksCount} / {size(sorted)}
+        </span>
+      </div>
+      <section className="mt-4 pb-24 px-4">
+        <Tasks isPending={isLoading} tasks={sorted} />
+      </section>
+      <TaskListOperations
+        isFiltered={size(sorted) !== size(tasks)}
+        isSorted={Boolean(sortType)}
+      />
+      <FiltersBottomSheet
+        canReset={size(tasks) !== size(sorted)}
+        state={filtersState}
+        tags={tags}
+        onChange={updateFilters}
+      />
+      <SortingBottomSheet sortType={sortType} onChange={setSortType} />
+    </>
+  )
+}
+
+export function TodayView() {
+  const addTaskControl = useAddTaskControl()
+  const queryClient = useQueryClient()
+  const createTaskMutation = useMutation(
+    (payload: {title: string; meta: CreateTaskMeta}) => {
+      return akira.tasks.createForMyDay(payload.title, payload.meta)
+    },
+    {
+      onSuccess() {
+        queryClient.invalidateQueries(['myday'])
+      }
+    }
+  )
 
   const [mode, setMode] = useState('today')
 
@@ -169,32 +196,7 @@ export function TodayView() {
         </Control>
         <div className="flex-1 border-b-2 border-gray-200" />
       </div>
-      {mode === 'today' ? (
-        <>
-          <div className="mt-2 flex justify-between items-center px-4 text-gray-700">
-            <p className="font-bold text-2xl">{today}</p>
-            <span className="text-2xl font-bold">
-              {completedTasksCount} / {size(sorted)}
-            </span>
-          </div>
-          <section className="mt-4 pb-24 px-4">
-            <Tasks isPending={isLoading} tasks={sorted} />
-          </section>
-          <TaskListOperations
-            isFiltered={size(sorted) !== size(tasks)}
-            isSorted={Boolean(sortType)}
-          />
-          <FiltersBottomSheet
-            canReset={size(tasks) !== size(sorted)}
-            state={filtersState}
-            tags={tags}
-            onChange={updateFilters}
-          />
-          <SortingBottomSheet sortType={sortType} onChange={setSortType} />
-        </>
-      ) : (
-        <Week />
-      )}
+      {mode === 'today' ? <Today /> : <Week />}
       {addTaskControl.isVisible && (
         <div className="z-20 fixed bottom-0 right-0 p-4">
           <AddTaskButton onClick={addTaskControl.onAddIntent} />
