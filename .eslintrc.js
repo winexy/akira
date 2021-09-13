@@ -72,7 +72,7 @@ module.exports = {
     'arrow-body-style': 'off',
     'no-param-reassign': [
       'error',
-      {props: true, ignorePropertyModificationsFor: ['draft']}
+      {props: true, ignorePropertyModificationsFor: ['draft', 'acc']}
     ],
     'object-curly-newline': 'off', // prefere prettier
     'no-undef': 'off', // false positive error,

@@ -4,6 +4,8 @@ import filter from 'lodash/fp/filter'
 import uniqueId from 'lodash/fp/uniqueId'
 import isUndefined from 'lodash/fp/isUndefined'
 import isNull from 'lodash/fp/isNull'
+import forOwn from 'lodash/forOwn'
+import reduce from 'lodash/reduce'
 import {useMutation, useQuery, useQueryClient, QueryClient} from 'react-query'
 import {akira} from '@lib/akira'
 import {
@@ -56,6 +58,31 @@ function writeTaskListCache(
   )
 
   return prevTasks
+}
+
+function writeTaskListsCache(
+  queryClient: QueryClient,
+  updatedTask: ApiTask | null
+) {
+  reduce(
+    TaskQueryKeyEnum,
+    (acc, queryKey) => {
+      acc[queryKey] = writeTaskListCache(queryKey, queryClient, updatedTask)
+      return acc
+    },
+    {} as PrevTasksRecord
+  )
+}
+
+type PrevTasksRecord = Record<TaskQueryKeyEnum, Array<ApiTask> | null>
+
+function rollbackTaskListMutations(
+  queryClient: QueryClient,
+  prevTasksRecord: PrevTasksRecord
+) {
+  forOwn(TaskQueryKeyEnum, queryKey => {
+    rollbackTaskListMutation(queryKey, queryClient, prevTasksRecord[queryKey])
+  })
 }
 
 function rollbackTaskMutation(
@@ -113,32 +140,13 @@ export function useToggleCompletedMutation() {
         draft.is_completed = !draft.is_completed
       })
 
-      const prevMyDayTasks = writeTaskListCache(
-        TaskQueryKeyEnum.MyDay,
-        queryClient,
-        newTask
-      )
+      const prevTasksRecord = writeTaskListsCache(queryClient, newTask)
 
-      const prevTasks = writeTaskListCache(
-        TaskQueryKeyEnum.All,
-        queryClient,
-        newTask
-      )
-
-      return {prevTask, prevMyDayTasks, prevTasks}
+      return {prevTask, prevTasksRecord}
     },
     onError(_, taskId, context: any) {
       rollbackTaskMutation(taskId, queryClient, context.prevTask)
-      rollbackTaskListMutation(
-        TaskQueryKeyEnum.MyDay,
-        queryClient,
-        context.prevMyDayTasks
-      )
-      rollbackTaskListMutation(
-        TaskQueryKeyEnum.All,
-        queryClient,
-        context.prevTasks
-      )
+      rollbackTaskListMutations(queryClient, context.prevTasksRecord)
     }
   })
 }
@@ -152,32 +160,13 @@ export function useToggleImportantMutation() {
         draft.is_important = !draft.is_important
       })
 
-      const prevMyDayTasks = writeTaskListCache(
-        TaskQueryKeyEnum.MyDay,
-        queryClient,
-        newTask
-      )
+      const prevTasksRecord = writeTaskListsCache(queryClient, newTask)
 
-      const prevTasks = writeTaskListCache(
-        TaskQueryKeyEnum.All,
-        queryClient,
-        newTask
-      )
-
-      return {prevTask, prevMyDayTasks, prevTasks}
+      return {prevTask, prevTasksRecord}
     },
     onError(_, taskId, context: any) {
       rollbackTaskMutation(taskId, queryClient, context.prevTask)
-      rollbackTaskListMutation(
-        TaskQueryKeyEnum.MyDay,
-        queryClient,
-        context.prevMyDayTasks
-      )
-      rollbackTaskListMutation(
-        TaskQueryKeyEnum.All,
-        queryClient,
-        context.prevTasks
-      )
+      rollbackTaskListMutations(queryClient, context.prevTasksRecord)
     }
   })
 }
@@ -244,35 +233,16 @@ export function useAddTodoMutation(taskId: TaskId) {
           }
         )
 
-        const prevMyDayTasks = writeTaskListCache(
-          TaskQueryKeyEnum.MyDay,
-          queryClient,
-          newTask
-        )
+        const prevTasksRecord = writeTaskListsCache(queryClient, newTask)
 
-        const prevTasks = writeTaskListCache(
-          TaskQueryKeyEnum.All,
-          queryClient,
-          newTask
-        )
-
-        return {prevTask, prevMyDayTasks, prevTasks}
+        return {prevTask, prevTasksRecord}
       },
       onSuccess() {
         queryClient.invalidateQueries(['task', taskId])
       },
       onError(_, __, context: any) {
         rollbackTaskMutation(taskId, queryClient, context.prevTask)
-        rollbackTaskListMutation(
-          TaskQueryKeyEnum.MyDay,
-          queryClient,
-          context.prevMyDayTasks
-        )
-        rollbackTaskListMutation(
-          TaskQueryKeyEnum.All,
-          queryClient,
-          context.prevTasks
-        )
+        rollbackTaskListMutations(queryClient, context.prevTasksRecord)
       }
     }
   )
@@ -331,32 +301,13 @@ export function useRemoveTodoMutation(taskId: TaskId) {
           }
         )
 
-        const prevMyDayTasks = writeTaskListCache(
-          TaskQueryKeyEnum.MyDay,
-          queryClient,
-          newTask
-        )
+        const prevTasksRecord = writeTaskListsCache(queryClient, newTask)
 
-        const prevTasks = writeTaskListCache(
-          TaskQueryKeyEnum.All,
-          queryClient,
-          newTask
-        )
-
-        return {prevTask, prevMyDayTasks, prevTasks}
+        return {prevTask, prevTasksRecord}
       },
       onError(_, __, context: any) {
         rollbackTaskMutation(taskId, queryClient, context.prevTask)
-        rollbackTaskListMutation(
-          TaskQueryKeyEnum.MyDay,
-          queryClient,
-          context.prevMyDayTasks
-        )
-        rollbackTaskListMutation(
-          TaskQueryKeyEnum.All,
-          queryClient,
-          context.prevTasks
-        )
+        rollbackTaskListMutations(queryClient, context.prevTasksRecord)
       }
     }
   )
@@ -379,32 +330,13 @@ export function useAddTaskTagMutation(task: ApiTask) {
           }
         )
 
-        const prevMyDayTasks = writeTaskListCache(
-          TaskQueryKeyEnum.MyDay,
-          queryClient,
-          newTask
-        )
+        const prevTasksRecord = writeTaskListsCache(queryClient, newTask)
 
-        const prevTasks = writeTaskListCache(
-          TaskQueryKeyEnum.All,
-          queryClient,
-          newTask
-        )
-
-        return {prevTask, prevMyDayTasks, prevTasks}
+        return {prevTask, prevTasksRecord}
       },
       onError(_, __, context: any) {
         rollbackTaskMutation(task.id, queryClient, context.prevTask)
-        rollbackTaskListMutation(
-          TaskQueryKeyEnum.MyDay,
-          queryClient,
-          context.prevMyDayTasks
-        )
-        rollbackTaskListMutation(
-          TaskQueryKeyEnum.All,
-          queryClient,
-          context.prevTasks
-        )
+        rollbackTaskListMutations(queryClient, context.prevTasksRecord)
       }
     }
   )
@@ -427,32 +359,13 @@ export function useRemoveTaskTagMutation(task: ApiTask) {
           }
         )
 
-        const prevMyDayTasks = writeTaskListCache(
-          TaskQueryKeyEnum.MyDay,
-          queryClient,
-          newTask
-        )
+        const prevTasksRecord = writeTaskListsCache(queryClient, newTask)
 
-        const prevTasks = writeTaskListCache(
-          TaskQueryKeyEnum.All,
-          queryClient,
-          newTask
-        )
-
-        return {prevTask, prevMyDayTasks, prevTasks}
+        return {prevTask, prevTasksRecord}
       },
       onError(_, __, context: any) {
         rollbackTaskMutation(task.id, queryClient, context.prevTask)
-        rollbackTaskListMutation(
-          TaskQueryKeyEnum.MyDay,
-          queryClient,
-          context.prevMyDayTasks
-        )
-        rollbackTaskListMutation(
-          TaskQueryKeyEnum.All,
-          queryClient,
-          context.prevTasks
-        )
+        rollbackTaskListMutations(queryClient, context.prevTasksRecord)
       }
     }
   )
