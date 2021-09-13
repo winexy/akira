@@ -29,6 +29,10 @@ import {api} from '@lib/api'
 import groupBy from 'lodash/groupBy'
 import keys from 'lodash/keys'
 import parseISO from 'date-fns/parseISO'
+import ContentLoader from 'react-content-loader'
+import times from 'lodash/fp/times'
+import InboxIcon from '@heroicons/react/solid/InboxIcon'
+import isEmpty from 'lodash/fp/isEmpty'
 
 const Control: React.FC<{
   value: string
@@ -52,7 +56,7 @@ const Control: React.FC<{
 )
 
 const Week: React.FC = () => {
-  const {data: tasks} = useQuery<Array<ApiTask>>(
+  const {data: tasks, isLoading} = useQuery<Array<ApiTask>>(
     'week',
     () => api.get('task-scheduler/week').then(response => response.data),
     {
@@ -62,6 +66,39 @@ const Week: React.FC = () => {
 
   const byDay = groupBy(tasks, task => task.schedule?.date ?? '')
   const days = keys(byDay)
+
+  if (isLoading) {
+    return (
+      <div className="px-4">
+        {times(
+          x => (
+            <ContentLoader
+              key={x}
+              speed={2}
+              width="100%"
+              className="mt-4"
+              height="98px"
+              backgroundColor="#ffffff"
+              foregroundColor="#e9e9e9"
+            >
+              <rect x="0" y={0} rx="6" ry="6" width="40%" height={28} />
+              <rect x="0" y={38} rx="6" ry="6" width="100%" height={60} />
+            </ContentLoader>
+          ),
+          4
+        )}
+      </div>
+    )
+  }
+
+  if (isEmpty(tasks)) {
+    return (
+      <div className="px-4 h-full flex flex-col items-center text-gray-700">
+        <InboxIcon className="mt-32 w-12 h-12" />
+        <h2 className="mt-2 font-semibold text-lg">No tasks</h2>
+      </div>
+    )
+  }
 
   return (
     <div className="mt-2 px-4 space-y-2 pb-24">
