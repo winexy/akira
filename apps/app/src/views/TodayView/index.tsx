@@ -66,7 +66,7 @@ const Week: React.FC = () => {
   return (
     <div className="mt-2 px-4 space-y-2 pb-24">
       {days.map(day => (
-        <section>
+        <section key={day}>
           <h2 className="font-bold text-2xl text-gray-700">
             {format(parseISO(day), 'EEEE')}
           </h2>
