@@ -57,11 +57,15 @@ const Control: React.FC<{
 )
 
 const Week: React.FC = () => {
+  const queryClient = useQueryClient()
   const {data: tasks, isLoading} = useQuery<Array<ApiTask>>(
-    'week',
+    TaskQueryKeyEnum.Week,
     () => api.get('task-scheduler/week').then(response => response.data),
     {
-      placeholderData: []
+      placeholderData: [],
+      onSuccess(tasks) {
+        tasks.forEach(task => queryClient.setQueryData(['task', task.id], task))
+      }
     }
   )
 
