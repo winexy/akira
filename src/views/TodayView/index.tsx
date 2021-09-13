@@ -42,12 +42,13 @@ const Control: React.FC<{
   <button
     type="button"
     className={clsx(
-      'h-8 flex items-center justify-center',
-      'font-semibold',
-      'flex-1 rounded-md border-none',
+      'py-1 px-5 flex items-center justify-center',
+      'font-bold text-xl',
+      'bg-transparent border-b-2',
+      'transition',
+      'active:text-purple-500',
       'focus:outline-none',
-      'transition-all',
-      {'bg-white shadow-sm': activeValue === value}
+      {'border-purple-500': activeValue === value}
     )}
     onClick={() => onClick(value)}
   >
@@ -148,7 +149,7 @@ export function TodayView() {
   const sorted = sort(filterTasks(tasks, filtersState))
   const completedTasksCount = size(filter({is_completed: true}, sorted))
 
-  const today = format(new Date(), 'eeee, do MMMM')
+  const today = format(new Date(), 'eeee, do MMM')
 
   const [mode, setMode] = useState('today')
 
@@ -159,24 +160,20 @@ export function TodayView() {
         onSubmit={createTaskMutation.mutate}
         onVisibilityChange={addTaskControl.onFormVisiblityChange}
       />
-      <div className="px-4">
-        <div className="flex p-0.5 rounded-md bg-gray-200 text-gray-700">
-          <Control activeValue={mode} value="today" onClick={setMode}>
-            today
-          </Control>
-          <Control activeValue={mode} value="week" onClick={setMode}>
-            week
-          </Control>
-        </div>
+      <div className="flex text-gray-700">
+        <Control activeValue={mode} value="today" onClick={setMode}>
+          Today
+        </Control>
+        <Control activeValue={mode} value="week" onClick={setMode}>
+          Week
+        </Control>
+        <div className="flex-1 border-b-2 border-gray-200" />
       </div>
       {mode === 'today' ? (
         <>
-          <div className="mt-2 flex justify-between items-center px-4 text-gray-600">
-            <div>
-              <h2 className="font-bold text-3xl">Today</h2>
-              <p className="text-sm">{today}</p>
-            </div>
-            <span className="text-gray-700 text-4xl font-bold">
+          <div className="mt-2 flex justify-between items-center px-4 text-gray-700">
+            <p className="font-bold text-2xl">{today}</p>
+            <span className="text-2xl font-bold">
               {completedTasksCount} / {size(sorted)}
             </span>
           </div>
