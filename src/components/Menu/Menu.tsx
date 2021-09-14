@@ -134,52 +134,58 @@ function useOpenMenuLock(
   }, [rootId, isOpen, menu])
 }
 
-const ScrollShadow = forwardRef<HTMLDivElement, PropsWithChildren<{}>>(
-  ({children}, forwardedRef) => {
-    const ref = useRef<HTMLDivElement>(null)
-    const [state, setState] = useState(0)
+const ScrollShadow = forwardRef<
+  HTMLDivElement,
+  PropsWithChildren<{recalcKey: string | number | boolean}>
+>(({children, recalcKey}, forwardedRef) => {
+  const ref = useRef<HTMLDivElement>(null)
+  const [state, setState] = useState(0)
 
-    const onScroll = throttle(() => {
-      const node = ref.current
+  const onScroll = throttle(() => {
+    const node = ref.current
 
-      if (isNull(node)) {
-        return
-      }
+    if (isNull(node)) {
+      return
+    }
 
-      const top = node.scrollTop > 0 ? 0b1 : 0
-      const bot =
-        node.scrollHeight - node.offsetHeight > node.scrollTop ? 0b10 : 0
+    const top = node.scrollTop > 0 ? 0b1 : 0
+    const bot =
+      node.scrollHeight - node.offsetHeight > node.scrollTop ? 0b10 : 0
 
-      setState(top | bot)
-    }, 250)
+    setState(top | bot)
+  }, 250)
 
-    return (
-      <div ref={forwardedRef} className="relative overflow-hidden">
-        <div
-          className={clsx(
-            'absolute top-0 h-24 w-full',
-            'from-gray-700 bg-gradient-to-b',
-            'transition ease-in duration-75',
-            'pointer-events-none',
-            {'opacity-0': (state & 0b1) !== 0b1}
-          )}
-        />
-        <div ref={ref} className="h-full overflow-auto" onScroll={onScroll}>
-          {children}
-        </div>
-        <div
-          className={clsx(
-            'z-10 absolute bottom-0 h-24 w-full',
-            'from-gray-700 bg-gradient-to-t',
-            'transition ease-in duration-75',
-            'pointer-events-none',
-            {'opacity-0': (state & 0b10) !== 0b10}
-          )}
-        />
+  useEffect(() => {
+    onScroll()
+    // eslint-disable-next-line
+  }, [recalcKey])
+
+  return (
+    <div ref={forwardedRef} className="relative overflow-hidden">
+      <div
+        className={clsx(
+          'absolute top-0 h-24 w-full',
+          'from-gray-700 bg-gradient-to-b',
+          'transition ease-in duration-75',
+          'pointer-events-none',
+          {'opacity-0': (state & 0b1) !== 0b1}
+        )}
+      />
+      <div ref={ref} className="h-full overflow-auto" onScroll={onScroll}>
+        {children}
       </div>
-    )
-  }
-)
+      <div
+        className={clsx(
+          'z-10 absolute bottom-0 h-24 w-full',
+          'from-gray-700 bg-gradient-to-t',
+          'transition ease-in duration-75',
+          'pointer-events-none',
+          {'opacity-0': (state & 0b10) !== 0b10}
+        )}
+      />
+    </div>
+  )
+})
 
 export const Menu: React.FC = ({children}) => {
   const history = useHistory()
@@ -258,7 +264,7 @@ export const Menu: React.FC = ({children}) => {
             <ChevronLeftIcon className="w-8 h-8" />
           </button>
         </div>
-        <ScrollShadow ref={scrollContentRef}>
+        <ScrollShadow recalcKey={isOpen} ref={scrollContentRef}>
           <ul
             className="
               pt-0.5 px-4
