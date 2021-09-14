@@ -21,13 +21,15 @@ export const MyDayToggle: React.FC<{taskId: TaskId}> = ({taskId}) => {
   const addToMyDayMutation = useMutation(akira.myday.add, {
     onSuccess(_, taskId) {
       onMyDayTaskAdded(taskId)
-      queryClient.refetchQueries(['myday'])
+      queryClient.invalidateQueries(['myday'])
+      queryClient.invalidateQueries(['task', taskId])
     }
   })
   const removeFromMyDayMutation = useMutation(akira.myday.remove, {
     onSuccess(_, taskId) {
       onMyDayTaskRemoved(taskId)
-      queryClient.refetchQueries(['myday'])
+      queryClient.invalidateQueries(['myday'])
+      queryClient.invalidateQueries(['task', taskId])
     }
   })
 
