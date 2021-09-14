@@ -7,13 +7,13 @@ export function myday(api: AxiosInstance) {
 
   return {
     tasks(): Promise<ApiTask[]> {
-      return api.get('myday').then(unwrap)
+      return api.get('task-scheduler/today').then(unwrap)
     },
     add(taskId: TaskId) {
-      return api.post(`myday/${taskId}`)
+      return api.post(`task-scheduler/schedule/today/${taskId}`)
     },
     remove(taskId: TaskId) {
-      return api.delete(`myday/${taskId}`)
+      return api.delete(`task-scheduler/schedule/${taskId}`)
     }
   }
 }
