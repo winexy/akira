@@ -125,7 +125,7 @@ const Today: React.FC = () => {
   const [filtersState, updateFilters] = useTaskFilters()
 
   const {data: tasks = [], isLoading} = useQuery<ApiTask[]>(
-    TaskQueryKeyEnum.MyDay,
+    [TaskQueryKeyEnum.MyDay],
     akira.myday.tasks,
     {
       onSuccess(tasks) {

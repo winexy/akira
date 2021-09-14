@@ -189,7 +189,7 @@ export const Menu: React.FC = ({children}) => {
   const menuRef = useRef<HTMLElement>(null)
   const scrollContentRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
-  const todayTasksCount = size(queryClient.getQueryData('myday'))
+  const todayTasksCount = size(queryClient.getQueryData(['myday']))
 
   useOpenMenuLock('root', isOpen, scrollContentRef.current)
 

@@ -23,9 +23,9 @@ const queryClient = new QueryClient({
 
 async function prefetchQueries() {
   queryClient.prefetchQuery('tags', akira.tags.findAll)
-  await queryClient.prefetchQuery('myday', akira.myday.tasks)
+  await queryClient.prefetchQuery(['myday'], akira.myday.tasks)
 
-  const tasks = queryClient.getQueryData<ApiTask[]>('myday')
+  const tasks = queryClient.getQueryData<ApiTask[]>(['myday'])
 
   if (tasks) {
     onMyDayFetch(tasks)
