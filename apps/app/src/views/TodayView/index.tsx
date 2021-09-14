@@ -150,7 +150,7 @@ const Today: React.FC = () => {
           {completedTasksCount} / {size(sorted)}
         </span>
       </div>
-      <section className="mt-4 pb-24 px-4">
+      <section className="mt-2 pb-24 px-4">
         <Tasks isPending={isLoading} tasks={sorted} />
       </section>
       <TaskListOperations
