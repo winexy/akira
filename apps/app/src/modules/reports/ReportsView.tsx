@@ -5,7 +5,6 @@ import {DatePicker} from '@/components/DatePicker'
 import format from 'date-fns/format'
 import {api} from '@lib/api'
 import {useQuery} from 'react-query'
-import subDays from 'date-fns/subDays'
 import {Match} from '@/components/Match'
 import isUndefined from 'lodash/fp/isUndefined'
 import get from 'lodash/fp/get'
@@ -14,6 +13,7 @@ import parseISO from 'date-fns/parseISO'
 import {CheckIcon, ExternalLinkIcon, FireIcon} from '@heroicons/react/solid'
 import {Link} from 'react-router-dom'
 import ContentLoader from 'react-content-loader'
+import isEmpty from 'lodash/fp/isEmpty'
 import {ApiTask} from '../tasks/types.d'
 
 type Report = {
@@ -23,7 +23,19 @@ type Report = {
 
 function useReportQuery(date: string) {
   return useQuery<Report>(['report', date], () => {
-    return api.get(`reports?date=${date}`).then(res => res.data)
+    return api
+      .get(`reports?date=${date}`)
+      .then(res => res.data)
+      .catch(error => {
+        if (error.type === 'NotFound') {
+          return {
+            date,
+            tasks: []
+          }
+        }
+
+        return Promise.reject(error)
+      })
   })
 }
 
@@ -64,48 +76,51 @@ function ReportView() {
           <p className="mt-4">Error occured: {get('message', error)}</p>
         </Match.Case>
         <Match.Case when={!isUndefined(report)}>
-          <ul className="mt-4 text-gray-600 space-y-2">
-            {report?.tasks.map(task => (
-              <li key={task.id}>
-                <div>
-                  <div className="flex items-center">
-                    <h2
-                      className={clsx('font-semibold text-xl truncate', {
-                        'line-through': task.is_completed
-                      })}
-                    >
-                      {task.title}
-                    </h2>
-                    <div className="ml-2 mr-4 flex space-x-2">
-                      {task.is_completed && (
-                        <CheckIcon className="w-6 h-6 text-green-500" />
-                      )}
-                      {task.is_important && (
-                        <FireIcon className="w-6 h-6 text-red-500" />
-                      )}
+          {isEmpty(report?.tasks) ? (
+            <p className="mt-4">No data</p>
+          ) : (
+            <ul className="mt-4 text-gray-600 space-y-2">
+              {report?.tasks.map(task => (
+                <li key={task.id}>
+                  <div>
+                    <div className="flex items-center">
+                      <h2
+                        className={clsx('font-semibold text-xl truncate', {
+                          'line-through': task.is_completed
+                        })}
+                      >
+                        {task.title}
+                      </h2>
+                      <div className="ml-2 mr-4 flex space-x-2">
+                        {task.is_completed && (
+                          <CheckIcon className="w-6 h-6 text-green-500" />
+                        )}
+                        {task.is_important && (
+                          <FireIcon className="w-6 h-6 text-red-500" />
+                        )}
+                      </div>
+                      <Link
+                        to={`/tasks/${task.id}`}
+                        className="ml-auto flex items-center text-blue-500 active:text-blue-600"
+                      >
+                        <ExternalLinkIcon className="w-5 h-5 mr-2" /> Link
+                      </Link>
                     </div>
-                    <Link
-                      to={`/tasks/${task.id}`}
-                      className="ml-auto flex items-center text-blue-500 active:text-blue-600"
-                    >
-                      <ExternalLinkIcon className="w-5 h-5 mr-2" /> Link
-                    </Link>
+                    <p className="text-gray-500 text-sm">
+                      Updated at:{' '}
+                      {format(parseISO(task.updated_at), 'HH:mm:ss')}
+                    </p>
+                    <p className="mt-2">{task.description}</p>
                   </div>
-                  <p className="text-gray-500 text-sm">
-                    Updated at: {format(parseISO(task.updated_at), 'HH:mm:ss')}
-                  </p>
-                  <p className="mt-2">{task.description}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
+                </li>
+              ))}
+            </ul>
+          )}
         </Match.Case>
       </Match>
     </MainView>
   )
 }
-
-const yesterday = subDays(new Date(), 1)
 
 export const ReportsView: React.FC = () => {
   const history = useHistory()
@@ -123,7 +138,7 @@ export const ReportsView: React.FC = () => {
         <MainView className="px-4">
           <h1 className="font-bold text-3xl text-gray-600">Select day</h1>
           <DatePicker
-            maxDate={yesterday}
+            maxDate={new Date()}
             className="mt-6"
             onChange={onDateSelect}
           />
