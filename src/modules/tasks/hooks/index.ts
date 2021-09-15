@@ -111,14 +111,19 @@ function rollbackTaskListMutation(
   }
 }
 
+function writeTasksToCache(
+  queryClient: QueryClient,
+  tasks: Array<ApiTask>
+): void {
+  tasks.forEach(task => queryClient.setQueryData(TaskQuery.One(task.id), task))
+}
+
 export function useTasksQuery() {
   const queryClient = useQueryClient()
 
   return useQuery(TaskQuery.All(), () => akira.tasks.findAll(), {
     onSuccess(tasks) {
-      tasks.forEach(task =>
-        queryClient.setQueryData(TaskQuery.One(task.id), task)
-      )
+      writeTasksToCache(queryClient, tasks)
     }
   })
 }
@@ -393,9 +398,17 @@ export function useMyDayQuery() {
 
   return useQuery(TaskQuery.MyDay(), akira.myday.tasks, {
     onSuccess(tasks) {
-      tasks.forEach(task => {
-        queryClient.setQueryData(TaskQuery.One(task.id), task)
-      })
+      writeTasksToCache(queryClient, tasks)
+    }
+  })
+}
+
+export function useWeekQuery() {
+  const queryClient = useQueryClient()
+
+  return useQuery<Array<ApiTask>>(TaskQuery.Week(), () => akira.tasks.week(), {
+    onSuccess(tasks) {
+      writeTasksToCache(queryClient, tasks)
     }
   })
 }

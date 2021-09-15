@@ -50,6 +50,9 @@ export function tasks(api: AxiosInstance) {
     },
     removeTag(id: TaskId, tagId: number): Promise<void> {
       return api.delete(`tasks/${id}/tags/${tagId}`)
+    },
+    week(): Promise<Array<ApiTask>> {
+      return api.get('task-scheduler/week').then(unwrap)
     }
   }
 }
