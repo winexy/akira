@@ -53,8 +53,14 @@ const Control: React.FC<{
   </button>
 )
 
+const SnackBar: React.FC = () => (
+  <div className="fixed bottom-0 w-full px-4 p-1 bg-blue-500">
+    <p className="text-white text-sm text-center">Refreshing...</p>
+  </div>
+)
+
 const Week: React.FC = () => {
-  const {data: tasks, isLoading} = useWeekQuery()
+  const {data: tasks, isLoading, isFetching} = useWeekQuery()
 
   const byDay = groupBy(task => task.schedule?.date ?? '', tasks)
   const days = keys(byDay).sort()
@@ -93,16 +99,19 @@ const Week: React.FC = () => {
   }
 
   return (
-    <div className="mt-2 px-4 space-y-2 pb-24">
-      {days.map(day => (
-        <section key={day}>
-          <h2 className="font-bold text-2xl text-gray-700">
-            {format(parseISO(day), 'EEEE')}
-          </h2>
-          <Tasks className="mt-2" isPending={false} tasks={byDay[day]} />
-        </section>
-      ))}
-    </div>
+    <>
+      <div className="mt-2 px-4 space-y-2 pb-24">
+        {days.map(day => (
+          <section key={day}>
+            <h2 className="font-bold text-2xl text-gray-700">
+              {format(parseISO(day), 'EEEE')}
+            </h2>
+            <Tasks className="mt-2" isPending={false} tasks={byDay[day]} />
+          </section>
+        ))}
+      </div>
+      {!isLoading && isFetching && <SnackBar />}
+    </>
   )
 }
 
@@ -110,7 +119,7 @@ const Today: React.FC = () => {
   const {sortType, setSortType, sort} = useTaskSorting()
   const [filtersState, updateFilters] = useTaskFilters()
 
-  const {data: tasks = [], isLoading} = useMyDayQuery()
+  const {data: tasks = [], isLoading, isFetching} = useMyDayQuery()
   const {data: tags = []} = useTagsQuery()
 
   const sorted = sort(filterTasks(tasks, filtersState))
@@ -139,6 +148,7 @@ const Today: React.FC = () => {
         onChange={updateFilters}
       />
       <SortingBottomSheet sortType={sortType} onChange={setSortType} />
+      {!isLoading && isFetching && <SnackBar />}
     </>
   )
 }
