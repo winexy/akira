@@ -17,18 +17,18 @@ import {
   Todo
 } from '@modules/tasks/types.d'
 import {TaskTag} from '@modules/tags/types.d'
-import {TaskQueryKeyEnum} from '@modules/tasks/config'
+import {TaskQueryKeyEnum, TaskQuery} from '@modules/tasks/config'
 
 function writeTaskCache(
   taskId: TaskId,
   queryClient: QueryClient,
   mutateDraft: (draft: Draft<ApiTask>, prevTask: Immutable<ApiTask>) => void
 ): [null, null] | [ApiTask, ApiTask] {
-  const prevTask = queryClient.getQueryData<ApiTask>(['task', taskId])
+  const prevTask = queryClient.getQueryData<ApiTask>(TaskQuery.One(taskId))
 
   if (!isUndefined(prevTask)) {
     const newTask = produce(prevTask, draft => mutateDraft(draft, prevTask))
-    queryClient.setQueriesData(['task', taskId], newTask)
+    queryClient.setQueriesData(TaskQuery.One(taskId), newTask)
     return [prevTask, newTask]
   }
 
@@ -91,7 +91,7 @@ function rollbackTaskMutation(
   prevTask: ApiTask | undefined
 ) {
   if (prevTask) {
-    queryClient.setQueryData(['task', taskId], prevTask)
+    queryClient.setQueryData(TaskQuery.One(taskId), prevTask)
   }
 }
 
@@ -110,7 +110,9 @@ export function useTasksQuery() {
 
   return useQuery(TaskQueryKeyEnum.All, () => akira.tasks.findAll(), {
     onSuccess(tasks) {
-      tasks.forEach(task => queryClient.setQueryData(['task', task.id], task))
+      tasks.forEach(task =>
+        queryClient.setQueryData(TaskQuery.One(task.id), task)
+      )
     }
   })
 }
@@ -124,7 +126,7 @@ export function usePatchTaskMutation(taskId: TaskId) {
     },
     {
       onSuccess(task) {
-        queryClient.setQueryData(['task', taskId], task)
+        queryClient.setQueryData(TaskQuery.One(taskId), task)
         writeTaskListCache(TaskQueryKeyEnum.MyDay, queryClient, task)
       }
     }
@@ -199,7 +201,7 @@ export function useRemoveTaskMutation() {
   return useMutation(akira.tasks.delete, {
     mutationKey: 'delete-task',
     onSuccess(_, taskId) {
-      queryClient.removeQueries(['task', taskId])
+      queryClient.removeQueries(TaskQuery.One(taskId))
       removeTasksFromCache(queryClient, TaskQueryKeyEnum.MyDay, taskId)
       removeTasksFromCache(queryClient, TaskQueryKeyEnum.All, taskId)
     }
@@ -238,7 +240,7 @@ export function useAddTodoMutation(taskId: TaskId) {
         return {prevTask, prevTasksRecord}
       },
       onSuccess() {
-        queryClient.invalidateQueries(['task', taskId])
+        queryClient.invalidateQueries(TaskQuery.One(taskId))
       },
       onError(_, __, context: any) {
         rollbackTaskMutation(taskId, queryClient, context.prevTask)

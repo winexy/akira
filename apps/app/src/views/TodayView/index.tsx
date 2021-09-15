@@ -10,7 +10,7 @@ import {useQuery, useQueryClient, useMutation} from 'react-query'
 import {akira} from '@lib/akira'
 import {onMyDayFetch} from '@modules/tasks/store'
 import {ApiTask} from '@modules/tasks/types.d'
-import {TaskQueryKeyEnum} from '@modules/tasks/config/index'
+import {TaskQueryKeyEnum, TaskQuery} from '@modules/tasks/config/index'
 import {useTagsQuery} from '@modules/tags/hooks'
 import {filterTasks, useTaskFilters} from '@modules/tasks/filters'
 import {FiltersBottomSheet} from '@modules/tasks/filters/FiltersBottomSheet'
@@ -63,7 +63,9 @@ const Week: React.FC = () => {
     () => api.get('task-scheduler/week').then(response => response.data),
     {
       onSuccess(tasks) {
-        tasks.forEach(task => queryClient.setQueryData(['task', task.id], task))
+        tasks.forEach(task =>
+          queryClient.setQueryData(TaskQuery.One(task.id), task)
+        )
       }
     }
   )
@@ -130,7 +132,7 @@ const Today: React.FC = () => {
       onSuccess(tasks) {
         onMyDayFetch(tasks)
         tasks.forEach(task => {
-          queryClient.setQueryData(['task', task.id], task)
+          queryClient.setQueryData(TaskQuery.One(task.id), task)
         })
       }
     }

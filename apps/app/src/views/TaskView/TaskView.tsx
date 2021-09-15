@@ -38,8 +38,8 @@ import isEqual from 'date-fns/isEqual'
 import isUndefined from 'lodash/fp/isUndefined'
 import {DatePickerSheet, DatePicker} from '@components/DatePicker'
 import {Portal} from '@components/Portal'
-import addDays from 'date-fns/addDays'
 import clsx from 'clsx'
+import {TaskQuery} from '@modules/tasks/config'
 import {exhaustiveCheck} from '../../utils/index'
 
 type TaskScheduleProps = {
@@ -99,7 +99,7 @@ const TaskSchedule: React.FC<TaskScheduleProps> = ({
       }),
     {
       onSuccess() {
-        queryClient.refetchQueries(['task', taskId])
+        queryClient.refetchQueries(TaskQuery.One(taskId))
       }
     }
   )
@@ -168,8 +168,9 @@ const TaskSchedule: React.FC<TaskScheduleProps> = ({
 
 export const TaskView: React.FC = () => {
   const {taskId} = useParams<{taskId: string}>()
-  const {data: task, isFetching} = useQuery<ApiTask>(['task', taskId], () =>
-    akira.tasks.findOne(taskId)
+  const {data: task, isFetching} = useQuery<ApiTask>(
+    TaskQuery.One(taskId),
+    () => akira.tasks.findOne(taskId)
   )
 
   const patchTaskMutation = usePatchTaskMutation(taskId)
