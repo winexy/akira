@@ -4,7 +4,6 @@ import filter from 'lodash/fp/filter'
 import uniqueId from 'lodash/fp/uniqueId'
 import isUndefined from 'lodash/fp/isUndefined'
 import isNull from 'lodash/fp/isNull'
-import forOwn from 'lodash/forOwn'
 import reduce from 'lodash/reduce'
 import {useMutation, useQuery, useQueryClient, QueryClient} from 'react-query'
 import {akira} from '@lib/akira'
@@ -17,7 +16,8 @@ import {
   Todo
 } from '@modules/tasks/types.d'
 import {TaskTag} from '@modules/tags/types.d'
-import {TaskQueryKeyEnum, TaskQuery} from '@modules/tasks/config'
+import {TaskQuery} from '@modules/tasks/config'
+import {forEach, join} from 'lodash/fp'
 
 function writeTaskCache(
   taskId: TaskId,
@@ -36,7 +36,7 @@ function writeTaskCache(
 }
 
 function writeTaskListCache(
-  tasksQueryKey: TaskQueryKeyEnum,
+  tasksQueryKey: Array<string>,
   queryClient: QueryClient,
   updatedTask: ApiTask | null
 ): ApiTask[] | null {
@@ -64,25 +64,31 @@ function writeTaskListsCache(
   queryClient: QueryClient,
   updatedTask: ApiTask | null
 ) {
+  const keys = [TaskQuery.All(), TaskQuery.MyDay(), TaskQuery.Week()]
+
   reduce(
-    TaskQueryKeyEnum,
-    (acc, queryKey) => {
-      acc[queryKey] = writeTaskListCache(queryKey, queryClient, updatedTask)
-      return acc
+    keys,
+    (entries, queryKey) => {
+      entries.push([
+        queryKey,
+        writeTaskListCache(queryKey, queryClient, updatedTask)
+      ])
+
+      return entries
     },
-    {} as PrevTasksRecord
+    [] as PrevTasksEntries
   )
 }
 
-type PrevTasksRecord = Record<TaskQueryKeyEnum, Array<ApiTask> | null>
+type PrevTasksEntries = Array<[Array<string>, Array<ApiTask> | null]>
 
 function rollbackTaskListMutations(
   queryClient: QueryClient,
-  prevTasksRecord: PrevTasksRecord
+  prevTasksEntries: PrevTasksEntries
 ) {
-  forOwn(TaskQueryKeyEnum, queryKey => {
-    rollbackTaskListMutation(queryKey, queryClient, prevTasksRecord[queryKey])
-  })
+  forEach(([queryKey, tasks]) => {
+    rollbackTaskListMutation(queryKey, queryClient, tasks)
+  }, prevTasksEntries)
 }
 
 function rollbackTaskMutation(
@@ -96,7 +102,7 @@ function rollbackTaskMutation(
 }
 
 function rollbackTaskListMutation(
-  tasksQueryKey: TaskQueryKeyEnum,
+  tasksQueryKey: Array<string>,
   queryClient: QueryClient,
   prevTasks: ApiTask[] | null
 ) {
@@ -108,7 +114,7 @@ function rollbackTaskListMutation(
 export function useTasksQuery() {
   const queryClient = useQueryClient()
 
-  return useQuery(TaskQueryKeyEnum.All, () => akira.tasks.findAll(), {
+  return useQuery(TaskQuery.All(), () => akira.tasks.findAll(), {
     onSuccess(tasks) {
       tasks.forEach(task =>
         queryClient.setQueryData(TaskQuery.One(task.id), task)
@@ -127,7 +133,7 @@ export function usePatchTaskMutation(taskId: TaskId) {
     {
       onSuccess(task) {
         queryClient.setQueryData(TaskQuery.One(taskId), task)
-        writeTaskListCache(TaskQueryKeyEnum.MyDay, queryClient, task)
+        writeTaskListCache(TaskQuery.MyDay(), queryClient, task)
       }
     }
   )
@@ -185,7 +191,7 @@ function removeTask(tasks: ApiTask[], taskId: TaskId) {
 
 function removeTasksFromCache(
   queryClient: QueryClient,
-  queryKey: TaskQueryKeyEnum,
+  queryKey: Array<string>,
   taskId: TaskId
 ) {
   const tasks = queryClient.getQueryData<ApiTask[]>(queryKey)
@@ -202,8 +208,8 @@ export function useRemoveTaskMutation() {
     mutationKey: 'delete-task',
     onSuccess(_, taskId) {
       queryClient.removeQueries(TaskQuery.One(taskId))
-      removeTasksFromCache(queryClient, TaskQueryKeyEnum.MyDay, taskId)
-      removeTasksFromCache(queryClient, TaskQueryKeyEnum.All, taskId)
+      removeTasksFromCache(queryClient, TaskQuery.MyDay(), taskId)
+      removeTasksFromCache(queryClient, TaskQuery.All(), taskId)
     }
   })
 }

@@ -10,7 +10,7 @@ import {useQuery, useQueryClient, useMutation} from 'react-query'
 import {akira} from '@lib/akira'
 import {onMyDayFetch} from '@modules/tasks/store'
 import {ApiTask} from '@modules/tasks/types.d'
-import {TaskQueryKeyEnum, TaskQuery} from '@modules/tasks/config/index'
+import {TaskQuery} from '@modules/tasks/config/index'
 import {useTagsQuery} from '@modules/tags/hooks'
 import {filterTasks, useTaskFilters} from '@modules/tasks/filters'
 import {FiltersBottomSheet} from '@modules/tasks/filters/FiltersBottomSheet'
@@ -59,7 +59,7 @@ const Control: React.FC<{
 const Week: React.FC = () => {
   const queryClient = useQueryClient()
   const {data: tasks, isLoading} = useQuery<Array<ApiTask>>(
-    TaskQueryKeyEnum.Week,
+    TaskQuery.Week(),
     () => api.get('task-scheduler/week').then(response => response.data),
     {
       onSuccess(tasks) {
@@ -126,7 +126,7 @@ const Today: React.FC = () => {
   const [filtersState, updateFilters] = useTaskFilters()
 
   const {data: tasks = [], isLoading} = useQuery<ApiTask[]>(
-    [TaskQueryKeyEnum.MyDay],
+    TaskQuery.MyDay(),
     akira.myday.tasks,
     {
       onSuccess(tasks) {
