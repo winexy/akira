@@ -1,12 +1,8 @@
-export enum TaskQueryKeyEnum {
-  Week = 'week',
-  MyDay = 'myday',
-  All = 'tasks'
-}
+import constant from 'lodash/constant'
 
 export const TaskQuery = {
   One: (taskId: string) => ['task', taskId],
-  All: () => ['tasks'],
-  MyDay: () => ['tasks'],
-  Week: () => ['week']
+  All: constant(['tasks']),
+  MyDay: constant(['tasks']),
+  Week: constant(['week'])
 }

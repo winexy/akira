@@ -19,7 +19,7 @@ import {useTaskFilters, filterTasks} from '@modules/tasks/filters'
 import size from 'lodash/fp/size'
 import {useTagsQuery} from '@modules/tags/hooks'
 import {TaskListOperations} from '@modules/tasks/components/TaskListOperations'
-import {TaskQueryKeyEnum} from '@modules/tasks/config'
+import {TaskQuery} from '@modules/tasks/config'
 import {CreateTaskMeta} from '@lib/akira/tasks/tasks'
 import {SearchIcon} from '@heroicons/react/solid'
 
@@ -37,7 +37,7 @@ export const TasksView: React.FC = () => {
     },
     {
       onSuccess(task) {
-        queryClient.setQueryData(TaskQueryKeyEnum.All, [task, ...tasks])
+        queryClient.setQueryData(TaskQuery.All(), [task, ...tasks])
       }
     }
   )
