@@ -12,6 +12,7 @@ import {akira} from '@lib/akira'
 import {Button} from '@components/Button'
 import {SunIcon} from '@heroicons/react/solid'
 import {SunIcon as SunIconOutline} from '@heroicons/react/outline'
+import {TaskQuery} from '@modules/tasks/config'
 
 export const MyDayToggle: React.FC<{taskId: TaskId}> = ({taskId}) => {
   const isOnMyDay = useStoreMap($myDayTasksIds, set => set.has(taskId))
@@ -21,15 +22,15 @@ export const MyDayToggle: React.FC<{taskId: TaskId}> = ({taskId}) => {
   const addToMyDayMutation = useMutation(akira.myday.add, {
     onSuccess(_, taskId) {
       onMyDayTaskAdded(taskId)
-      queryClient.invalidateQueries(['myday'])
-      queryClient.invalidateQueries(['task', taskId])
+      queryClient.invalidateQueries(TaskQuery.MyDay())
+      queryClient.invalidateQueries(TaskQuery.One(taskId))
     }
   })
   const removeFromMyDayMutation = useMutation(akira.myday.remove, {
     onSuccess(_, taskId) {
       onMyDayTaskRemoved(taskId)
-      queryClient.invalidateQueries(['myday'])
-      queryClient.invalidateQueries(['task', taskId])
+      queryClient.invalidateQueries(TaskQuery.MyDay())
+      queryClient.invalidateQueries(TaskQuery.One(taskId))
     }
   })
 
