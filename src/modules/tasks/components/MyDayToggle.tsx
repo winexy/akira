@@ -1,34 +1,32 @@
 import React from 'react'
-import {
-  $myDayTasksIds,
-  onMyDayTaskAdded,
-  onMyDayTaskRemoved
-} from '@/modules/tasks/store'
-import {useStoreMap} from 'effector-react'
 import {Spin} from '@/components/Spin'
 import {TaskId} from '@modules/tasks/types.d'
-import {useIsFetching, useMutation, useQueryClient} from 'react-query'
+import {useMutation, useQueryClient} from 'react-query'
 import {akira} from '@lib/akira'
 import {Button} from '@components/Button'
 import {SunIcon} from '@heroicons/react/solid'
 import {SunIcon as SunIconOutline} from '@heroicons/react/outline'
 import {TaskQuery} from '@modules/tasks/config'
+import isToday from 'date-fns/isToday'
+import {useTaskQuery} from '../hooks/index'
 
 export const MyDayToggle: React.FC<{taskId: TaskId}> = ({taskId}) => {
-  const isOnMyDay = useStoreMap($myDayTasksIds, set => set.has(taskId))
-  const isMyDayFetching = useIsFetching(['myday'])
+  const {data: isOnMyDay, isLoading, isFetching} = useTaskQuery(taskId, {
+    select: task => {
+      return task.schedule ? isToday(new Date(task.schedule.date)) : false
+    }
+  })
+
   const queryClient = useQueryClient()
 
   const addToMyDayMutation = useMutation(akira.myday.add, {
     onSuccess(_, taskId) {
-      onMyDayTaskAdded(taskId)
       queryClient.invalidateQueries(TaskQuery.MyDay())
       queryClient.invalidateQueries(TaskQuery.One(taskId))
     }
   })
   const removeFromMyDayMutation = useMutation(akira.myday.remove, {
     onSuccess(_, taskId) {
-      onMyDayTaskRemoved(taskId)
       queryClient.invalidateQueries(TaskQuery.MyDay())
       queryClient.invalidateQueries(TaskQuery.One(taskId))
     }
@@ -39,7 +37,11 @@ export const MyDayToggle: React.FC<{taskId: TaskId}> = ({taskId}) => {
     mutation.mutate(taskId)
   }
 
-  if (isMyDayFetching) {
+  const isUpdating =
+    addToMyDayMutation.isLoading || removeFromMyDayMutation.isLoading
+  const isSyncing = isLoading || isFetching
+
+  if (isUpdating || isSyncing) {
     return (
       <Button variant="outline" className="text-sm" disabled>
         <Spin className="w-5 h-5 mr-2" /> Loading...

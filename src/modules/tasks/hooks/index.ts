@@ -378,3 +378,12 @@ export function useRemoveTaskTagMutation(task: ApiTask) {
     }
   )
 }
+
+export function useTaskQuery<Select>(
+  taskId: string,
+  {select}: {select?(task: ApiTask): Select} = {}
+) {
+  return useQuery(TaskQuery.One(taskId), () => akira.tasks.findOne(taskId), {
+    select
+  })
+}
