@@ -384,7 +384,7 @@ export function useRemoveTaskTagMutation(task: ApiTask) {
   )
 }
 
-export function useTaskQuery<Select>(
+export function useTaskQuery<Select = ApiTask>(
   taskId: string,
   {select}: {select?(task: ApiTask): Select} = {}
 ) {
