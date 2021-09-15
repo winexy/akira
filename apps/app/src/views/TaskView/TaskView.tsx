@@ -21,7 +21,7 @@ import {
 import {showBottomSheet} from '@store/bottom-sheet'
 import {ApiTask, TaskId} from '@modules/tasks/types.d'
 import {TagsManager, TaskTag} from '@modules/tags/components'
-import {usePatchTaskMutation} from '@modules/tasks/hooks'
+import {usePatchTaskMutation, useTaskQuery} from '@modules/tasks/hooks'
 import {Tag} from '@components/Tag/Tag'
 import {EditableHeading} from '@components/EditableHeading'
 import {
@@ -168,10 +168,7 @@ const TaskSchedule: React.FC<TaskScheduleProps> = ({
 
 export const TaskView: React.FC = () => {
   const {taskId} = useParams<{taskId: string}>()
-  const {data: task, isFetching} = useQuery<ApiTask>(
-    TaskQuery.One(taskId),
-    () => akira.tasks.findOne(taskId)
-  )
+  const {data: task, isFetching} = useTaskQuery(taskId)
 
   const patchTaskMutation = usePatchTaskMutation(taskId)
 

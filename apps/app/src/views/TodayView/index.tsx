@@ -8,7 +8,6 @@ import format from 'date-fns/format'
 import {MainView} from '@views/MainView'
 import {useQuery, useQueryClient, useMutation} from 'react-query'
 import {akira} from '@lib/akira'
-import {onMyDayFetch} from '@modules/tasks/store'
 import {ApiTask} from '@modules/tasks/types.d'
 import {TaskQuery} from '@modules/tasks/config/index'
 import {useTagsQuery} from '@modules/tags/hooks'
@@ -130,7 +129,6 @@ const Today: React.FC = () => {
     akira.myday.tasks,
     {
       onSuccess(tasks) {
-        onMyDayFetch(tasks)
         tasks.forEach(task => {
           queryClient.setQueryData(TaskQuery.One(task.id), task)
         })
