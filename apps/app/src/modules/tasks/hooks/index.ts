@@ -387,3 +387,15 @@ export function useTaskQuery<Select>(
     select
   })
 }
+
+export function useMyDayQuery() {
+  const queryClient = useQueryClient()
+
+  return useQuery(TaskQuery.MyDay(), akira.myday.tasks, {
+    onSuccess(tasks) {
+      tasks.forEach(task => {
+        queryClient.setQueryData(TaskQuery.One(task.id), task)
+      })
+    }
+  })
+}

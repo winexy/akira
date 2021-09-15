@@ -32,6 +32,7 @@ import ContentLoader from 'react-content-loader'
 import times from 'lodash/fp/times'
 import InboxIcon from '@heroicons/react/solid/InboxIcon'
 import isEmpty from 'lodash/fp/isEmpty'
+import {useMyDayQuery} from '@modules/tasks/hooks'
 
 const Control: React.FC<{
   value: string
@@ -120,21 +121,10 @@ const Week: React.FC = () => {
 }
 
 const Today: React.FC = () => {
-  const queryClient = useQueryClient()
   const {sortType, setSortType, sort} = useTaskSorting()
   const [filtersState, updateFilters] = useTaskFilters()
 
-  const {data: tasks = [], isLoading} = useQuery<ApiTask[]>(
-    TaskQuery.MyDay(),
-    akira.myday.tasks,
-    {
-      onSuccess(tasks) {
-        tasks.forEach(task => {
-          queryClient.setQueryData(TaskQuery.One(task.id), task)
-        })
-      }
-    }
-  )
+  const {data: tasks = [], isLoading} = useMyDayQuery()
   const {data: tags = []} = useTagsQuery()
 
   const sorted = sort(filterTasks(tasks, filtersState))
