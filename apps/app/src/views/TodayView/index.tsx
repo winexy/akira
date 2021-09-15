@@ -6,10 +6,8 @@ import filter from 'lodash/fp/filter'
 
 import format from 'date-fns/format'
 import {MainView} from '@views/MainView'
-import {useQuery, useQueryClient, useMutation} from 'react-query'
+import {useQueryClient, useMutation} from 'react-query'
 import {akira} from '@lib/akira'
-import {ApiTask} from '@modules/tasks/types.d'
-import {TaskQuery} from '@modules/tasks/config/index'
 import {useTagsQuery} from '@modules/tags/hooks'
 import {filterTasks, useTaskFilters} from '@modules/tasks/filters'
 import {FiltersBottomSheet} from '@modules/tasks/filters/FiltersBottomSheet'
@@ -24,7 +22,6 @@ import {
   useAddTaskControl
 } from '@/modules/tasks/components/AddTaskButton'
 import clsx from 'clsx'
-import {api} from '@lib/api'
 import groupBy from 'lodash/fp/groupBy'
 import keys from 'lodash/fp/keys'
 import parseISO from 'date-fns/parseISO'
@@ -32,7 +29,7 @@ import ContentLoader from 'react-content-loader'
 import times from 'lodash/fp/times'
 import InboxIcon from '@heroicons/react/solid/InboxIcon'
 import isEmpty from 'lodash/fp/isEmpty'
-import {useMyDayQuery} from '@modules/tasks/hooks'
+import {useMyDayQuery, useWeekQuery} from '@modules/tasks/hooks'
 
 const Control: React.FC<{
   value: string
@@ -57,18 +54,7 @@ const Control: React.FC<{
 )
 
 const Week: React.FC = () => {
-  const queryClient = useQueryClient()
-  const {data: tasks, isLoading} = useQuery<Array<ApiTask>>(
-    TaskQuery.Week(),
-    () => api.get('task-scheduler/week').then(response => response.data),
-    {
-      onSuccess(tasks) {
-        tasks.forEach(task =>
-          queryClient.setQueryData(TaskQuery.One(task.id), task)
-        )
-      }
-    }
-  )
+  const {data: tasks, isLoading} = useWeekQuery()
 
   const byDay = groupBy(task => task.schedule?.date ?? '', tasks)
   const days = keys(byDay).sort()
