@@ -26,8 +26,8 @@ import {
 } from '@/modules/tasks/components/AddTaskButton'
 import clsx from 'clsx'
 import {api} from '@lib/api'
-import groupBy from 'lodash/groupBy'
-import keys from 'lodash/keys'
+import groupBy from 'lodash/fp/groupBy'
+import keys from 'lodash/fp/keys'
 import parseISO from 'date-fns/parseISO'
 import ContentLoader from 'react-content-loader'
 import times from 'lodash/fp/times'
@@ -68,8 +68,8 @@ const Week: React.FC = () => {
     }
   )
 
-  const byDay = groupBy(tasks, task => task.schedule?.date ?? '')
-  const days = keys(byDay)
+  const byDay = groupBy(task => task.schedule?.date ?? '', tasks)
+  const days = keys(byDay).sort()
 
   if (isLoading) {
     return (
