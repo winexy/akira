@@ -62,7 +62,6 @@ const Week: React.FC = () => {
     TaskQueryKeyEnum.Week,
     () => api.get('task-scheduler/week').then(response => response.data),
     {
-      placeholderData: [],
       onSuccess(tasks) {
         tasks.forEach(task => queryClient.setQueryData(['task', task.id], task))
       }
