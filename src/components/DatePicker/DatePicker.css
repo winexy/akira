@@ -4,7 +4,7 @@
 
 .react-datepicker__day-names {
   @apply h-8 items-center text-center;
-  @apply grid grid-cols-7 text-gray-400 font-bold;
+  @apply grid grid-cols-7 text-gray-400 font-semibold;
 }
 
 .react-datepicker__month {

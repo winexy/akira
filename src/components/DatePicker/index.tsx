@@ -17,6 +17,32 @@ type Props = {
   className?: string
 }
 
+const ChangeMonth: React.FC<{isDisabled: boolean; onClick(): void}> = ({
+  isDisabled,
+  onClick,
+  children
+}) => {
+  return (
+    <button
+      className={clsx(
+        'w-10 h-10',
+        'flex items-center justify-center',
+        'bg-white rounded-lg shadow-sm',
+        'border border-gray-200',
+        'transition ease-in duration-150',
+        'active:bg-gray-100',
+        'focus:outline-none',
+        'disabled:text-gray-200 disabled:bg-transparent'
+      )}
+      type="button"
+      disabled={isDisabled}
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  )
+}
+
 export const DatePicker: React.FC<Props> = ({
   date = null,
   onChange,
@@ -34,24 +60,22 @@ export const DatePicker: React.FC<Props> = ({
       className={clsx('flex flex-col justify-center', className)}
       renderCustomHeader={params => {
         return (
-          <div className="text-gray-700 px-2 flex items-center justify-between">
-            <button
-              className="w-12 h-12 flex items-center justify-center rounded transition ease-in duration-150 active:bg-gray-100 focus:outline-none disabled:text-gray-200 disabled:bg-transparent"
-              disabled={params.prevMonthButtonDisabled}
+          <div className="text-gray-700 py-4 px-2 flex items-center justify-between">
+            <ChangeMonth
+              isDisabled={params.prevMonthButtonDisabled}
               onClick={params.decreaseMonth}
             >
               <ChevronLeftIcon className="w-5 h-5" />
-            </button>
-            <strong className="font-semibold">
+            </ChangeMonth>
+            <strong className="font-semibold text-xl">
               {format(params.date, 'LLLL')}
             </strong>
-            <button
-              className="w-12 h-12 flex items-center justify-center rounded transition ease-in duration-150 active:bg-gray-100 focus:outline-none disabled:text-gray-200 disabled:bg-transparent"
-              disabled={params.nextMonthButtonDisabled}
+            <ChangeMonth
+              isDisabled={params.nextMonthButtonDisabled}
               onClick={params.increaseMonth}
             >
               <ChevronRightIcon className="w-5 h-5" />
-            </button>
+            </ChangeMonth>
           </div>
         )
       }}
