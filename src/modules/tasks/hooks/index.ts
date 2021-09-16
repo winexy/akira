@@ -17,7 +17,7 @@ import {
 } from '@modules/tasks/types.d'
 import {TaskTag} from '@modules/tags/types.d'
 import {TaskQuery} from '@modules/tasks/config'
-import {forEach, join} from 'lodash/fp'
+import {forEach} from 'lodash/fp'
 
 function writeTaskCache(
   taskId: TaskId,
