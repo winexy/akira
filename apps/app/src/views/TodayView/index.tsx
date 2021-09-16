@@ -30,6 +30,7 @@ import times from 'lodash/fp/times'
 import InboxIcon from '@heroicons/react/solid/InboxIcon'
 import isEmpty from 'lodash/fp/isEmpty'
 import {useMyDayQuery, useWeekQuery} from '@modules/tasks/hooks'
+import {TaskQuery} from '@modules/tasks/config'
 
 const Control: React.FC<{
   value: string
@@ -162,7 +163,7 @@ export function TodayView() {
     },
     {
       onSuccess() {
-        queryClient.invalidateQueries(['myday'])
+        queryClient.invalidateQueries(TaskQuery.MyDay())
       }
     }
   )
