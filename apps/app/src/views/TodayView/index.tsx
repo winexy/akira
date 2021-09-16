@@ -130,7 +130,7 @@ const Today: React.FC = () => {
   return (
     <>
       <div className="mt-2 flex justify-between items-center px-4 text-gray-700">
-        <p className="font-bold text-2xl">{today}</p>
+        <p className="font-bold text-xl">{today}</p>
         <span className="text-2xl font-bold">
           {completedTasksCount} / {size(sorted)}
         </span>
