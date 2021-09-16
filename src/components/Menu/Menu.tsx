@@ -26,15 +26,16 @@ import isNull from 'lodash/fp/isNull'
 import {useQueryClient} from 'react-query'
 import size from 'lodash/fp/size'
 import throttle from 'lodash/throttle'
-import {TaskLists} from '@/modules/lists/components/TaskLists'
+import {TaskLists} from '@modules/lists/components/TaskLists'
 import './Menu.css'
 import {
   clearAllBodyScrollLocks,
   disableBodyScroll,
   enableBodyScroll
 } from 'body-scroll-lock'
-import {useHotkey} from '@/modules/hotkeys/HotKeyContext'
-import {HotKey} from '@/modules/hotkeys/HotKey'
+import {useHotkey} from '@modules/hotkeys/HotKeyContext'
+import {HotKey} from '@modules/hotkeys/HotKey'
+import {TaskQuery} from '@modules/tasks/config'
 
 type MenuItemProps = {
   Icon: SVGIconElement
@@ -195,7 +196,7 @@ export const Menu: React.FC = ({children}) => {
   const menuRef = useRef<HTMLElement>(null)
   const scrollContentRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
-  const todayTasksCount = size(queryClient.getQueryData(['myday']))
+  const todayTasksCount = size(queryClient.getQueryData(TaskQuery.MyDay()))
 
   useOpenMenuLock('root', isOpen, scrollContentRef.current)
 
