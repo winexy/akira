@@ -288,9 +288,8 @@ export const Menu: React.FC = ({children}) => {
             <MenuItem to="/tasks" Icon={CollectionIcon}>
               Tasks
             </MenuItem>
-            <MenuItem to="/wip" Icon={AdjustmentsIcon}>
+            <MenuItem to="/preferences" Icon={AdjustmentsIcon}>
               Preferences
-              <WIP className="ml-auto" />
             </MenuItem>
             <li>
               <div className="flex items-center text-gray-400 pl-4">
