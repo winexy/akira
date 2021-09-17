@@ -42,7 +42,7 @@ export const FiltersBottomSheet: React.FC<Props> = ({
 }) => {
   return (
     <>
-      <BottomSheet name="filters" className="px-4 pb-6 pt-4 text-gray-800">
+      <BottomSheet name="filters" className="px-4 pb-6 pt-4">
         <h2 className="flex items-center justify-between font-bold text-2xl">
           Filters
           {canReset && (
@@ -69,7 +69,7 @@ export const FiltersBottomSheet: React.FC<Props> = ({
                 font-semibold text-lg 
                 rounded select-none
                 transition ease-in duration-75
-                active:bg-gray-100
+                active:bg-gray-100 dark:active:bg-gray-600
               "
               >
                 <Checkbox

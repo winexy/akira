@@ -32,9 +32,7 @@ function Fallback({error}: FallbackProps) {
     <div className="py-8 px-8 flex justify-center items-center flex-col">
       <ExclamationCircleIcon className="w-16 h-16 text-red-500" />
       <p className="mt-4 text-xl font-semibold">Something went wrong...</p>
-      {import.meta.env.DEV && (
-        <p className="mt-4 text-gray-700">{error.message}</p>
-      )}
+      {import.meta.env.DEV && <p className="mt-4  ">{error.message}</p>}
       <Button
         variant="red"
         size="md"
@@ -169,7 +167,7 @@ export const BottomSheet: React.FC<Props> = ({name, children, className}) => {
             style={{transform: `translateY(${sheetShift}px)`}}
             className="
               w-full flex flex-col
-              bg-white overflow-hidden rounded-t-xl
+              bg-white dark:bg-gray-700 overflow-hidden rounded-t-xl
               transition duration-300 ease-out
             "
             role="dialog"

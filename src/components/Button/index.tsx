@@ -18,7 +18,7 @@ const blue =
 const red =
   'bg-red-500 border border-red-600 active:bg-red-600 active:border-red-700 text-white shadow-md active:shadow focus:ring-red-300'
 const outline =
-  'bg-transparent border border-gray-200 text-gray-700 shadow-none active:bg-gray-100 active:border-gray-200 active:shadow-inner focus:ring'
+  'bg-transparent border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-white shadow-none active:bg-gray-100 active:border-gray-200 active:shadow-inner focus:ring'
 const transparent = `bg-white bg-opacity-10 border border-white border-opacity-20 active:bg-white active:bg-opacity-20`
 const indigo =
   'bg-indigo-500 border border-indigo-400 active:bg-indigo-400 active:border-indigo-300 focuse:ring-indigo-300'

@@ -218,7 +218,7 @@ export const TaskView: React.FC = () => {
         </time>
         <MyDayToggle taskId={taskId} />
       </div>
-      <section className="mt-2 py-3 px-4 border-t border-b border-gray-50">
+      <section className="mt-2 py-3 px-4 border-t border-b border-gray-50 dark:border-gray-600">
         {!isEmpty(task.tags) && (
           <ul className="mb-2 inline-flex space-x-1">
             {task.tags.map(tag => (

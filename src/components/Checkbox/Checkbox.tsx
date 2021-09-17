@@ -47,7 +47,7 @@ export const Checkbox: React.FC<Props> = ({
           'transition ease-in duration-75',
           {
             'bg-indigo-400 border-indigo-500': isChecked,
-            'bg-white border-gray-400': !isChecked
+            'bg-white dark:bg-gray-600 border-gray-400 dark:border-gray-500': !isChecked
           },
           matchSize(size)
         )}
