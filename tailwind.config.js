@@ -4,7 +4,7 @@ const TwPaddingSafe = require('tailwindcss-padding-safe')
 
 module.exports = {
   purge: ['./src/**/*.tsx'],
-  darkMode: false,
+  darkMode: 'class',
   theme: {
     extend: {}
   },
