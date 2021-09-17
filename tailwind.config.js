@@ -3,7 +3,9 @@ const TwCaretColor = require('tailwind-caret-color')
 const TwPaddingSafe = require('tailwindcss-padding-safe')
 
 module.exports = {
-  purge: ['./src/**/*.tsx'],
+  purge: {
+    content: ['./src/**/*.tsx', './src/**/*.ts']
+  },
   darkMode: 'class',
   theme: {
     extend: {}
