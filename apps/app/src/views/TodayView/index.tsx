@@ -42,11 +42,11 @@ const Control: React.FC<{
     className={clsx(
       'py-1 px-4 flex items-center justify-center',
       'font-bold text-xl',
-      'bg-transparent border-b-2',
+      'bg-transparent border-b-2 dark:border-gray-600',
       'transition',
-      'active:text-purple-500',
+      'active:text-purple-500 dark:active:text-gray-300',
       'focus:outline-none',
-      {'border-purple-500': activeValue === value}
+      {'border-purple-500 dark:border-purple-500': activeValue === value}
     )}
     onClick={() => onClick(value)}
   >
@@ -92,7 +92,7 @@ const Week: React.FC = () => {
 
   if (isEmpty(tasks)) {
     return (
-      <div className="px-4 h-full flex flex-col items-center text-gray-700">
+      <div className="px-4 h-full flex flex-col items-center">
         <InboxIcon className="mt-32 w-12 h-12" />
         <h2 className="mt-2 font-semibold text-lg">No tasks</h2>
       </div>
@@ -104,7 +104,7 @@ const Week: React.FC = () => {
       <div className="mt-2 px-4 space-y-2 pb-24">
         {days.map(day => (
           <section key={day}>
-            <h2 className="font-bold text-2xl text-gray-700">
+            <h2 className="font-bold text-2xl">
               {format(parseISO(day), 'EEEE')}
             </h2>
             <Tasks className="mt-2" isPending={false} tasks={byDay[day]} />
@@ -129,7 +129,7 @@ const Today: React.FC = () => {
 
   return (
     <>
-      <div className="mt-2 flex justify-between items-center px-4 text-gray-700">
+      <div className="mt-2 flex justify-between items-center px-4">
         <p className="font-bold text-xl">{today}</p>
         <span className="text-2xl font-bold">
           {completedTasksCount} / {size(sorted)}
@@ -177,14 +177,14 @@ export function TodayView() {
         onSubmit={createTaskMutation.mutate}
         onVisibilityChange={addTaskControl.onFormVisiblityChange}
       />
-      <div className="flex text-gray-700">
+      <div className="flex">
         <Control activeValue={mode} value="today" onClick={setMode}>
           Today
         </Control>
         <Control activeValue={mode} value="week" onClick={setMode}>
           Week
         </Control>
-        <div className="flex-1 border-b-2 border-gray-200" />
+        <div className="flex-1 border-b-2 border-gray-200 dark:border-gray-600" />
       </div>
       {mode === 'today' ? <Today /> : <Week />}
       {addTaskControl.isVisible && (

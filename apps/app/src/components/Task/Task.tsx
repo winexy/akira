@@ -173,8 +173,8 @@ export const Task: React.FC<TaskProps> = ({
       Component="li"
       className={clsx(
         'rounded-lg overflow-hidden',
-        'bg-white',
-        'transform border border-gray-200',
+        'bg-white dark:bg-gray-600',
+        'transform border border-gray-200 dark:border-gray-500',
         'shadow-xs',
         'transition ease-in duration-100',
         {
@@ -209,12 +209,12 @@ export const Task: React.FC<TaskProps> = ({
         to={`/tasks/${task.id}`}
         className={clsx(
           'flex items-center',
-          'bg-white pl-4 p-2 text-lg text-black',
-          'rounded-md',
+          'bg-white dark:bg-gray-600 pl-4 p-2 text-lg text-black',
+          'rounded-md dark:text-white',
           'transition ease-in duration-150',
           'active:bg-gray-50',
           {
-            'line-through text-gray-300': task.is_completed
+            'line-through text-gray-300 dark:text-gray-400': task.is_completed
           }
         )}
       >
@@ -256,12 +256,12 @@ export const Task: React.FC<TaskProps> = ({
           <button
             ref={dragRef as LegacyRef<HTMLButtonElement>}
             className="
-          ml-auto w-8 h-8 -mr-2
-          flex items-center justify-center
-          text-gray-400 
-          active:text-gray-300
-          focus:outline-none
-          "
+              ml-auto w-8 h-8 -mr-2
+              flex items-center justify-center
+              text-gray-400 
+              active:text-gray-300
+              focus:outline-none
+            "
           >
             <MenuAlt4Icon className="w-4 h-4" />
           </button>

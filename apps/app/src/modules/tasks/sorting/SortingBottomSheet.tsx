@@ -59,7 +59,7 @@ export const SortingBottomSheet: React.FC<Props> = ({sortType, onChange}) => {
   }
 
   return (
-    <BottomSheet name="sorting" className="px-4 pb-6 pt-4 text-gray-800">
+    <BottomSheet name="sorting" className="px-4 pb-6 pt-4">
       <div className="flex justify-between">
         <h2 className="font-bold text-2xl">Sort</h2>
         {sortType && (
@@ -83,7 +83,7 @@ export const SortingBottomSheet: React.FC<Props> = ({sortType, onChange}) => {
               font-semibold text-lg 
               rounded select-none
               transition ease-in duration-75
-              active:bg-gray-50
+              active:bg-gray-50 dark:active:bg-gray-600
             "
             >
               <input
