@@ -18,7 +18,7 @@ const Toggle: React.FC<TogglePropsT> = ({
   children
 }) => {
   return (
-    <label className={clsx('w-full flex items-center', className)}>
+    <label className={clsx('flex items-center', className)}>
       {children}
       <div
         className={clsx(
@@ -34,7 +34,7 @@ const Toggle: React.FC<TogglePropsT> = ({
         <div
           className={clsx(
             'rounded-full bg-white w-6 h-6 shadow',
-            'transition transform'
+            'transition ease-in-out duration-300 transform'
           )}
           style={{
             transform: isChecked ? `translateX(24px)` : ''
@@ -56,14 +56,9 @@ export const PreferencesView: React.FC = () => {
 
   return (
     <MainView>
-      <div className="mt-2 px-4 w-full">
-        <Toggle
-          className="justify-between"
-          isChecked={isDarkMode}
-          onChange={toggleDarkModeFx}
-        >
-          <span className="font-semibold text-lg">Dark mode</span>
-        </Toggle>
+      <div className="mt-2 px-4 w-full flex justify-between">
+        <span className="font-semibold text-lg ">Dark mode</span>
+        <Toggle isChecked={isDarkMode} onChange={toggleDarkModeFx} />
       </div>
     </MainView>
   )
