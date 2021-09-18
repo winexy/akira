@@ -8,6 +8,7 @@ import {FirebaseAuthProvider} from '@/firebase'
 import App from './App'
 import {HotkeyProvider} from './modules/hotkeys/HotKeyContext'
 import {TaskQuery} from './modules/tasks/config/index'
+import {initAppThemeFx} from './modules/preferences/darkmode/index'
 
 enableMapSet()
 
@@ -24,6 +25,8 @@ async function prefetchQueries() {
   queryClient.prefetchQuery('tags', akira.tags.findAll)
   await queryClient.prefetchQuery(TaskQuery.MyDay(), akira.myday.tasks)
 }
+
+initAppThemeFx()
 
 ReactDOM.render(
   <React.StrictMode>
