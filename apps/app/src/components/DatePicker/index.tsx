@@ -32,7 +32,8 @@ const ChangeMonth: React.FC<{isDisabled: boolean; onClick(): void}> = ({
         'transition ease-in duration-150',
         'active:bg-gray-100',
         'focus:outline-none',
-        'disabled:text-gray-200 disabled:bg-transparent'
+        'disabled:text-gray-200 dark:disabled:text-dark-400',
+        'disabled:bg-transparent dark:disabled:bg-transparent'
       )}
       type="button"
       disabled={isDisabled}
