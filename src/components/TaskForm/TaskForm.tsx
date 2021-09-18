@@ -146,7 +146,7 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
               'flex flex-col',
               'transition ease-in duration-75 backdrop-filter',
               {
-                'z-20 fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm': isVisible
+                'z-20 fixed inset-0 bg-black dark:bg-dark-500 bg-opacity-60 dark:bg-opacity-60 backdrop-blur-sm': isVisible
               }
             )}
           >
@@ -243,7 +243,7 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                 )}
               </div>
             </form>
-            <div className="mt-auto p-4 bg-gradient-to-t from-gray-600">
+            <div className="mt-auto p-4 bg-gradient-to-t from-gray-600 dark:from-dark-600">
               {isEmpty(title) ? (
                 <Button
                   size="md"

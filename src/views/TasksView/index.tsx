@@ -51,7 +51,7 @@ export const TasksView: React.FC = () => {
         onSubmit={createTaskMutation.mutate}
         onVisibilityChange={addTaskControl.onFormVisiblityChange}
       />
-      <div className="flex items-center px-4 text-gray-600">
+      <div className="flex items-center px-4">
         <h2 className="flex items-center font-bold text-3xl">Tasks</h2>
         <Link to="/search" className="ml-auto">
           <SearchIcon className="w-6 h-6" />

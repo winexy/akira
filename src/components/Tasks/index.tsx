@@ -12,6 +12,9 @@ import {
   useRemoveTaskMutation
 } from '@modules/tasks/hooks'
 import clsx from 'clsx'
+import {useStore} from 'effector-react'
+import {$isDarkMode} from '@/modules/preferences/darkmode'
+import {useContentLoaderColor} from '@/config/content-loader'
 
 type Props = {
   isPending: boolean
@@ -29,6 +32,7 @@ export const Tasks: React.FC<Props> = ({
   const toggleTaskCompleteMutation = useToggleCompletedMutation()
   const toggleImportantMutation = useToggleImportantMutation()
   const removeTaskMutation = useRemoveTaskMutation()
+  const {backgroundColor, foregroundColor} = useContentLoaderColor()
 
   if (isPending) {
     const taskHeight = 56
@@ -41,8 +45,8 @@ export const Tasks: React.FC<Props> = ({
           speed={2}
           width="100%"
           height={height}
-          backgroundColor="#ffffff"
-          foregroundColor="#e9e9e9"
+          backgroundColor={backgroundColor}
+          foregroundColor={foregroundColor}
         >
           {times(
             n => (
@@ -65,7 +69,7 @@ export const Tasks: React.FC<Props> = ({
 
   if (isEmpty(tasks)) {
     return (
-      <div className="flex flex-col justify-center items-center pt-12 text-gray-700">
+      <div className="flex flex-col justify-center items-center pt-12">
         <InboxIcon className="w-12 h-12" />
         <h2 className="mt-2 font-semibold text-lg">No tasks</h2>
         {noTasksSlot}

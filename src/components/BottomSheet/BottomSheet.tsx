@@ -167,7 +167,7 @@ export const BottomSheet: React.FC<Props> = ({name, children, className}) => {
             style={{transform: `translateY(${sheetShift}px)`}}
             className="
               w-full flex flex-col
-              bg-white dark:bg-gray-700 overflow-hidden rounded-t-xl
+              bg-white dark:bg-dark-600 overflow-hidden rounded-t-xl
               transition duration-300 ease-out
             "
             role="dialog"

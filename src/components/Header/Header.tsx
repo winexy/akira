@@ -27,7 +27,7 @@ export const Header: React.FC = ({children}) => {
         'sticky w-full top-0 z-20 px-4 py-2',
         'flex items-center',
         'transition-shadow ease-in duration-100',
-        'bg-white dark:bg-gray-700 text-gray-700 dark:text-white',
+        'bg-white dark:bg-dark-600 text-gray-700 dark:text-white',
         {
           'shadow-2xl border-b bg-gray-100 dark:border-gray-600': isFloating
         }

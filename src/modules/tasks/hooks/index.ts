@@ -396,11 +396,23 @@ export function useTaskQuery<Select = ApiTask>(
 export function useMyDayQuery() {
   const queryClient = useQueryClient()
 
-  return useQuery(TaskQuery.MyDay(), akira.myday.tasks, {
-    onSuccess(tasks) {
-      writeTasksToCache(queryClient, tasks)
+  return useQuery(
+    TaskQuery.MyDay(),
+    () => {
+      return akira.myday.tasks().catch(error => {
+        if (error.type === 'NotFound') {
+          return []
+        }
+
+        return Promise.reject(error)
+      })
+    },
+    {
+      onSuccess(tasks) {
+        writeTasksToCache(queryClient, tasks)
+      }
     }
-  })
+  )
 }
 
 export function useWeekQuery() {

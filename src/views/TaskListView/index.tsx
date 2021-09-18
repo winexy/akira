@@ -25,8 +25,10 @@ export const TaskListView: React.FC = () => {
   if (isLoading) {
     return (
       <MainView>
-        <h1 className="px-4 font-semibold text-2xl text-gray-700">...</h1>
-        <Tasks className="mt-4" isPending={isLoading} tasks={[]} />
+        <h1 className="px-4 font-semibold text-2xl">...</h1>
+        <div className="px-4">
+          <Tasks className="mt-4" isPending={isLoading} tasks={[]} />
+        </div>
       </MainView>
     )
   }
@@ -37,9 +39,7 @@ export const TaskListView: React.FC = () => {
 
   return (
     <MainView>
-      <h1 className="px-4 font-semibold text-2xl text-gray-700">
-        {list.title}
-      </h1>
+      <h1 className="px-4 font-semibold text-2xl">{list.title}</h1>
       <section className="px-4">
         <Tasks className="mt-4" isPending={isLoading} tasks={list.tasks} />
       </section>

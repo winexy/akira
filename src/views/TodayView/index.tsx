@@ -31,6 +31,7 @@ import InboxIcon from '@heroicons/react/solid/InboxIcon'
 import isEmpty from 'lodash/fp/isEmpty'
 import {useMyDayQuery, useWeekQuery} from '@modules/tasks/hooks'
 import {TaskQuery} from '@modules/tasks/config'
+import {useContentLoaderColor} from '@/config/content-loader'
 
 const Control: React.FC<{
   value: string
@@ -62,6 +63,7 @@ const SnackBar: React.FC = () => (
 
 const Week: React.FC = () => {
   const {data: tasks, isLoading, isFetching} = useWeekQuery()
+  const {backgroundColor, foregroundColor} = useContentLoaderColor()
 
   const byDay = groupBy(task => task.schedule?.date ?? '', tasks)
   const days = keys(byDay).sort()
@@ -77,8 +79,8 @@ const Week: React.FC = () => {
               width="100%"
               className="mt-4"
               height="98px"
-              backgroundColor="#ffffff"
-              foregroundColor="#e9e9e9"
+              backgroundColor={backgroundColor}
+              foregroundColor={foregroundColor}
             >
               <rect x="0" y={0} rx="6" ry="6" width="40%" height={28} />
               <rect x="0" y={38} rx="6" ry="6" width="100%" height={60} />
