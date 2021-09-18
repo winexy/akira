@@ -13,6 +13,7 @@ import {
 } from '@modules/tasks/hooks'
 import {ApiTask} from '@modules/tasks/types.d'
 import {Button} from '@components/Button'
+import {useContentLoaderColor} from '@/config/content-loader'
 import {TaskTag} from './TaskTag'
 import {useTagsQuery} from '../hooks/index'
 
@@ -22,10 +23,11 @@ export const TagsManager: React.FC<{task: ApiTask}> = ({task}) => {
 
   const addTagMutation = useAddTaskTagMutation(task)
   const removeTaskTagMutation = useRemoveTaskTagMutation(task)
+  const {backgroundColor, foregroundColor} = useContentLoaderColor()
 
   return (
     <>
-      <h2 className="px-4 font-bold text-2xl text-gray-700">Tags</h2>
+      <h2 className="px-4 font-bold text-2xl">Tags</h2>
       {isLoading && (
         <ContentLoader
           speed={2}
@@ -33,8 +35,8 @@ export const TagsManager: React.FC<{task: ApiTask}> = ({task}) => {
           height={214}
           className="mt-4"
           viewBox="0 0 320 214"
-          backgroundColor="#ffffff"
-          foregroundColor="#e9e9e9"
+          backgroundColor={backgroundColor}
+          foregroundColor={foregroundColor}
         >
           <rect x="0" y="0" width="100%" height="42" />
           <rect x="0" y="43" width="100%" height="42" />
@@ -44,7 +46,7 @@ export const TagsManager: React.FC<{task: ApiTask}> = ({task}) => {
         </ContentLoader>
       )}
       {!isUndefined(tags) && !isEmpty(tags) && (
-        <ul className="mt-2 divide-y">
+        <ul className="mt-2 divide-y dark:divide-dark-500">
           {tags.map(tag => (
             <li key={tag.id} className="flex items-center px-4 py-2">
               <TaskTag name={tag.name} />
@@ -71,9 +73,9 @@ export const TagsManager: React.FC<{task: ApiTask}> = ({task}) => {
       <div
         className={clsx(
           'px-4 py-3 sticky bottom-0',
-          'bg-white border-t',
+          'bg-white dark:bg-dark-600 border-t dark:border-dark-500',
           'transition ease-in duration-150',
-          'active:bg-gray-100'
+          'active:bg-gray-100 dark:active:bg-dark-500'
         )}
       >
         <Link to="/tags" className="flex justify-between items-center ">

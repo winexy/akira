@@ -1,5 +1,5 @@
 .react-datepicker {
-  @apply text-gray-800 text-sm;
+  @apply text-sm;
 }
 
 .react-datepicker__day-names {

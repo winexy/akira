@@ -47,7 +47,8 @@ export const CreateTagForm: React.FC<Props> = ({className}) => {
         className={clsx(
           'w-full px-3 py-2',
           'appearance-none',
-          'rounded-md border border-gray-300',
+          'dark:bg-dark-500',
+          'rounded-md border border-gray-300 dark:border-dark-400',
           'focus:outline-none focus:border-blue-500',
           'focus:ring',
           {

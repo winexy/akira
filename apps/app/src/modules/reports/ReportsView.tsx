@@ -14,6 +14,7 @@ import {CheckIcon, ExternalLinkIcon, FireIcon} from '@heroicons/react/solid'
 import {Link} from 'react-router-dom'
 import ContentLoader from 'react-content-loader'
 import isEmpty from 'lodash/fp/isEmpty'
+import {useContentLoaderColor} from '@/config/content-loader'
 import {ApiTask} from '../tasks/types.d'
 
 type Report = {
@@ -39,21 +40,25 @@ function useReportQuery(date: string) {
   })
 }
 
-const ReportLoader = (
-  <ContentLoader
-    speed={2}
-    width="100%"
-    className="mt-4"
-    height="128px"
-    backgroundColor="#ffffff"
-    foregroundColor="#e9e9e9"
-  >
-    <rect x="0" y={0} rx="6" ry="6" width="60%" height={24} />
-    <rect x="70%" y={0} rx="6" ry="6" width="30%" height={24} />
-    <rect x="0" y={32} rx="6" ry="6" width="40%" height={20} />
-    <rect x="0" y={64} rx="6" ry="6" width="100%" height={60} />
-  </ContentLoader>
-)
+const ReportLoader: React.FC = () => {
+  const {backgroundColor, foregroundColor} = useContentLoaderColor()
+
+  return (
+    <ContentLoader
+      speed={2}
+      width="100%"
+      className="mt-4"
+      height="128px"
+      backgroundColor={backgroundColor}
+      foregroundColor={foregroundColor}
+    >
+      <rect x="0" y={0} rx="6" ry="6" width="60%" height={24} />
+      <rect x="70%" y={0} rx="6" ry="6" width="30%" height={24} />
+      <rect x="0" y={32} rx="6" ry="6" width="40%" height={20} />
+      <rect x="0" y={64} rx="6" ry="6" width="100%" height={60} />
+    </ContentLoader>
+  )
+}
 
 function ReportView() {
   const match = useRouteMatch<{date: string}>()
@@ -63,7 +68,7 @@ function ReportView() {
 
   return (
     <MainView className="px-4" withBackNavigation>
-      <h1 className="flex items-center font-bold text-3xl text-gray-600">
+      <h1 className="flex items-center font-bold text-3xl">
         Report
         <span className="ml-auto">{date.replaceAll('-', '/')}</span>
       </h1>
@@ -79,7 +84,7 @@ function ReportView() {
           {isEmpty(report?.tasks) ? (
             <p className="mt-4">No data</p>
           ) : (
-            <ul className="mt-4 text-gray-600 space-y-2">
+            <ul className="mt-4 space-y-2">
               {report?.tasks.map(task => (
                 <li key={task.id}>
                   <div>
@@ -101,12 +106,12 @@ function ReportView() {
                       </div>
                       <Link
                         to={`/tasks/${task.id}`}
-                        className="ml-auto flex items-center text-blue-500 active:text-blue-600"
+                        className="ml-auto flex items-center text-blue-500 dark:text-blue-400 active:text-blue-600"
                       >
                         <ExternalLinkIcon className="w-5 h-5 mr-2" /> Link
                       </Link>
                     </div>
-                    <p className="text-gray-500 text-sm">
+                    <p className="text-gray-500 dark:text-gray-400 text-sm">
                       Updated at:{' '}
                       {format(parseISO(task.updated_at), 'HH:mm:ss')}
                     </p>
@@ -136,7 +141,7 @@ export const ReportsView: React.FC = () => {
       </Route>
       <Route exact>
         <MainView className="px-4">
-          <h1 className="font-bold text-3xl text-gray-600">Select day</h1>
+          <h1 className="font-bold text-3xl">Select day</h1>
           <DatePicker
             maxDate={new Date()}
             className="mt-6"

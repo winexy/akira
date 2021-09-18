@@ -24,7 +24,7 @@ export const MainView: React.FC<ViewProps> = ({
     withBackNavigation && canGoBack ? (
       <Header>
         <button
-          className="-ml-1 text-gray-700 flex items-center font-bold active:text-gray-500 rounded focus:outline-none"
+          className="-ml-1 flex items-center font-bold active:text-gray-500 rounded focus:outline-none"
           onClick={history.goBack}
         >
           <ChevronLeftIcon className="w-6 h-6 mr-1" />
@@ -40,7 +40,7 @@ export const MainView: React.FC<ViewProps> = ({
       {isUndefined(header) ? defaultHeader : header}
       <main
         className={clsx(
-          'bg-white text-gray-700 dark:bg-gray-700 dark:text-white',
+          'bg-white text-gray-700 dark:bg-dark-600 dark:text-white',
           className
         )}
       >

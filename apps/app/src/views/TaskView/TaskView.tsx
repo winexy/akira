@@ -40,6 +40,7 @@ import {DatePickerSheet, DatePicker} from '@components/DatePicker'
 import {Portal} from '@components/Portal'
 import clsx from 'clsx'
 import {TaskQuery} from '@modules/tasks/config'
+import {useContentLoaderColor} from '@/config/content-loader'
 import {exhaustiveCheck} from '../../utils/index'
 
 type TaskScheduleProps = {
@@ -115,6 +116,8 @@ const TaskSchedule: React.FC<TaskScheduleProps> = ({
     }
   }
 
+  const {backgroundColor, foregroundColor} = useContentLoaderColor()
+
   const formattedDate = scheduledTaskDate
     ? format(parseISO(scheduledTaskDate), 'd.MM.yy')
     : ''
@@ -135,8 +138,8 @@ const TaskSchedule: React.FC<TaskScheduleProps> = ({
                 width="50%"
                 height={24}
                 viewBox="0 0 50% 24"
-                backgroundColor="#ffffff"
-                foregroundColor="#e9e9e9"
+                backgroundColor={backgroundColor}
+                foregroundColor={foregroundColor}
               >
                 <rect rx="5" ry="5" x="0" y="0" width="50%" height="24" />
               </ContentLoader>
@@ -146,7 +149,7 @@ const TaskSchedule: React.FC<TaskScheduleProps> = ({
             </Match.Case>
             <Match.Default>
               Scheduled
-              <span className="ml-auto bg-blue-50 text-blue-600 rounded px-2">
+              <span className="ml-auto bg-blue-50 dark:bg-dark-500 text-blue-600 dark:text-blue-400 rounded px-2">
                 {formattedDate}
               </span>
             </Match.Default>
@@ -171,6 +174,7 @@ export const TaskView: React.FC = () => {
   const {data: task, isFetching} = useTaskQuery(taskId)
 
   const patchTaskMutation = usePatchTaskMutation(taskId)
+  const {backgroundColor, foregroundColor} = useContentLoaderColor()
 
   if (isNil(task)) {
     return (
@@ -180,8 +184,8 @@ export const TaskView: React.FC = () => {
           width={320}
           height={160}
           viewBox="0 0 320 160"
-          backgroundColor="#ffffff"
-          foregroundColor="#e9e9e9"
+          backgroundColor={backgroundColor}
+          foregroundColor={foregroundColor}
         >
           <rect x="0" y="0" rx="4" ry="4" width="105" height="25" />
           <rect x="120" y="0" rx="4" ry="4" width="105" height="25" />
@@ -218,7 +222,7 @@ export const TaskView: React.FC = () => {
         </time>
         <MyDayToggle taskId={taskId} />
       </div>
-      <section className="mt-2 py-3 px-4 border-t border-b border-gray-50 dark:border-gray-600">
+      <section className="mt-2 py-3 px-4 border-t border-b border-gray-50 dark:border-dark-500">
         {!isEmpty(task.tags) && (
           <ul className="mb-2 inline-flex space-x-1">
             {task.tags.map(tag => (

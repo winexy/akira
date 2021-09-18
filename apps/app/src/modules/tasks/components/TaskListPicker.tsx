@@ -54,7 +54,7 @@ export const TaskListPicker: React.FC<Props> = ({taskId, activeListId}) => {
 
   return (
     <>
-      <div className="sticky top-0 p-4 bg-white border-b border-gray-100">
+      <div className="sticky top-0 p-4 border-b border-gray-100 dark:border-dark-500">
         <h2 className="text-xl font-semibold">Add to list</h2>
       </div>
       <Match>
@@ -73,7 +73,7 @@ export const TaskListPicker: React.FC<Props> = ({taskId, activeListId}) => {
           </div>
         </Match.Case>
         <Match.Default>
-          <ul className="divide-y divide-gray-100">
+          <ul className="divide-y divide-gray-100 dark:divide-dark-500">
             {lists.map(list => (
               <li key={list.id}>
                 <button
@@ -82,7 +82,6 @@ export const TaskListPicker: React.FC<Props> = ({taskId, activeListId}) => {
                     'font-semibold text-left ',
                     'transition ease-in duration-150 ',
                     'active:bg-gray-100 focus:outline-none',
-                    'disabled:bg-white',
                     {
                       'text-blue-500': list.id === activeListId
                     }
@@ -114,7 +113,7 @@ export const TaskListPicker: React.FC<Props> = ({taskId, activeListId}) => {
           </ul>
         </Match.Default>
       </Match>
-      <div className="sticky bottom-0 bg-white px-4 pt-4 pb-6 border-t border-gray-100">
+      <div className="sticky bottom-0 px-4 pt-4 pb-6 border-t border-gray-100 dark:border-dark-500">
         <Link to="/lists/new">
           <Button size="md" className="w-full">
             Create new list <ChevronRightIcon className="ml-auto w-6 h-6" />

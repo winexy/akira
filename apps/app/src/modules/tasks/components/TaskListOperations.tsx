@@ -10,7 +10,7 @@ type Props = {
 
 export const TaskListOperations: React.FC<Props> = ({isFiltered, isSorted}) => {
   return (
-    <div className="fixed bottom-0 right-0 left-0 py-7 flex items-center mt-4 px-4 from-gray-100 dark:from-gray-700 bg-gradient-to-t">
+    <div className="fixed bottom-0 right-0 left-0 py-7 flex items-center mt-4 px-4 from-gray-100 dark:from-dark-600 bg-gradient-to-t">
       <button
         className={clsx(
           'flex items-center px-3 py-1 ',
@@ -21,7 +21,7 @@ export const TaskListOperations: React.FC<Props> = ({isFiltered, isSorted}) => {
           'focus:outline-none ',
           isFiltered
             ? 'text-white bg-blue-500 border-blue-600 active:bg-blue-600 active:border-blue-700'
-            : 'bg-gray-100 dark:bg-gray-600 border-gray-300 dark:border-gray-500 active:bg-gray-200 dark:active:bg-gray-500'
+            : 'bg-gray-100 dark:bg-dark-500 border-gray-300 dark:border-dark-400 active:bg-gray-200 dark:active:bg-dark-600'
         )}
         onClick={() => showBottomSheet('filters')}
       >
@@ -39,7 +39,7 @@ export const TaskListOperations: React.FC<Props> = ({isFiltered, isSorted}) => {
           'focus:outline-none',
           isSorted
             ? 'text-white bg-blue-500 border-blue-600 active:bg-blue-600 active:border-blue-700'
-            : 'bg-gray-100 dark:bg-gray-600 border-gray-300 dark:border-gray-500 active:bg-gray-200 dark:active:bg-gray-500'
+            : 'bg-gray-100 dark:bg-dark-500 border-gray-300 dark:border-dark-400 active:bg-gray-200 dark:active:bg-dark-600'
         )}
         onClick={() => showBottomSheet('sorting')}
       >

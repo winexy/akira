@@ -4,7 +4,7 @@
 html,
 body {
   @apply overscroll-contain bg-gray-700 text-gray-800;
-  @apply dark:bg-gray-800;
+  @apply dark:bg-dark-700;
 }
 
 * {

@@ -40,10 +40,10 @@ export const SearchView: React.FC = () => {
           className={clsx(
             'flex',
             'rounded-md shadow-sm',
-            'border border-gray-200',
+            'border border-gray-200 dark:border-dark-400',
             'transition ease-in duration-150',
             'focus-within:border-indigo-400',
-            'focus-within:ring focus-within:ring-indigo-100'
+            'focus-within:ring-1 focus-within:ring-indigo-100 dark:focus-within:ring-indigo-500'
           )}
         >
           <div className="relative flex flex-1 items-center">
@@ -52,11 +52,12 @@ export const SearchView: React.FC = () => {
               type="search"
               enterKeyHint="search"
               className="
-              w-full px-12 py-3 
-              rounded-l-md
-              appearance-none
-              focus:outline-none
-            "
+                w-full px-12 py-3 
+                dark:bg-dark-500
+                rounded-l-md
+                appearance-none
+                focus:outline-none
+              "
               value={searchText}
               onChange={event => setSearchText(event.target.value)}
             />
@@ -66,7 +67,8 @@ export const SearchView: React.FC = () => {
                 className="
                 absolute right-0  w-8 h-8 rounded 
                 flex items-center justify-center
-                transition ease-in duration-100 border border-none
+                transition ease-in duration-100 
+                border border-none
                 focus:outline-none
                 active:bg-gray-100 active:border-gray-200
               "

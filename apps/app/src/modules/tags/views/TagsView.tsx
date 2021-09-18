@@ -32,7 +32,7 @@ export const TagsView: React.FC = () => {
           <h2 className="flex items-center px-4 font-bold text-2xl">
             All tags <span className="ml-4 text-gray-400">{tags.length}</span>
           </h2>
-          <ul className="mt-2 divide-y">
+          <ul className="mt-2 divide-y dark:divide-dark-500">
             {tags.map(tag => (
               <li
                 key={tag.id}

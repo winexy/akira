@@ -40,21 +40,21 @@ export const TaskActionToast: React.FC<Props> = ({
         <ActionToast.Button
           Icon={CheckIcon}
           className={clsx('active:text-green-600', {
-            'text-green-500': isCompleted
+            'text-green-500 dark:text-green-400': isCompleted
           })}
           onClick={() => toggleCompletedMutation.mutate(taskId)}
         />
         <ActionToast.Button
           Icon={FireIcon}
           className={clsx('active:text-red-600', {
-            'text-red-500': isImportant
+            'text-red-500 dark:text-red-400': isImportant
           })}
           onClick={() => toggleImportantMutation.mutate(taskId)}
         />
         <ActionToast.Button
           isLoading={removeTaskMutation.isLoading}
           Icon={TrashIcon}
-          className="text-red-500 active:text-red-600"
+          className="text-red-500 dark:text-red-400 active:text-red-600"
           onClick={() => openActionSheet('delete-task-sheet')}
         />
       </ActionToast>

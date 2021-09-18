@@ -173,8 +173,8 @@ export const Task: React.FC<TaskProps> = ({
       Component="li"
       className={clsx(
         'rounded-lg overflow-hidden',
-        'bg-white dark:bg-gray-600',
-        'transform border border-gray-200 dark:border-gray-500',
+        'bg-white dark:bg-dark-500',
+        'transform border border-gray-200 dark:border-dark-400',
         'shadow-xs',
         'transition ease-in duration-100',
         {
@@ -209,7 +209,7 @@ export const Task: React.FC<TaskProps> = ({
         to={`/tasks/${task.id}`}
         className={clsx(
           'flex items-center',
-          'bg-white dark:bg-gray-600 pl-4 p-2 text-lg text-black',
+          'bg-white dark:bg-dark-500 pl-4 p-2 text-lg text-black',
           'rounded-md dark:text-white',
           'transition ease-in duration-150',
           'active:bg-gray-50',
@@ -235,7 +235,6 @@ export const Task: React.FC<TaskProps> = ({
           className={clsx(
             'flex items-center justify-center',
             'w-10 h-10 rounded',
-            'text-white',
             'focus:outline-none',
             task.is_important
               ? 'text-red-500 active:text-red-400'

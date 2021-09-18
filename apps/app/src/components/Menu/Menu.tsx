@@ -166,7 +166,7 @@ const ScrollShadow = forwardRef<
       <div
         className={clsx(
           'absolute top-0 h-24 w-full',
-          'from-gray-700 bg-gradient-to-b',
+          'from-gray-700 dark:from-dark-700 bg-gradient-to-b',
           'transition ease-in duration-75',
           'pointer-events-none',
           {'opacity-0': (state & 0b1) !== 0b1}
@@ -178,7 +178,7 @@ const ScrollShadow = forwardRef<
       <div
         className={clsx(
           'z-10 absolute bottom-0 h-24 w-full',
-          'from-gray-700 bg-gradient-to-t',
+          'from-gray-700 dark:from-dark-700 bg-gradient-to-t',
           'transition ease-in duration-75',
           'pointer-events-none',
           {'opacity-0': (state & 0b10) !== 0b10}
@@ -338,8 +338,8 @@ export const Menu: React.FC = ({children}) => {
         ref={contentRef}
         className={clsx(
           'transform flex flex-col',
-          'bg-white',
-          'transition ease-in duration-300',
+          'bg-white dark:bg-dark-600',
+          'transition-transform ease-in duration-300',
           isOpen ? 'max-vh-full ' : 'vh-full',
           {
             'scale-90 rounded-3xl shadow-2xl h-screen overflow-hidden pointer-events-none filter opacity-75': isOpen

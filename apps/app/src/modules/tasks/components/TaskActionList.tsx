@@ -21,7 +21,7 @@ export const TaskActionList: React.FC<Props> & {
 } = ({children, className}) => (
   <ul
     className={clsx(
-      'mt-4 border-t border-b border-gray-50 dark:border-gray-600 divide-y divide-gray-50 dark:divide-gray-600',
+      'mt-4 border-t border-b border-gray-50 dark:border-dark-600 divide-y divide-gray-50 dark:divide-dark-500',
       className
     )}
   >
@@ -41,9 +41,9 @@ TaskActionList.Button = ({
   <button
     className={clsx(
       'flex items-center px-4 py-3',
-      'text-blue-500 font-semibold',
+      'text-blue-500 dark:text-blue-400 font-semibold',
       'transition ease-in duration-75',
-      'active:text-blue-600 active:bg-gray-50',
+      'active:text-blue-600 dark:text-blue-500 active:bg-gray-50 dark:active:bg-dark-500',
       'focus:outline-none',
       {'flex-1': stretch},
       className

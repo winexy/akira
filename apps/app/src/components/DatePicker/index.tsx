@@ -27,8 +27,8 @@ const ChangeMonth: React.FC<{isDisabled: boolean; onClick(): void}> = ({
       className={clsx(
         'w-10 h-10',
         'flex items-center justify-center',
-        'bg-white rounded-lg shadow-sm',
-        'border border-gray-200',
+        'bg-white dark:bg-dark-500 rounded-lg shadow-sm',
+        'border border-gray-200 dark:border-dark-400',
         'transition ease-in duration-150',
         'active:bg-gray-100',
         'focus:outline-none',
@@ -60,7 +60,7 @@ export const DatePicker: React.FC<Props> = ({
       className={clsx('flex flex-col justify-center', className)}
       renderCustomHeader={params => {
         return (
-          <div className="text-gray-700 py-4 px-2 flex items-center justify-between">
+          <div className="py-4 px-2 flex items-center justify-between">
             <ChangeMonth
               isDisabled={params.prevMonthButtonDisabled}
               onClick={params.decreaseMonth}
@@ -96,7 +96,7 @@ export const DatePickerSheet: React.FC<DatePickerSheetProps> = ({
 }) => {
   return (
     <BottomSheet name="datepicker" className="pb-8">
-      <h2 className="mt-4 px-4 text-center font-bold text-2xl text-gray-700">
+      <h2 className="mt-4 px-4 text-center font-bold text-2xl">
         Schedule task
       </h2>
       <div className="px-4">{children}</div>

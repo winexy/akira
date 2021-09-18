@@ -42,8 +42,7 @@ export const AddTaskButton: React.FC<NativeButtonProps> = ({onClick}) => {
           active:scale-110
           active:shadow-md
           focus:outline-none
-        `,
-        isMenuOpen ? 'rounded-2xl' : 'rounded-md'
+        `
       )}
       onClick={onClick}
     >
