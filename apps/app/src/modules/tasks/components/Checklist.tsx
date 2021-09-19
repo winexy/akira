@@ -36,6 +36,7 @@ export const Checklist: React.FC<Props> = ({taskId, checklist}) => {
           <Checkbox
             isChecked={todo.is_completed}
             className="mr-4"
+            size="sm"
             onChange={() =>
               patchTodoMutation.mutate({
                 todoId: todo.id,

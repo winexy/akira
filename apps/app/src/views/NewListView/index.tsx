@@ -44,10 +44,10 @@ export const NewListView: React.FC = () => {
           className="
             w-full px-4 py-2
             text-2xl font-semibold 
-            text-gray-700
+            text-gray-700 dark:text-gray-200
             appearance-none 
             transition ease-in duration-150
-            focus:bg-gray-100 focus:outline-none
+            focus:bg-gray-100 dark:focus:bg-dark-500 focus:outline-none
           "
           onChange={event => {
             setTitle(event.target.value)

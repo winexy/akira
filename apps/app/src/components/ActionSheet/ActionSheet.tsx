@@ -40,7 +40,7 @@ const Action: React.FC<ActionProps> = ({
           'w-full text-center text-lg py-3',
           'transition ease-in duration-75',
           'rounded-lg',
-          'focus:outline-none active:bg-gray-200',
+          'focus:outline-none active:bg-gray-200 dark:active:bg-dark-400',
           'focus-visible:ring-4 focus-visible:ring-blue-500',
           destructive ? 'text-red-500' : 'text-blue-500'
         )}
@@ -133,7 +133,7 @@ const ActionSheet: React.FC<Props> & {Action: typeof Action} = ({
             ref={actionsRef}
             className="sheet z-10 fixed bottom-0 p-2 pb-6-safe flex flex-col left-0 right-0"
           >
-            <ul className="rounded-lg bg-white w-full divide-y divide-gray-200">
+            <ul className="rounded-lg bg-white dark:bg-dark-500 w-full divide-y divide-gray-200">
               {children}
             </ul>
             <button
@@ -141,12 +141,12 @@ const ActionSheet: React.FC<Props> & {Action: typeof Action} = ({
               type="button"
               className={clsx(
                 'mt-2 py-3 w-full',
-                'bg-white rounded-lg',
-                'text-lg text-blue-500 font-semibold',
+                'bg-white dark:bg-dark-500 rounded-lg',
+                'text-lg text-blue-500 dark:text-blue-400 font-semibold',
                 'transition ease-in duration-75',
                 'focus:outline-none',
                 'focus-visible:ring-4 focus-visible:ring-blue-500',
-                'active:bg-gray-200'
+                'active:bg-gray-200 dark:active:bg-dark-400'
               )}
               onClick={onCancel}
             >

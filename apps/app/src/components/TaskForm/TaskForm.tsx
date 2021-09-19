@@ -267,7 +267,7 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
             <BottomSheet name="lists" className="pt-6">
               <div className="px-4">
                 <input
-                  className="w-full rounded px-1 appearance-none text-lg font-bold focus:outline-none"
+                  className="w-full rounded px-1 appearance-none text-lg font-bold focus:outline-none bg-transparent"
                   placeholder="Search list..."
                   onInput={e =>
                     setSearch(toLower((e.target as HTMLInputElement).value))
@@ -275,7 +275,7 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                 />
               </div>
               {lists && (
-                <ul className="mt-4 divide-y divide-gray-100">
+                <ul className="mt-4 divide-y divide-gray-100 dark:divide-dark-400">
                   {filteredList.map(list => (
                     <li
                       key={list.id}
