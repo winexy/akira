@@ -25,7 +25,7 @@ import {AkiraLoader} from './components/AkiraLoader'
 import {TaskListView} from './views/TaskListView'
 import {SearchView} from './views/SearchView'
 import {NotificationManager} from './modules/notifications/NotificationManager'
-import {NoteView} from './views/NoteView'
+import {NoteView, TextEditorProvider} from './views/NoteView'
 import {ReportsView} from './modules/reports/ReportsView'
 import {PreferencesView} from './modules/preferences/PreferencesView'
 
@@ -118,7 +118,9 @@ function App() {
                 <ListsView />
               </Route>
               <Route path="/note">
-                <NoteView />
+                <TextEditorProvider>
+                  <NoteView />
+                </TextEditorProvider>
               </Route>
               <Route path="/reports">
                 <ReportsView />
