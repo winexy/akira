@@ -75,6 +75,7 @@ export const FiltersBottomSheet: React.FC<Props> = ({
                 <Checkbox
                   className="mr-3"
                   isChecked={state[filterType]}
+                  size="sm"
                   onChange={() => {
                     onChange({type: filterType})
                   }}
