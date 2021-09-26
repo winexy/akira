@@ -41,3 +41,16 @@ export type TaskId = ApiTask['id']
 type NonPatchableProps = 'id' | 'author_uid' | 'created_at' | 'updated_at'
 
 export type TaskPatch = Partial<Omit<ApiTask, NonPatchableProps>>
+
+export type CreateTaskMeta = {
+  tags: Array<number>
+  list_id?: number
+}
+
+export type CreateTaskPayload = {
+  task: {
+    title: string
+    description: string
+  }
+  meta: CreateTaskMeta
+}

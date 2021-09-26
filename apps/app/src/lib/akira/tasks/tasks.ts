@@ -2,7 +2,12 @@
 import {AxiosInstance} from 'axios'
 import qs from 'qs'
 import get from 'lodash/fp/get'
-import {ApiTask, TaskId, TaskPatch} from '@modules/tasks/types.d'
+import {
+  ApiTask,
+  TaskId,
+  TaskPatch,
+  CreateTaskPayload
+} from '@modules/tasks/types.d'
 
 type IntBool = 1 | 0
 
@@ -12,11 +17,6 @@ type QueryParams = Partial<{
   is_today: IntBool
 }>
 
-export type CreateTaskMeta = {
-  tags: Array<number>
-  list_id?: number
-}
-
 export function tasks(api: AxiosInstance) {
   const unwrap = get('data')
 
@@ -24,11 +24,11 @@ export function tasks(api: AxiosInstance) {
     findAll(params: QueryParams = {}): Promise<ApiTask[]> {
       return api.get(`tasks?${qs.stringify(params)}`).then(unwrap)
     },
-    create(title: string, meta: CreateTaskMeta): Promise<ApiTask> {
-      return api.post('tasks', {title, meta}).then(unwrap)
+    create(payload: CreateTaskPayload): Promise<ApiTask> {
+      return api.post('tasks', payload).then(unwrap)
     },
-    createForMyDay(title: string, meta: CreateTaskMeta): Promise<ApiTask> {
-      return api.post('tasks/myday', {title, meta}).then(unwrap)
+    createForMyDay(payload: CreateTaskPayload): Promise<ApiTask> {
+      return api.post('tasks/myday', payload).then(unwrap)
     },
     findOne(id: TaskId): Promise<ApiTask> {
       return api.get(`tasks/${id}`).then(unwrap)
