@@ -31,16 +31,11 @@ export const TasksView: React.FC = () => {
   const {sortType, setSortType, sort} = useTaskSorting()
   const queryClient = useQueryClient()
 
-  const createTaskMutation = useMutation(
-    ({task, meta}: CreateTaskPayload) => {
-      return akira.tasks.create(task, meta)
-    },
-    {
-      onSuccess(task) {
-        queryClient.setQueryData(TaskQuery.All(), [task, ...tasks])
-      }
+  const createTaskMutation = useMutation(akira.tasks.create, {
+    onSuccess(task) {
+      queryClient.setQueryData(TaskQuery.All(), [task, ...tasks])
     }
-  )
+  })
 
   const sorted = sort(filterTasks(tasks, filtersState))
 
