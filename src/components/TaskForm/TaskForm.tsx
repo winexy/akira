@@ -5,8 +5,7 @@ import React, {
   useLayoutEffect,
   useImperativeHandle,
   FormEventHandler,
-  useEffect,
-  KeyboardEventHandler
+  useEffect
 } from 'react'
 import isEmpty from 'lodash/fp/isEmpty'
 import isUndefined from 'lodash/fp/isUndefined'
@@ -21,20 +20,22 @@ import {useTagsQuery} from '@modules/tags/hooks/index'
 import {Button} from '@components/Button'
 import {TaskTag} from '@modules/tags/types.d'
 import {TagsGrid} from '@components/TagsGrid/TagsGrid'
-import {CreateTaskMeta} from '@lib/akira/tasks/tasks'
 import {TaskList} from '@modules/lists/types.d'
 import filter from 'lodash/fp/filter'
 import lowerCase from 'lodash/fp/lowerCase'
 import toLower from 'lodash/fp/toLower'
 import {useHotkey} from '@modules/hotkeys/HotKeyContext'
 import {HotKey} from '@modules/hotkeys/HotKey'
+import {TextArea} from '@modules/tasks/components'
+import {CalendarIcon} from '@heroicons/react/outline'
+import {CreateTaskPayload} from '@modules/tasks/types.d'
 import {Tag} from '../Tag/Tag'
 import {useListsQuery} from '../../modules/lists/hooks/index'
 import {BottomSheet} from '../BottomSheet/BottomSheet'
 import {showBottomSheet, hideBottomSheet} from '../../store/bottom-sheet/index'
 
 type TaskFormProps = {
-  onSubmit(payload: {title: string; meta: CreateTaskMeta}): void
+  onSubmit(payload: CreateTaskPayload): void
   onVisibilityChange(isVisible: boolean): void
 }
 
@@ -48,6 +49,7 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
     const inputRef = useRef<HTMLInputElement>(null)
     const backdropRef = useRef<HTMLDivElement>(null)
     const [isVisible, setIsVisible] = useState(false)
+    const [description, setDescription] = useState('')
     const {data: tags} = useTagsQuery()
     const {data: lists} = useListsQuery()
     const [selectedTags, setSelectedTags] = useState(new Set<number>())
@@ -105,7 +107,10 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
       }
 
       onSubmit({
-        title,
+        task: {
+          title,
+          description
+        },
         meta: {
           tags: [...selectedTags],
           list_id: selectedList?.id
@@ -113,6 +118,7 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
       })
 
       setTitle('')
+      setDescription('')
       setSelectedTags(new Set())
       setSelectedList(null)
     }
@@ -203,8 +209,8 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                     ))}
                   </TagsGrid>
                 )}
-                {!isUndefined(lists) && (
-                  <div className="mt-4 w-full px-6 text-white flex justify-between items-center">
+                <div className="mt-4 w-full px-6 flex flex-col">
+                  {!isUndefined(lists) && (
                     <Button
                       size="sm"
                       className="w-full text-left justify-between font-bold"
@@ -224,8 +230,22 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                         </>
                       )}
                     </Button>
-                  </div>
-                )}
+                  )}
+                  <Button
+                    size="sm"
+                    className="mt-4 text-left justify-between"
+                    variant="transparent"
+                  >
+                    Schedule task
+                    <CalendarIcon className="w-6 h-6" />
+                  </Button>
+                  <TextArea
+                    value={description}
+                    className="mt-4"
+                    placeholder="Add note"
+                    onChange={setDescription}
+                  />
+                </div>
                 {!isEmpty(title) && (
                   <button
                     type="button"

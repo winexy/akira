@@ -20,8 +20,8 @@ import size from 'lodash/fp/size'
 import {useTagsQuery} from '@modules/tags/hooks'
 import {TaskListOperations} from '@modules/tasks/components/TaskListOperations'
 import {TaskQuery} from '@modules/tasks/config'
-import {CreateTaskMeta} from '@lib/akira/tasks/tasks'
 import {SearchIcon} from '@heroicons/react/solid'
+import {CreateTaskPayload} from '@modules/tasks/types.d'
 
 export const TasksView: React.FC = () => {
   const {data: tasks = [], isLoading} = useTasksQuery()
@@ -32,8 +32,8 @@ export const TasksView: React.FC = () => {
   const queryClient = useQueryClient()
 
   const createTaskMutation = useMutation(
-    ({title, meta}: {title: string; meta: CreateTaskMeta}) => {
-      return akira.tasks.create(title, meta)
+    ({task, meta}: CreateTaskPayload) => {
+      return akira.tasks.create(task, meta)
     },
     {
       onSuccess(task) {

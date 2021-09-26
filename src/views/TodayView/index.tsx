@@ -12,7 +12,6 @@ import {useTagsQuery} from '@modules/tags/hooks'
 import {filterTasks, useTaskFilters} from '@modules/tasks/filters'
 import {FiltersBottomSheet} from '@modules/tasks/filters/FiltersBottomSheet'
 import {TaskListOperations} from '@modules/tasks/components/TaskListOperations'
-import {CreateTaskMeta} from '@lib/akira/tasks/tasks'
 import {
   SortingBottomSheet,
   useTaskSorting
@@ -32,6 +31,7 @@ import isEmpty from 'lodash/fp/isEmpty'
 import {useMyDayQuery, useWeekQuery} from '@modules/tasks/hooks'
 import {TaskQuery} from '@modules/tasks/config'
 import {useContentLoaderColor} from '@/config/content-loader'
+import {CreateTaskPayload} from '@modules/tasks/types.d'
 
 const Control: React.FC<{
   value: string
@@ -160,8 +160,8 @@ export function TodayView() {
   const addTaskControl = useAddTaskControl()
   const queryClient = useQueryClient()
   const createTaskMutation = useMutation(
-    (payload: {title: string; meta: CreateTaskMeta}) => {
-      return akira.tasks.createForMyDay(payload.title, payload.meta)
+    (payload: CreateTaskPayload) => {
+      return akira.tasks.createForMyDay(payload)
     },
     {
       onSuccess() {
