@@ -306,14 +306,14 @@ export const TaskView: React.FC = () => {
         <div className="text-center py-3">
           <h2 className="font-semibold text-2xl">Repeat</h2>
         </div>
-        <ul className="divide-y divide-gray-100">
+        <ul className="divide-y divide-gray-100 dark:divide-dark-500">
           {repeatPatterns.map(pattern => (
             <li
               key={pattern}
               className={clsx(
                 'px-4 py-3 font-semibold',
                 'transition ease-in duration-100',
-                'active:bg-gray-50'
+                'active:bg-gray-50 dark:active:bg-dark-400'
               )}
               // eslint-disable-next-line no-alert
               onClick={() => alert('WIP: not implemented')}

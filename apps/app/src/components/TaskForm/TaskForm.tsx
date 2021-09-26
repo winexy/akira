@@ -283,6 +283,7 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                         'px-4 py-3 font-semibold text-lg',
                         'transition ease-in duration-75',
                         'active:text-blue-500 active:bg-gray-50',
+                        'dark:active:bg-dark-400',
                         list.id === selectedList?.id ? 'text-blue-500' : ''
                       )}
                       onClick={() => {
