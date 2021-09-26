@@ -24,15 +24,19 @@ import {TaskList} from '@modules/lists/types.d'
 import filter from 'lodash/fp/filter'
 import lowerCase from 'lodash/fp/lowerCase'
 import toLower from 'lodash/fp/toLower'
+import format from 'date-fns/format'
 import {useHotkey} from '@modules/hotkeys/HotKeyContext'
 import {HotKey} from '@modules/hotkeys/HotKey'
 import {TextArea} from '@modules/tasks/components'
 import {CalendarIcon} from '@heroicons/react/outline'
 import {CreateTaskPayload} from '@modules/tasks/types.d'
+import isTomorrow from 'date-fns/isTomorrow'
+import isToday from 'date-fns/isToday'
 import {Tag} from '../Tag/Tag'
 import {useListsQuery} from '../../modules/lists/hooks/index'
 import {BottomSheet} from '../BottomSheet/BottomSheet'
 import {showBottomSheet, hideBottomSheet} from '../../store/bottom-sheet/index'
+import {DatePicker, DatePickerSheet} from '../DatePicker'
 
 type TaskFormProps = {
   onSubmit(payload: CreateTaskPayload): void
@@ -43,13 +47,27 @@ export type TaskFormRef = {
   show(): void
 }
 
+function renderDate(date: Date) {
+  if (isToday(date)) {
+    return 'Today'
+  }
+
+  if (isTomorrow(date)) {
+    return 'Tomorrow'
+  }
+
+  return format(date, 'dd.MM.yyyy')
+}
+
 export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
-  ({onSubmit, onVisibilityChange}, ref) => {
+  // eslint-disable-next-line
+  function TaskForm_ForwardRef({onSubmit, onVisibilityChange}, ref) {
     const [title, setTitle] = useState('')
     const inputRef = useRef<HTMLInputElement>(null)
     const backdropRef = useRef<HTMLDivElement>(null)
     const [isVisible, setIsVisible] = useState(false)
     const [description, setDescription] = useState('')
+    const [date, setDate] = useState(() => new Date())
     const {data: tags} = useTagsQuery()
     const {data: lists} = useListsQuery()
     const [selectedTags, setSelectedTags] = useState(new Set<number>())
@@ -112,6 +130,7 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
           description
         },
         meta: {
+          date: format(date, 'yyyy-MM-dd'),
           tags: [...selectedTags],
           list_id: selectedList?.id
         }
@@ -121,6 +140,7 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
       setDescription('')
       setSelectedTags(new Set())
       setSelectedList(null)
+      setDate(new Date())
     }
 
     function onReset() {
@@ -235,8 +255,12 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                     size="sm"
                     className="mt-4 text-left justify-between"
                     variant="transparent"
+                    type="button"
+                    onClick={() => {
+                      showBottomSheet('task-date')
+                    }}
                   >
-                    Schedule task
+                    {renderDate(date)}
                     <CalendarIcon className="w-6 h-6" />
                   </Button>
                   <TextArea
@@ -263,6 +287,9 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                 )}
               </div>
             </form>
+            <DatePickerSheet name="task-date" date={date}>
+              <DatePicker date={date} minDate={new Date()} onChange={setDate} />
+            </DatePickerSheet>
             <div className="mt-auto p-4 bg-gradient-to-t from-gray-600 dark:from-dark-600">
               {isEmpty(title) ? (
                 <Button

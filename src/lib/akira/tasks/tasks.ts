@@ -27,9 +27,6 @@ export function tasks(api: AxiosInstance) {
     create(payload: CreateTaskPayload): Promise<ApiTask> {
       return api.post('tasks', payload).then(unwrap)
     },
-    createForMyDay(payload: CreateTaskPayload): Promise<ApiTask> {
-      return api.post('tasks/myday', payload).then(unwrap)
-    },
     findOne(id: TaskId): Promise<ApiTask> {
       return api.get(`tasks/${id}`).then(unwrap)
     },

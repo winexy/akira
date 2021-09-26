@@ -86,17 +86,19 @@ export const DatePicker: React.FC<Props> = ({
 }
 
 type DatePickerSheetProps = {
+  name?: string
   date: Date | null
-  onApply(): void
+  onApply?(): void
 }
 
 export const DatePickerSheet: React.FC<DatePickerSheetProps> = ({
+  name = 'datepicker',
   children,
   date,
   onApply
 }) => {
   return (
-    <BottomSheet name="datepicker" className="pb-8">
+    <BottomSheet name={name} className="pb-8">
       <h2 className="mt-4 px-4 text-center font-bold text-2xl">
         Schedule task
       </h2>
@@ -109,7 +111,7 @@ export const DatePickerSheet: React.FC<DatePickerSheetProps> = ({
           onClick={event => {
             event.stopPropagation()
             hideBottomSheet()
-            onApply()
+            onApply?.()
           }}
         >
           Select

@@ -43,6 +43,7 @@ type NonPatchableProps = 'id' | 'author_uid' | 'created_at' | 'updated_at'
 export type TaskPatch = Partial<Omit<ApiTask, NonPatchableProps>>
 
 export type CreateTaskMeta = {
+  date: string
   tags: Array<number>
   list_id?: number
 }
