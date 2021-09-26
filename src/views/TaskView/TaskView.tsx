@@ -101,6 +101,8 @@ const TaskSchedule: React.FC<TaskScheduleProps> = ({
     {
       onSuccess() {
         queryClient.refetchQueries(TaskQuery.One(taskId))
+        queryClient.invalidateQueries(TaskQuery.MyDay())
+        queryClient.invalidateQueries(TaskQuery.Week())
       }
     }
   )
