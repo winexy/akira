@@ -46,7 +46,7 @@ export const Button: React.FC<Props> = ({
     `
     flex justify-center items-center 
     rounded-md
-    text-white font-semibold
+    font-semibold
     transition ease-in duration-100
     disabled:bg-gray-200
     disabled:border-gray-300
