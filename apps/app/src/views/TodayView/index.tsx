@@ -161,7 +161,7 @@ export function TodayView() {
   const queryClient = useQueryClient()
   const createTaskMutation = useMutation(
     (payload: CreateTaskPayload) => {
-      return akira.tasks.createForMyDay(payload)
+      return akira.tasks.create(payload)
     },
     {
       onSuccess() {
