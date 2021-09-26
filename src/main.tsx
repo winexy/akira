@@ -1,6 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import {enableMapSet} from 'immer'
+import * as Sentry from '@sentry/react'
+import {Integrations} from '@sentry/tracing'
 import {QueryClient, QueryClientProvider} from 'react-query'
 import './index.css'
 import {akira} from '@lib/akira'
@@ -27,6 +29,14 @@ async function prefetchQueries() {
 }
 
 initAppThemeFx()
+
+if (import.meta.env.PROD) {
+  Sentry.init({
+    dsn: import.meta.env.VITE_SENTRY_DSN,
+    integrations: [new Integrations.BrowserTracing()],
+    tracesSampleRate: 1.0
+  })
+}
 
 ReactDOM.render(
   <React.StrictMode>
