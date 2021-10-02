@@ -3,7 +3,7 @@ import clsx from 'clsx'
 import isEmpty from 'lodash/fp/isEmpty'
 import {XIcon} from '@heroicons/react/solid'
 
-import {Checkbox} from '@components/Checkbox/Checkbox'
+import {Checkbox} from '@shared/ui/checkbox'
 import {TaskId, Todo} from '@modules/tasks/types.d'
 import {useRemoveTodoMutation, usePatchTodoMutation} from '../hooks'
 
