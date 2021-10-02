@@ -34,15 +34,14 @@ export const Header: React.FC = ({children}) => {
       )}
     >
       {isUndefined(children) ? (
-        <Link
-          to="/"
-          className="flex items-center focus:outline-none focus:text-purple-500"
-        >
+        <Link to="/" className="flex items-center">
           <Akira className="w-5 h-5 -mt-px" />
           <h1
             className="
               ml-2 font-bold text-xl font-mono 
+              transition
               active:text-gray-900 
+              dark:active:text-purple-300
             "
           >
             Akira
