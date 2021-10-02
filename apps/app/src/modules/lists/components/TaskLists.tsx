@@ -1,5 +1,4 @@
 import React from 'react'
-import {Swipeable} from '@components/Swipeable/Swipeable'
 import {TrashIcon} from '@heroicons/react/solid'
 import {Link} from 'react-router-dom'
 import isUndefined from 'lodash/fp/isUndefined'
@@ -10,6 +9,7 @@ import {closeMenu} from '@store/menu'
 import {ActionSheet} from '@shared/ui/action-sheet'
 import {openActionSheet, closeActionSheet} from '@shared/ui/action-sheet/model'
 import {Spin} from '@shared/ui/spin'
+import {Swipeable} from '@shared/components/swipeable'
 import {useListsQuery} from '../hooks/index'
 import {TaskList} from '../types.d'
 
