@@ -4,7 +4,7 @@ import {MainView} from '@views/MainView'
 import {useHistory} from 'react-router'
 import {Button} from '@components/Button'
 
-export const WipView: React.FC = () => {
+const WipView: React.FC = () => {
   const history = useHistory()
 
   return (
@@ -24,3 +24,5 @@ export const WipView: React.FC = () => {
     </MainView>
   )
 }
+
+export default WipView

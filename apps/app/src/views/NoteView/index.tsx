@@ -351,7 +351,7 @@ type LinkProps = {
 
 export type KeyCommand = DraftEditorCommand | 'accent'
 
-export const NoteView: React.FC = () => {
+const TextEditor: React.FC = () => {
   const editor = useEditorContext()
 
   const handlerAddLink = () => {
@@ -361,9 +361,8 @@ export const NoteView: React.FC = () => {
       editor.addLink(url)
     }
   }
-
   return (
-    <MainView className="px-4">
+    <>
       <div>
         {INLINE_STYLES_CODES.map(code => {
           const onClick = (e: React.MouseEvent) => {
@@ -394,6 +393,18 @@ export const NoteView: React.FC = () => {
         editorState={editor.state}
         onChange={editor.onChange}
       />
+    </>
+  )
+}
+
+const NoteView: React.FC = () => {
+  return (
+    <MainView className="px-4">
+      <TextEditorProvider>
+        <TextEditor />
+      </TextEditorProvider>
     </MainView>
   )
 }
+
+export default NoteView

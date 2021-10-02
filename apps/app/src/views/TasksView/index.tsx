@@ -22,7 +22,7 @@ import {TaskListOperations} from '@modules/tasks/components/TaskListOperations'
 import {TaskQuery} from '@modules/tasks/config'
 import {SearchIcon} from '@heroicons/react/solid'
 
-export const TasksView: React.FC = () => {
+const TasksView: React.FC = () => {
   const {data: tasks = [], isLoading} = useTasksQuery()
   const {data: tags = []} = useTagsQuery()
   const addTaskControl = useAddTaskControl()
@@ -73,3 +73,5 @@ export const TasksView: React.FC = () => {
     </MainView>
   )
 }
+
+export default TasksView

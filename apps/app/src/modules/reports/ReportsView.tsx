@@ -127,7 +127,7 @@ function ReportView() {
   )
 }
 
-export const ReportsView: React.FC = () => {
+const ReportsView: React.FC = () => {
   const history = useHistory()
 
   function onDateSelect(dateInstance: Date) {
@@ -152,3 +152,5 @@ export const ReportsView: React.FC = () => {
     </Switch>
   )
 }
+
+export default ReportsView

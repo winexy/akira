@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import clsx from 'clsx'
 import {MenuIcon} from '@heroicons/react/solid'
 import isUndefined from 'lodash/fp/isUndefined'

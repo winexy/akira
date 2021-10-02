@@ -170,7 +170,7 @@ const TaskSchedule: React.FC<TaskScheduleProps> = ({
   )
 }
 
-export const TaskView: React.FC = () => {
+const TaskView: React.FC = () => {
   const {taskId} = useParams<{taskId: string}>()
   const {data: task, isFetching} = useTaskQuery(taskId)
 
@@ -334,3 +334,5 @@ export const TaskView: React.FC = () => {
     </MainView>
   )
 }
+
+export default TaskView

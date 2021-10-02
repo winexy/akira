@@ -1,1 +1,0 @@
-export {TagsView} from './TagsView'

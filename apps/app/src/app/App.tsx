@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {lazy, Suspense} from 'react'
 import {ReactQueryDevtools} from 'react-query/devtools'
 import {DndProvider} from 'react-dnd'
 import {TouchBackend} from 'react-dnd-touch-backend'
@@ -10,24 +10,14 @@ import {
   useHistory
 } from 'react-router-dom'
 import {HomeIcon, RefreshIcon} from '@heroicons/react/solid'
-import {TodayView} from '@/views/TodayView'
-import {TaskView} from '@views/TaskView/TaskView'
+import {TodayView} from '@views/TodayView'
 import {AuthView} from '@views/AuthView/AuthView'
-import {WipView} from '@views/WipView/WipView'
 import {Menu} from '@components/Menu/Menu'
 import {Button} from '@components/Button'
-import {TasksView} from '@views/TasksView'
 import {useFirebaseAuth} from '@/firebase/Provider'
-import {TagsView} from '@modules/tags/views'
-import {NewListView} from '@views/NewListView'
-import {ListsView} from '@views/ListsView'
 import {AkiraLoader} from '@components/AkiraLoader'
-import {TaskListView} from '@views/TaskListView'
-import {SearchView} from '@views/SearchView'
 import {NotificationManager} from '@modules/notifications/NotificationManager'
-import {NoteView, TextEditorProvider} from '@views/NoteView'
-import {ReportsView} from '@modules/reports/ReportsView'
-import {PreferencesView} from '@modules/preferences/PreferencesView'
+import {MainView} from '@views/MainView/index'
 
 const dndConfig = {
   enableMouseEvents: true
@@ -68,6 +58,22 @@ function Fallback({error, resetErrorBoundary}: FallbackProps) {
   )
 }
 
+const TaskView = lazy(() => import('@views/TaskView/TaskView'))
+const TasksView = lazy(() => import('@views/TasksView'))
+const TagsView = lazy(() => import('@modules/tags/views/TagsView'))
+const NewListView = lazy(() => import('@views/NewListView'))
+const WipView = lazy(() => import('@views/WipView/WipView'))
+const ListsView = lazy(() => import('@views/ListsView'))
+const TaskListView = lazy(() => import('@views/TaskListView'))
+const SearchView = lazy(() => import('@views/SearchView'))
+const ReportsView = lazy(() => import('@modules/reports/ReportsView'))
+const PreferencesView = lazy(
+  () => import('@modules/preferences/PreferencesView')
+)
+const NoteView = lazy(() => import('@views/NoteView'))
+
+const LoadingView: React.FC = () => <MainView>loading...</MainView>
+
 function App() {
   const {isLoading, isAuthenticated} = useFirebaseAuth()
 
@@ -94,39 +100,57 @@ function App() {
                 <TodayView />
               </Route>
               <Route path="/tasks" exact>
-                <TasksView />
+                <Suspense fallback={<LoadingView />}>
+                  <TasksView />
+                </Suspense>
               </Route>
               <Route path="/tasks/:taskId">
-                <TaskView />
+                <Suspense fallback={<LoadingView />}>
+                  <TaskView />
+                </Suspense>
               </Route>
               <Route path="/search">
-                <SearchView />
+                <Suspense fallback={<LoadingView />}>
+                  <SearchView />
+                </Suspense>
               </Route>
               <Route path="/wip">
                 <WipView />
               </Route>
               <Route path="/tags">
-                <TagsView />
+                <Suspense fallback={<LoadingView />}>
+                  <TagsView />
+                </Suspense>
               </Route>
               <Route path="/lists/new">
-                <NewListView />
+                <Suspense fallback={<LoadingView />}>
+                  <NewListView />
+                </Suspense>
               </Route>
               <Route path="/lists/:listId">
-                <TaskListView />
+                <Suspense fallback={<LoadingView />}>
+                  <TaskListView />
+                </Suspense>
               </Route>
               <Route path="/lists">
-                <ListsView />
+                <Suspense fallback={<LoadingView />}>
+                  <ListsView />
+                </Suspense>
               </Route>
               <Route path="/note">
-                <TextEditorProvider>
+                <Suspense fallback={<LoadingView />}>
                   <NoteView />
-                </TextEditorProvider>
+                </Suspense>
               </Route>
               <Route path="/reports">
-                <ReportsView />
+                <Suspense fallback={<LoadingView />}>
+                  <ReportsView />
+                </Suspense>
               </Route>
               <Route path="/preferences">
-                <PreferencesView />
+                <Suspense fallback={<LoadingView />}>
+                  <PreferencesView />
+                </Suspense>
               </Route>
             </Switch>
           </Menu>

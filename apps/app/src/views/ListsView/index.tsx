@@ -2,7 +2,7 @@ import React from 'react'
 import {TaskLists} from '@modules/lists/components/TaskLists'
 import {MainView} from '../MainView'
 
-export const ListsView: React.FC = () => {
+const ListsView: React.FC = () => {
   return (
     <MainView>
       <div className="px-4 flex items-center">
@@ -12,3 +12,5 @@ export const ListsView: React.FC = () => {
     </MainView>
   )
 }
+
+export default ListsView
