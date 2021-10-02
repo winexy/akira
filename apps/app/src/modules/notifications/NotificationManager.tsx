@@ -1,6 +1,6 @@
 import React from 'react'
 import clsx from 'clsx'
-import {Portal} from '@components/Portal'
+import {Portal} from '@shared/components/portal'
 import {useStore} from 'effector-react'
 import {$notifications} from './store'
 
