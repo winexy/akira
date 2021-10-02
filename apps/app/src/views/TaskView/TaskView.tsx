@@ -6,11 +6,10 @@ import parseISO from 'date-fns/parseISO'
 import isEmpty from 'lodash/fp/isEmpty'
 import {CalendarIcon, PlusIcon, ClockIcon} from '@heroicons/react/outline'
 import ContentLoader from 'react-content-loader'
-import {useQuery, useMutation, useQueryClient} from 'react-query'
+import {useMutation, useQueryClient} from 'react-query'
 import isNil from 'lodash/fp/isNil'
 import {BottomSheet} from '@/components/BottomSheet/BottomSheet'
 import {Button} from '@components/Button'
-import {akira} from '@/lib/akira'
 import {
   ChecklistManager,
   MyDayToggle,
@@ -19,10 +18,10 @@ import {
   TextArea
 } from '@modules/tasks/components'
 import {showBottomSheet} from '@store/bottom-sheet'
-import {ApiTask, TaskId} from '@modules/tasks/types.d'
+import {TaskId} from '@modules/tasks/types.d'
 import {TagsManager, TaskTag} from '@modules/tags/components'
 import {usePatchTaskMutation, useTaskQuery} from '@modules/tasks/hooks'
-import {Tag} from '@components/Tag/Tag'
+import {Tag} from '@modules/tags/components/Tag'
 import {EditableHeading} from '@components/EditableHeading'
 import {
   DotsVerticalIcon,
