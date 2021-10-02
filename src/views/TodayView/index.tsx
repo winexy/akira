@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import {TaskForm} from '@components/TaskForm/TaskForm'
-import {Tasks} from '@components/Tasks'
+import {TaskList} from '@modules/tasks/components/TaskList'
 import size from 'lodash/fp/size'
 import filter from 'lodash/fp/filter'
 
@@ -109,7 +109,7 @@ const Week: React.FC = () => {
             <h2 className="font-bold text-2xl">
               {format(parseISO(day), 'EEEE')}
             </h2>
-            <Tasks className="mt-2" isPending={false} tasks={byDay[day]} />
+            <TaskList className="mt-2" isPending={false} tasks={byDay[day]} />
           </section>
         ))}
       </div>
@@ -138,7 +138,7 @@ const Today: React.FC = () => {
         </span>
       </div>
       <section className="mt-2 pb-24 px-4">
-        <Tasks isPending={isLoading} tasks={sorted} />
+        <TaskList isPending={isLoading} tasks={sorted} />
       </section>
       <TaskListOperations
         isFiltered={size(sorted) !== size(tasks)}

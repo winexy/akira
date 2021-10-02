@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import {useQuery} from 'react-query'
 import debounce from 'debounce-promise'
 import {api} from '@lib/api'
-import {Tasks} from '@components/Tasks'
+import {TaskList} from '@modules/tasks/components/TaskList'
 import {AdjustmentsIcon, SearchIcon, XIcon} from '@heroicons/react/solid'
 import clsx from 'clsx'
 import {showBottomSheet} from '@store/bottom-sheet'
@@ -114,7 +114,7 @@ export const SearchView: React.FC = () => {
         </div>
       </BottomSheet>
       <section className="mt-4 px-4">
-        <Tasks isPending={searchQuery.isLoading} tasks={searchQuery.data} />
+        <TaskList isPending={searchQuery.isLoading} tasks={searchQuery.data} />
       </section>
     </MainView>
   )

@@ -4,7 +4,7 @@ import {useQuery} from 'react-query'
 import isUndefined from 'lodash/fp/isUndefined'
 import {api} from '@lib/api'
 import {ApiTask} from '@modules/tasks/types.d'
-import {Tasks} from '@components/Tasks'
+import {TaskList} from '@/modules/tasks/components/TaskList'
 import {MainView} from '../MainView'
 
 type ApiList = {
@@ -27,7 +27,7 @@ export const TaskListView: React.FC = () => {
       <MainView>
         <h1 className="px-4 font-semibold text-2xl">...</h1>
         <div className="px-4">
-          <Tasks className="mt-4" isPending={isLoading} tasks={[]} />
+          <TaskList className="mt-4" isPending={isLoading} tasks={[]} />
         </div>
       </MainView>
     )
@@ -41,7 +41,7 @@ export const TaskListView: React.FC = () => {
     <MainView>
       <h1 className="px-4 font-semibold text-2xl">{list.title}</h1>
       <section className="px-4">
-        <Tasks className="mt-4" isPending={isLoading} tasks={list.tasks} />
+        <TaskList className="mt-4" isPending={isLoading} tasks={list.tasks} />
       </section>
     </MainView>
   )
