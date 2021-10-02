@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {TaskForm} from '@components/TaskForm/TaskForm'
+import {TaskForm} from '@modules/tasks/components/TaskForm'
 import {TaskList} from '@modules/tasks/components/TaskList'
 import size from 'lodash/fp/size'
 import filter from 'lodash/fp/filter'
