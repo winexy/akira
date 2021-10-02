@@ -72,7 +72,9 @@ const PreferencesView = lazy(
 )
 const NoteView = lazy(() => import('@views/NoteView'))
 
-const LoadingView: React.FC = () => <MainView>loading...</MainView>
+const LoadingView: React.FC = () => (
+  <MainView className="p-4">loading...</MainView>
+)
 
 function App() {
   const {isLoading, isAuthenticated} = useFirebaseAuth()
