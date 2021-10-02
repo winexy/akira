@@ -19,7 +19,7 @@ import {
 import {closeMenu, openMenu, $isMenuOpen} from '@store/menu'
 import {useFirebaseAuth} from '@/firebase/Provider'
 import {config} from '@config/app'
-import {Tag, WIP} from '@components/Tag/Tag'
+import {Tag} from '@modules/tags/components/Tag'
 import {useStore} from 'effector-react'
 import {Link, useHistory} from 'react-router-dom'
 import isNull from 'lodash/fp/isNull'
