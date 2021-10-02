@@ -12,7 +12,7 @@ import {
   useRemoveTaskTagMutation
 } from '@modules/tasks/hooks'
 import {ApiTask} from '@modules/tasks/types.d'
-import {Button} from '@components/Button'
+import {Button} from '@shared/ui/button'
 import {useContentLoaderColor} from '@/config/content-loader'
 import {TaskTag} from './TaskTag'
 import {useTagsQuery} from '../hooks/index'

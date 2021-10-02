@@ -16,7 +16,7 @@ import {
 } from 'body-scroll-lock'
 import './BottomSheet.css'
 import {ExclamationCircleIcon} from '@heroicons/react/solid'
-import {Button} from '@components/Button'
+import {Button} from '@shared/ui/button'
 import find from 'lodash/fp/find'
 import isNull from 'lodash/fp/isNull'
 

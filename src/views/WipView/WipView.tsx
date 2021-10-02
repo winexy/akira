@@ -2,7 +2,7 @@ import React from 'react'
 import {ShieldExclamationIcon} from '@heroicons/react/solid'
 import {MainView} from '@views/MainView'
 import {useHistory} from 'react-router'
-import {Button} from '@components/Button'
+import {Button} from '@shared/ui/button'
 
 const WipView: React.FC = () => {
   const history = useHistory()

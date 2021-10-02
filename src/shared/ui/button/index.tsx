@@ -1,6 +1,6 @@
 import React from 'react'
 import clsx from 'clsx'
-import {createMatcher} from '../ui/utils'
+import {createMatcher} from '../../../components/ui/utils'
 
 type Props = React.DetailedHTMLProps<
   React.ButtonHTMLAttributes<HTMLButtonElement>,

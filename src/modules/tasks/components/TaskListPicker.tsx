@@ -6,7 +6,7 @@ import {Spin} from '@components/Spin'
 import clsx from 'clsx'
 import {CheckIcon, ChevronRightIcon, InboxIcon} from '@heroicons/react/solid'
 import {Link} from 'react-router-dom'
-import {Button} from '@components/Button'
+import {Button} from '@shared/ui/button'
 import isEmpty from 'lodash/fp/isEmpty'
 import get from 'lodash/fp/get'
 

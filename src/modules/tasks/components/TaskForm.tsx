@@ -17,7 +17,7 @@ import {
 } from '@heroicons/react/solid'
 import clsx from 'clsx'
 import {useTagsQuery} from '@modules/tags/hooks/index'
-import {Button} from '@components/Button'
+import {Button} from '@shared/ui/button'
 import {TaskTag} from '@modules/tags/types.d'
 import {TagsGrid} from '@modules/tags/components/TagsGrid'
 import {TaskList} from '@modules/lists/types.d'
