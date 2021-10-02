@@ -1,5 +1,5 @@
 import React, {ReactNode} from 'react'
-import {Task} from '@/components/Task/Task'
+import {Task} from '@modules/tasks/components/Task'
 import {ApiTask} from '@modules/tasks/types.d'
 import ContentLoader from 'react-content-loader'
 import isEmpty from 'lodash/fp/isEmpty'
