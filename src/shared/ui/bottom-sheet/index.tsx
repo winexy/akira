@@ -8,15 +8,15 @@ import {
   hideBottomSheet,
   $activeBottomSheet,
   $bottomSheets
-} from '@store/bottom-sheet'
+} from '@shared/ui/bottom-sheet/model'
+import {Button} from '@shared/ui/button'
 import {
   disableBodyScroll,
   enableBodyScroll,
   clearAllBodyScrollLocks
 } from 'body-scroll-lock'
-import './BottomSheet.css'
+import './index.css'
 import {ExclamationCircleIcon} from '@heroicons/react/solid'
-import {Button} from '@shared/ui/button'
 import find from 'lodash/fp/find'
 import isNull from 'lodash/fp/isNull'
 

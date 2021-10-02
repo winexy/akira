@@ -8,7 +8,8 @@ import {CalendarIcon, PlusIcon, ClockIcon} from '@heroicons/react/outline'
 import ContentLoader from 'react-content-loader'
 import {useMutation, useQueryClient} from 'react-query'
 import isNil from 'lodash/fp/isNil'
-import {BottomSheet} from '@/components/BottomSheet/BottomSheet'
+import {showBottomSheet} from '@shared/ui/bottom-sheet/model'
+import {BottomSheet} from '@shared/ui/bottom-sheet'
 import {Button} from '@shared/ui/button'
 import {
   ChecklistManager,
@@ -17,7 +18,6 @@ import {
   TaskActionToast,
   TextArea
 } from '@modules/tasks/components'
-import {showBottomSheet} from '@store/bottom-sheet'
 import {TaskId} from '@modules/tasks/types.d'
 import {TagsManager, TaskTag} from '@modules/tags/components'
 import {usePatchTaskMutation, useTaskQuery} from '@modules/tasks/hooks'
