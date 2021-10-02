@@ -32,11 +32,14 @@ import {CalendarIcon} from '@heroicons/react/outline'
 import {CreateTaskPayload} from '@modules/tasks/types.d'
 import isTomorrow from 'date-fns/isTomorrow'
 import isToday from 'date-fns/isToday'
-import {Tag} from '../Tag/Tag'
-import {useListsQuery} from '../../modules/lists/hooks/index'
-import {BottomSheet} from '../BottomSheet/BottomSheet'
-import {showBottomSheet, hideBottomSheet} from '../../store/bottom-sheet/index'
-import {DatePicker, DatePickerSheet} from '../DatePicker'
+import {Tag} from '../../../components/Tag/Tag'
+import {useListsQuery} from '../../lists/hooks/index'
+import {BottomSheet} from '../../../components/BottomSheet/BottomSheet'
+import {
+  showBottomSheet,
+  hideBottomSheet
+} from '../../../store/bottom-sheet/index'
+import {DatePicker, DatePickerSheet} from '../../../components/DatePicker'
 
 type TaskFormProps = {
   onSubmit(payload: CreateTaskPayload): void
