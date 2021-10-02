@@ -1,6 +1,6 @@
 import React from 'react'
 import {MainView} from '@/views/MainView'
-import {Tasks} from '@components/Tasks'
+import {TaskList} from '@modules/tasks/components/TaskList'
 import {useTasksQuery} from '@modules/tasks/hooks'
 import {TaskForm} from '@components/TaskForm/TaskForm'
 import {akira} from '@lib/akira'
@@ -21,7 +21,6 @@ import {useTagsQuery} from '@modules/tags/hooks'
 import {TaskListOperations} from '@modules/tasks/components/TaskListOperations'
 import {TaskQuery} from '@modules/tasks/config'
 import {SearchIcon} from '@heroicons/react/solid'
-import {CreateTaskPayload} from '@modules/tasks/types.d'
 
 export const TasksView: React.FC = () => {
   const {data: tasks = [], isLoading} = useTasksQuery()
@@ -53,7 +52,7 @@ export const TasksView: React.FC = () => {
         </Link>
       </div>
       <section className="mt-4 pb-4 px-4">
-        <Tasks isPending={isLoading} tasks={sorted} />
+        <TaskList isPending={isLoading} tasks={sorted} />
       </section>
       <FiltersBottomSheet
         canReset={size(tasks) !== size(sorted)}

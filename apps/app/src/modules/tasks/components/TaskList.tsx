@@ -12,8 +12,6 @@ import {
   useRemoveTaskMutation
 } from '@modules/tasks/hooks'
 import clsx from 'clsx'
-import {useStore} from 'effector-react'
-import {$isDarkMode} from '@/modules/preferences/darkmode'
 import {useContentLoaderColor} from '@/config/content-loader'
 
 type Props = {
@@ -23,7 +21,7 @@ type Props = {
   className?: string
 }
 
-export const Tasks: React.FC<Props> = ({
+export const TaskList: React.FC<Props> = ({
   isPending,
   tasks,
   noTasksSlot,
