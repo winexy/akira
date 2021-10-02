@@ -1,4 +1,4 @@
-import {app} from '../app'
+import {app} from '@store/app'
 
 export const openActionSheet = app.createEvent<string>()
 export const closeActionSheet = app.createEvent()
