@@ -24,6 +24,7 @@
       "@components/*": ["./src/components/*"],
       "@hooks/*": ["./src/hooks/*"],
       "@modules/*": ["./src/modules/*"],
+      "@shared/*": ["./src/shared"],
       "@views/*": ["./src/views/*"],
       "@store/*": ["./src/store/*"],
       "@lib/*": ["./src/lib/*"],

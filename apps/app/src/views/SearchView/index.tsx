@@ -9,7 +9,7 @@ import {showBottomSheet} from '@store/bottom-sheet'
 import {DatePicker} from '@components/DatePicker'
 import {BottomSheet} from '@components/BottomSheet/BottomSheet'
 import format from 'date-fns/format'
-import {Button} from '@components/Button'
+import {Button} from '@shared/ui/button'
 import {MainView} from '../MainView'
 
 const search = debounce((searchText: string) => {

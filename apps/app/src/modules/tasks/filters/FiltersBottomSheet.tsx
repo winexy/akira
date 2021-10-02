@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button} from '@components/Button'
+import {Button} from '@shared/ui/button'
 import {RefreshIcon, XIcon} from '@heroicons/react/solid'
 import {Tag} from '@modules/tags/components/Tag'
 import {Checkbox} from '@components/Checkbox/Checkbox'

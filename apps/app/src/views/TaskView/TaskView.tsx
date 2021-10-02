@@ -9,7 +9,7 @@ import ContentLoader from 'react-content-loader'
 import {useMutation, useQueryClient} from 'react-query'
 import isNil from 'lodash/fp/isNil'
 import {BottomSheet} from '@/components/BottomSheet/BottomSheet'
-import {Button} from '@components/Button'
+import {Button} from '@shared/ui/button'
 import {
   ChecklistManager,
   MyDayToggle,
