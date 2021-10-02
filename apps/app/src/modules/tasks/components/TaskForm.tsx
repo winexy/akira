@@ -17,6 +17,7 @@ import {
 } from '@heroicons/react/solid'
 import clsx from 'clsx'
 import {useTagsQuery} from '@modules/tags/hooks/index'
+import {BottomSheet} from '@shared/ui/bottom-sheet'
 import {Button} from '@shared/ui/button'
 import {TaskTag} from '@modules/tags/types.d'
 import {TagsGrid} from '@modules/tags/components/TagsGrid'
@@ -33,12 +34,8 @@ import {CreateTaskPayload} from '@modules/tasks/types.d'
 import isTomorrow from 'date-fns/isTomorrow'
 import isToday from 'date-fns/isToday'
 import {Tag} from '@modules/tags/components/Tag'
+import {showBottomSheet, hideBottomSheet} from '@shared/ui/bottom-sheet/model'
 import {useListsQuery} from '../../lists/hooks/index'
-import {BottomSheet} from '../../../components/BottomSheet/BottomSheet'
-import {
-  showBottomSheet,
-  hideBottomSheet
-} from '../../../store/bottom-sheet/index'
 import {DatePicker, DatePickerSheet} from '../../../components/DatePicker'
 
 type TaskFormProps = {

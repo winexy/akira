@@ -1,11 +1,11 @@
 import React from 'react'
 import ReactDatePicker from 'react-datepicker'
-import {BottomSheet} from '@components/BottomSheet/BottomSheet'
 import ChevronLeftIcon from '@heroicons/react/solid/ChevronLeftIcon'
 import format from 'date-fns/format'
 import ChevronRightIcon from '@heroicons/react/solid/ChevronRightIcon'
+import {hideBottomSheet} from '@shared/ui/bottom-sheet/model'
+import {BottomSheet} from '@shared/ui/bottom-sheet'
 import {Button} from '@shared/ui/button'
-import {hideBottomSheet} from '@store/bottom-sheet'
 import './DatePicker.css'
 import clsx from 'clsx'
 
