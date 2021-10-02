@@ -1,6 +1,6 @@
 import React from 'react'
 import {render} from '@testing-library/react'
-import {Checkbox} from './Checkbox'
+import {Checkbox} from '.'
 
 test('Checkbox', () => {
   render(<Checkbox />)
