@@ -8,9 +8,9 @@ import './index.css'
 import {akira} from '@lib/akira'
 import {FirebaseAuthProvider} from '@/firebase'
 import App from './App'
-import {HotkeyProvider} from './modules/hotkeys/HotKeyContext'
-import {TaskQuery} from './modules/tasks/config/index'
-import {initAppThemeFx} from './modules/preferences/darkmode/index'
+import {HotkeyProvider} from '../modules/hotkeys/HotKeyContext'
+import {TaskQuery} from '../modules/tasks/config/index'
+import {initAppThemeFx} from '../modules/preferences/darkmode/index'
 
 enableMapSet()
 
