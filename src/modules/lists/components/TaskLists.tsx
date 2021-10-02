@@ -9,7 +9,7 @@ import {akira} from '@lib/akira'
 import {closeMenu} from '@store/menu'
 import {ActionSheet} from '@shared/ui/action-sheet'
 import {openActionSheet, closeActionSheet} from '@shared/ui/action-sheet/model'
-import {Spin} from '@components/Spin'
+import {Spin} from '@shared/ui/spin'
 import {useListsQuery} from '../hooks/index'
 import {TaskList} from '../types.d'
 
