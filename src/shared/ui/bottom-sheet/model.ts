@@ -1,15 +1,16 @@
-import {createEvent, createStore} from 'effector'
 import last from 'lodash/fp/last'
+import {app} from '@store/app'
 
 type Sheet = {
   index: number
   name: string
 }
 
-export const showBottomSheet = createEvent<string>()
-export const hideBottomSheet = createEvent<string | undefined>()
+export const showBottomSheet = app.event<string>()
+export const hideBottomSheet = app.event<string | undefined>()
 
-export const $bottomSheets = createStore<Sheet[]>([])
+export const $bottomSheets = app
+  .store<Sheet[]>([])
   .on(showBottomSheet, (sheets, name) => {
     const sheet = {
       index: sheets.length + 1,
