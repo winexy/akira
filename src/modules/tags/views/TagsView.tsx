@@ -9,7 +9,7 @@ import isEmpty from 'lodash/fp/isEmpty'
 import {CreateTagForm, TaskTag} from '../components'
 import {useTagsQuery} from '../hooks/index'
 
-export const TagsView: React.FC = () => {
+const TagsView: React.FC = () => {
   const queryClient = useQueryClient()
   const {data: tags = []} = useTagsQuery()
   const removeTagMutation = useMutation(akira.tags.remove, {
@@ -57,3 +57,5 @@ export const TagsView: React.FC = () => {
     </MainView>
   )
 }
+
+export default TagsView

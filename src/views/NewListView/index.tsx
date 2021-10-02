@@ -4,7 +4,7 @@ import {Redirect} from 'react-router'
 import {akira} from '@lib/akira'
 import {MainView} from '../MainView'
 
-export const NewListView: React.FC = () => {
+const NewListView: React.FC = () => {
   const [title, setTitle] = useState('Untitled list')
   const inputRef = useRef<HTMLInputElement | null>(null)
   const queryClient = useQueryClient()
@@ -58,3 +58,5 @@ export const NewListView: React.FC = () => {
     </MainView>
   )
 }
+
+export default NewListView

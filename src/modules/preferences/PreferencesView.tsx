@@ -56,7 +56,7 @@ const Toggle: React.FC<TogglePropsT> = ({
   )
 }
 
-export const PreferencesView: React.FC = () => {
+const PreferencesView: React.FC = () => {
   const isDarkMode = useStore($isDarkMode)
 
   return (
@@ -80,3 +80,5 @@ export const PreferencesView: React.FC = () => {
     </MainView>
   )
 }
+
+export default PreferencesView
