@@ -17,7 +17,6 @@ import {
   DocumentTextIcon
 } from '@heroicons/react/solid'
 import {closeMenu, openMenu, $isMenuOpen} from '@store/menu'
-import {useFirebaseAuth} from '@/firebase/Provider'
 import {config} from '@config/app'
 import {Tag} from '@modules/tags/components/Tag'
 import {useStore} from 'effector-react'
@@ -35,6 +34,7 @@ import {
 import {useHotkey} from '@modules/hotkeys/HotKeyContext'
 import {HotKey} from '@modules/hotkeys/HotKey'
 import {TaskQuery} from '@modules/tasks/config'
+import {useFirebaseAuth} from '@shared/lib/firebase'
 import './index.css'
 
 type MenuItemProps = {

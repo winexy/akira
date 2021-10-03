@@ -1,5 +1,5 @@
-import {auth} from '@/firebase/firebase'
 import axios, {AxiosError} from 'axios'
+import {auth} from '@shared/lib/firebase'
 import {config as appConfig} from '@config/app'
 import identity from 'lodash/fp/identity'
 import replace from 'lodash/fp/replace'
