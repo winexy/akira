@@ -1,6 +1,6 @@
 import React, {createContext, useContext, useEffect, useState} from 'react'
 import noop from 'lodash/fp/noop'
-import {firebase, auth, GoogleProvider} from './firebase'
+import {auth, GoogleProvider, User} from './auth'
 
 type AuthFunctionsT = {
   login(): void
@@ -8,7 +8,7 @@ type AuthFunctionsT = {
 }
 
 type AuthorizedT = {
-  user: firebase.User
+  user: User
   isAuthenticated: true
 }
 

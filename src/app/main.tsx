@@ -4,13 +4,13 @@ import {enableMapSet} from 'immer'
 import * as Sentry from '@sentry/react'
 import {Integrations} from '@sentry/tracing'
 import {QueryClient, QueryClientProvider} from 'react-query'
-import './index.css'
 import {akira} from '@lib/akira'
-import {FirebaseAuthProvider} from '@/firebase'
+import {FirebaseAuthProvider} from '@shared/lib/firebase'
+import {HotkeyProvider} from '@modules/hotkeys/HotKeyContext'
+import {TaskQuery} from '@modules/tasks/config/index'
+import {initAppThemeFx} from '@modules/preferences/darkmode/index'
+import './index.css'
 import App from './App'
-import {HotkeyProvider} from '../modules/hotkeys/HotKeyContext'
-import {TaskQuery} from '../modules/tasks/config/index'
-import {initAppThemeFx} from '../modules/preferences/darkmode/index'
 
 enableMapSet()
 

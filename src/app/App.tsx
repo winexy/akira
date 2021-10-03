@@ -16,7 +16,7 @@ import {Menu} from '@shared/ui/menu'
 import {AkiraLoader} from '@shared/ui/akira-spinner'
 import {Button} from '@shared/ui/button'
 import {PageView} from '@shared/ui/page-view'
-import {useFirebaseAuth} from '@/firebase/Provider'
+import {useFirebaseAuth} from '@shared/lib/firebase'
 import {NotificationManager} from '@modules/notifications/NotificationManager'
 
 const dndConfig = {
