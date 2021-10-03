@@ -40,7 +40,7 @@ import {Portal} from '@shared/components/portal'
 import clsx from 'clsx'
 import {TaskQuery} from '@modules/tasks/config'
 import {useContentLoaderColor} from '@/config/content-loader'
-import {DatePickerSheet} from '@components/DatePicker'
+import {DatePickerSheet} from '@shared/components/datepicker-sheet'
 import {exhaustiveCheck} from '../../utils/index'
 
 type TaskScheduleProps = {
