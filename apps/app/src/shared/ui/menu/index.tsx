@@ -17,7 +17,7 @@ import {
   DocumentTextIcon
 } from '@heroicons/react/solid'
 import {closeMenu, openMenu, $isMenuOpen} from '@store/menu'
-import {config} from '@config/app'
+import {config} from '@shared/config'
 import {Tag} from '@modules/tags/components/Tag'
 import {useStore} from 'effector-react'
 import {Link, useHistory} from 'react-router-dom'
