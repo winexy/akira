@@ -1,5 +1,5 @@
 import React from 'react'
-import {MainView} from '@views/MainView'
+import {PageView} from '@shared/ui/page-view'
 import {useMutation, useQueryClient} from 'react-query'
 import {akira} from '@/lib/akira'
 import {XIcon} from '@heroicons/react/solid'
@@ -24,7 +24,7 @@ const TagsView: React.FC = () => {
     removeTagMutation.isLoading && removeTagMutation.variables === id
 
   return (
-    <MainView withBackNavigation>
+    <PageView withBackNavigation>
       <h2 className="px-4 font-bold text-2xl">Add new tag</h2>
       <CreateTagForm className="p-4" />
       {!isEmpty(tags) && (
@@ -54,7 +54,7 @@ const TagsView: React.FC = () => {
           </ul>
         </>
       )}
-    </MainView>
+    </PageView>
   )
 }
 

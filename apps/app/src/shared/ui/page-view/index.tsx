@@ -1,5 +1,5 @@
 import React from 'react'
-import clsx, {ClassValue} from 'clsx'
+import clsx from 'clsx'
 import {Header} from '@components/Header/Header'
 import isUndefined from 'lodash/fp/isUndefined'
 import {useHistory} from 'react-router'
@@ -11,7 +11,7 @@ type ViewProps = {
   withBackNavigation?: boolean
 }
 
-export const MainView: React.FC<ViewProps> = ({
+export const PageView: React.FC<ViewProps> = ({
   children,
   className,
   header,

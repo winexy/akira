@@ -17,7 +17,7 @@ import {Button} from '@shared/ui/button'
 import {useFirebaseAuth} from '@/firebase/Provider'
 import {AkiraLoader} from '@components/AkiraLoader'
 import {NotificationManager} from '@modules/notifications/NotificationManager'
-import {MainView} from '@views/MainView/index'
+import {PageView} from '@shared/ui/page-view'
 
 const dndConfig = {
   enableMouseEvents: true
@@ -73,7 +73,7 @@ const PreferencesView = lazy(
 const NoteView = lazy(() => import('@views/NoteView'))
 
 const LoadingView: React.FC = () => (
-  <MainView className="p-4">loading...</MainView>
+  <PageView className="p-4">loading...</PageView>
 )
 
 function App() {

@@ -1,5 +1,5 @@
 import React from 'react'
-import {MainView} from '@/views/MainView'
+import {PageView} from '@shared/ui/page-view'
 import {TaskList} from '@modules/tasks/components/TaskList'
 import {useTasksQuery} from '@modules/tasks/hooks'
 import {TaskForm} from '@modules/tasks/components/TaskForm'
@@ -39,7 +39,7 @@ const TasksView: React.FC = () => {
   const sorted = sort(filterTasks(tasks, filtersState))
 
   return (
-    <MainView>
+    <PageView>
       <TaskForm
         ref={addTaskControl.formRef}
         onSubmit={createTaskMutation.mutate}
@@ -70,7 +70,7 @@ const TasksView: React.FC = () => {
           <AddTaskButton onClick={addTaskControl.onAddIntent} />
         </div>
       )}
-    </MainView>
+    </PageView>
   )
 }
 

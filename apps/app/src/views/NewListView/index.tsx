@@ -2,7 +2,7 @@ import React, {useEffect, useLayoutEffect, useRef, useState} from 'react'
 import {useMutation, useQueryClient} from 'react-query'
 import {Redirect} from 'react-router'
 import {akira} from '@lib/akira'
-import {MainView} from '../MainView'
+import {PageView} from '@shared/ui/page-view'
 
 const NewListView: React.FC = () => {
   const [title, setTitle] = useState('Untitled list')
@@ -33,7 +33,7 @@ const NewListView: React.FC = () => {
   }
 
   return (
-    <MainView>
+    <PageView>
       {list ? <Redirect to={`/lists/${list.id}`} /> : null}
       <div className="">
         <input
@@ -55,7 +55,7 @@ const NewListView: React.FC = () => {
           onBlur={onInputBlur}
         />
       </div>
-    </MainView>
+    </PageView>
   )
 }
 

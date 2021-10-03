@@ -1,6 +1,6 @@
 import React from 'react'
 import {Route, Switch, useHistory, useRouteMatch} from 'react-router'
-import {MainView} from '@/views/MainView'
+import {PageView} from '@shared/ui/page-view'
 import {DatePicker} from '@shared/ui/datepicker'
 import format from 'date-fns/format'
 import {api} from '@lib/api'
@@ -67,7 +67,7 @@ function ReportView() {
   const {data: report, isLoading, isError, error} = useReportQuery(date)
 
   return (
-    <MainView className="px-4" withBackNavigation>
+    <PageView className="px-4" withBackNavigation>
       <h1 className="flex items-center font-bold text-3xl">
         Report
         <span className="ml-auto">{date.replaceAll('-', '/')}</span>
@@ -123,7 +123,7 @@ function ReportView() {
           )}
         </Match.Case>
       </Match>
-    </MainView>
+    </PageView>
   )
 }
 
@@ -140,14 +140,14 @@ const ReportsView: React.FC = () => {
         <ReportView />
       </Route>
       <Route exact>
-        <MainView className="px-4">
+        <PageView className="px-4">
           <h1 className="font-bold text-3xl">Select day</h1>
           <DatePicker
             maxDate={new Date()}
             className="mt-6"
             onChange={onDateSelect}
           />
-        </MainView>
+        </PageView>
       </Route>
     </Switch>
   )

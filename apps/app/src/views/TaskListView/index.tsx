@@ -5,7 +5,7 @@ import isUndefined from 'lodash/fp/isUndefined'
 import {api} from '@lib/api'
 import {ApiTask} from '@modules/tasks/types.d'
 import {TaskList} from '@/modules/tasks/components/TaskList'
-import {MainView} from '../MainView'
+import {PageView} from '@shared/ui/page-view'
 
 type ApiList = {
   id: number
@@ -24,26 +24,26 @@ const TaskListView: React.FC = () => {
 
   if (isLoading) {
     return (
-      <MainView>
+      <PageView>
         <h1 className="px-4 font-semibold text-2xl">...</h1>
         <div className="px-4">
           <TaskList className="mt-4" isPending={isLoading} tasks={[]} />
         </div>
-      </MainView>
+      </PageView>
     )
   }
 
   if (isUndefined(list)) {
-    return <MainView>Something went wrong</MainView>
+    return <PageView>Something went wrong</PageView>
   }
 
   return (
-    <MainView>
+    <PageView>
       <h1 className="px-4 font-semibold text-2xl">{list.title}</h1>
       <section className="px-4">
         <TaskList className="mt-4" isPending={isLoading} tasks={list.tasks} />
       </section>
-    </MainView>
+    </PageView>
   )
 }
 
