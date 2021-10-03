@@ -15,7 +15,7 @@ type ApiList = {
   tasks: ApiTask[]
 }
 
-const TaskListView: React.FC = () => {
+const TaskListPage: React.FC = () => {
   const {listId} = useParams<{listId: string}>()
 
   const {data: list, isLoading} = useQuery(['list', listId], () =>
@@ -47,4 +47,4 @@ const TaskListView: React.FC = () => {
   )
 }
 
-export default TaskListView
+export default TaskListPage

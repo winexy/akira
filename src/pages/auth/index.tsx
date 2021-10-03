@@ -4,7 +4,7 @@ import {useFirebaseAuth} from '@shared/lib/firebase'
 import {Akira} from '@shared/ui/akira'
 import {Button} from '@shared/ui/button'
 
-export const AuthView: React.FC = () => {
+export const AuthPage: React.FC = () => {
   const {login} = useFirebaseAuth()
 
   return (

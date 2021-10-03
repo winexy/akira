@@ -10,8 +10,8 @@ import {
   useHistory
 } from 'react-router-dom'
 import {HomeIcon, RefreshIcon} from '@heroicons/react/solid'
-import {TodayView} from '@views/TodayView'
-import {AuthView} from '@views/AuthView/AuthView'
+import {DashboardPage} from '@pages/dashboard'
+import {AuthPage} from '@pages/auth'
 import {Menu} from '@shared/ui/menu'
 import {AkiraLoader} from '@shared/ui/akira-spinner'
 import {Button} from '@shared/ui/button'
@@ -58,19 +58,17 @@ function Fallback({error, resetErrorBoundary}: FallbackProps) {
   )
 }
 
-const TaskView = lazy(() => import('@views/TaskView/TaskView'))
-const TasksView = lazy(() => import('@views/TasksView'))
-const TagsView = lazy(() => import('@modules/tags/views/TagsView'))
-const NewListView = lazy(() => import('@views/NewListView'))
-const WipView = lazy(() => import('@views/WipView/WipView'))
-const ListsView = lazy(() => import('@views/ListsView'))
-const TaskListView = lazy(() => import('@views/TaskListView'))
-const SearchView = lazy(() => import('@views/SearchView'))
-const ReportsView = lazy(() => import('@modules/reports/ReportsView'))
-const PreferencesView = lazy(
-  () => import('@modules/preferences/PreferencesView')
-)
-const NoteView = lazy(() => import('@views/NoteView'))
+const TaskPage = lazy(() => import('@pages/task'))
+const TasksPage = lazy(() => import('@pages/tasks'))
+const TagsPage = lazy(() => import('@pages/tags'))
+const NewListPage = lazy(() => import('@pages/new-list'))
+const WipPage = lazy(() => import('@pages/wip'))
+const ListsPage = lazy(() => import('@pages/lists'))
+const TaskListPage = lazy(() => import('@pages/task-list'))
+const SearchPage = lazy(() => import('@pages/search'))
+const ReportsPage = lazy(() => import('@pages/reports'))
+const PreferencesPage = lazy(() => import('@pages/preferences'))
+const NotePage = lazy(() => import('@pages/note'))
 
 const LoadingView: React.FC = () => (
   <PageView className="p-4">loading...</PageView>
@@ -89,7 +87,7 @@ function App() {
   }
 
   if (!isAuthenticated) {
-    return <AuthView />
+    return <AuthPage />
   }
 
   return (
@@ -99,59 +97,59 @@ function App() {
           <Menu>
             <Switch>
               <Route path="/" exact>
-                <TodayView />
+                <DashboardPage />
               </Route>
               <Route path="/tasks" exact>
                 <Suspense fallback={<LoadingView />}>
-                  <TasksView />
+                  <TasksPage />
                 </Suspense>
               </Route>
               <Route path="/tasks/:taskId">
                 <Suspense fallback={<LoadingView />}>
-                  <TaskView />
+                  <TaskPage />
                 </Suspense>
               </Route>
               <Route path="/search">
                 <Suspense fallback={<LoadingView />}>
-                  <SearchView />
+                  <SearchPage />
                 </Suspense>
               </Route>
               <Route path="/wip">
-                <WipView />
+                <WipPage />
               </Route>
               <Route path="/tags">
                 <Suspense fallback={<LoadingView />}>
-                  <TagsView />
+                  <TagsPage />
                 </Suspense>
               </Route>
               <Route path="/lists/new">
                 <Suspense fallback={<LoadingView />}>
-                  <NewListView />
+                  <NewListPage />
                 </Suspense>
               </Route>
               <Route path="/lists/:listId">
                 <Suspense fallback={<LoadingView />}>
-                  <TaskListView />
+                  <TaskListPage />
                 </Suspense>
               </Route>
               <Route path="/lists">
                 <Suspense fallback={<LoadingView />}>
-                  <ListsView />
+                  <ListsPage />
                 </Suspense>
               </Route>
               <Route path="/note">
                 <Suspense fallback={<LoadingView />}>
-                  <NoteView />
+                  <NotePage />
                 </Suspense>
               </Route>
               <Route path="/reports">
                 <Suspense fallback={<LoadingView />}>
-                  <ReportsView />
+                  <ReportsPage />
                 </Suspense>
               </Route>
               <Route path="/preferences">
                 <Suspense fallback={<LoadingView />}>
-                  <PreferencesView />
+                  <PreferencesPage />
                 </Suspense>
               </Route>
             </Switch>

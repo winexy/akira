@@ -15,7 +15,7 @@ import {Link} from 'react-router-dom'
 import ContentLoader from 'react-content-loader'
 import isEmpty from 'lodash/fp/isEmpty'
 import {useShimmerColors} from '@shared/ui/shimmer'
-import {ApiTask} from '../tasks/types.d'
+import {ApiTask} from '@modules/tasks/types.d'
 
 type Report = {
   date: string

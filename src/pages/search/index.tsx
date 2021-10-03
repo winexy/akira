@@ -26,7 +26,7 @@ const search = debounce((searchText: string) => {
     .then(res => res.data)
 }, 300)
 
-const SearchView: React.FC = () => {
+const SearchPage: React.FC = () => {
   const [searchText, setSearchText] = useState('')
   const searchQuery = useQuery(['search', searchText], () => {
     return search(searchText)
@@ -120,4 +120,4 @@ const SearchView: React.FC = () => {
   )
 }
 
-export default SearchView
+export default SearchPage

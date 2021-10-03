@@ -25,7 +25,7 @@
       "@hooks/*": ["./src/hooks/*"],
       "@modules/*": ["./src/modules/*"],
       "@shared/*": ["./src/shared/*"],
-      "@views/*": ["./src/views/*"],
+      "@pages/*": ["src/pages/*"],
       "@store/*": ["./src/store/*"],
       "@lib/*": ["./src/lib/*"],
       "@config/*": ["./src/config/*"]
