@@ -35,11 +35,12 @@ import {api} from '@lib/api'
 import {Match} from '@/components/Match'
 import isEqual from 'date-fns/isEqual'
 import isUndefined from 'lodash/fp/isUndefined'
-import {DatePickerSheet, DatePicker} from '@components/DatePicker'
+import {DatePicker} from '@shared/ui/datepicker'
 import {Portal} from '@shared/components/portal'
 import clsx from 'clsx'
 import {TaskQuery} from '@modules/tasks/config'
 import {useContentLoaderColor} from '@/config/content-loader'
+import {DatePickerSheet} from '@components/DatePicker'
 import {exhaustiveCheck} from '../../utils/index'
 
 type TaskScheduleProps = {

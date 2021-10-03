@@ -34,9 +34,10 @@ import {CreateTaskPayload} from '@modules/tasks/types.d'
 import isTomorrow from 'date-fns/isTomorrow'
 import isToday from 'date-fns/isToday'
 import {Tag} from '@modules/tags/components/Tag'
+import {DatePickerSheet} from '@components/DatePicker'
 import {showBottomSheet, hideBottomSheet} from '@shared/ui/bottom-sheet/model'
+import {DatePicker} from '@shared/ui/datepicker'
 import {useListsQuery} from '../../lists/hooks/index'
-import {DatePicker, DatePickerSheet} from '../../../components/DatePicker'
 
 type TaskFormProps = {
   onSubmit(payload: CreateTaskPayload): void

@@ -9,7 +9,8 @@ import {BottomSheet} from '@/shared/ui/bottom-sheet'
 import {TaskTag} from '@modules/tags/types.d'
 import {exhaustiveCheck} from '@/utils'
 import {TagsGrid} from '@modules/tags/components/TagsGrid'
-import {DatePicker, DatePickerSheet} from '@/components/DatePicker'
+import {DatePickerSheet} from '@components/DatePicker'
+import {DatePicker} from '@shared/ui/datepicker'
 import {FiltersState, FilterAction} from '.'
 
 type Props = {

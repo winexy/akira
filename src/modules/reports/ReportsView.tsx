@@ -1,7 +1,7 @@
 import React from 'react'
 import {Route, Switch, useHistory, useRouteMatch} from 'react-router'
 import {MainView} from '@/views/MainView'
-import {DatePicker} from '@/components/DatePicker'
+import {DatePicker} from '@shared/ui/datepicker'
 import format from 'date-fns/format'
 import {api} from '@lib/api'
 import {useQuery} from 'react-query'
