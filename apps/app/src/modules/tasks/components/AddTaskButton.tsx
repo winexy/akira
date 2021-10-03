@@ -2,7 +2,7 @@ import React, {useRef, useState} from 'react'
 import {useStore} from 'effector-react'
 import clsx from 'clsx'
 import {PlusIcon} from '@heroicons/react/solid'
-import {$isMenuOpen} from '@store/menu'
+import {$isMenuOpen} from '@shared/ui/menu'
 import {TaskFormRef} from '@modules/tasks/components/TaskForm'
 import isNull from 'lodash/fp/isNull'
 

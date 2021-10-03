@@ -16,7 +16,6 @@ import {
   SearchIcon,
   DocumentTextIcon
 } from '@heroicons/react/solid'
-import {closeMenu, openMenu, $isMenuOpen} from '@store/menu'
 import {config} from '@shared/config'
 import {Tag} from '@modules/tags/components/Tag'
 import {useStore} from 'effector-react'
@@ -35,6 +34,7 @@ import {useHotkey} from '@modules/hotkeys/HotKeyContext'
 import {HotKey} from '@modules/hotkeys/HotKey'
 import {TaskQuery} from '@modules/tasks/config'
 import {useFirebaseAuth} from '@shared/lib/firebase'
+import {closeMenu, openMenu, $isMenuOpen} from './model'
 import './index.css'
 
 type MenuItemProps = {
@@ -46,6 +46,8 @@ type ButtonProps = {
   onClick(): void
   Icon: SVGIconElement
 }
+
+export * from './model'
 
 export const MenuItem: React.FC<MenuItemProps> & {
   Button: React.FC<ButtonProps>
