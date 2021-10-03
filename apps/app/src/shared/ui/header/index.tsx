@@ -4,7 +4,7 @@ import {MenuIcon} from '@heroicons/react/solid'
 import isUndefined from 'lodash/fp/isUndefined'
 import {toggleMenu} from '@store/menu'
 import {Link} from 'react-router-dom'
-import {Akira} from './Akira'
+import {Akira} from '@shared/ui/akira'
 
 export const Header: React.FC = ({children}) => {
   const [isFloating, setIsFloating] = useState(false)

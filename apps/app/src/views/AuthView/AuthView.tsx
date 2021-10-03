@@ -1,7 +1,7 @@
 import React from 'react'
 import {LoginIcon} from '@heroicons/react/solid'
 import {useFirebaseAuth} from '@/firebase/index'
-import {Akira} from '@/components/Header/Akira'
+import {Akira} from '@shared/ui/akira'
 import {Button} from '@shared/ui/button'
 
 export const AuthView: React.FC = () => {
