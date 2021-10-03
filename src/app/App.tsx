@@ -13,11 +13,11 @@ import {HomeIcon, RefreshIcon} from '@heroicons/react/solid'
 import {TodayView} from '@views/TodayView'
 import {AuthView} from '@views/AuthView/AuthView'
 import {Menu} from '@shared/ui/menu'
+import {AkiraLoader} from '@shared/ui/akira-spinner'
 import {Button} from '@shared/ui/button'
-import {useFirebaseAuth} from '@/firebase/Provider'
-import {AkiraLoader} from '@components/AkiraLoader'
-import {NotificationManager} from '@modules/notifications/NotificationManager'
 import {PageView} from '@shared/ui/page-view'
+import {useFirebaseAuth} from '@/firebase/Provider'
+import {NotificationManager} from '@modules/notifications/NotificationManager'
 
 const dndConfig = {
   enableMouseEvents: true
