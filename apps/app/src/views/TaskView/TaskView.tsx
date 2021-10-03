@@ -30,7 +30,7 @@ import {
 import {Link} from 'react-router-dom'
 import isNull from 'lodash/fp/isNull'
 import {TaskListPicker} from '@modules/tasks/components/TaskListPicker'
-import {api} from '@lib/api'
+import {api} from '@shared/api'
 import {Match} from '@shared/ui/match'
 import isEqual from 'date-fns/isEqual'
 import isUndefined from 'lodash/fp/isUndefined'

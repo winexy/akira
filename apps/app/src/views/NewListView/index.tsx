@@ -1,7 +1,7 @@
 import React, {useEffect, useLayoutEffect, useRef, useState} from 'react'
 import {useMutation, useQueryClient} from 'react-query'
 import {Redirect} from 'react-router'
-import {akira} from '@lib/akira'
+import {akira} from '@shared/api/akira'
 import {PageView} from '@shared/ui/page-view'
 
 const NewListView: React.FC = () => {

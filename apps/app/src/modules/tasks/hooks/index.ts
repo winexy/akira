@@ -6,7 +6,7 @@ import isUndefined from 'lodash/fp/isUndefined'
 import isNull from 'lodash/fp/isNull'
 import reduce from 'lodash/reduce'
 import {useMutation, useQuery, useQueryClient, QueryClient} from 'react-query'
-import {akira} from '@lib/akira'
+import {akira} from '@shared/api/akira'
 import {
   TaskPatch,
   ApiTask,

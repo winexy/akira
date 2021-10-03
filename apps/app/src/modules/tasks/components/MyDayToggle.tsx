@@ -1,7 +1,7 @@
 import React from 'react'
 import {TaskId} from '@modules/tasks/types.d'
 import {useMutation, useQueryClient} from 'react-query'
-import {akira} from '@lib/akira'
+import {akira} from '@shared/api/akira'
 import {Spin} from '@shared/ui/spin'
 import {Button} from '@shared/ui/button'
 import {SunIcon} from '@heroicons/react/solid'

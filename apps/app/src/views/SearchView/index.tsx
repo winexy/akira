@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {useQuery} from 'react-query'
 import debounce from 'debounce-promise'
-import {api} from '@lib/api'
+import {api} from '@shared/api'
 import {TaskList} from '@modules/tasks/components/TaskList'
 import {AdjustmentsIcon, SearchIcon, XIcon} from '@heroicons/react/solid'
 import clsx from 'clsx'
