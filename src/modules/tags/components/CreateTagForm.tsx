@@ -2,7 +2,7 @@ import clsx, {ClassValue} from 'clsx'
 import React, {FormEventHandler, useState} from 'react'
 import {useMutation, useQueryClient} from 'react-query'
 import {Button} from '@shared/ui/button'
-import {akira} from '@lib/akira'
+import {akira} from '@shared/api/akira'
 import {Spin} from '@shared/ui/spin'
 import {TaskTag} from '@modules/tags/types.d'
 

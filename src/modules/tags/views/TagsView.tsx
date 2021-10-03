@@ -1,7 +1,7 @@
 import React from 'react'
 import {PageView} from '@shared/ui/page-view'
 import {useMutation, useQueryClient} from 'react-query'
-import {akira} from '@/lib/akira'
+import {akira} from '@shared/api/akira'
 import {XIcon} from '@heroicons/react/solid'
 import {IconButton} from '@shared/ui/icon-button'
 import {Spin} from '@shared/ui/spin'
