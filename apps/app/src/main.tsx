@@ -9,8 +9,8 @@ import {FirebaseAuthProvider} from '@shared/lib/firebase'
 import {HotkeyProvider} from '@modules/hotkeys/HotKeyContext'
 import {TaskQuery} from '@modules/tasks/config/index'
 import {initAppThemeFx} from '@modules/preferences/darkmode/index'
-import './index.css'
-import App from './App'
+import './app/index.css'
+import App from './app/App'
 
 enableMapSet()
 
