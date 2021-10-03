@@ -1,4 +1,4 @@
-import firebase from 'firebase'
+import firebase from 'firebase/app'
 import {config} from '@config/app'
 
 firebase.initializeApp(config.firebase)
