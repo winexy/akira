@@ -1,5 +1,5 @@
 import last from 'lodash/fp/last'
-import {app} from '@store/app'
+import {app} from '@shared/lib/app-domain'
 
 type Sheet = {
   index: number

@@ -1,4 +1,4 @@
-import {app} from '@store/app'
+import {app} from '@shared/lib/app-domain'
 import {forward} from 'effector'
 
 export const $isDarkMode = app.createStore(false, {
