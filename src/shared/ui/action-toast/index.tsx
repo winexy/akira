@@ -2,7 +2,7 @@ import clsx, {ClassValue} from 'clsx'
 import React, {useEffect, useRef, useState} from 'react'
 import {CSSTransition} from 'react-transition-group'
 import {Spin} from '@shared/ui/spin'
-import './ActionToast.css'
+import './index.css'
 
 type ActionToastButtonProps = NativeButtonProps & {
   className?: ClassValue
