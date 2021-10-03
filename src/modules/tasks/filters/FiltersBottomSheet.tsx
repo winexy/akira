@@ -9,7 +9,7 @@ import {BottomSheet} from '@/shared/ui/bottom-sheet'
 import {TaskTag} from '@modules/tags/types.d'
 import {exhaustiveCheck} from '@/utils'
 import {TagsGrid} from '@modules/tags/components/TagsGrid'
-import {DatePickerSheet} from '@shared/components/datepicker-sheet'
+import {DatePickerSheet} from '@/shared/ui/datepicker-sheet'
 import {DatePicker} from '@shared/ui/datepicker'
 import {FiltersState, FilterAction} from '.'
 
