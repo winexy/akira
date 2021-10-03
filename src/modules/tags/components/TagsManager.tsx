@@ -13,7 +13,7 @@ import {
 } from '@modules/tasks/hooks'
 import {ApiTask} from '@modules/tasks/types.d'
 import {Button} from '@shared/ui/button'
-import {useContentLoaderColor} from '@/config/content-loader'
+import {useShimmerColors} from '@shared/ui/shimmer'
 import {TaskTag} from './TaskTag'
 import {useTagsQuery} from '../hooks/index'
 
@@ -23,7 +23,7 @@ export const TagsManager: React.FC<{task: ApiTask}> = ({task}) => {
 
   const addTagMutation = useAddTaskTagMutation(task)
   const removeTaskTagMutation = useRemoveTaskTagMutation(task)
-  const {backgroundColor, foregroundColor} = useContentLoaderColor()
+  const {backgroundColor, foregroundColor} = useShimmerColors()
 
   return (
     <>

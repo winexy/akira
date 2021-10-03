@@ -1,7 +1,7 @@
-import {$isDarkMode} from '@/modules/preferences/darkmode'
 import {useStore} from 'effector-react'
+import {$isDarkMode} from '@modules/preferences/darkmode'
 
-export function useContentLoaderColor() {
+export function useShimmerColors() {
   const isDarkMode = useStore($isDarkMode)
 
   return {

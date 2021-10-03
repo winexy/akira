@@ -39,8 +39,8 @@ import {DatePicker} from '@shared/ui/datepicker'
 import {Portal} from '@shared/ui/portal'
 import clsx from 'clsx'
 import {TaskQuery} from '@modules/tasks/config'
-import {useContentLoaderColor} from '@/config/content-loader'
-import {DatePickerSheet} from '@/shared/ui/datepicker-sheet'
+import {useShimmerColors} from '@shared/ui/shimmer'
+import {DatePickerSheet} from '@shared/ui/datepicker-sheet'
 import {exhaustiveCheck} from '../../utils/index'
 
 type TaskScheduleProps = {
@@ -118,7 +118,7 @@ const TaskSchedule: React.FC<TaskScheduleProps> = ({
     }
   }
 
-  const {backgroundColor, foregroundColor} = useContentLoaderColor()
+  const {backgroundColor, foregroundColor} = useShimmerColors()
 
   const formattedDate = scheduledTaskDate
     ? format(parseISO(scheduledTaskDate), 'd.MM.yy')
@@ -176,7 +176,7 @@ const TaskView: React.FC = () => {
   const {data: task, isFetching} = useTaskQuery(taskId)
 
   const patchTaskMutation = usePatchTaskMutation(taskId)
-  const {backgroundColor, foregroundColor} = useContentLoaderColor()
+  const {backgroundColor, foregroundColor} = useShimmerColors()
 
   if (isNil(task)) {
     return (
