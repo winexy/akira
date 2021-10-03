@@ -7,7 +7,7 @@ import {useStore} from 'effector-react'
 import {CSSTransition} from 'react-transition-group'
 import clsx from 'clsx'
 import {createFocusTrap, FocusTrap} from 'focus-trap'
-import {Portal} from '@shared/components/portal'
+import {Portal} from '@shared/ui/portal'
 import './index.css'
 
 type Props = {

@@ -13,7 +13,7 @@ import {Checkbox} from '@shared/ui/checkbox'
 import {ActionSheet} from '@shared/ui/action-sheet'
 import {openActionSheet} from '@shared/ui/action-sheet/model'
 import {Spin} from '@shared/ui/spin'
-import {Swipeable} from '@shared/components/swipeable'
+import {Swipeable} from '@shared/ui/swipeable'
 
 const ItemType = 'list-item'
 
