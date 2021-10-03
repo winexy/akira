@@ -22,7 +22,6 @@ import {TaskId} from '@modules/tasks/types.d'
 import {TagsManager, TaskTag} from '@modules/tags/components'
 import {usePatchTaskMutation, useTaskQuery} from '@modules/tasks/hooks'
 import {Tag} from '@modules/tags/components/Tag'
-import {EditableHeading} from '@components/EditableHeading'
 import {
   DotsVerticalIcon,
   ViewListIcon,
@@ -35,6 +34,7 @@ import {api} from '@lib/api'
 import {Match} from '@/components/Match'
 import isEqual from 'date-fns/isEqual'
 import isUndefined from 'lodash/fp/isUndefined'
+import {EditableHeading} from '@shared/ui/editable-heading'
 import {DatePicker} from '@shared/ui/datepicker'
 import {Portal} from '@shared/components/portal'
 import clsx from 'clsx'
