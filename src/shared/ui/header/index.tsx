@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import clsx from 'clsx'
 import {MenuIcon} from '@heroicons/react/solid'
 import isUndefined from 'lodash/fp/isUndefined'
-import {toggleMenu} from '@store/menu'
+import {toggleMenu} from '@shared/ui/menu'
 import {Link} from 'react-router-dom'
 import {Akira} from '@shared/ui/akira'
 
