@@ -14,7 +14,7 @@ import {CheckIcon, ExternalLinkIcon, FireIcon} from '@heroicons/react/solid'
 import {Link} from 'react-router-dom'
 import ContentLoader from 'react-content-loader'
 import isEmpty from 'lodash/fp/isEmpty'
-import {useContentLoaderColor} from '@/config/content-loader'
+import {useShimmerColors} from '@shared/ui/shimmer'
 import {ApiTask} from '../tasks/types.d'
 
 type Report = {
@@ -41,7 +41,7 @@ function useReportQuery(date: string) {
 }
 
 const ReportLoader: React.FC = () => {
-  const {backgroundColor, foregroundColor} = useContentLoaderColor()
+  const {backgroundColor, foregroundColor} = useShimmerColors()
 
   return (
     <ContentLoader

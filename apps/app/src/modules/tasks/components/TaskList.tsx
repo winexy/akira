@@ -12,7 +12,7 @@ import {
   useRemoveTaskMutation
 } from '@modules/tasks/hooks'
 import clsx from 'clsx'
-import {useContentLoaderColor} from '@/config/content-loader'
+import {useShimmerColors} from '@shared/ui/shimmer'
 
 type Props = {
   isPending: boolean
@@ -30,7 +30,7 @@ export const TaskList: React.FC<Props> = ({
   const toggleTaskCompleteMutation = useToggleCompletedMutation()
   const toggleImportantMutation = useToggleImportantMutation()
   const removeTaskMutation = useRemoveTaskMutation()
-  const {backgroundColor, foregroundColor} = useContentLoaderColor()
+  const {backgroundColor, foregroundColor} = useShimmerColors()
 
   if (isPending) {
     const taskHeight = 56
