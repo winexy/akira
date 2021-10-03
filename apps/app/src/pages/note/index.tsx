@@ -397,7 +397,7 @@ const TextEditor: React.FC = () => {
   )
 }
 
-const NoteView: React.FC = () => {
+const NotePage: React.FC = () => {
   return (
     <PageView className="px-4">
       <TextEditorProvider>
@@ -407,4 +407,4 @@ const NoteView: React.FC = () => {
   )
 }
 
-export default NoteView
+export default NotePage

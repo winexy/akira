@@ -5,7 +5,7 @@ import {useStore} from 'effector-react'
 import {PageView} from '@shared/ui/page-view'
 import DarkThemePreview from '@/assets/images/dark-theme.jpg'
 import LightThemePreview from '@/assets/images/light-theme.jpg'
-import {$isDarkMode, toggleDarkMode} from './darkmode'
+import {$isDarkMode, toggleDarkMode} from '../../modules/preferences/darkmode'
 
 type TogglePropsT = {
   className?: string
@@ -56,7 +56,7 @@ const Toggle: React.FC<TogglePropsT> = ({
   )
 }
 
-const PreferencesView: React.FC = () => {
+const PreferencesPage: React.FC = () => {
   const isDarkMode = useStore($isDarkMode)
 
   return (
@@ -81,4 +81,4 @@ const PreferencesView: React.FC = () => {
   )
 }
 
-export default PreferencesView
+export default PreferencesPage

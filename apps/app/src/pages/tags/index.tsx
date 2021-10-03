@@ -6,10 +6,10 @@ import {XIcon} from '@heroicons/react/solid'
 import {IconButton} from '@shared/ui/icon-button'
 import {Spin} from '@shared/ui/spin'
 import isEmpty from 'lodash/fp/isEmpty'
-import {CreateTagForm, TaskTag} from '../components'
-import {useTagsQuery} from '../hooks/index'
+import {CreateTagForm, TaskTag} from '@modules/tags/components'
+import {useTagsQuery} from '@modules/tags/hooks'
 
-const TagsView: React.FC = () => {
+const TagsPage: React.FC = () => {
   const queryClient = useQueryClient()
   const {data: tags = []} = useTagsQuery()
   const removeTagMutation = useMutation(akira.tags.remove, {
@@ -58,4 +58,4 @@ const TagsView: React.FC = () => {
   )
 }
 
-export default TagsView
+export default TagsPage

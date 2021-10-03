@@ -2,7 +2,7 @@ import React from 'react'
 import {TaskLists} from '@modules/lists/components/TaskLists'
 import {PageView} from '@shared/ui/page-view'
 
-const ListsView: React.FC = () => {
+const ListsPage: React.FC = () => {
   return (
     <PageView>
       <div className="px-4 flex items-center">
@@ -13,4 +13,4 @@ const ListsView: React.FC = () => {
   )
 }
 
-export default ListsView
+export default ListsPage

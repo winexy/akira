@@ -4,7 +4,7 @@ import {PageView} from '@shared/ui/page-view'
 import {useHistory} from 'react-router'
 import {Button} from '@shared/ui/button'
 
-const WipView: React.FC = () => {
+const WipPage: React.FC = () => {
   const history = useHistory()
 
   return (
@@ -25,4 +25,4 @@ const WipView: React.FC = () => {
   )
 }
 
-export default WipView
+export default WipPage

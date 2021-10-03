@@ -156,7 +156,7 @@ const Today: React.FC = () => {
   )
 }
 
-export function TodayView() {
+export function DashboardPage() {
   const addTaskControl = useAddTaskControl()
   const queryClient = useQueryClient()
   const createTaskMutation = useMutation(
