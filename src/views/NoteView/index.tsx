@@ -20,7 +20,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import clsx from 'clsx'
 import {convertFromHTML, convertToHTML} from 'draft-convert'
-import {MainView} from '../MainView'
+import {PageView} from '@shared/ui/page-view'
 
 export enum InlineStyle {
   BOLD = 'BOLD',
@@ -399,11 +399,11 @@ const TextEditor: React.FC = () => {
 
 const NoteView: React.FC = () => {
   return (
-    <MainView className="px-4">
+    <PageView className="px-4">
       <TextEditorProvider>
         <TextEditor />
       </TextEditorProvider>
-    </MainView>
+    </PageView>
   )
 }
 

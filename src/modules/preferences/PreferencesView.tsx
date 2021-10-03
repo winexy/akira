@@ -1,8 +1,8 @@
 import React from 'react'
-import {MainView} from '@/views/MainView'
 import clsx from 'clsx'
 import noop from 'lodash/fp/noop'
 import {useStore} from 'effector-react'
+import {PageView} from '@shared/ui/page-view'
 import DarkThemePreview from '@/assets/images/dark-theme.jpg'
 import LightThemePreview from '@/assets/images/light-theme.jpg'
 import {$isDarkMode, toggleDarkMode} from './darkmode'
@@ -60,7 +60,7 @@ const PreferencesView: React.FC = () => {
   const isDarkMode = useStore($isDarkMode)
 
   return (
-    <MainView>
+    <PageView>
       <div className="mt-2 px-4 w-full flex justify-between">
         <span className="font-semibold text-lg ">Dark mode</span>
         <Toggle isChecked={isDarkMode} onChange={toggleDarkMode} />
@@ -77,7 +77,7 @@ const PreferencesView: React.FC = () => {
           alt="light theme preview"
         />
       </div>
-    </MainView>
+    </PageView>
   )
 }
 

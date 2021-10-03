@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {useParams} from 'react-router'
-import {MainView} from '@views/MainView'
+import {PageView} from '@shared/ui/page-view'
 import format from 'date-fns/format'
 import parseISO from 'date-fns/parseISO'
 import isEmpty from 'lodash/fp/isEmpty'
@@ -180,7 +180,7 @@ const TaskView: React.FC = () => {
 
   if (isNil(task)) {
     return (
-      <MainView className="p-4">
+      <PageView className="p-4">
         <ContentLoader
           speed={2}
           width={320}
@@ -194,14 +194,14 @@ const TaskView: React.FC = () => {
           <rect x="0" y="46" rx="4" ry="4" width="240" height="28" />
           <rect x="0" y="92" rx="4" ry="4" width="200" height="42" />
         </ContentLoader>
-      </MainView>
+      </PageView>
     )
   }
 
   const createdAt = format(parseISO(task.created_at), 'd LLL yyyy')
 
   return (
-    <MainView className="pb-32">
+    <PageView className="pb-32">
       <div className="px-4 space-x-2">
         <Tag variant={task.is_completed ? 'green' : 'gray'}>
           {task.is_completed ? '' : 'not '}completed
@@ -332,7 +332,7 @@ const TaskView: React.FC = () => {
       <BottomSheet name="lists" className="">
         <TaskListPicker taskId={task.id} activeListId={task.list_id} />
       </BottomSheet>
-    </MainView>
+    </PageView>
   )
 }
 

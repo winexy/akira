@@ -5,7 +5,7 @@ import size from 'lodash/fp/size'
 import filter from 'lodash/fp/filter'
 
 import format from 'date-fns/format'
-import {MainView} from '@views/MainView'
+import {PageView} from '@shared/ui/page-view'
 import {useQueryClient, useMutation} from 'react-query'
 import {akira} from '@lib/akira'
 import {useTagsQuery} from '@modules/tags/hooks'
@@ -173,7 +173,7 @@ export function TodayView() {
   const [mode, setMode] = useState('today')
 
   return (
-    <MainView className="flex-1">
+    <PageView className="flex-1">
       <TaskForm
         ref={addTaskControl.formRef}
         onSubmit={createTaskMutation.mutate}
@@ -194,6 +194,6 @@ export function TodayView() {
           <AddTaskButton onClick={addTaskControl.onAddIntent} />
         </div>
       )}
-    </MainView>
+    </PageView>
   )
 }

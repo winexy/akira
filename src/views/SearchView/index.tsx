@@ -10,7 +10,7 @@ import {showBottomSheet} from '@shared/ui/bottom-sheet/model'
 import {BottomSheet} from '@shared/ui/bottom-sheet'
 import {Button} from '@shared/ui/button'
 import format from 'date-fns/format'
-import {MainView} from '../MainView'
+import {PageView} from '@shared/ui/page-view'
 
 const search = debounce((searchText: string) => {
   if (searchText === '') {
@@ -34,7 +34,7 @@ const SearchView: React.FC = () => {
   const [createdBefore, setCreatedBefore] = useState<Date | null>(null)
 
   return (
-    <MainView>
+    <PageView>
       <form className="mt-2 px-4" onSubmit={event => event.preventDefault()}>
         <div
           className={clsx(
@@ -116,7 +116,7 @@ const SearchView: React.FC = () => {
       <section className="mt-4 px-4">
         <TaskList isPending={searchQuery.isLoading} tasks={searchQuery.data} />
       </section>
-    </MainView>
+    </PageView>
   )
 }
 
