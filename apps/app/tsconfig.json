@@ -21,14 +21,11 @@
     "noEmit": true,
     "paths": {
       "@/*": ["./src/*"],
-      "@components/*": ["./src/components/*"],
-      "@hooks/*": ["./src/hooks/*"],
       "@modules/*": ["./src/modules/*"],
+      "@features/*": ["./src/features/*"],
       "@shared/*": ["./src/shared/*"],
       "@pages/*": ["src/pages/*"],
-      "@store/*": ["./src/store/*"],
-      "@lib/*": ["./src/lib/*"],
-      "@config/*": ["./src/config/*"]
+      "@images/*": ["src/assets/images/*"]
     }
   },
   "include": ["./src"]

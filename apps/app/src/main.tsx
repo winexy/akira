@@ -8,7 +8,7 @@ import {akira} from '@shared/api/akira'
 import {FirebaseAuthProvider} from '@shared/lib/firebase'
 import {HotkeyProvider} from '@modules/hotkeys/HotKeyContext'
 import {TaskQuery} from '@modules/tasks/config/index'
-import {initAppThemeFx} from '@modules/preferences/darkmode/index'
+import {initAppThemeFx} from '@/features/darkmode/model/index'
 import './app/index.css'
 import App from './app/App'
 
