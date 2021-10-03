@@ -27,7 +27,6 @@ import {useQueryClient} from 'react-query'
 import size from 'lodash/fp/size'
 import throttle from 'lodash/throttle'
 import {TaskLists} from '@modules/lists/components/TaskLists'
-import './Menu.css'
 import {
   clearAllBodyScrollLocks,
   disableBodyScroll,
@@ -36,6 +35,7 @@ import {
 import {useHotkey} from '@modules/hotkeys/HotKeyContext'
 import {HotKey} from '@modules/hotkeys/HotKey'
 import {TaskQuery} from '@modules/tasks/config'
+import './index.css'
 
 type MenuItemProps = {
   Icon: SVGIconElement
