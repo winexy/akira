@@ -1,4 +1,4 @@
-import {exhaustiveCheck} from '@/utils'
+import {exhaustiveCheck} from '@shared/lib/utils'
 import React, {useState} from 'react'
 import values from 'lodash/fp/values'
 import {hideBottomSheet} from '@shared/ui/bottom-sheet/model'
