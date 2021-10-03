@@ -1,25 +1,25 @@
 import React from 'react'
-import {PageView} from '@shared/ui/page-view'
-import {TaskList} from '@modules/tasks/components/TaskList'
-import {useTasksQuery} from '@modules/tasks/hooks'
-import {TaskForm} from '@modules/tasks/components/TaskForm'
-import {akira} from '@shared/api/akira'
+import {PageView} from 'shared/ui/page-view'
+import {TaskList} from 'modules/tasks/components/TaskList'
+import {useTasksQuery} from 'modules/tasks/hooks'
+import {TaskForm} from 'modules/tasks/components/TaskForm'
+import {akira} from 'shared/api/akira'
 import {Link} from 'react-router-dom'
 import {useMutation, useQueryClient} from 'react-query'
-import {FiltersBottomSheet} from '@modules/tasks/filters/FiltersBottomSheet'
+import {FiltersBottomSheet} from 'modules/tasks/filters/FiltersBottomSheet'
 import {
   SortingBottomSheet,
   useTaskSorting
-} from '@modules/tasks/sorting/SortingBottomSheet'
+} from 'modules/tasks/sorting/SortingBottomSheet'
 import {
   AddTaskButton,
   useAddTaskControl
-} from '@modules/tasks/components/AddTaskButton'
-import {useTaskFilters, filterTasks} from '@modules/tasks/filters'
+} from 'modules/tasks/components/AddTaskButton'
+import {useTaskFilters, filterTasks} from 'modules/tasks/filters'
 import size from 'lodash/fp/size'
-import {useTagsQuery} from '@modules/tags/hooks'
-import {TaskListOperations} from '@modules/tasks/components/TaskListOperations'
-import {TaskQuery} from '@modules/tasks/config'
+import {useTagsQuery} from 'modules/tags/hooks'
+import {TaskListOperations} from 'modules/tasks/components/TaskListOperations'
+import {TaskQuery} from 'modules/tasks/config'
 import {SearchIcon} from '@heroicons/react/solid'
 
 const TasksPage: React.FC = () => {

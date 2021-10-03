@@ -10,10 +10,10 @@ import {PencilAltIcon} from '@heroicons/react/solid'
 import {
   useAddTaskTagMutation,
   useRemoveTaskTagMutation
-} from '@modules/tasks/hooks'
-import {ApiTask} from '@modules/tasks/types.d'
-import {Button} from '@shared/ui/button'
-import {useShimmerColors} from '@shared/ui/shimmer'
+} from 'modules/tasks/hooks'
+import {ApiTask} from 'modules/tasks/types.d'
+import {Button} from 'shared/ui/button'
+import {useShimmerColors} from 'shared/ui/shimmer'
 import {TaskTag} from './TaskTag'
 import {useTagsQuery} from '../hooks/index'
 

@@ -2,12 +2,12 @@ import React, {MutableRefObject, useEffect, useRef} from 'react'
 import {
   $activeActionSheet,
   closeActionSheet
-} from '@/shared/ui/action-sheet/model'
+} from 'shared/ui/action-sheet/model'
 import {useStore} from 'effector-react'
 import {CSSTransition} from 'react-transition-group'
 import clsx from 'clsx'
 import {createFocusTrap, FocusTrap} from 'focus-trap'
-import {Portal} from '@shared/ui/portal'
+import {Portal} from 'shared/ui/portal'
 import './index.css'
 
 type Props = {

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {useParams} from 'react-router'
-import {PageView} from '@shared/ui/page-view'
+import {PageView} from 'shared/ui/page-view'
 import format from 'date-fns/format'
 import parseISO from 'date-fns/parseISO'
 import isEmpty from 'lodash/fp/isEmpty'
@@ -8,20 +8,20 @@ import {CalendarIcon, PlusIcon, ClockIcon} from '@heroicons/react/outline'
 import ContentLoader from 'react-content-loader'
 import {useMutation, useQueryClient} from 'react-query'
 import isNil from 'lodash/fp/isNil'
-import {showBottomSheet} from '@shared/ui/bottom-sheet/model'
-import {BottomSheet} from '@shared/ui/bottom-sheet'
-import {Button} from '@shared/ui/button'
+import {showBottomSheet} from 'shared/ui/bottom-sheet/model'
+import {BottomSheet} from 'shared/ui/bottom-sheet'
+import {Button} from 'shared/ui/button'
 import {
   ChecklistManager,
   MyDayToggle,
   TaskActionList,
   TaskActionToast,
   TextArea
-} from '@modules/tasks/components'
-import {TaskId} from '@modules/tasks/types.d'
-import {TagsManager, TaskTag} from '@modules/tags/components'
-import {usePatchTaskMutation, useTaskQuery} from '@modules/tasks/hooks'
-import {Tag} from '@modules/tags/components/Tag'
+} from 'modules/tasks/components'
+import {TaskId} from 'modules/tasks/types.d'
+import {TagsManager, TaskTag} from 'modules/tags/components'
+import {usePatchTaskMutation, useTaskQuery} from 'modules/tasks/hooks'
+import {Tag} from 'modules/tags/components/Tag'
 import {
   DotsVerticalIcon,
   ViewListIcon,
@@ -29,19 +29,19 @@ import {
 } from '@heroicons/react/solid'
 import {Link} from 'react-router-dom'
 import isNull from 'lodash/fp/isNull'
-import {TaskListPicker} from '@modules/tasks/components/TaskListPicker'
-import {api} from '@shared/api'
-import {Match} from '@shared/ui/match'
+import {TaskListPicker} from 'modules/tasks/components/TaskListPicker'
+import {api} from 'shared/api'
+import {Match} from 'shared/ui/match'
 import isEqual from 'date-fns/isEqual'
 import isUndefined from 'lodash/fp/isUndefined'
-import {EditableHeading} from '@shared/ui/editable-heading'
-import {DatePicker} from '@shared/ui/datepicker'
-import {Portal} from '@shared/ui/portal'
+import {EditableHeading} from 'shared/ui/editable-heading'
+import {DatePicker} from 'shared/ui/datepicker'
+import {Portal} from 'shared/ui/portal'
 import clsx from 'clsx'
-import {TaskQuery} from '@modules/tasks/config'
-import {useShimmerColors} from '@shared/ui/shimmer'
-import {DatePickerSheet} from '@shared/ui/datepicker-sheet'
-import {exhaustiveCheck} from '@shared/lib/utils'
+import {TaskQuery} from 'modules/tasks/config'
+import {useShimmerColors} from 'shared/ui/shimmer'
+import {DatePickerSheet} from 'shared/ui/datepicker-sheet'
+import {exhaustiveCheck} from 'shared/lib/utils'
 
 type TaskScheduleProps = {
   taskId: TaskId

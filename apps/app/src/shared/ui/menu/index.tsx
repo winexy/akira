@@ -16,24 +16,24 @@ import {
   SearchIcon,
   DocumentTextIcon
 } from '@heroicons/react/solid'
-import {config} from '@shared/config'
-import {Tag} from '@modules/tags/components/Tag'
+import {config} from 'shared/config'
+import {Tag} from 'modules/tags/components/Tag'
 import {useStore} from 'effector-react'
 import {Link, useHistory} from 'react-router-dom'
 import isNull from 'lodash/fp/isNull'
 import {useQueryClient} from 'react-query'
 import size from 'lodash/fp/size'
 import throttle from 'lodash/throttle'
-import {TaskLists} from '@modules/lists/components/TaskLists'
+import {TaskLists} from 'modules/lists/components/TaskLists'
 import {
   clearAllBodyScrollLocks,
   disableBodyScroll,
   enableBodyScroll
 } from 'body-scroll-lock'
-import {useHotkey} from '@modules/hotkeys/HotKeyContext'
-import {HotKey} from '@modules/hotkeys/HotKey'
-import {TaskQuery} from '@modules/tasks/config'
-import {useFirebaseAuth} from '@shared/lib/firebase'
+import {useHotkey} from 'modules/hotkeys/HotKeyContext'
+import {HotKey} from 'modules/hotkeys/HotKey'
+import {TaskQuery} from 'modules/tasks/config'
+import {useFirebaseAuth} from 'shared/lib/firebase'
 import {closeMenu, openMenu, $isMenuOpen} from './model'
 import './index.css'
 

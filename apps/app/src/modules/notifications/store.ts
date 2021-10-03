@@ -1,4 +1,4 @@
-import {app} from '@shared/lib/app-domain'
+import {app} from 'shared/lib/app-domain'
 import {forward, sample} from 'effector'
 import {nanoid} from 'nanoid'
 

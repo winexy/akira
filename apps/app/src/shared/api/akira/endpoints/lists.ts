@@ -1,5 +1,5 @@
 import {AxiosInstance} from 'axios'
-import {TaskList, NewList} from '@modules/lists/types.d'
+import {TaskList, NewList} from 'modules/lists/types.d'
 import get from 'lodash/fp/get'
 
 export function lists(api: AxiosInstance) {

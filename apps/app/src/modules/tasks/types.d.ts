@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
-import {TaskTag} from '@modules/tags/types.d'
-import {TaskList} from '@modules/lists/types.d'
+import {TaskTag} from 'modules/tags/types.d'
+import {TaskList} from 'modules/lists/types.d'
 
 export type Todo = {
   id: string

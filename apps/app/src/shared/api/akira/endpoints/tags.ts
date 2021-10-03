@@ -1,6 +1,6 @@
 import {AxiosInstance} from 'axios'
 import get from 'lodash/fp/get'
-import {TaskTag} from '@modules/tags/types.d'
+import {TaskTag} from 'modules/tags/types.d'
 
 export function tags(api: AxiosInstance) {
   const unwrap = get('data')

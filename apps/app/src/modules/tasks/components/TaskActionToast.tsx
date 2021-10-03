@@ -2,10 +2,10 @@ import React from 'react'
 import {CheckIcon, FireIcon, TrashIcon} from '@heroicons/react/solid'
 import clsx from 'clsx'
 import {useHistory} from 'react-router'
-import {TaskId} from '@modules/tasks/types.d'
-import {ActionToast} from '@shared/ui/action-toast'
-import {ActionSheet} from '@shared/ui/action-sheet'
-import {openActionSheet} from '@shared/ui/action-sheet/model'
+import {TaskId} from 'modules/tasks/types.d'
+import {ActionToast} from 'shared/ui/action-toast'
+import {ActionSheet} from 'shared/ui/action-sheet'
+import {openActionSheet} from 'shared/ui/action-sheet/model'
 import {
   useRemoveTaskMutation,
   useToggleCompletedMutation,

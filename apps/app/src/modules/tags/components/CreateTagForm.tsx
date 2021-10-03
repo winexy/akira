@@ -1,10 +1,10 @@
 import clsx, {ClassValue} from 'clsx'
 import React, {FormEventHandler, useState} from 'react'
 import {useMutation, useQueryClient} from 'react-query'
-import {Button} from '@shared/ui/button'
-import {akira} from '@shared/api/akira'
-import {Spin} from '@shared/ui/spin'
-import {TaskTag} from '@modules/tags/types.d'
+import {Button} from 'shared/ui/button'
+import {akira} from 'shared/api/akira'
+import {Spin} from 'shared/ui/spin'
+import {TaskTag} from 'modules/tags/types.d'
 
 type Props = {
   className?: ClassValue

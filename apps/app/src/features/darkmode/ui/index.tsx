@@ -1,9 +1,9 @@
 import {useStore} from 'effector-react'
 import React from 'react'
-import DarkThemePreview from '@images/dark-theme.jpg'
-import LightThemePreview from '@images/light-theme.jpg'
-import {Toggle} from '@shared/ui/toggle'
-import {$isDarkMode, toggleDarkMode} from '@features/darkmode/model'
+import DarkThemePreview from 'images/dark-theme.jpg'
+import LightThemePreview from 'images/light-theme.jpg'
+import {Toggle} from 'shared/ui/toggle'
+import {$isDarkMode, toggleDarkMode} from 'features/darkmode/model'
 
 const DarkModePreview: React.FC = () => (
   <div className="grid grid-cols-2 gap-4 p-4">

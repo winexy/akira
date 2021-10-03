@@ -1,5 +1,5 @@
 import {AxiosError, AxiosRequestConfig} from 'axios'
-import {auth} from '@shared/lib/firebase'
+import {auth} from 'shared/lib/firebase'
 
 export function extractError(error: AxiosError) {
   if (!error.isAxiosError) {

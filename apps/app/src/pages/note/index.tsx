@@ -20,7 +20,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import clsx from 'clsx'
 import {convertFromHTML, convertToHTML} from 'draft-convert'
-import {PageView} from '@shared/ui/page-view'
+import {PageView} from 'shared/ui/page-view'
 
 export enum InlineStyle {
   BOLD = 'BOLD',

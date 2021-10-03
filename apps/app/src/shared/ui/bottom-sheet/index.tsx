@@ -8,8 +8,8 @@ import {
   hideBottomSheet,
   $activeBottomSheet,
   $bottomSheets
-} from '@shared/ui/bottom-sheet/model'
-import {Button} from '@shared/ui/button'
+} from 'shared/ui/bottom-sheet/model'
+import {Button} from 'shared/ui/button'
 import {
   disableBodyScroll,
   enableBodyScroll,

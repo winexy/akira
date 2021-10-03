@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 import React from 'react'
-import {createMatcher} from '@shared/ui/create-matcher'
+import {createMatcher} from 'shared/ui/create-matcher'
 
 type ButtonSize = 'sm'
 

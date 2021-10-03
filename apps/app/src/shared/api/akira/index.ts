@@ -1,4 +1,4 @@
-import {api} from '@shared/api'
+import {api} from 'shared/api'
 import {checklist} from './endpoints/checklist'
 import {lists} from './endpoints/lists'
 import {tasks} from './endpoints/tasks'

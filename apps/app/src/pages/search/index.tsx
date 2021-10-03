@@ -1,16 +1,16 @@
 import React, {useState} from 'react'
 import {useQuery} from 'react-query'
 import debounce from 'debounce-promise'
-import {api} from '@shared/api'
-import {TaskList} from '@modules/tasks/components/TaskList'
+import {api} from 'shared/api'
+import {TaskList} from 'modules/tasks/components/TaskList'
 import {AdjustmentsIcon, SearchIcon, XIcon} from '@heroicons/react/solid'
 import clsx from 'clsx'
-import {DatePicker} from '@shared/ui/datepicker'
-import {showBottomSheet} from '@shared/ui/bottom-sheet/model'
-import {BottomSheet} from '@shared/ui/bottom-sheet'
-import {Button} from '@shared/ui/button'
+import {DatePicker} from 'shared/ui/datepicker'
+import {showBottomSheet} from 'shared/ui/bottom-sheet/model'
+import {BottomSheet} from 'shared/ui/bottom-sheet'
+import {Button} from 'shared/ui/button'
 import format from 'date-fns/format'
-import {PageView} from '@shared/ui/page-view'
+import {PageView} from 'shared/ui/page-view'
 
 const search = debounce((searchText: string) => {
   if (searchText === '') {

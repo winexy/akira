@@ -1,25 +1,25 @@
 import React, {useState} from 'react'
-import {TaskForm} from '@modules/tasks/components/TaskForm'
-import {TaskList} from '@modules/tasks/components/TaskList'
+import {TaskForm} from 'modules/tasks/components/TaskForm'
+import {TaskList} from 'modules/tasks/components/TaskList'
 import size from 'lodash/fp/size'
 import filter from 'lodash/fp/filter'
 
 import format from 'date-fns/format'
-import {PageView} from '@shared/ui/page-view'
+import {PageView} from 'shared/ui/page-view'
 import {useQueryClient, useMutation} from 'react-query'
-import {akira} from '@shared/api/akira'
-import {useTagsQuery} from '@modules/tags/hooks'
-import {filterTasks, useTaskFilters} from '@modules/tasks/filters'
-import {FiltersBottomSheet} from '@modules/tasks/filters/FiltersBottomSheet'
-import {TaskListOperations} from '@modules/tasks/components/TaskListOperations'
+import {akira} from 'shared/api/akira'
+import {useTagsQuery} from 'modules/tags/hooks'
+import {filterTasks, useTaskFilters} from 'modules/tasks/filters'
+import {FiltersBottomSheet} from 'modules/tasks/filters/FiltersBottomSheet'
+import {TaskListOperations} from 'modules/tasks/components/TaskListOperations'
 import {
   SortingBottomSheet,
   useTaskSorting
-} from '@modules/tasks/sorting/SortingBottomSheet'
+} from 'modules/tasks/sorting/SortingBottomSheet'
 import {
   AddTaskButton,
   useAddTaskControl
-} from '@/modules/tasks/components/AddTaskButton'
+} from 'modules/tasks/components/AddTaskButton'
 import clsx from 'clsx'
 import groupBy from 'lodash/fp/groupBy'
 import keys from 'lodash/fp/keys'
@@ -28,10 +28,10 @@ import ContentLoader from 'react-content-loader'
 import times from 'lodash/fp/times'
 import InboxIcon from '@heroicons/react/solid/InboxIcon'
 import isEmpty from 'lodash/fp/isEmpty'
-import {useMyDayQuery, useWeekQuery} from '@modules/tasks/hooks'
-import {TaskQuery} from '@modules/tasks/config'
-import {useShimmerColors} from '@shared/ui/shimmer'
-import {CreateTaskPayload} from '@modules/tasks/types.d'
+import {useMyDayQuery, useWeekQuery} from 'modules/tasks/hooks'
+import {TaskQuery} from 'modules/tasks/config'
+import {useShimmerColors} from 'shared/ui/shimmer'
+import {CreateTaskPayload} from 'modules/tasks/types.d'
 
 const Control: React.FC<{
   value: string
