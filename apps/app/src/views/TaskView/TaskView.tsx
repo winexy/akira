@@ -41,7 +41,7 @@ import clsx from 'clsx'
 import {TaskQuery} from '@modules/tasks/config'
 import {useShimmerColors} from '@shared/ui/shimmer'
 import {DatePickerSheet} from '@shared/ui/datepicker-sheet'
-import {exhaustiveCheck} from '../../utils/index'
+import {exhaustiveCheck} from '@shared/lib/utils'
 
 type TaskScheduleProps = {
   taskId: TaskId
