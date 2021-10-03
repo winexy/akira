@@ -7,7 +7,7 @@ import {
   TaskId,
   TaskPatch,
   CreateTaskPayload
-} from '@modules/tasks/types.d'
+} from 'modules/tasks/types.d'
 
 type IntBool = 1 | 0
 

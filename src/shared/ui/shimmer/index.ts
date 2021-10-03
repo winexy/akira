@@ -1,5 +1,5 @@
 import {useStore} from 'effector-react'
-import {$isDarkMode} from '@/features/darkmode/model'
+import {$isDarkMode} from 'features/darkmode/model'
 
 export function useShimmerColors() {
   const isDarkMode = useStore($isDarkMode)

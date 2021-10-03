@@ -1,6 +1,6 @@
 import React, {ReactNode} from 'react'
-import {Task} from '@modules/tasks/components/Task'
-import {ApiTask} from '@modules/tasks/types.d'
+import {Task} from 'modules/tasks/components/Task'
+import {ApiTask} from 'modules/tasks/types.d'
 import ContentLoader from 'react-content-loader'
 import isEmpty from 'lodash/fp/isEmpty'
 import times from 'lodash/fp/times'
@@ -10,9 +10,9 @@ import {
   useToggleCompletedMutation,
   useToggleImportantMutation,
   useRemoveTaskMutation
-} from '@modules/tasks/hooks'
+} from 'modules/tasks/hooks'
 import clsx from 'clsx'
-import {useShimmerColors} from '@shared/ui/shimmer'
+import {useShimmerColors} from 'shared/ui/shimmer'
 
 type Props = {
   isPending: boolean

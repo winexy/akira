@@ -1,8 +1,8 @@
 import React from 'react'
 import {ShieldExclamationIcon} from '@heroicons/react/solid'
-import {PageView} from '@shared/ui/page-view'
+import {PageView} from 'shared/ui/page-view'
 import {useHistory} from 'react-router'
-import {Button} from '@shared/ui/button'
+import {Button} from 'shared/ui/button'
 
 const WipPage: React.FC = () => {
   const history = useHistory()

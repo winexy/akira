@@ -1,6 +1,6 @@
 import compareDesc from 'date-fns/compareDesc'
 import parseISO from 'date-fns/parseISO'
-import {ApiTask} from '@modules/tasks/types.d'
+import {ApiTask} from 'modules/tasks/types.d'
 
 export enum SortEnum {
   ImportantASC = 'Important::ASC',

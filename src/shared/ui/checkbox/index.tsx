@@ -2,7 +2,7 @@ import React, {MouseEventHandler} from 'react'
 import clsx from 'clsx'
 import {CheckIcon} from '@heroicons/react/solid'
 import noop from 'lodash/fp/noop'
-import {createMatcher} from '@shared/ui/create-matcher'
+import {createMatcher} from 'shared/ui/create-matcher'
 
 type Props = {
   isChecked?: boolean

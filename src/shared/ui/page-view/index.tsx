@@ -3,7 +3,7 @@ import {useHistory} from 'react-router'
 import clsx from 'clsx'
 import isUndefined from 'lodash/fp/isUndefined'
 import {ChevronLeftIcon} from '@heroicons/react/solid'
-import {Header} from '@shared/ui/header'
+import {Header} from 'shared/ui/header'
 
 type ViewProps = {
   className?: string

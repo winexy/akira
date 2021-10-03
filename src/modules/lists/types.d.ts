@@ -1,4 +1,4 @@
-import {ApiTask} from '@modules/tasks/types.d'
+import {ApiTask} from 'modules/tasks/types.d'
 
 /* eslint-disable camelcase */
 export type TaskList = {

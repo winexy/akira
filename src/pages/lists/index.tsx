@@ -1,6 +1,6 @@
 import React from 'react'
-import {TaskLists} from '@modules/lists/components/TaskLists'
-import {PageView} from '@shared/ui/page-view'
+import {TaskLists} from 'modules/lists/components/TaskLists'
+import {PageView} from 'shared/ui/page-view'
 
 const ListsPage: React.FC = () => {
   return (

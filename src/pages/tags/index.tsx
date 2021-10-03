@@ -1,13 +1,13 @@
 import React from 'react'
-import {PageView} from '@shared/ui/page-view'
+import {PageView} from 'shared/ui/page-view'
 import {useMutation, useQueryClient} from 'react-query'
-import {akira} from '@shared/api/akira'
+import {akira} from 'shared/api/akira'
 import {XIcon} from '@heroicons/react/solid'
-import {IconButton} from '@shared/ui/icon-button'
-import {Spin} from '@shared/ui/spin'
+import {IconButton} from 'shared/ui/icon-button'
+import {Spin} from 'shared/ui/spin'
 import isEmpty from 'lodash/fp/isEmpty'
-import {CreateTagForm, TaskTag} from '@modules/tags/components'
-import {useTagsQuery} from '@modules/tags/hooks'
+import {CreateTagForm, TaskTag} from 'modules/tags/components'
+import {useTagsQuery} from 'modules/tags/hooks'
 
 const TagsPage: React.FC = () => {
   const queryClient = useQueryClient()

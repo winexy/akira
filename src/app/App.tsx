@@ -10,14 +10,14 @@ import {
   useHistory
 } from 'react-router-dom'
 import {HomeIcon, RefreshIcon} from '@heroicons/react/solid'
-import {DashboardPage} from '@pages/dashboard'
-import {AuthPage} from '@pages/auth'
-import {Menu} from '@shared/ui/menu'
-import {AkiraLoader} from '@shared/ui/akira-spinner'
-import {Button} from '@shared/ui/button'
-import {PageView} from '@shared/ui/page-view'
-import {useFirebaseAuth} from '@shared/lib/firebase'
-import {NotificationManager} from '@modules/notifications/NotificationManager'
+import {DashboardPage} from 'pages/dashboard'
+import {AuthPage} from 'pages/auth'
+import {Menu} from 'shared/ui/menu'
+import {AkiraLoader} from 'shared/ui/akira-spinner'
+import {Button} from 'shared/ui/button'
+import {PageView} from 'shared/ui/page-view'
+import {useFirebaseAuth} from 'shared/lib/firebase'
+import {NotificationManager} from 'modules/notifications/NotificationManager'
 
 const dndConfig = {
   enableMouseEvents: true
@@ -58,17 +58,17 @@ function Fallback({error, resetErrorBoundary}: FallbackProps) {
   )
 }
 
-const TaskPage = lazy(() => import('@pages/task'))
-const TasksPage = lazy(() => import('@pages/tasks'))
-const TagsPage = lazy(() => import('@pages/tags'))
-const NewListPage = lazy(() => import('@pages/new-list'))
-const WipPage = lazy(() => import('@pages/wip'))
-const ListsPage = lazy(() => import('@pages/lists'))
-const TaskListPage = lazy(() => import('@pages/task-list'))
-const SearchPage = lazy(() => import('@pages/search'))
-const ReportsPage = lazy(() => import('@pages/reports'))
-const PreferencesPage = lazy(() => import('@pages/preferences'))
-const NotePage = lazy(() => import('@pages/note'))
+const TaskPage = lazy(() => import('pages/task'))
+const TasksPage = lazy(() => import('pages/tasks'))
+const TagsPage = lazy(() => import('pages/tags'))
+const NewListPage = lazy(() => import('pages/new-list'))
+const WipPage = lazy(() => import('pages/wip'))
+const ListsPage = lazy(() => import('pages/lists'))
+const TaskListPage = lazy(() => import('pages/task-list'))
+const SearchPage = lazy(() => import('pages/search'))
+const ReportsPage = lazy(() => import('pages/reports'))
+const PreferencesPage = lazy(() => import('pages/preferences'))
+const NotePage = lazy(() => import('pages/note'))
 
 const LoadingView: React.FC = () => (
   <PageView className="p-4">loading...</PageView>

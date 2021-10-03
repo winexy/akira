@@ -2,10 +2,10 @@ import React from 'react'
 import {useParams} from 'react-router'
 import {useQuery} from 'react-query'
 import isUndefined from 'lodash/fp/isUndefined'
-import {api} from '@shared/api'
-import {ApiTask} from '@modules/tasks/types.d'
-import {TaskList} from '@/modules/tasks/components/TaskList'
-import {PageView} from '@shared/ui/page-view'
+import {api} from 'shared/api'
+import {ApiTask} from 'modules/tasks/types.d'
+import {TaskList} from 'modules/tasks/components/TaskList'
+import {PageView} from 'shared/ui/page-view'
 
 type ApiList = {
   id: number

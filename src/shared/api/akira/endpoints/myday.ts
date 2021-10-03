@@ -1,6 +1,6 @@
 import {AxiosInstance} from 'axios'
 import get from 'lodash/fp/get'
-import {TaskId, ApiTask} from '@modules/tasks/types.d'
+import {TaskId, ApiTask} from 'modules/tasks/types.d'
 
 export function myday(api: AxiosInstance) {
   const unwrap = get('data')

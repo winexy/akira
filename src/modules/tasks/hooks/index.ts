@@ -6,7 +6,7 @@ import isUndefined from 'lodash/fp/isUndefined'
 import isNull from 'lodash/fp/isNull'
 import reduce from 'lodash/reduce'
 import {useMutation, useQuery, useQueryClient, QueryClient} from 'react-query'
-import {akira} from '@shared/api/akira'
+import {akira} from 'shared/api/akira'
 import {
   TaskPatch,
   ApiTask,
@@ -14,9 +14,9 @@ import {
   TodoId,
   TodoPatch,
   Todo
-} from '@modules/tasks/types.d'
-import {TaskTag} from '@modules/tags/types.d'
-import {TaskQuery} from '@modules/tasks/config'
+} from 'modules/tasks/types.d'
+import {TaskTag} from 'modules/tags/types.d'
+import {TaskQuery} from 'modules/tasks/config'
 import {forEach} from 'lodash/fp'
 
 function writeTaskCache(

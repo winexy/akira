@@ -1,5 +1,5 @@
 import {createEvent, createStore} from 'effector'
-import {always, invert} from '@shared/lib/utils'
+import {always, invert} from 'shared/lib/utils'
 
 export const $isMenuOpen = createStore(false)
 export const openMenu = createEvent()

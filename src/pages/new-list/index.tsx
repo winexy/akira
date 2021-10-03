@@ -1,8 +1,8 @@
 import React, {useEffect, useLayoutEffect, useRef, useState} from 'react'
 import {useMutation, useQueryClient} from 'react-query'
 import {Redirect} from 'react-router'
-import {akira} from '@shared/api/akira'
-import {PageView} from '@shared/ui/page-view'
+import {akira} from 'shared/api/akira'
+import {PageView} from 'shared/ui/page-view'
 
 const NewListPage: React.FC = () => {
   const [title, setTitle] = useState('Untitled list')

@@ -1,5 +1,5 @@
 import {AxiosInstance} from 'axios'
-import {TaskId, TodoId, TodoPatch, Todo} from '@modules/tasks/types.d'
+import {TaskId, TodoId, TodoPatch, Todo} from 'modules/tasks/types.d'
 import {get} from 'lodash/fp'
 
 export type CreateTodoDto = {
