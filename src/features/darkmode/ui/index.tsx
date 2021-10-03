@@ -5,7 +5,7 @@ import LightThemePreview from 'images/light-theme.jpg'
 import {Toggle} from 'shared/ui/toggle'
 import {$isDarkMode, toggleDarkMode} from 'features/darkmode/model'
 
-const DarkModePreview: React.FC = () => (
+const ThemePreview: React.FC = () => (
   <div className="grid grid-cols-2 gap-4 p-4">
     <img
       className="w-full rounded-lg shadow-md border-2 border-gray-200 dark:border-dark-400"
@@ -29,7 +29,7 @@ export const DarkMode: React.FC = () => {
         <span className="font-semibold text-lg ">Dark mode</span>
         <Toggle isChecked={isDarkMode} onChange={toggleDarkMode} />
       </div>
-      <DarkModePreview />
+      <ThemePreview />
     </>
   )
 }
