@@ -20,12 +20,12 @@
     "strict": true,
     "noEmit": true,
     "paths": {
-      "src/*": ["./src/*"],
       "modules/*": ["./src/modules/*"],
       "features/*": ["./src/features/*"],
       "shared/*": ["./src/shared/*"],
       "pages/*": ["src/pages/*"],
-      "images/*": ["src/assets/images/*"]
+      "images/*": ["src/assets/images/*"],
+      "src/*": ["./src/*"]
     }
   },
   "include": ["./src"]
