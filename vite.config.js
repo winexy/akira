@@ -6,7 +6,7 @@ import reactRefresh from '@vitejs/plugin-react-refresh'
 // https://vitejs.dev/config/
 export default defineConfig({
   resolve: {
-    alias: alias.rollup
+    alias: alias.rollup()
   },
   define: {
     __VERSION__: JSON.stringify(pkg.version)
