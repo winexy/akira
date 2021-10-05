@@ -87,7 +87,7 @@ module.exports = {
         extensions: ['.js', '.jsx', '.ts', '.tsx']
       },
       alias: {
-        map: alias.eslint,
+        map: alias.eslint(),
         extensions: ['.jsx', '.jsx', '.ts', '.tsx']
       }
     }
