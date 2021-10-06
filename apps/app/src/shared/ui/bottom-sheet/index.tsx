@@ -146,7 +146,7 @@ export const BottomSheet: React.FC<Props> = ({name, children, className}) => {
         />
         <div
           className="sheet z-10 absolute bottom-0 flex w-full justify-center"
-          style={{maxHeight: '90%'}}
+          style={{maxHeight: '95%'}}
         >
           <button
             style={{transform: `translateY(${sheetShift}px)`}}
