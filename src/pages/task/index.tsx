@@ -137,13 +137,13 @@ const TaskSchedule: React.FC<TaskScheduleProps> = ({
             <Match.Case when={scheduleTaskMutation.isLoading || isFetchingTask}>
               Loading...
               <ContentLoader
-                width="50%"
+                className="ml-auto"
+                width="40%"
                 height={24}
-                viewBox="0 0 50% 24"
                 backgroundColor={backgroundColor}
                 foregroundColor={foregroundColor}
               >
-                <rect rx="5" ry="5" x="0" y="0" width="50%" height="24" />
+                <rect rx="5" ry="5" x="0" y="0" width="100%" height="24" />
               </ContentLoader>
             </Match.Case>
             <Match.Case when={isUndefined(scheduledTaskDate)}>
