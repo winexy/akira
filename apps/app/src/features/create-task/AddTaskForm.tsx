@@ -38,7 +38,7 @@ import {DatePickerSheet} from 'shared/ui/datepicker-sheet'
 import {showBottomSheet, hideBottomSheet} from 'shared/ui/bottom-sheet/model'
 import {DatePicker} from 'shared/ui/datepicker'
 import {DatePickerShortcut} from 'shared/ui/datepicker-shortcut'
-import {useListsQuery} from '../../lists/hooks/index'
+import {useListsQuery} from '../../modules/lists/hooks/index'
 
 type TaskFormProps = {
   onSubmit(payload: CreateTaskPayload): void
@@ -61,7 +61,7 @@ function renderDate(date: Date) {
   return format(date, 'dd.MM.yyyy')
 }
 
-export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
+export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
   // eslint-disable-next-line
   function TaskForm_ForwardRef({onSubmit, onVisibilityChange}, ref) {
     const [title, setTitle] = useState('')
