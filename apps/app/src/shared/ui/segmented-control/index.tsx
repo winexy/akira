@@ -34,8 +34,10 @@ const Segment: React.FC<SegmentProps> = ({id, children}) => {
     throw new Error('Segment should be used within SegmentedControl')
   }
 
+  const isActive = context.activeId === id
+
   useEffect(() => {
-    if (context.activeId === id && ref.current) {
+    if (isActive && ref.current) {
       context.update(id, {
         height: ref.current.clientHeight,
         width: ref.current.clientWidth,
@@ -55,7 +57,8 @@ const Segment: React.FC<SegmentProps> = ({id, children}) => {
         'transition ease-in duration-150',
         'focus:outline-none',
         {
-          'active:text-gray-400': context.activeId !== id
+          'text-white': isActive,
+          'active:text-gray-400': !isActive
         }
       )}
       onClick={() => {
@@ -115,7 +118,7 @@ const SegmentedControl: React.FC<Props> = ({activeId, onChange, children}) => {
         {children}
         <div
           style={styles}
-          className="absolute rounded-xl bg-gray-50 dark:bg-dark-600 shadow-lg transition-all ease-in-out"
+          className="absolute rounded-xl bg-blue-500 dark:bg-dark-600 shadow-lg transition-all ease-in-out"
         />
       </div>
     </Context.Provider>
