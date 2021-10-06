@@ -1,5 +1,4 @@
 import React, {useState} from 'react'
-import {TaskForm} from 'modules/tasks/components/TaskForm'
 import {TaskList} from 'modules/tasks/components/TaskList'
 import size from 'lodash/fp/size'
 import filter from 'lodash/fp/filter'
@@ -17,9 +16,10 @@ import {
   useTaskSorting
 } from 'modules/tasks/sorting/SortingBottomSheet'
 import {
+  AddTaskForm,
   AddTaskButton,
   useAddTaskControl
-} from 'modules/tasks/components/AddTaskButton'
+} from 'features/create-task'
 import clsx from 'clsx'
 import groupBy from 'lodash/fp/groupBy'
 import keys from 'lodash/fp/keys'
@@ -174,7 +174,7 @@ export function DashboardPage() {
 
   return (
     <PageView className="flex-1">
-      <TaskForm
+      <AddTaskForm
         ref={addTaskControl.formRef}
         onSubmit={createTaskMutation.mutate}
         onVisibilityChange={addTaskControl.onFormVisiblityChange}

@@ -2,7 +2,6 @@ import React from 'react'
 import {PageView} from 'shared/ui/page-view'
 import {TaskList} from 'modules/tasks/components/TaskList'
 import {useTasksQuery} from 'modules/tasks/hooks'
-import {TaskForm} from 'modules/tasks/components/TaskForm'
 import {akira} from 'shared/api/akira'
 import {Link} from 'react-router-dom'
 import {useMutation, useQueryClient} from 'react-query'
@@ -12,9 +11,10 @@ import {
   useTaskSorting
 } from 'modules/tasks/sorting/SortingBottomSheet'
 import {
+  AddTaskForm,
   AddTaskButton,
   useAddTaskControl
-} from 'modules/tasks/components/AddTaskButton'
+} from 'features/create-task'
 import {useTaskFilters, filterTasks} from 'modules/tasks/filters'
 import size from 'lodash/fp/size'
 import {useTagsQuery} from 'modules/tags/hooks'
@@ -40,7 +40,7 @@ const TasksPage: React.FC = () => {
 
   return (
     <PageView>
-      <TaskForm
+      <AddTaskForm
         ref={addTaskControl.formRef}
         onSubmit={createTaskMutation.mutate}
         onVisibilityChange={addTaskControl.onFormVisiblityChange}

@@ -1,10 +1,8 @@
 import React, {useRef, useState} from 'react'
-import {useStore} from 'effector-react'
 import clsx from 'clsx'
-import {PlusIcon} from '@heroicons/react/solid'
-import {$isMenuOpen} from 'shared/ui/menu'
-import {TaskFormRef} from 'modules/tasks/components/TaskForm'
 import isNull from 'lodash/fp/isNull'
+import {PlusIcon} from '@heroicons/react/solid'
+import {TaskFormRef} from 'features/create-task/AddTaskForm'
 
 export function useAddTaskControl() {
   const [isVisible, setIsVisible] = useState(true)
@@ -24,8 +22,6 @@ export function useAddTaskControl() {
 }
 
 export const AddTaskButton: React.FC<NativeButtonProps> = ({onClick}) => {
-  const isMenuOpen = useStore($isMenuOpen)
-
   return (
     <button
       className={clsx(
