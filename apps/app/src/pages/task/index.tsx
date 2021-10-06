@@ -42,6 +42,7 @@ import {TaskQuery} from 'modules/tasks/config'
 import {useShimmerColors} from 'shared/ui/shimmer'
 import {DatePickerSheet} from 'shared/ui/datepicker-sheet'
 import {exhaustiveCheck} from 'shared/lib/utils'
+import {DatePickerShortcut} from 'shared/ui/datepicker-shortcut'
 
 type TaskScheduleProps = {
   taskId: TaskId
@@ -159,7 +160,13 @@ const TaskSchedule: React.FC<TaskScheduleProps> = ({
         </TaskActionList.Button>
       </TaskActionList.Item>
       <Portal to="schedule-datepicker">
-        <DatePickerSheet date={scheduledDate} onApply={apply}>
+        <DatePickerSheet
+          date={scheduledDate}
+          fixedChildren={
+            <DatePickerShortcut className="mb-4" onPick={setScheduledDate} />
+          }
+          onApply={apply}
+        >
           <DatePicker
             date={scheduledDate}
             minDate={new Date()}
