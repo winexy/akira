@@ -10,7 +10,9 @@ export const NotificationManager: React.FC = () => {
   return (
     <Portal to="notifications-root">
       <div
-        className={clsx('fixed bottom-0 right-0 left-0 p-4')}
+        className={clsx(
+          'fixed bottom-0 right-0 left-0 p-4 pointer-events-none'
+        )}
         style={{zIndex: 100000}}
       >
         {notifications.map(notification => (
