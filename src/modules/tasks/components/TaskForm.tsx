@@ -37,6 +37,7 @@ import {Tag} from 'modules/tags/components/Tag'
 import {DatePickerSheet} from 'shared/ui/datepicker-sheet'
 import {showBottomSheet, hideBottomSheet} from 'shared/ui/bottom-sheet/model'
 import {DatePicker} from 'shared/ui/datepicker'
+import {DatePickerShortcut} from 'shared/ui/datepicker-shortcut'
 import {useListsQuery} from '../../lists/hooks/index'
 
 type TaskFormProps = {
@@ -288,7 +289,13 @@ export const TaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                 )}
               </div>
             </form>
-            <DatePickerSheet name="task-date" date={date}>
+            <DatePickerSheet
+              name="task-date"
+              date={date}
+              fixedChildren={
+                <DatePickerShortcut className="mb-4" onPick={setDate} />
+              }
+            >
               <DatePicker date={date} minDate={new Date()} onChange={setDate} />
             </DatePickerSheet>
             <div className="mt-auto p-4 bg-gradient-to-t from-gray-600 dark:from-dark-600">

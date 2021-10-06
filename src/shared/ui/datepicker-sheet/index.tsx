@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {ReactNode} from 'react'
 import format from 'date-fns/format'
 import {hideBottomSheet} from 'shared/ui/bottom-sheet/model'
 import {BottomSheet} from 'shared/ui/bottom-sheet'
@@ -8,12 +8,14 @@ type DatePickerSheetProps = {
   name?: string
   date: Date | null
   onApply?(): void
+  fixedChildren?: ReactNode
 }
 
 export const DatePickerSheet: React.FC<DatePickerSheetProps> = ({
   name = 'datepicker',
   children,
   date,
+  fixedChildren,
   onApply
 }) => {
   return (
@@ -22,7 +24,8 @@ export const DatePickerSheet: React.FC<DatePickerSheetProps> = ({
         Schedule task
       </h2>
       <div className="px-4">{children}</div>
-      <div className="sticky bottom-0 mt-6 px-4">
+      <div className="sticky bottom-0 mt-2 px-4">
+        {fixedChildren}
         <Button
           size="md"
           type="button"
