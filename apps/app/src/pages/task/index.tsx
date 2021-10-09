@@ -4,7 +4,7 @@ import {PageView} from 'shared/ui/page-view'
 import format from 'date-fns/format'
 import parseISO from 'date-fns/parseISO'
 import isEmpty from 'lodash/fp/isEmpty'
-import {CalendarIcon, PlusIcon} from '@heroicons/react/outline'
+import {PlusIcon} from '@heroicons/react/outline'
 import ContentLoader from 'react-content-loader'
 import isNil from 'lodash/fp/isNil'
 import {showBottomSheet, BottomSheet} from 'shared/ui/bottom-sheet'
@@ -32,6 +32,7 @@ import {useShimmerColors} from 'shared/ui/shimmer'
 import {exhaustiveCheck} from 'shared/lib/utils'
 import {MyDayToggle} from 'features/toggle-myday'
 import {ScheduleTask} from 'features/schedule-task'
+import {TaskDueDate} from 'features/add-due-date'
 
 type RepeatPattern = {
   type: 'daily'
@@ -165,11 +166,11 @@ const TaskPage: React.FC = () => {
             </TaskActionList.Button>
           </TaskActionList.Item>
         )}
-        <TaskActionList.Item>
-          <TaskActionList.Button Icon={CalendarIcon}>
-            Add due date
-          </TaskActionList.Button>
-        </TaskActionList.Item>
+        <TaskDueDate
+          taskId={taskId}
+          dueDate={task.due_date}
+          isFetchingTask={isFetching}
+        />
         <ScheduleTask
           taskId={taskId}
           scheduledTaskDate={task.schedule?.date}
