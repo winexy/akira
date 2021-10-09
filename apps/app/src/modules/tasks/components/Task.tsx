@@ -14,12 +14,8 @@ import {ActionSheet} from 'shared/ui/action-sheet'
 import {openActionSheet} from 'shared/ui/action-sheet/model'
 import {Spin} from 'shared/ui/spin'
 import {Swipeable} from 'shared/ui/swipeable'
-import format from 'date-fns/format'
-import parseISO from 'date-fns/parseISO'
 import {CalendarIcon} from '@heroicons/react/outline'
-import {pipe} from 'fp-ts/lib/function'
-import {fromNullable, getOrElse, map} from 'fp-ts/Option'
-import isToday from 'date-fns/isToday'
+import {TaskLib} from 'entities/task'
 
 const ItemType = 'list-item'
 
@@ -182,19 +178,8 @@ export const Task: React.FC<TaskProps> = ({
     onRemove(task.id)
   }
 
-  const dueDate = pipe(fromNullable(task.due_date), map(parseISO))
-
-  const formattedDueDate = pipe(
-    dueDate,
-    map(date => format(date, 'dd.MM.yy')),
-    getOrElse(() => '')
-  )
-
-  const isOverdue = pipe(
-    dueDate,
-    map(isToday),
-    getOrElse(() => false)
-  )
+  const isCompleted = task.is_completed
+  const isOverdue = TaskLib.isOverdue(task)
 
   return (
     <Swipeable
@@ -241,31 +226,39 @@ export const Task: React.FC<TaskProps> = ({
           'bg-white dark:bg-dark-500 pl-4 p-2 text-lg text-black',
           'rounded-md dark:text-white',
           'transition ease-in duration-150',
-          'active:bg-gray-50',
-          {
-            'line-through text-gray-300 dark:text-gray-400': task.is_completed
-          }
+          'active:bg-gray-50'
         )}
       >
         <Checkbox
           className="mr-1"
           size="sm"
-          isChecked={task.is_completed}
+          isChecked={isCompleted}
           onChange={() => onCheck(task.id)}
           onClick={e => e.stopPropagation()}
         />
         <div className="flex-1 mx-2 flex flex-col truncate">
-          <p className="truncate">{task.title}</p>
+          <p
+            className={clsx('truncate', {
+              'text-red-500 dark:text-red-400': isOverdue,
+              'line-through text-gray-300 dark:text-gray-400': isCompleted
+            })}
+          >
+            {task.title}
+          </p>
           <div className="flex items-center">
             {!isNull(task.due_date) && (
               <span
                 className={clsx(
                   'flex items-center text-xs font-semibold leading-tight',
-                  isOverdue ? 'text-red-500 dark:text-red-400' : 'text-gray-400'
+                  TaskLib.isDeadlineToday(task)
+                    ? 'text-yellow-500'
+                    : isOverdue
+                    ? 'text-red-500 dark:text-red-400'
+                    : 'text-gray-400'
                 )}
               >
-                <CalendarIcon className="w-4 h-4 mr-1" />
-                {formattedDueDate}
+                <CalendarIcon className={clsx('w-4 h-4 mr-1')} />
+                {TaskLib.getFormattedDueDate(task)}
               </span>
             )}
             {!isEmpty(task.checklist) && (
