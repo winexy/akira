@@ -74,8 +74,9 @@ module.exports = {
       'error',
       {props: true, ignorePropertyModificationsFor: ['draft', 'acc']}
     ],
-    'object-curly-newline': 'off', // prefere prettier
+    'object-curly-newline': 'off', // prefer prettier
     'no-undef': 'off', // false positive error,
+    'no-nested-ternary': 'off',
     'import/no-extraneous-dependencies': [
       'error',
       {devDependencies: ['**/*.test.jsx', '**/*.test.tsx', '**/*.test.js']}
