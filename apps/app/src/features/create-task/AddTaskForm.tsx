@@ -294,6 +294,7 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
             </form>
             <DatePickerSheet
               name="task-date"
+              title="Schedule task"
               date={date}
               fixedChildren={
                 <DatePickerShortcut className="mb-4" onPick={setDate} />

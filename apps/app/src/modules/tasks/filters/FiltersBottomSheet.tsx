@@ -119,7 +119,7 @@ export const FiltersBottomSheet: React.FC<Props> = ({
           Apply
         </Button>
       </BottomSheet>
-      <DatePickerSheet date={state.dateFrom}>
+      <DatePickerSheet title="Select date from" date={state.dateFrom}>
         <DatePicker
           date={state.dateFrom}
           maxDate={new Date()}
