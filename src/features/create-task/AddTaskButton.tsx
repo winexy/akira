@@ -34,7 +34,7 @@ export const AddTaskButton: React.FC<NativeButtonProps> = ({onClick}) => {
           bg-gradient-to-tr
           from-indigo-300 via-indigo-400 to-blue-500
           active:from-indigo-500 active:to-blue-500
-          active:ring-8 active:ring-indigo-50
+          active:ring-8 active:ring-indigo-50 dark:active:ring-opacity-20
           active:scale-110
           active:shadow-md
           focus:outline-none
