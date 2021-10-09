@@ -3,7 +3,7 @@ import {SegmentedControl, Segment} from 'shared/ui/segmented-control'
 import {useStore} from 'effector-react'
 import {apiModel} from 'shared/api'
 
-export const ApiVersion: React.FC = () => {
+export const ApiVersionControl: React.FC = () => {
   const apiVersion = useStore(apiModel.$apiVersion)
 
   return (
