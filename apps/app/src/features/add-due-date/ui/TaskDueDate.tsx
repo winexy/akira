@@ -94,7 +94,7 @@ export const TaskDueDate: React.FC<Props> = ({
         }
       >
         <TaskActionList.Button
-          className="w-full bg-dark-600"
+          className="w-full bg-white dark:bg-dark-600"
           Icon={CalendarIcon}
           onClick={() => {
             showBottomSheet('due-datepicker')

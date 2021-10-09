@@ -21,7 +21,7 @@ export const TaskActionList: React.FC<Props> & {
 } = ({children, className}) => (
   <ul
     className={clsx(
-      'mt-4 border-t border-b border-gray-50 dark:border-dark-600 divide-y divide-gray-50 dark:divide-dark-500',
+      'mt-4 border-t border-b border-gray-50 dark:border-dark-600 divide-y divide-gray-100 dark:divide-dark-500',
       className
     )}
   >
