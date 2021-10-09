@@ -41,7 +41,7 @@ import {Tag} from 'modules/tags/components/Tag'
 import {DatePickerSheet} from 'shared/ui/datepicker-sheet'
 import {DatePicker} from 'shared/ui/datepicker'
 import {DatePickerShortcut} from 'shared/ui/datepicker-shortcut'
-import {useListsQuery} from '../../modules/lists/hooks/index'
+import {useListsQuery} from 'modules/lists/hooks'
 
 type TaskFormProps = {
   onSubmit(payload: CreateTaskPayload): void
