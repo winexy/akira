@@ -100,9 +100,7 @@ export const ScheduleTask: React.FC<Props> = ({
         <DatePickerSheet
           date={scheduledDate}
           title="Schedule task"
-          fixedChildren={
-            <DatePickerShortcut className="mb-4" onPick={setScheduledDate} />
-          }
+          fixedChildren={<DatePickerShortcut onPick={setScheduledDate} />}
           onApply={apply}
         >
           <DatePicker
