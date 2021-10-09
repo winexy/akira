@@ -251,7 +251,7 @@ export const Task: React.FC<TaskProps> = ({
                 className={clsx(
                   'flex items-center text-xs font-semibold leading-tight',
                   TaskLib.isDeadlineToday(task)
-                    ? 'text-yellow-500'
+                    ? 'text-yellow-500 dark:text-yellow-200'
                     : isOverdue
                     ? 'text-red-500 dark:text-red-400'
                     : 'text-gray-400'
