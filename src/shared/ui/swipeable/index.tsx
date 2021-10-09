@@ -3,7 +3,8 @@ import React, {
   useState,
   useRef,
   forwardRef,
-  CSSProperties
+  CSSProperties,
+  useImperativeHandle
 } from 'react'
 import clsx, {ClassValue} from 'clsx'
 import pipe from 'lodash/fp/pipe'
@@ -25,7 +26,14 @@ type SwipeableProps = {
   style?: CSSProperties
 }
 
-export const Swipeable = forwardRef<Element, SwipeableProps>(
+export type SwipeableRefHandle = {
+  unshift(): void
+}
+
+export const Swipeable = forwardRef<
+  SwipeableRefHandle | undefined,
+  SwipeableProps
+>(
   (
     {Component = 'div', children, before, after, className, ...props},
     parentRef
@@ -37,6 +45,10 @@ export const Swipeable = forwardRef<Element, SwipeableProps>(
     const beforeRef = useRef<HTMLDivElement>(null)
     const ref = useRef<HTMLDivElement>(null)
     const afterRef = useRef<HTMLDivElement>(null)
+
+    useImperativeHandle(parentRef, () => ({
+      unshift: () => setShift(0)
+    }))
 
     useEffect(() => {
       const beforeWidth = withDefaultWidth(beforeRef.current)

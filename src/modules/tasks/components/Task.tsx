@@ -1,4 +1,4 @@
-import React, {LegacyRef, Ref, useRef} from 'react'
+import React, {LegacyRef, useRef} from 'react'
 import {DragSourceMonitor, DropTargetMonitor, useDrag, useDrop} from 'react-dnd'
 import {Link} from 'react-router-dom'
 import clsx from 'clsx'
@@ -13,7 +13,7 @@ import {Checkbox} from 'shared/ui/checkbox'
 import {ActionSheet} from 'shared/ui/action-sheet'
 import {openActionSheet} from 'shared/ui/action-sheet/model'
 import {Spin} from 'shared/ui/spin'
-import {Swipeable} from 'shared/ui/swipeable'
+import {Swipeable, SwipeableRefHandle} from 'shared/ui/swipeable'
 import {CalendarIcon} from '@heroicons/react/outline'
 import {TaskLib} from 'entities/task'
 
@@ -136,7 +136,7 @@ export const Task: React.FC<TaskProps> = ({
   onOrderChange,
   onSetImportant
 }) => {
-  const dropRef = useRef<Element>()
+  const dropRef = useRef<Element & SwipeableRefHandle>()
   const dragRef = useRef<HTMLButtonElement>()
   const [{opacity, isDragging}, connectDragSource] = useDrag<
     DragObject,
@@ -183,7 +183,7 @@ export const Task: React.FC<TaskProps> = ({
 
   return (
     <Swipeable
-      ref={dropRef as Ref<Element>}
+      ref={dropRef}
       Component="li"
       className={clsx(
         'rounded-lg overflow-hidden',
