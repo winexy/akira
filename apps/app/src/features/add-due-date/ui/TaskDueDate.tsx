@@ -73,7 +73,7 @@ export const TaskDueDate: React.FC<Props> = ({
     <>
       <Swipeable
         ref={swipeableRef}
-        Component={TaskActionList.Item}
+        Component="li"
         after={
           dueDate ? (
             <button
