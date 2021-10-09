@@ -47,7 +47,7 @@ export const ActionToast: React.FC & {
     >
       <div
         ref={ref}
-        className="fixed bottom-0 pointer-events-none w-full flex justify-center items-center pb-10 transition ease-in duration-300"
+        className="z-10 fixed bottom-0 pointer-events-none w-full flex justify-center items-center pb-10 transition ease-in duration-300"
       >
         <div className="flex items-center space-x-4 pointer-events-auto px-4 py-1 rounded-full bg-white dark:bg-dark-500 shadow-2xl border border-gray-50 dark:border-dark-500">
           {children}
