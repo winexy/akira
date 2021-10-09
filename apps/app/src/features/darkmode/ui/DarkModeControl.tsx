@@ -20,7 +20,7 @@ const ThemePreview: React.FC = () => (
   </div>
 )
 
-export const DarkMode: React.FC = () => {
+export const DarkModeControl: React.FC = () => {
   const isDarkMode = useStore($isDarkMode)
 
   return (
