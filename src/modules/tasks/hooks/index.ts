@@ -386,9 +386,16 @@ export function useRemoveTaskTagMutation(task: ApiTask) {
 
 export function useTaskQuery<Select = ApiTask>(
   taskId: string,
-  {select}: {select?(task: ApiTask): Select} = {}
+  {
+    suspense,
+    select
+  }: Partial<{
+    select(task: ApiTask): Select
+    suspense: boolean
+  }> = {}
 ) {
   return useQuery(TaskQuery.One(taskId), () => akira.tasks.findOne(taskId), {
+    suspense,
     select
   })
 }

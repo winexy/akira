@@ -5,7 +5,6 @@ import format from 'date-fns/format'
 import parseISO from 'date-fns/parseISO'
 import isEmpty from 'lodash/fp/isEmpty'
 import {PlusIcon} from '@heroicons/react/outline'
-import ContentLoader from 'react-content-loader'
 import isNil from 'lodash/fp/isNil'
 import {showBottomSheet, BottomSheet} from 'shared/ui/bottom-sheet'
 import {Button} from 'shared/ui/button'
@@ -28,7 +27,6 @@ import isNull from 'lodash/fp/isNull'
 import {TaskListPicker} from 'modules/tasks/components/TaskListPicker'
 import {EditableHeading} from 'shared/ui/editable-heading'
 import clsx from 'clsx'
-import {useShimmerColors} from 'shared/ui/shimmer'
 import {exhaustiveCheck} from 'shared/lib/utils'
 import {MyDayToggle} from 'features/toggle-myday'
 import {ScheduleTask} from 'features/schedule-task'
@@ -57,29 +55,14 @@ function matchRepeatPattern(pattern: typeof repeatPatterns[number]) {
 
 const TaskPage: React.FC = () => {
   const {taskId} = useParams<{taskId: string}>()
-  const {data: task, isFetching} = useTaskQuery(taskId)
+  const {data: task, isFetching} = useTaskQuery(taskId, {
+    suspense: true
+  })
 
   const patchTaskMutation = usePatchTaskMutation(taskId)
-  const {backgroundColor, foregroundColor} = useShimmerColors()
 
   if (isNil(task)) {
-    return (
-      <PageView className="p-4">
-        <ContentLoader
-          speed={2}
-          width={320}
-          height={160}
-          viewBox="0 0 320 160"
-          backgroundColor={backgroundColor}
-          foregroundColor={foregroundColor}
-        >
-          <rect x="0" y="0" rx="4" ry="4" width="105" height="25" />
-          <rect x="120" y="0" rx="4" ry="4" width="105" height="25" />
-          <rect x="0" y="46" rx="4" ry="4" width="240" height="28" />
-          <rect x="0" y="92" rx="4" ry="4" width="200" height="42" />
-        </ContentLoader>
-      </PageView>
-    )
+    return null
   }
 
   const createdAt = format(parseISO(task.created_at), 'd LLL yyyy')
