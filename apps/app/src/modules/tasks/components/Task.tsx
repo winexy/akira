@@ -14,6 +14,12 @@ import {ActionSheet} from 'shared/ui/action-sheet'
 import {openActionSheet} from 'shared/ui/action-sheet/model'
 import {Spin} from 'shared/ui/spin'
 import {Swipeable} from 'shared/ui/swipeable'
+import format from 'date-fns/format'
+import parseISO from 'date-fns/parseISO'
+import {CalendarIcon} from '@heroicons/react/outline'
+import {pipe} from 'fp-ts/lib/function'
+import {fromNullable, getOrElse, map} from 'fp-ts/Option'
+import isToday from 'date-fns/isToday'
 
 const ItemType = 'list-item'
 
@@ -98,14 +104,23 @@ const collectProps = (monitor: DragSourceMonitor) => {
 
 type ProgressBarProps = {
   checklist: CheckList
+  className?: string
 }
 
-const ChecklistProgressBar: React.FC<ProgressBarProps> = ({checklist}) => {
+const ChecklistProgressBar: React.FC<ProgressBarProps> = ({
+  className,
+  checklist
+}) => {
   const completedCount = size(filter('is_completed', checklist))
   const percentage = (completedCount * 100) / size(checklist)
 
   return (
-    <div className="mt-1 w-full h-1 flex bg-gray-200 rounded overflow-hidden">
+    <div
+      className={clsx(
+        className,
+        'w-full h-1 flex bg-gray-200 rounded overflow-hidden'
+      )}
+    >
       <div
         className="h-1 bg-green-400"
         style={{
@@ -167,6 +182,20 @@ export const Task: React.FC<TaskProps> = ({
     onRemove(task.id)
   }
 
+  const dueDate = pipe(fromNullable(task.due_date), map(parseISO))
+
+  const formattedDueDate = pipe(
+    dueDate,
+    map(date => format(date, 'dd.MM.yy')),
+    getOrElse(() => '')
+  )
+
+  const isOverdue = pipe(
+    dueDate,
+    map(isToday),
+    getOrElse(() => false)
+  )
+
   return (
     <Swipeable
       ref={dropRef as Ref<Element>}
@@ -227,9 +256,25 @@ export const Task: React.FC<TaskProps> = ({
         />
         <div className="flex-1 mx-2 flex flex-col truncate">
           <p className="truncate">{task.title}</p>
-          {!isEmpty(task.checklist) && (
-            <ChecklistProgressBar checklist={task.checklist} />
-          )}
+          <div className="flex items-center">
+            {!isNull(task.due_date) && (
+              <span
+                className={clsx(
+                  'flex items-center text-xs font-semibold leading-tight',
+                  isOverdue ? 'text-red-500 dark:text-red-400' : 'text-gray-400'
+                )}
+              >
+                <CalendarIcon className="w-4 h-4 mr-1" />
+                {formattedDueDate}
+              </span>
+            )}
+            {!isEmpty(task.checklist) && (
+              <ChecklistProgressBar
+                className="ml-4"
+                checklist={task.checklist}
+              />
+            )}
+          </div>
         </div>
         <button
           className={clsx(

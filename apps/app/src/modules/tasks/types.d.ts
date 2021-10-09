@@ -27,7 +27,7 @@ export type ApiTask = {
   description: string
   created_at: string
   updated_at: string
-  due_date: string
+  due_date: string | null
   is_completed: boolean
   list_id: number | null
   list: Omit<TaskList, 'tasksCount'>
