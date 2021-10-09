@@ -22,6 +22,7 @@
     "paths": {
       "modules/*": ["./src/modules/*"],
       "features/*": ["./src/features/*"],
+      "entities/*": ["./src/entities/*"],
       "shared/*": ["./src/shared/*"],
       "pages/*": ["./src/pages/*"],
       "images/*": ["./src/assets/images/*"],
