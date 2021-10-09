@@ -28,7 +28,7 @@ export const DatePickerSheet: React.FC<DatePickerSheetProps> = ({
         <Button
           size="md"
           type="button"
-          className="w-full"
+          className="mt-4 w-full"
           onClick={event => {
             event.stopPropagation()
             hideBottomSheet()

@@ -93,9 +93,7 @@ export const TaskDueDate: React.FC<Props> = ({
           date={date}
           title="Select due date"
           name="due-datepicker"
-          fixedChildren={
-            <DatePickerShortcut className="mb-4" onPick={setDate} />
-          }
+          fixedChildren={<DatePickerShortcut onPick={setDate} />}
           onApply={apply}
         >
           <DatePicker date={date} minDate={new Date()} onChange={setDate} />
