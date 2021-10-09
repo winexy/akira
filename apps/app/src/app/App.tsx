@@ -18,6 +18,7 @@ import {Button} from 'shared/ui/button'
 import {PageView} from 'shared/ui/page-view'
 import {useFirebaseAuth} from 'shared/lib/firebase'
 import {NotificationManager} from 'modules/notifications/NotificationManager'
+import {TaskPageFallback} from 'pages/task/fallback'
 
 const dndConfig = {
   enableMouseEvents: true
@@ -105,7 +106,7 @@ function App() {
                 </Suspense>
               </Route>
               <Route path="/tasks/:taskId">
-                <Suspense fallback={<LoadingView />}>
+                <Suspense fallback={<TaskPageFallback />}>
                   <TaskPage />
                 </Suspense>
               </Route>
