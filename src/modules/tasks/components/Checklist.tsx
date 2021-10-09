@@ -21,7 +21,7 @@ export const Checklist: React.FC<Props> = ({taskId, checklist}) => {
   }
 
   return (
-    <ul className="mt-2 divide-y transition ease-in duration-75">
+    <ul className="mt-2 divide-y dark:divide-dark-500 transition ease-in duration-75">
       {checklist.map(todo => (
         <li
           key={todo.id}
