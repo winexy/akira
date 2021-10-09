@@ -1,5 +1,6 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import {CalendarIcon} from '@heroicons/react/outline'
+import {TrashIcon} from '@heroicons/react/solid'
 import {TaskActionList} from 'modules/tasks/components'
 
 import format from 'date-fns/format'
@@ -16,6 +17,7 @@ import {DatePickerShortcut} from 'shared/ui/datepicker-shortcut'
 import {showBottomSheet} from 'shared/ui/bottom-sheet'
 import ContentLoader from 'react-content-loader'
 import {usePatchTaskMutation} from 'modules/tasks/hooks'
+import {Swipeable, SwipeableRefHandle} from 'shared/ui/swipeable'
 
 type Props = {
   taskId: TaskId
@@ -28,6 +30,7 @@ export const TaskDueDate: React.FC<Props> = ({
   isFetchingTask,
   dueDate
 }) => {
+  const swipeableRef = useRef<SwipeableRefHandle>()
   const [date, setDate] = useState<Date | null>(() => {
     return !isNull(dueDate) ? parseISO(dueDate) : null
   })
@@ -56,10 +59,42 @@ export const TaskDueDate: React.FC<Props> = ({
 
   const formattedDate = dueDate ? format(parseISO(dueDate), 'd.MM.yy') : ''
 
+  const resetDate = () => {
+    setDate(null)
+
+    patchTaskMutation.mutate({
+      due_date: null
+    })
+
+    swipeableRef.current?.unshift()
+  }
+
   return (
     <>
-      <TaskActionList.Item>
+      <Swipeable
+        ref={swipeableRef}
+        Component={TaskActionList.Item}
+        after={
+          dueDate ? (
+            <button
+              type="button"
+              className="
+                h-full px-4 
+                flex items-center justify-between  
+                text-white bg-red-500
+                transition ease-in duration-100
+                active:bg-red-600
+                focus:outline-none
+              "
+              onClick={resetDate}
+            >
+              <TrashIcon className="w-5 h-5" />
+            </button>
+          ) : undefined
+        }
+      >
         <TaskActionList.Button
+          className="w-full bg-dark-600"
           Icon={CalendarIcon}
           onClick={() => {
             showBottomSheet('due-datepicker')
@@ -87,7 +122,7 @@ export const TaskDueDate: React.FC<Props> = ({
             </Match.Default>
           </Match>
         </TaskActionList.Button>
-      </TaskActionList.Item>
+      </Swipeable>
       <Portal to="schedule-datepicker">
         <DatePickerSheet
           date={date}
