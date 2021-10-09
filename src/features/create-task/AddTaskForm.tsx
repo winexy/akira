@@ -17,7 +17,11 @@ import {
 } from '@heroicons/react/solid'
 import clsx from 'clsx'
 import {useTagsQuery} from 'modules/tags/hooks/index'
-import {BottomSheet} from 'shared/ui/bottom-sheet'
+import {
+  showBottomSheet,
+  hideBottomSheet,
+  BottomSheet
+} from 'shared/ui/bottom-sheet'
 import {Button} from 'shared/ui/button'
 import {TaskTag} from 'modules/tags/types.d'
 import {TagsGrid} from 'modules/tags/components/TagsGrid'
@@ -35,7 +39,6 @@ import isTomorrow from 'date-fns/isTomorrow'
 import isToday from 'date-fns/isToday'
 import {Tag} from 'modules/tags/components/Tag'
 import {DatePickerSheet} from 'shared/ui/datepicker-sheet'
-import {showBottomSheet, hideBottomSheet} from 'shared/ui/bottom-sheet/model'
 import {DatePicker} from 'shared/ui/datepicker'
 import {DatePickerShortcut} from 'shared/ui/datepicker-shortcut'
 import {useListsQuery} from '../../modules/lists/hooks/index'

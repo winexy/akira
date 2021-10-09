@@ -1,7 +1,7 @@
 import React from 'react'
 import clsx from 'clsx'
 import {FilterIcon, SortAscendingIcon} from '@heroicons/react/solid'
-import {showBottomSheet} from 'shared/ui/bottom-sheet/model'
+import {showBottomSheet} from 'shared/ui/bottom-sheet'
 
 type Props = {
   isFiltered: boolean

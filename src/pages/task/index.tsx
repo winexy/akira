@@ -7,8 +7,7 @@ import isEmpty from 'lodash/fp/isEmpty'
 import {CalendarIcon, PlusIcon} from '@heroicons/react/outline'
 import ContentLoader from 'react-content-loader'
 import isNil from 'lodash/fp/isNil'
-import {showBottomSheet} from 'shared/ui/bottom-sheet/model'
-import {BottomSheet} from 'shared/ui/bottom-sheet'
+import {showBottomSheet, BottomSheet} from 'shared/ui/bottom-sheet'
 import {Button} from 'shared/ui/button'
 import {
   ChecklistManager,
