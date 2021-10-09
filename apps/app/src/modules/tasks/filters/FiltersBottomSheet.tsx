@@ -1,11 +1,14 @@
 import React from 'react'
 import {Button} from 'shared/ui/button'
 import {Checkbox} from 'shared/ui/checkbox'
-import {hideBottomSheet, showBottomSheet} from 'shared/ui/bottom-sheet/model'
 import {RefreshIcon, XIcon} from '@heroicons/react/solid'
 import {Tag} from 'modules/tags/components/Tag'
 import format from 'date-fns/format'
-import {BottomSheet} from 'shared/ui/bottom-sheet'
+import {
+  hideBottomSheet,
+  showBottomSheet,
+  BottomSheet
+} from 'shared/ui/bottom-sheet'
 import {TaskTag} from 'modules/tags/types.d'
 import {exhaustiveCheck} from 'shared/lib/utils'
 import {TagsGrid} from 'modules/tags/components/TagsGrid'

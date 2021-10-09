@@ -13,7 +13,7 @@ import {DatePicker} from 'shared/ui/datepicker'
 import {Portal} from 'shared/ui/portal'
 import {DatePickerSheet} from 'shared/ui/datepicker-sheet'
 import {DatePickerShortcut} from 'shared/ui/datepicker-shortcut'
-import {showBottomSheet} from 'shared/ui/bottom-sheet/model'
+import {showBottomSheet} from 'shared/ui/bottom-sheet'
 import ContentLoader from 'react-content-loader'
 import {useScheduleTaskMutation} from '../model'
 

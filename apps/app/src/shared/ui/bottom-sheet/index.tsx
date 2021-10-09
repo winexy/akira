@@ -27,6 +27,8 @@ type Props = {
   className?: string
 }
 
+export * from 'shared/ui/bottom-sheet/model'
+
 function Fallback({error}: FallbackProps) {
   return (
     <div className="py-8 px-8 flex justify-center items-center flex-col">

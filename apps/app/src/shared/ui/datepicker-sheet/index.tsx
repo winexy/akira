@@ -1,7 +1,6 @@
 import React, {ReactNode} from 'react'
 import format from 'date-fns/format'
-import {hideBottomSheet} from 'shared/ui/bottom-sheet/model'
-import {BottomSheet} from 'shared/ui/bottom-sheet'
+import {hideBottomSheet, BottomSheet} from 'shared/ui/bottom-sheet'
 import {Button} from 'shared/ui/button'
 
 type DatePickerSheetProps = {
