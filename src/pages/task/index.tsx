@@ -13,7 +13,6 @@ import {BottomSheet} from 'shared/ui/bottom-sheet'
 import {Button} from 'shared/ui/button'
 import {
   ChecklistManager,
-  MyDayToggle,
   TaskActionList,
   TaskActionToast,
   TextArea
@@ -43,6 +42,7 @@ import {useShimmerColors} from 'shared/ui/shimmer'
 import {DatePickerSheet} from 'shared/ui/datepicker-sheet'
 import {exhaustiveCheck} from 'shared/lib/utils'
 import {DatePickerShortcut} from 'shared/ui/datepicker-shortcut'
+import {MyDayToggle} from 'features/toggle-myday'
 
 type TaskScheduleProps = {
   taskId: TaskId
