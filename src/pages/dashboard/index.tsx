@@ -166,6 +166,7 @@ export function DashboardPage() {
     {
       onSuccess() {
         queryClient.invalidateQueries(TaskQuery.MyDay())
+        queryClient.invalidateQueries(TaskQuery.Week())
       }
     }
   )
