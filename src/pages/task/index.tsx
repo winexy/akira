@@ -1,12 +1,11 @@
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 import {useParams} from 'react-router'
 import {PageView} from 'shared/ui/page-view'
 import format from 'date-fns/format'
 import parseISO from 'date-fns/parseISO'
 import isEmpty from 'lodash/fp/isEmpty'
-import {CalendarIcon, PlusIcon, ClockIcon} from '@heroicons/react/outline'
+import {CalendarIcon, PlusIcon} from '@heroicons/react/outline'
 import ContentLoader from 'react-content-loader'
-import {useMutation, useQueryClient} from 'react-query'
 import isNil from 'lodash/fp/isNil'
 import {showBottomSheet} from 'shared/ui/bottom-sheet/model'
 import {BottomSheet} from 'shared/ui/bottom-sheet'
@@ -17,7 +16,6 @@ import {
   TaskActionToast,
   TextArea
 } from 'modules/tasks/components'
-import {TaskId} from 'modules/tasks/types.d'
 import {TagsManager, TaskTag} from 'modules/tags/components'
 import {usePatchTaskMutation, useTaskQuery} from 'modules/tasks/hooks'
 import {Tag} from 'modules/tags/components/Tag'
@@ -29,26 +27,12 @@ import {
 import {Link} from 'react-router-dom'
 import isNull from 'lodash/fp/isNull'
 import {TaskListPicker} from 'modules/tasks/components/TaskListPicker'
-import {api} from 'shared/api'
-import {Match} from 'shared/ui/match'
-import isEqual from 'date-fns/isEqual'
-import isUndefined from 'lodash/fp/isUndefined'
 import {EditableHeading} from 'shared/ui/editable-heading'
-import {DatePicker} from 'shared/ui/datepicker'
-import {Portal} from 'shared/ui/portal'
 import clsx from 'clsx'
-import {TaskQuery} from 'modules/tasks/config'
 import {useShimmerColors} from 'shared/ui/shimmer'
-import {DatePickerSheet} from 'shared/ui/datepicker-sheet'
 import {exhaustiveCheck} from 'shared/lib/utils'
-import {DatePickerShortcut} from 'shared/ui/datepicker-shortcut'
 import {MyDayToggle} from 'features/toggle-myday'
-
-type TaskScheduleProps = {
-  taskId: TaskId
-  scheduledTaskDate?: string
-  isFetchingTask: boolean
-}
+import {ScheduleTask} from 'features/schedule-task'
 
 type RepeatPattern = {
   type: 'daily'
@@ -69,113 +53,6 @@ function matchRepeatPattern(pattern: typeof repeatPatterns[number]) {
     default:
       return exhaustiveCheck(pattern)
   }
-}
-
-const TaskSchedule: React.FC<TaskScheduleProps> = ({
-  taskId,
-  isFetchingTask,
-  scheduledTaskDate
-}) => {
-  const [scheduledDate, setScheduledDate] = useState<Date | null>(() => {
-    return !isUndefined(scheduledTaskDate) ? parseISO(scheduledTaskDate) : null
-  })
-
-  useEffect(() => {
-    if (
-      scheduledDate &&
-      !isUndefined(scheduledTaskDate) &&
-      isEqual(parseISO(scheduledTaskDate), scheduledDate)
-    ) {
-      setScheduledDate(parseISO(scheduledTaskDate))
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scheduledTaskDate])
-
-  const queryClient = useQueryClient()
-
-  const scheduleTaskMutation = useMutation(
-    (date: string) =>
-      api.post(`task-scheduler/schedule`, {
-        task_id: taskId,
-        date
-      }),
-    {
-      onSuccess() {
-        queryClient.refetchQueries(TaskQuery.One(taskId))
-        queryClient.invalidateQueries(TaskQuery.MyDay())
-        queryClient.invalidateQueries(TaskQuery.Week())
-      }
-    }
-  )
-
-  function apply() {
-    const shouldChangeDate =
-      isUndefined(scheduledTaskDate) ||
-      isNull(scheduledDate) ||
-      !isEqual(scheduledDate, parseISO(scheduledTaskDate))
-
-    if (scheduledDate && shouldChangeDate) {
-      scheduleTaskMutation.mutate(format(scheduledDate, 'yyyy-MM-dd'))
-    }
-  }
-
-  const {backgroundColor, foregroundColor} = useShimmerColors()
-
-  const formattedDate = scheduledTaskDate
-    ? format(parseISO(scheduledTaskDate), 'd.MM.yy')
-    : ''
-
-  return (
-    <>
-      <TaskActionList.Item>
-        <TaskActionList.Button
-          Icon={ClockIcon}
-          onClick={() => {
-            showBottomSheet('datepicker')
-          }}
-        >
-          <Match>
-            <Match.Case when={scheduleTaskMutation.isLoading || isFetchingTask}>
-              Loading...
-              <ContentLoader
-                className="ml-auto"
-                width="40%"
-                height={24}
-                backgroundColor={backgroundColor}
-                foregroundColor={foregroundColor}
-              >
-                <rect rx="5" ry="5" x="0" y="0" width="100%" height="24" />
-              </ContentLoader>
-            </Match.Case>
-            <Match.Case when={isUndefined(scheduledTaskDate)}>
-              Schedule
-            </Match.Case>
-            <Match.Default>
-              Scheduled
-              <span className="ml-auto bg-blue-50 dark:bg-dark-500 text-blue-600 dark:text-blue-400 rounded px-2">
-                {formattedDate}
-              </span>
-            </Match.Default>
-          </Match>
-        </TaskActionList.Button>
-      </TaskActionList.Item>
-      <Portal to="schedule-datepicker">
-        <DatePickerSheet
-          date={scheduledDate}
-          fixedChildren={
-            <DatePickerShortcut className="mb-4" onPick={setScheduledDate} />
-          }
-          onApply={apply}
-        >
-          <DatePicker
-            date={scheduledDate}
-            minDate={new Date()}
-            onChange={setScheduledDate}
-          />
-        </DatePickerSheet>
-      </Portal>
-    </>
-  )
 }
 
 const TaskPage: React.FC = () => {
@@ -294,7 +171,7 @@ const TaskPage: React.FC = () => {
             Add due date
           </TaskActionList.Button>
         </TaskActionList.Item>
-        <TaskSchedule
+        <ScheduleTask
           taskId={taskId}
           scheduledTaskDate={task.schedule?.date}
           isFetchingTask={isFetching}
