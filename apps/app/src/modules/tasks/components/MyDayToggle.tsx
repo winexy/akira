@@ -23,12 +23,14 @@ export const MyDayToggle: React.FC<{taskId: TaskId}> = ({taskId}) => {
     onSuccess(_, taskId) {
       queryClient.invalidateQueries(TaskQuery.MyDay())
       queryClient.invalidateQueries(TaskQuery.One(taskId))
+      queryClient.invalidateQueries(TaskQuery.Week())
     }
   })
   const removeFromMyDayMutation = useMutation(akira.myday.remove, {
     onSuccess(_, taskId) {
       queryClient.invalidateQueries(TaskQuery.MyDay())
       queryClient.invalidateQueries(TaskQuery.One(taskId))
+      queryClient.invalidateQueries(TaskQuery.Week())
     }
   })
 
