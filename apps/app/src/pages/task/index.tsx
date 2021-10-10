@@ -31,6 +31,7 @@ import {MyDayToggle} from 'features/toggle-myday'
 import {ScheduleTask} from 'features/schedule-task'
 import {TaskDueDate} from 'features/add-due-date'
 import {ChecklistManager} from 'features/checklist'
+import {List} from 'shared/ui/list'
 
 type RepeatPattern = {
   type: 'daily'
@@ -173,22 +174,18 @@ const TaskPage: React.FC = () => {
         <div className="text-center py-3">
           <h2 className="font-semibold text-2xl">Repeat</h2>
         </div>
-        <ul className="divide-y divide-gray-100 dark:divide-dark-500">
+        <List>
           {repeatPatterns.map(pattern => (
-            <li
+            <List.Item
               key={pattern}
-              className={clsx(
-                'px-4 py-3 font-semibold',
-                'transition ease-in duration-100',
-                'active:bg-gray-50 dark:active:bg-dark-400'
-              )}
+              className={clsx('px-4 py-3 font-semibold')}
               // eslint-disable-next-line no-alert
               onClick={() => alert('WIP: not implemented')}
             >
               {matchRepeatPattern(pattern)}
-            </li>
+            </List.Item>
           ))}
-        </ul>
+        </List>
       </BottomSheet>
       {task && <ChecklistManager task={task} />}
       <TaskActionToast

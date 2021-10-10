@@ -14,8 +14,9 @@ import {
 import {ApiTask} from 'modules/tasks/types.d'
 import {Button} from 'shared/ui/button'
 import {useShimmerColors} from 'shared/ui/shimmer'
+import {List} from 'shared/ui/list'
 import {TaskTag} from './TaskTag'
-import {useTagsQuery} from '../hooks/index'
+import {useTagsQuery} from '../hooks'
 
 export const TagsManager: React.FC<{task: ApiTask}> = ({task}) => {
   const {data: tags, isLoading} = useTagsQuery()
@@ -46,9 +47,9 @@ export const TagsManager: React.FC<{task: ApiTask}> = ({task}) => {
         </ContentLoader>
       )}
       {!isUndefined(tags) && !isEmpty(tags) && (
-        <ul className="mt-2 divide-y dark:divide-dark-500">
+        <List className="mt-2">
           {tags.map(tag => (
-            <li key={tag.id} className="flex items-center px-4 py-2">
+            <List.Item key={tag.id} className="px-4 py-2">
               <TaskTag name={tag.name} />
               {taskTagsIdSet.has(tag.id) ? (
                 <Button
@@ -66,9 +67,9 @@ export const TagsManager: React.FC<{task: ApiTask}> = ({task}) => {
                   add tag
                 </Button>
               )}
-            </li>
+            </List.Item>
           ))}
-        </ul>
+        </List>
       )}
       <div
         className={clsx(

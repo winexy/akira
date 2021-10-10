@@ -7,6 +7,7 @@ import {CheckIcon, ChevronRightIcon, InboxIcon} from '@heroicons/react/solid'
 import {Link} from 'react-router-dom'
 import {Spin} from 'shared/ui/spin'
 import {Button} from 'shared/ui/button'
+import {List} from 'shared/ui/list'
 import isEmpty from 'lodash/fp/isEmpty'
 import get from 'lodash/fp/get'
 
@@ -73,15 +74,15 @@ export const TaskListPicker: React.FC<Props> = ({taskId, activeListId}) => {
           </div>
         </Match.Case>
         <Match.Default>
-          <ul className="divide-y divide-gray-100 dark:divide-dark-500">
+          <List>
             {lists.map(list => (
-              <li key={list.id}>
+              <List.Item key={list.id}>
                 <button
+                  type="button"
                   className={clsx(
                     'w-full flex items-center px-4 py-3',
                     'font-semibold text-left ',
-                    'transition ease-in duration-150 ',
-                    'active:bg-gray-100 focus:outline-none',
+                    'focus:outline-none',
                     {
                       'text-blue-500': list.id === activeListId
                     }
@@ -108,9 +109,9 @@ export const TaskListPicker: React.FC<Props> = ({taskId, activeListId}) => {
                     </Match.Case>
                   </Match>
                 </button>
-              </li>
+              </List.Item>
             ))}
-          </ul>
+          </List>
         </Match.Default>
       </Match>
       <div className="sticky bottom-0 px-4 pt-4 pb-6 border-t border-gray-100 dark:border-dark-500">
