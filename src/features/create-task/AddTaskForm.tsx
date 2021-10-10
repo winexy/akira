@@ -41,6 +41,7 @@ import {Tag} from 'modules/tags/components/Tag'
 import {DatePickerSheet} from 'shared/ui/datepicker-sheet'
 import {DatePicker} from 'shared/ui/datepicker'
 import {DatePickerShortcut} from 'shared/ui/datepicker-shortcut'
+import {List} from 'shared/ui/list'
 import {useListsQuery} from 'modules/lists/hooks'
 
 type TaskFormProps = {
@@ -324,7 +325,7 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
             <BottomSheet name="lists" className="pt-6">
               <div className="px-4">
                 <input
-                  className="w-full rounded px-1 appearance-none text-lg font-bold focus:outline-none bg-transparent"
+                  className="w-full rounded appearance-none text-lg font-bold focus:outline-none bg-transparent"
                   placeholder="Search list..."
                   onInput={e =>
                     setSearch(toLower((e.target as HTMLInputElement).value))
@@ -332,15 +333,12 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                 />
               </div>
               {lists && (
-                <ul className="mt-4 divide-y divide-gray-100 dark:divide-dark-400">
+                <List className="mt-4">
                   {filteredList.map(list => (
-                    <li
+                    <List.Item
                       key={list.id}
                       className={clsx(
-                        'px-4 py-3 font-semibold text-lg',
-                        'transition ease-in duration-75',
-                        'active:text-blue-500 active:bg-gray-50',
-                        'dark:active:bg-dark-400',
+                        'px-4 py-3 font-semibold ',
                         list.id === selectedList?.id ? 'text-blue-500' : ''
                       )}
                       onClick={() => {
@@ -353,9 +351,9 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                       }}
                     >
                       {list.title}
-                    </li>
+                    </List.Item>
                   ))}
-                </ul>
+                </List>
               )}
             </BottomSheet>
           </div>

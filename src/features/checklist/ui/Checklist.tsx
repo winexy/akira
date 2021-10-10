@@ -5,6 +5,7 @@ import {XIcon} from '@heroicons/react/solid'
 
 import {Checkbox} from 'shared/ui/checkbox'
 import {TaskId, Todo} from 'modules/tasks/types.d'
+import {List} from 'shared/ui/list'
 import {useRemoveTodoMutation, usePatchTodoMutation} from '../model'
 
 type Props = {
@@ -21,17 +22,11 @@ export const Checklist: React.FC<Props> = ({taskId, checklist}) => {
   }
 
   return (
-    <ul className="mt-2 divide-y divide-gray-100 dark:divide-dark-500 transition ease-in duration-75">
+    <List className="mt-2">
       {checklist.map(todo => (
-        <li
+        <List.Item
           key={todo.id}
-          className={clsx(
-            'flex items-center px-4 py-1',
-            'select-none',
-            'transitino ease-in duration-150',
-            'active:bg-gray-200 dark:active:bg-dark-500',
-            {'line-through': todo.is_completed}
-          )}
+          className={clsx('px-4 py-1', {'line-through': todo.is_completed})}
         >
           <Checkbox
             isChecked={todo.is_completed}
@@ -60,8 +55,8 @@ export const Checklist: React.FC<Props> = ({taskId, checklist}) => {
           >
             <XIcon className="w-4 h-4" />
           </button>
-        </li>
+        </List.Item>
       ))}
-    </ul>
+    </List>
   )
 }

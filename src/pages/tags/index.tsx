@@ -8,6 +8,7 @@ import {Spin} from 'shared/ui/spin'
 import isEmpty from 'lodash/fp/isEmpty'
 import {CreateTagForm, TaskTag} from 'modules/tags/components'
 import {useTagsQuery} from 'modules/tags/hooks'
+import {List} from 'shared/ui/list'
 
 const TagsPage: React.FC = () => {
   const queryClient = useQueryClient()
@@ -32,12 +33,9 @@ const TagsPage: React.FC = () => {
           <h2 className="flex items-center px-4 font-bold text-2xl">
             All tags <span className="ml-4 text-gray-400">{tags.length}</span>
           </h2>
-          <ul className="mt-2 divide-y dark:divide-dark-500">
+          <List className="mt-2">
             {tags.map(tag => (
-              <li
-                key={tag.id}
-                className="flex items-center justify-between px-4 py-2"
-              >
+              <List.Item key={tag.id} className="justify-between px-4 py-2">
                 <TaskTag name={tag.name} />
                 <IconButton
                   disabled={isTagPending(tag.id)}
@@ -49,9 +47,9 @@ const TagsPage: React.FC = () => {
                     <XIcon className="w-4 h-4 text-red-500" />
                   )}
                 </IconButton>
-              </li>
+              </List.Item>
             ))}
-          </ul>
+          </List>
         </>
       )}
     </PageView>
