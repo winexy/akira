@@ -5,7 +5,7 @@ import {XIcon} from '@heroicons/react/solid'
 
 import {Checkbox} from 'shared/ui/checkbox'
 import {TaskId, Todo} from 'modules/tasks/types.d'
-import {useRemoveTodoMutation, usePatchTodoMutation} from '../hooks'
+import {useRemoveTodoMutation, usePatchTodoMutation} from '../model'
 
 type Props = {
   taskId: TaskId
@@ -29,7 +29,7 @@ export const Checklist: React.FC<Props> = ({taskId, checklist}) => {
             'flex items-center px-4 py-1',
             'select-none',
             'transitino ease-in duration-150',
-            'active:bg-gray-200',
+            'active:bg-gray-200 dark:active:bg-dark-500',
             {'line-through': todo.is_completed}
           )}
         >

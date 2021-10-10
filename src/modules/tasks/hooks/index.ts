@@ -1,7 +1,6 @@
 import produce, {Draft, Immutable} from 'immer'
 import findIndex from 'lodash/fp/findIndex'
 import filter from 'lodash/fp/filter'
-import uniqueId from 'lodash/fp/uniqueId'
 import isUndefined from 'lodash/fp/isUndefined'
 import isNull from 'lodash/fp/isNull'
 import reduce from 'lodash/reduce'
@@ -19,7 +18,7 @@ import {TaskTag} from 'modules/tags/types.d'
 import {TaskQuery} from 'modules/tasks/config'
 import {forEach} from 'lodash/fp'
 
-function writeTaskCache(
+export function writeTaskCache(
   taskId: TaskId,
   queryClient: QueryClient,
   mutateDraft: (draft: Draft<ApiTask>, prevTask: Immutable<ApiTask>) => void
@@ -35,7 +34,7 @@ function writeTaskCache(
   return [null, null]
 }
 
-function writeTaskListCache(
+export function writeTaskListCache(
   tasksQueryKey: Array<string>,
   queryClient: QueryClient,
   updatedTask: ApiTask | null
@@ -60,7 +59,7 @@ function writeTaskListCache(
   return prevTasks
 }
 
-function writeTaskListsCache(
+export function writeTaskListsCache(
   queryClient: QueryClient,
   updatedTask: ApiTask | null
 ) {
@@ -82,7 +81,7 @@ function writeTaskListsCache(
 
 type PrevTasksEntries = Array<[Array<string>, Array<ApiTask> | null]>
 
-function rollbackTaskListMutations(
+export function rollbackTaskListMutations(
   queryClient: QueryClient,
   prevTasksEntries: PrevTasksEntries
 ) {
@@ -91,7 +90,7 @@ function rollbackTaskListMutations(
   }, prevTasksEntries)
 }
 
-function rollbackTaskMutation(
+export function rollbackTaskMutation(
   taskId: TaskId,
   queryClient: QueryClient,
   prevTask: ApiTask | undefined
@@ -217,113 +216,6 @@ export function useRemoveTaskMutation() {
       removeTasksFromCache(queryClient, TaskQuery.All(), taskId)
     }
   })
-}
-
-export function useAddTodoMutation(taskId: TaskId) {
-  const queryClient = useQueryClient()
-
-  return useMutation(
-    (Todoitle: string) => {
-      return akira.checklist.addTodo({
-        taskId,
-        title: Todoitle
-      })
-    },
-    {
-      onMutate(Todoitle) {
-        const todo: Todo = {
-          id: uniqueId(Todoitle),
-          title: Todoitle,
-          is_completed: false,
-          task_id: taskId
-        }
-
-        const [prevTask, newTask] = writeTaskCache(
-          taskId,
-          queryClient,
-          draft => {
-            draft.checklist.push(todo)
-          }
-        )
-
-        const prevTasksRecord = writeTaskListsCache(queryClient, newTask)
-
-        return {prevTask, prevTasksRecord}
-      },
-      onSuccess() {
-        queryClient.invalidateQueries(TaskQuery.One(taskId))
-      },
-      onError(_, __, context: any) {
-        rollbackTaskMutation(taskId, queryClient, context.prevTask)
-        rollbackTaskListMutations(queryClient, context.prevTasksRecord)
-      }
-    }
-  )
-}
-
-export function usePatchTodoMutation(taskId: TaskId) {
-  const queryClient = useQueryClient()
-
-  return useMutation(
-    ({todoId, patch}: {todoId: TodoId; patch: TodoPatch}) => {
-      return akira.checklist.patchTodo(taskId, todoId, patch)
-    },
-    {
-      onMutate({todoId, patch}) {
-        const [prevTask] = writeTaskCache(
-          taskId,
-          queryClient,
-          (draft, prevTask) => {
-            const index = findIndex({id: todoId}, prevTask.checklist)
-
-            if (index !== -1) {
-              draft.checklist[index] = {
-                ...prevTask.checklist[index],
-                ...patch
-              }
-            }
-          }
-        )
-
-        return {prevTask}
-      },
-      onError(_, __, context: any) {
-        rollbackTaskMutation(taskId, queryClient, context.prevTask)
-      }
-    }
-  )
-}
-
-export function useRemoveTodoMutation(taskId: TaskId) {
-  const queryClient = useQueryClient()
-
-  return useMutation(
-    (todoId: TodoId) => {
-      return akira.checklist.removeTodo(taskId, todoId)
-    },
-    {
-      onMutate(todoId) {
-        const [prevTask, newTask] = writeTaskCache(
-          taskId,
-          queryClient,
-          draft => {
-            draft.checklist = filter(
-              todo => todo.id !== todoId,
-              draft.checklist
-            )
-          }
-        )
-
-        const prevTasksRecord = writeTaskListsCache(queryClient, newTask)
-
-        return {prevTask, prevTasksRecord}
-      },
-      onError(_, __, context: any) {
-        rollbackTaskMutation(taskId, queryClient, context.prevTask)
-        rollbackTaskListMutations(queryClient, context.prevTasksRecord)
-      }
-    }
-  )
 }
 
 export function useAddTaskTagMutation(task: ApiTask) {

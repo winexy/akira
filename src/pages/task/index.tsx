@@ -9,7 +9,6 @@ import isNil from 'lodash/fp/isNil'
 import {showBottomSheet, BottomSheet} from 'shared/ui/bottom-sheet'
 import {Button} from 'shared/ui/button'
 import {
-  ChecklistManager,
   TaskActionList,
   TaskActionToast,
   TextArea
@@ -31,6 +30,7 @@ import {exhaustiveCheck} from 'shared/lib/utils'
 import {MyDayToggle} from 'features/toggle-myday'
 import {ScheduleTask} from 'features/schedule-task'
 import {TaskDueDate} from 'features/add-due-date'
+import {ChecklistManager} from 'features/checklist'
 
 type RepeatPattern = {
   type: 'daily'
