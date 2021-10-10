@@ -6,7 +6,7 @@ type ItemProps = {className?: string} & React.DetailedHTMLProps<
   HTMLLIElement
 >
 
-const Item: React.FC<ItemProps> = ({children, className}) => {
+const Item: React.FC<ItemProps> = ({children, className, onClick}) => {
   return (
     <li
       className={clsx(
@@ -15,6 +15,7 @@ const Item: React.FC<ItemProps> = ({children, className}) => {
         'active:bg-gray-200 dark:active:bg-dark-500',
         className
       )}
+      onClick={onClick}
     >
       {children}
     </li>
