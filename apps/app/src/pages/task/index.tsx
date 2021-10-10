@@ -4,7 +4,7 @@ import {PageView} from 'shared/ui/page-view'
 import format from 'date-fns/format'
 import parseISO from 'date-fns/parseISO'
 import isEmpty from 'lodash/fp/isEmpty'
-import {PlusIcon} from '@heroicons/react/outline'
+import {ExclamationIcon, PlusIcon} from '@heroicons/react/outline'
 import isNil from 'lodash/fp/isNil'
 import {showBottomSheet, BottomSheet} from 'shared/ui/bottom-sheet'
 import {Button} from 'shared/ui/button'
@@ -32,6 +32,7 @@ import {ScheduleTask} from 'features/schedule-task'
 import {TaskDueDate} from 'features/add-due-date'
 import {ChecklistManager} from 'features/checklist'
 import {List} from 'shared/ui/list'
+import {IconButton} from 'shared/ui/icon-button'
 
 type RepeatPattern = {
   type: 'daily'
@@ -70,11 +71,24 @@ const TaskPage: React.FC = () => {
 
   return (
     <PageView className="pb-32">
-      <div className="px-4 space-x-2">
-        <Tag variant={task.is_completed ? 'green' : 'gray'}>
-          {task.is_completed ? '' : 'not '}completed
-        </Tag>
-        {task.is_important && <Tag variant="red">important</Tag>}
+      <div className="mt-1 flex px-4 space-x-2">
+        <div>
+          <Tag variant={task.is_completed ? 'green' : 'gray'}>
+            {task.is_completed ? '' : 'not '}completed
+          </Tag>
+          {task.is_important && <Tag variant="red">important</Tag>}
+        </div>
+        <div className="ml-auto">
+          <IconButton>
+            <ExclamationIcon
+              className={clsx(
+                'w-6 h-6 text-gray-400',
+                'transition',
+                'transform active:scale-110'
+              )}
+            />
+          </IconButton>
+        </div>
       </div>
       <EditableHeading
         value={task.title}

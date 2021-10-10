@@ -22,8 +22,8 @@ export const IconButton: React.FC<Props> = ({
       'flex justify-center items-center',
       'rounded',
       'transition ease-in duration-150',
-      'active:bg-gray-200',
-      'focus:outline-none focus-within:ring',
+      'active:bg-gray-200 dark:active:bg-dark-500',
+      'focus:outline-none focus-visible:ring',
       matchSize(size)
     )}
     type="button"
