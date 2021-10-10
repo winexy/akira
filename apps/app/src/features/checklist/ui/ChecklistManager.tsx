@@ -4,8 +4,8 @@ import {ApiTask} from 'modules/tasks/types.d'
 import {ClipboardCheckIcon} from '@heroicons/react/solid'
 import {Button} from 'shared/ui/button'
 import clsx from 'clsx'
-import {useAddTodoMutation} from '../hooks'
 import {Checklist} from './Checklist'
+import {useAddTodoMutation} from '../model'
 
 type Props = {
   task: ApiTask
