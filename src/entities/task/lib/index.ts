@@ -1,4 +1,3 @@
-import startOfToday from 'date-fns/startOfToday'
 import isBefore from 'date-fns/fp/isBefore'
 import parseISO from 'date-fns/parseISO'
 import {constFalse, constTrue, flow, pipe} from 'fp-ts/lib/function'
@@ -11,10 +10,10 @@ import isToday from 'date-fns/isToday'
 const parseDueDate = (task: ApiTask): O.Option<Date> =>
   pipe(O.fromNullable(task.due_date), O.map(parseISO), O.filter(isValid))
 
-export const isOverdue = (task: ApiTask): boolean =>
+export const isOverdue = (task: ApiTask, today: Date): boolean =>
   pipe(
     parseDueDate(task),
-    O.filter(isBefore(startOfToday())),
+    O.filter(isBefore(today)),
     O.filter(() => !task.is_completed),
     O.fold(constFalse, constTrue)
   )

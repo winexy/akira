@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom'
 import clsx from 'clsx'
 import {XIcon, MenuAlt4Icon, FireIcon} from '@heroicons/react/solid'
 import {ApiTask, TaskId, CheckList} from 'modules/tasks/types.d'
+import startOfToday from 'date-fns/startOfToday'
 import isNull from 'lodash/isNull'
 import size from 'lodash/fp/size'
 import filter from 'lodash/fp/filter'
@@ -179,7 +180,7 @@ export const Task: React.FC<TaskProps> = ({
   }
 
   const isCompleted = task.is_completed
-  const isOverdue = TaskLib.isOverdue(task)
+  const isOverdue = TaskLib.isOverdue(task, startOfToday())
 
   return (
     <Swipeable
