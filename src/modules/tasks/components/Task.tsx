@@ -6,8 +6,6 @@ import {XIcon, MenuAlt4Icon, FireIcon} from '@heroicons/react/solid'
 import {ApiTask, TaskId, CheckList} from 'modules/tasks/types.d'
 import startOfToday from 'date-fns/startOfToday'
 import isNull from 'lodash/isNull'
-import size from 'lodash/fp/size'
-import filter from 'lodash/fp/filter'
 import isEmpty from 'lodash/fp/isEmpty'
 import {useIsMutating} from 'react-query'
 import {Checkbox} from 'shared/ui/checkbox'
@@ -16,6 +14,7 @@ import {openActionSheet} from 'shared/ui/action-sheet/model'
 import {Spin} from 'shared/ui/spin'
 import {Swipeable, SwipeableRefHandle} from 'shared/ui/swipeable'
 import {CalendarIcon} from '@heroicons/react/outline'
+import {ChecklistLib} from 'entities/checklist'
 import {TaskLib} from 'entities/task'
 
 const ItemType = 'list-item'
@@ -108,8 +107,7 @@ const ChecklistProgressBar: React.FC<ProgressBarProps> = ({
   className,
   checklist
 }) => {
-  const completedCount = size(filter('is_completed', checklist))
-  const percentage = (completedCount * 100) / size(checklist)
+  const percentage = ChecklistLib.getPercentageOfCompleted(checklist)
 
   return (
     <div

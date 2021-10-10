@@ -7,3 +7,7 @@ export const rejectNotImplemented = () =>
 export const exhaustiveCheck = (arg: never): never => {
   throw new Error(`[ExhaustiveCheck]: ${arg}`)
 }
+
+export function prop<T, K extends keyof T = keyof T>(key: K) {
+  return (source: NonNullable<T>) => source[key]
+}
