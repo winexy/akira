@@ -171,7 +171,7 @@ const TaskPage: React.FC = () => {
         />
         <ScheduleTask
           taskId={taskId}
-          scheduledTaskDate={task.schedule?.date}
+          scheduledTaskDate={task.date}
           isFetchingTask={isFetching}
         />
         <TaskActionList.Item>
