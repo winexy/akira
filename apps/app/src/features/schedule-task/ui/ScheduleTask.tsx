@@ -19,7 +19,7 @@ import {useScheduleTaskMutation} from '../model'
 
 type Props = {
   taskId: TaskId
-  scheduledTaskDate?: string
+  scheduledTaskDate: string | null
   isFetchingTask: boolean
 }
 
@@ -29,13 +29,13 @@ export const ScheduleTask: React.FC<Props> = ({
   scheduledTaskDate
 }) => {
   const [scheduledDate, setScheduledDate] = useState<Date | null>(() => {
-    return !isUndefined(scheduledTaskDate) ? parseISO(scheduledTaskDate) : null
+    return !isNull(scheduledTaskDate) ? parseISO(scheduledTaskDate) : null
   })
 
   useEffect(() => {
     if (
       scheduledDate &&
-      !isUndefined(scheduledTaskDate) &&
+      !isNull(scheduledTaskDate) &&
       isEqual(parseISO(scheduledTaskDate), scheduledDate)
     ) {
       setScheduledDate(parseISO(scheduledTaskDate))
@@ -47,7 +47,7 @@ export const ScheduleTask: React.FC<Props> = ({
 
   function apply() {
     const shouldChangeDate =
-      isUndefined(scheduledTaskDate) ||
+      isNull(scheduledTaskDate) ||
       isNull(scheduledDate) ||
       !isEqual(scheduledDate, parseISO(scheduledTaskDate))
 

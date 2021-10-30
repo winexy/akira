@@ -9,7 +9,7 @@ import {useTaskQuery} from 'modules/tasks/hooks'
 import {useAddToMyDayMutation, useRemoveFromMyDayMutation} from '../model/index'
 
 const isTaskOnMyDay = (task: ApiTask): boolean =>
-  task.schedule ? isToday(new Date(task.schedule.date)) : false
+  task.date ? isToday(new Date(task.date)) : false
 
 export const MyDayToggle: React.FC<{taskId: TaskId}> = ({taskId}) => {
   const {data: isOnMyDay, isLoading, isFetching} = useTaskQuery(taskId, {

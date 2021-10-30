@@ -65,7 +65,7 @@ const Week: React.FC = () => {
   const {data: tasks, isLoading, isFetching} = useWeekQuery()
   const {backgroundColor, foregroundColor} = useShimmerColors()
 
-  const byDay = groupBy(task => task.schedule?.date ?? '', tasks)
+  const byDay = groupBy(task => task.date ?? '', tasks)
   const days = keys(byDay).sort()
 
   if (isLoading) {
