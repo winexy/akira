@@ -26,14 +26,14 @@ import isNull from 'lodash/fp/isNull'
 import {TaskListPicker} from 'modules/tasks/components/TaskListPicker'
 import {EditableHeading} from 'shared/ui/editable-heading'
 import clsx from 'clsx'
-import {exhaustiveCheck} from 'shared/lib/utils'
+import RRule from 'rrule'
 import {MyDayToggle} from 'features/toggle-myday'
 import {ScheduleTask} from 'features/schedule-task'
 import {TaskDueDate} from 'features/add-due-date'
 import {ChecklistManager} from 'features/checklist'
-import {List} from 'shared/ui/list'
 import {IconButton} from 'shared/ui/icon-button'
 import {Recurrence} from 'features/recurrence'
+import capitalize from 'lodash/capitalize'
 
 type RepeatPattern = {
   type: 'daily'
@@ -163,7 +163,9 @@ const TaskPage: React.FC = () => {
             Icon={RefreshIcon}
             onClick={() => showBottomSheet('repeat-patterns')}
           >
-            Make recurring
+            {task.recurrence
+              ? capitalize(RRule.fromString(task.recurrence.rule).toText())
+              : 'Make recurring'}
           </TaskActionList.Button>
         </TaskActionList.Item>
       </TaskActionList>
