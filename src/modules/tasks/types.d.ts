@@ -14,6 +14,14 @@ export type CheckList = Todo[]
 export type TodoId = Todo['id']
 export type TodoPatch = Partial<Omit<Todo, 'id' | 'task_id'>>
 
+type Recurrence = {
+  id: number
+  author_uid: string
+  next_date: string
+  rule: string
+  source_task_id: string
+}
+
 export type ApiTask = {
   id: string
   author_uid: string
@@ -29,6 +37,7 @@ export type ApiTask = {
   checklist: Array<Todo>
   tags: Array<TaskTag>
   date: string | null
+  recurrence: Recurrence | null
 }
 
 export type TaskId = ApiTask['id']
