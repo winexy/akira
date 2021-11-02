@@ -33,26 +33,10 @@ import {TaskDueDate} from 'features/add-due-date'
 import {ChecklistManager} from 'features/checklist'
 import {List} from 'shared/ui/list'
 import {IconButton} from 'shared/ui/icon-button'
+import {Recurrence} from 'features/recurrence'
 
 type RepeatPattern = {
   type: 'daily'
-}
-
-const repeatPatterns = ['daily', 'weekly', 'monthly', 'years'] as const
-
-function matchRepeatPattern(pattern: typeof repeatPatterns[number]) {
-  switch (pattern) {
-    case 'daily':
-      return 'Daily'
-    case 'monthly':
-      return 'Monthly'
-    case 'weekly':
-      return 'Weekly'
-    case 'years':
-      return 'Years'
-    default:
-      return exhaustiveCheck(pattern)
-  }
 }
 
 const TaskPage: React.FC = () => {
@@ -179,7 +163,7 @@ const TaskPage: React.FC = () => {
             Icon={RefreshIcon}
             onClick={() => showBottomSheet('repeat-patterns')}
           >
-            Repeat task
+            Make recurring
           </TaskActionList.Button>
         </TaskActionList.Item>
       </TaskActionList>
@@ -188,18 +172,7 @@ const TaskPage: React.FC = () => {
         <div className="text-center py-3">
           <h2 className="font-semibold text-2xl">Repeat</h2>
         </div>
-        <List>
-          {repeatPatterns.map(pattern => (
-            <List.Item
-              key={pattern}
-              className={clsx('px-4 py-3 font-semibold')}
-              // eslint-disable-next-line no-alert
-              onClick={() => alert('WIP: not implemented')}
-            >
-              {matchRepeatPattern(pattern)}
-            </List.Item>
-          ))}
-        </List>
+        <Recurrence taskId={task.id} />
       </BottomSheet>
       {task && <ChecklistManager task={task} />}
       <TaskActionToast
