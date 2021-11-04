@@ -48,3 +48,10 @@ body {
     max-height: -webkit-fill-available;
   }
 }
+
+/* pull-to-refresh start */
+.ptr--text,
+.ptr--icon {
+  @apply text-white !important;
+}
+/* pull-to-refresh end */
