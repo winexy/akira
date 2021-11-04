@@ -63,7 +63,7 @@ export function usePatchTodoMutation(taskId: TaskId) {
     },
     {
       onMutate({todoId, patch}) {
-        const [prevTask] = writeTaskCache(
+        const [prevTask, newTask] = writeTaskCache(
           taskId,
           queryClient,
           (draft, prevTask) => {
@@ -75,10 +75,13 @@ export function usePatchTodoMutation(taskId: TaskId) {
           }
         )
 
-        return {prevTask}
+        const prevTasksRecord = writeTaskListsCache(queryClient, newTask)
+
+        return {prevTask, prevTasksRecord}
       },
       onError(_, __, context: any) {
         rollbackTaskMutation(taskId, queryClient, context.prevTask)
+        rollbackTaskListMutations(queryClient, context.prevTasksRecord)
       }
     }
   )
