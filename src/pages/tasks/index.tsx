@@ -21,9 +21,10 @@ import {useTagsQuery} from 'modules/tags/hooks'
 import {TaskListOperations} from 'modules/tasks/components/TaskListOperations'
 import {TaskQuery} from 'modules/tasks/config'
 import {SearchIcon} from '@heroicons/react/solid'
+import {usePullToRefresh} from '../../shared/lib/hooks/pull-to-refresh'
 
 const TasksPage: React.FC = () => {
-  const {data: tasks = [], isLoading} = useTasksQuery()
+  const {data: tasks = [], isLoading, refetch: refetchTasks} = useTasksQuery()
   const {data: tags = []} = useTagsQuery()
   const addTaskControl = useAddTaskControl()
   const [filtersState, updateFilters] = useTaskFilters()
@@ -38,14 +39,19 @@ const TasksPage: React.FC = () => {
 
   const sorted = sort(filterTasks(tasks, filtersState))
 
+  usePullToRefresh({
+    mainElement: '#tasks-wrapper',
+    onRefresh: refetchTasks
+  })
+
   return (
-    <PageView>
+    <PageView id="tasks-wrapper">
       <AddTaskForm
         ref={addTaskControl.formRef}
         onSubmit={createTaskMutation.mutate}
         onVisibilityChange={addTaskControl.onFormVisiblityChange}
       />
-      <div className="flex items-center px-4">
+      <div className="flex items-center px-4 mt-4">
         <h2 className="flex items-center font-bold text-3xl">Tasks</h2>
         <Link to="/search" className="ml-auto">
           <SearchIcon className="w-6 h-6" />
