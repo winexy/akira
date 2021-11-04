@@ -30,7 +30,7 @@ export const TaskActionToast: React.FC<Props> = ({
 
   function onRemoveConfirm() {
     removeTaskMutation.mutateAsync(taskId).then(() => {
-      history.push('/')
+      history.goBack()
     })
   }
 
