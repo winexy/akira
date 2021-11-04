@@ -32,6 +32,7 @@ import {useMyDayQuery, useWeekQuery} from 'modules/tasks/hooks'
 import {TaskQuery} from 'modules/tasks/config'
 import {useShimmerColors} from 'shared/ui/shimmer'
 import {CreateTaskPayload} from 'modules/tasks/types.d'
+import {usePullToRefresh} from 'shared/lib/hooks/pull-to-refresh'
 
 const Control: React.FC<{
   value: string
@@ -62,11 +63,16 @@ const SnackBar: React.FC = () => (
 )
 
 const Week: React.FC = () => {
-  const {data: tasks, isLoading, isFetching} = useWeekQuery()
+  const {data: tasks, isLoading, refetch: refetchTasks} = useWeekQuery()
   const {backgroundColor, foregroundColor} = useShimmerColors()
 
   const byDay = groupBy(task => task.date ?? '', tasks)
   const days = keys(byDay).sort()
+
+  usePullToRefresh({
+    mainElement: '#week-wrapper',
+    onRefresh: refetchTasks
+  })
 
   if (isLoading) {
     return (
@@ -94,7 +100,7 @@ const Week: React.FC = () => {
 
   if (isEmpty(tasks)) {
     return (
-      <div className="px-4 h-full flex flex-col items-center">
+      <div id="week-wrapper" className="px-4 h-full flex flex-col items-center">
         <InboxIcon className="mt-32 w-12 h-12" />
         <h2 className="mt-2 font-semibold text-lg">No tasks</h2>
       </div>
@@ -102,19 +108,16 @@ const Week: React.FC = () => {
   }
 
   return (
-    <>
-      <div className="mt-2 px-4 space-y-2 pb-24">
-        {days.map(day => (
-          <section key={day}>
-            <h2 className="font-bold text-2xl">
-              {format(parseISO(day), 'EEEE')}
-            </h2>
-            <TaskList className="mt-2" isPending={false} tasks={byDay[day]} />
-          </section>
-        ))}
-      </div>
-      {!isLoading && isFetching && <SnackBar />}
-    </>
+    <div id="week-wrapper" className="mt-2 px-4 space-y-2 pb-24">
+      {days.map(day => (
+        <section key={day}>
+          <h2 className="font-bold text-2xl">
+            {format(parseISO(day), 'EEEE')}
+          </h2>
+          <TaskList className="mt-2" isPending={false} tasks={byDay[day]} />
+        </section>
+      ))}
+    </div>
   )
 }
 
@@ -122,15 +125,21 @@ const Today: React.FC = () => {
   const {sortType, setSortType, sort} = useTaskSorting()
   const [filtersState, updateFilters] = useTaskFilters()
 
-  const {data: tasks = [], isLoading, isFetching} = useMyDayQuery()
+  const {data: tasks = [], isLoading, refetch: refetchTasks} = useMyDayQuery()
+
   const {data: tags = []} = useTagsQuery()
 
   const sorted = sort(filterTasks(tasks, filtersState))
   const completedTasksCount = size(filter({is_completed: true}, sorted))
   const today = format(new Date(), 'eeee, do MMM')
 
+  usePullToRefresh({
+    mainElement: '#today-wrapper',
+    onRefresh: refetchTasks
+  })
+
   return (
-    <>
+    <div id="today-wrapper">
       <div className="mt-2 flex justify-between items-center px-4">
         <p className="font-bold text-xl">{today}</p>
         <span className="text-2xl font-bold">
@@ -151,8 +160,7 @@ const Today: React.FC = () => {
         onChange={updateFilters}
       />
       <SortingBottomSheet sortType={sortType} onChange={setSortType} />
-      {!isLoading && isFetching && <SnackBar />}
-    </>
+    </div>
   )
 }
 

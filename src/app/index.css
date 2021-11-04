@@ -50,8 +50,30 @@ body {
 }
 
 /* pull-to-refresh start */
-.ptr--text,
+.ptr--ptr {
+  @apply dark:bg-dark-500 bg-opacity-10 shadow-none !important;
+  @apply transition ease-in duration-300 !important;
+  @apply flex items-center justify-center !important;
+}
+
+.ptr--box {
+  @apply p-0 flex items-center justify-center !important;
+}
+
+.ptr--content {
+  @apply w-full !important;
+}
+
+.ptr--refresh {
+  @apply bg-blue-500 !important;
+}
+
+.ptr--text {
+  @apply hidden !important;
+}
+
 .ptr--icon {
-  @apply text-white !important;
+  @apply dark:text-white !important;
+  @apply transform-none !important;
 }
 /* pull-to-refresh end */
