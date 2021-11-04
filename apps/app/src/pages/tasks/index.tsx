@@ -51,7 +51,7 @@ const TasksPage: React.FC = () => {
           <SearchIcon className="w-6 h-6" />
         </Link>
       </div>
-      <section className="mt-4 pb-4 px-4">
+      <section className="mt-4 mb-2 pb-20 px-4">
         <TaskList isPending={isLoading} tasks={sorted} />
       </section>
       <FiltersBottomSheet
