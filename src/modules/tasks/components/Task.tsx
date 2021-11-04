@@ -248,7 +248,7 @@ export const Task: React.FC<TaskProps> = ({
             {!isNull(task.due_date) && (
               <span
                 className={clsx(
-                  'flex items-center text-xs font-semibold leading-tight',
+                  'mr-4 flex items-center text-xs font-semibold leading-tight',
                   TaskLib.isDeadlineToday(task)
                     ? 'text-yellow-500 dark:text-yellow-200'
                     : isOverdue
@@ -261,10 +261,7 @@ export const Task: React.FC<TaskProps> = ({
               </span>
             )}
             {!isEmpty(task.checklist) && (
-              <ChecklistProgressBar
-                className="ml-4"
-                checklist={task.checklist}
-              />
+              <ChecklistProgressBar checklist={task.checklist} />
             )}
           </div>
         </div>
