@@ -103,11 +103,7 @@ export const ScheduleTask: React.FC<Props> = ({
           fixedChildren={<DatePickerShortcut onPick={setScheduledDate} />}
           onApply={apply}
         >
-          <DatePicker
-            date={scheduledDate}
-            minDate={new Date()}
-            onChange={setScheduledDate}
-          />
+          <DatePicker date={scheduledDate} onChange={setScheduledDate} />
         </DatePickerSheet>
       </Portal>
     </>
