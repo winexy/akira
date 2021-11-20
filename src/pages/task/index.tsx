@@ -35,10 +35,6 @@ import {IconButton} from 'shared/ui/icon-button'
 import {Recurrence} from 'features/recurrence'
 import capitalize from 'lodash/capitalize'
 
-type RepeatPattern = {
-  type: 'daily'
-}
-
 const TaskPage: React.FC = () => {
   const {taskId} = useParams<{taskId: string}>()
   const {data: task, isFetching} = useTaskQuery(taskId, {
@@ -56,7 +52,7 @@ const TaskPage: React.FC = () => {
   return (
     <PageView className="pb-32">
       <div className="mt-1 flex px-4 space-x-2">
-        <div>
+        <div className="space-x-2 flex-1">
           <Tag variant={task.is_completed ? 'green' : 'gray'}>
             {task.is_completed ? '' : 'not '}completed
           </Tag>
