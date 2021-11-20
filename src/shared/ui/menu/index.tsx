@@ -14,7 +14,8 @@ import {
   CollectionIcon,
   PlusIcon,
   SearchIcon,
-  DocumentTextIcon
+  DocumentTextIcon,
+  RefreshIcon
 } from '@heroicons/react/solid'
 import {config} from 'shared/config'
 import {Tag} from 'modules/tags/components/Tag'
@@ -289,6 +290,9 @@ export const Menu: React.FC = ({children}) => {
             </MenuItem>
             <MenuItem to="/tasks" Icon={CollectionIcon}>
               Tasks
+            </MenuItem>
+            <MenuItem to="/recurrent-tasks" Icon={RefreshIcon}>
+              Recurrent Tasks
             </MenuItem>
             <MenuItem to="/preferences" Icon={AdjustmentsIcon}>
               Preferences
