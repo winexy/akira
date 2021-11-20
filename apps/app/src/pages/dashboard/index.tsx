@@ -188,14 +188,16 @@ const Habbit: React.FC<HabbitProps> = ({Icon, variant, children}) => {
           className={clsx(
             'absolute flex items-center justify-center w-11 h-11 rounded-full border-2 transition',
             variant === 'outline'
-              ? 'border-dark-600'
+              ? 'border-gray-400 dark:border-dark-600'
               : 'border-white dark:border-dark-500'
           )}
         />
         <Icon
           className={clsx(
             'w-6 h-6',
-            variant === 'outline' ? 'text-dark-100' : 'text-white'
+            variant === 'outline'
+              ? 'text-gray-400 dark:text-dark-100'
+              : 'text-white'
           )}
         />
       </div>
@@ -230,7 +232,7 @@ export function DashboardPage() {
         onSubmit={createTaskMutation.mutate}
         onVisibilityChange={addTaskControl.onFormVisiblityChange}
       />
-      <div className="px-4 pb-2 flex space-x-6 overflow-auto">
+      <div className="px-4 pb-2 flex space-x-4 overflow-auto">
         <Habbit variant="outline" Icon={PlusIcon}>
           New
         </Habbit>
