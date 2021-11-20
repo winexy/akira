@@ -3,27 +3,25 @@ import {LoginIcon} from '@heroicons/react/solid'
 import {useFirebaseAuth} from 'shared/lib/firebase'
 import {Akira} from 'shared/ui/akira'
 import {Button} from 'shared/ui/button'
+import GoogleIcon from 'src/assets/icons/google.svg'
 
 export const AuthPage: React.FC = () => {
   const {login} = useFirebaseAuth()
 
   return (
-    <div className="flex-1 flex-col flex justify-center items-center p-6">
+    <div className="bg-white dark:bg-dark-700 flex-1 flex-col flex justify-center items-center p-6">
       <div className="mt-auto">
-        <Akira className="w-48 h-48" />
-        <h2 className="text-white text-4xl font-bold text-center font-mono">
-          Akira
-        </h2>
+        <Akira className="w-36 h-36" />
       </div>
       <Button
         type="button"
         size="md"
-        variant="indigo"
+        variant="outline"
         className="mt-auto w-full"
         onClick={login}
       >
-        <LoginIcon className="w-6 h-6 mr-2" />
-        Sign in with Google
+        <img src={GoogleIcon} alt="" className="w-6 h-6 mr-2" />
+        Authorize with Google
       </Button>
     </div>
   )
