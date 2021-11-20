@@ -33,6 +33,7 @@ import {TaskQuery} from 'modules/tasks/config'
 import {useShimmerColors} from 'shared/ui/shimmer'
 import {CreateTaskPayload} from 'modules/tasks/types.d'
 import {usePullToRefresh} from 'shared/lib/hooks/pull-to-refresh'
+import {BookOpenIcon, PlusIcon} from '@heroicons/react/solid'
 
 const Control: React.FC<{
   value: string
@@ -164,6 +165,47 @@ const Today: React.FC = () => {
   )
 }
 
+type HabbitProps = {
+  Icon: SVGIconElement
+  variant?: 'outline'
+}
+
+const Habbit: React.FC<HabbitProps> = ({Icon, variant, children}) => {
+  return (
+    <div className="group inline-flex flex-col items-center justify-center flex-shrink-0">
+      <div
+        className={clsx(
+          'w-12 h-12 relative',
+          'flex items-center justify-center',
+          'rounded-full',
+          'transition',
+          variant === 'outline'
+            ? 'bg-white active:bg-gray-100 dark:bg-dark-500 dark:active:bg-dark-400'
+            : 'bg-indigo-400 active:bg-indigo-500'
+        )}
+      >
+        <div
+          className={clsx(
+            'absolute flex items-center justify-center w-11 h-11 rounded-full border-2 transition',
+            variant === 'outline'
+              ? 'border-dark-600'
+              : 'border-white dark:border-dark-500'
+          )}
+        />
+        <Icon
+          className={clsx(
+            'w-6 h-6',
+            variant === 'outline' ? 'text-dark-100' : 'text-white'
+          )}
+        />
+      </div>
+      <span className="max-w-[72px] mt-2 text-xs select-none truncate">
+        {children}
+      </span>
+    </div>
+  )
+}
+
 export function DashboardPage() {
   const addTaskControl = useAddTaskControl()
   const queryClient = useQueryClient()
@@ -188,6 +230,14 @@ export function DashboardPage() {
         onSubmit={createTaskMutation.mutate}
         onVisibilityChange={addTaskControl.onFormVisiblityChange}
       />
+      <div className="px-4 pb-2 flex space-x-6 overflow-auto">
+        <Habbit variant="outline" Icon={PlusIcon}>
+          New
+        </Habbit>
+        {['Drink Water', 'Leetcode Hello There', 'Run'].map(text => (
+          <Habbit Icon={BookOpenIcon}>{text}</Habbit>
+        ))}
+      </div>
       <div className="flex">
         <Control activeValue={mode} value="today" onClick={setMode}>
           Today
