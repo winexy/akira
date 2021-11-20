@@ -1,8 +1,7 @@
 import React from 'react'
-import {useQuery} from 'react-query'
+import {useQuery, useMutation, useQueryClient} from 'react-query'
 import {PageView} from 'shared/ui/page-view'
 import {api} from 'shared/api'
-import {Print} from 'shared/ui/print'
 import {ApiTask} from 'modules/tasks/types.d'
 import format from 'date-fns/format'
 import parseISO from 'date-fns/parseISO'
@@ -13,6 +12,7 @@ import {Link} from 'react-router-dom'
 import {LinkIcon} from '@heroicons/react/solid'
 
 type RecurrentTask = {
+  id: number
   rule: string
   // eslint-disable-next-line camelcase
   next_date: string
@@ -20,8 +20,18 @@ type RecurrentTask = {
 }
 
 const ReccurentTasksPage: React.FC = () => {
+  const queryClient = useQueryClient()
   const query = useQuery<Array<RecurrentTask>>('recurrent-tasks', () =>
     api.get('recurrence/tasks').then(res => res.data)
+  )
+
+  const removeMutation = useMutation(
+    (recurrenceId: number) => api.delete(`recurrence/${recurrenceId}`),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries('recurrent-tasks')
+      }
+    }
   )
 
   return (
@@ -63,6 +73,10 @@ const ReccurentTasksPage: React.FC = () => {
                     'focus:outline-none rounded-b-lg',
                     'transition ease-in duration-75'
                   )}
+                  type="button"
+                  onClick={() => {
+                    removeMutation.mutate(recurrence.id)
+                  }}
                 >
                   Remove recurrence
                 </button>
