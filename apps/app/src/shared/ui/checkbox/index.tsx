@@ -43,7 +43,7 @@ export const Checkbox: React.FC<Props> = ({
       <div
         className={clsx(
           'flex items-center justify-center',
-          'rounded-md border',
+          'rounded border',
           'transition ease-in duration-75',
           {
             'bg-indigo-400 border-indigo-500': isChecked,
