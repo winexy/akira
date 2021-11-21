@@ -39,7 +39,7 @@
     "effector": "^21.8.11",
     "effector-react": "^21.3.2",
     "escape-html": "^1.0.3",
-    "firebase": "^8.4.3",
+    "firebase": "9.5.0",
     "focus-trap": "^6.6.1",
     "fp-ts": "^2.11.4",
     "fp-ts-std": "^0.11.0",

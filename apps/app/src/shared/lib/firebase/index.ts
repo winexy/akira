@@ -1,5 +1,2 @@
-import 'firebase/analytics'
-import 'firebase/auth'
-
-export {auth} from './auth'
+export {auth, signInWithRedirect, GoogleProvider} from './auth'
 export {useFirebaseAuth, FirebaseAuthProvider} from './Provider'

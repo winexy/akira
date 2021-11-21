@@ -1,4 +1,6 @@
-import firebase from 'firebase/app'
+import {initializeApp} from 'firebase/app'
+import {getAuth, GoogleAuthProvider, signInWithRedirect} from 'firebase/auth'
+import type {User as FirebaseUser} from 'firebase/auth'
 
 const config = {
   apiKey: 'AIzaSyCBU8b6HX2K75H9ejUkjkLjvFN3y9-3QBg',
@@ -10,9 +12,10 @@ const config = {
   measurementId: 'G-DFBDL3KN6W'
 }
 
-firebase.initializeApp(config)
+initializeApp(config)
 
-export const auth = firebase.auth()
-export const GoogleProvider = new firebase.auth.GoogleAuthProvider()
+export const auth = getAuth()
+export {signInWithRedirect}
+export const GoogleProvider = new GoogleAuthProvider()
 
-export type User = firebase.User
+export type User = FirebaseUser
