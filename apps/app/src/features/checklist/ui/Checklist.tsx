@@ -21,16 +21,20 @@ export const Checklist: React.FC<Props> = ({taskId, checklist}) => {
   }
 
   return (
-    <ul className="mt-2 px-4 space-y-1">
+    <ul className="mt-2 space-y-1">
       {checklist.map(todo => (
         <li
           key={todo.id}
-          className={clsx('rounded-md flex', {
-            'line-through': todo.is_completed
-          })}
+          className={clsx(
+            'px-4 rounded-md flex active:bg-gray-100 dark:active:bg-dark-500 transition',
+            {
+              'line-through': todo.is_completed
+            }
+          )}
         >
-          <div className="py-1 flex items-center">
+          <label className="py-1 w-full flex items-center">
             <Checkbox
+              labeled
               isChecked={todo.is_completed}
               className="mr-3"
               size="sm"
@@ -44,7 +48,7 @@ export const Checklist: React.FC<Props> = ({taskId, checklist}) => {
               }
             />
             {todo.title}
-          </div>
+          </label>
           <button
             className={clsx(
               'ml-auto -mr-3 w-10 h-10',

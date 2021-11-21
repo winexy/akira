@@ -7,9 +7,10 @@ import {createMatcher} from 'shared/ui/create-matcher'
 type Props = {
   isChecked?: boolean
   onChange?(newState: boolean): void
-  onClick?: MouseEventHandler<HTMLLabelElement>
+  onClick?: MouseEventHandler<HTMLElement>
   className?: string
   size?: Size
+  labeled?: boolean
 }
 
 type Size = 'xs' | 'sm'
@@ -24,13 +25,16 @@ export const Checkbox: React.FC<Props> = ({
   onChange = noop,
   onClick = noop,
   className = '',
-  size = 'xs'
+  size = 'xs',
+  labeled
 }) => {
+  const Element = labeled ? 'div' : 'label'
+
   return (
-    <label
+    <Element
       className={clsx(
         className,
-        'focus-within:ring-2 rounded-md transition ease-in duration-150'
+        'focus-within:ring-2 rounded transition ease-in duration-150'
       )}
       onClick={onClick}
     >
@@ -54,6 +58,6 @@ export const Checkbox: React.FC<Props> = ({
       >
         {isChecked && <CheckIcon className="h-4 w-4 text-white" />}
       </div>
-    </label>
+    </Element>
   )
 }
