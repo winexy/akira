@@ -1,6 +1,6 @@
 import React, {createContext, useContext, useEffect, useState} from 'react'
 import noop from 'lodash/fp/noop'
-import {auth, GoogleProvider, User} from './auth'
+import {auth, GoogleProvider, User, signInWithRedirect} from './auth'
 
 type AuthFunctionsT = {
   login(): void
@@ -21,7 +21,7 @@ type AuthStateT = AuthorizedT | UnauthorizedT
 type ContextValueT = AuthFunctionsT & AuthStateT & {isLoading: boolean}
 
 function login() {
-  auth.signInWithRedirect(GoogleProvider)
+  signInWithRedirect(auth, GoogleProvider)
 }
 
 function logout() {
