@@ -17,9 +17,8 @@ export const AuthPage: React.FC = () => {
           'bg-gradient-to-r from-indigo-500 to-pink-600'
         )}
         style={{
-          // @ts-expect-error
-          '-webkit-background-clip': 'text',
-          '-webkit-text-fill-color': 'transparent'
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent'
         }}
       >
         akira.app
