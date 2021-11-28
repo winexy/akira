@@ -237,7 +237,9 @@ export function DashboardPage() {
           New
         </Habbit>
         {['Drink Water', 'Leetcode Hello There', 'Run'].map(text => (
-          <Habbit Icon={BookOpenIcon}>{text}</Habbit>
+          <Habbit key={text} Icon={BookOpenIcon}>
+            {text}
+          </Habbit>
         ))}
       </div>
       <div className="flex">
