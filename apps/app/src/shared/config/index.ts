@@ -10,6 +10,9 @@ export const config = {
   api: {
     dev_url: import.meta.env.VITE_AKIRA_DEV_API,
     prod_url: import.meta.env.VITE_AKIRA_PROD_API
+  },
+  webPush: {
+    vapidKey: import.meta.env.VITE_VAPID_KEY
   }
 }
 
