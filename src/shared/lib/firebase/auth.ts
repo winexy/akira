@@ -7,9 +7,10 @@ import {
   isSupported,
   onMessage
 } from 'firebase/messaging'
+import {config} from 'shared/config'
 import {exhaustiveCheck} from '../utils/index'
 
-const config = {
+const firebaseConfig = {
   apiKey: 'AIzaSyCBU8b6HX2K75H9ejUkjkLjvFN3y9-3QBg',
   authDomain: 'akira-wnx.firebaseapp.com',
   projectId: 'akira-wnx',
@@ -19,7 +20,7 @@ const config = {
   measurementId: 'G-DFBDL3KN6W'
 }
 
-const app = initializeApp(config)
+const app = initializeApp(firebaseConfig)
 
 export const auth = getAuth()
 export {signInWithRedirect}
@@ -42,16 +43,12 @@ async function setupCloudMessaging() {
   switch (permission) {
     case 'granted': {
       const token = await getToken(messaging, {
-        vapidKey: import.meta.env.VITE_VAPID_KEY
+        vapidKey: config.webPush.vapidKey
       })
 
       if (import.meta.env.DEV) {
         globalThis.console.log({token})
       }
-
-      onMessage(messaging, payload => {
-        globalThis.console.log({payload})
-      })
 
       return
     }
@@ -70,3 +67,7 @@ function onPermissionDenied() {
 }
 
 setupCloudMessaging()
+
+onMessage(messaging, payload => {
+  globalThis.console.log({payload})
+})
