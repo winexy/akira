@@ -5,7 +5,7 @@ import * as Sentry from '@sentry/react'
 import {Integrations} from '@sentry/tracing'
 import {QueryClient, QueryClientProvider} from 'react-query'
 import {akira} from 'shared/api/akira'
-import {FirebaseAuthProvider} from 'shared/lib/firebase'
+import {FirebaseAuthProvider, setupCloudMessaging} from 'shared/lib/firebase'
 import {HotkeyProvider} from 'modules/hotkeys/HotKeyContext'
 import {TaskQuery} from 'modules/tasks/config/index'
 import {initAppThemeFx} from 'features/darkmode/model/index'
@@ -25,7 +25,12 @@ const queryClient = new QueryClient({
 
 async function prefetchQueries() {
   queryClient.prefetchQuery('tags', akira.tags.findAll)
-  await queryClient.prefetchQuery(TaskQuery.MyDay(), akira.myday.tasks)
+  queryClient.prefetchQuery(TaskQuery.MyDay(), akira.myday.tasks)
+}
+
+function onAuthSuccess() {
+  prefetchQueries()
+  setupCloudMessaging()
 }
 
 initAppThemeFx()
@@ -41,7 +46,7 @@ if (import.meta.env.PROD) {
 ReactDOM.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <FirebaseAuthProvider onAuthSuccess={prefetchQueries}>
+      <FirebaseAuthProvider onAuthSuccess={onAuthSuccess}>
         <HotkeyProvider>
           <App />
         </HotkeyProvider>

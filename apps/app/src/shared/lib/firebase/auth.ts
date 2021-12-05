@@ -8,6 +8,7 @@ import {
   onMessage
 } from 'firebase/messaging'
 import {config} from 'shared/config'
+import {api} from 'shared/api'
 import {exhaustiveCheck} from '../utils/index'
 
 const firebaseConfig = {
@@ -30,7 +31,7 @@ export type User = FirebaseUser
 
 const messaging = getMessaging(app)
 
-async function setupCloudMessaging() {
+export async function setupCloudMessaging() {
   const supported = await isSupported()
 
   if (!supported) {
@@ -50,6 +51,8 @@ async function setupCloudMessaging() {
         globalThis.console.log({token})
       }
 
+      await api.post('users/sync', {fcm_token: token})
+
       return
     }
     case 'denied':
@@ -65,8 +68,6 @@ async function setupCloudMessaging() {
 function onPermissionDenied() {
   globalThis.console.log('Notification permission is not granted')
 }
-
-setupCloudMessaging()
 
 onMessage(messaging, payload => {
   globalThis.console.log({payload})
