@@ -6,6 +6,7 @@ import React, {
   useImperativeHandle,
   FormEventHandler
 } from 'react'
+import {useStore} from 'effector-react'
 import isEmpty from 'lodash/fp/isEmpty'
 import isUndefined from 'lodash/fp/isUndefined'
 import {
@@ -42,6 +43,21 @@ import {DatePickerShortcut} from 'shared/ui/datepicker-shortcut'
 import {List} from 'shared/ui/list'
 import {useListsQuery} from 'modules/lists/hooks'
 import {useFormVisibility} from './use-form-visibility'
+import {
+  $title,
+  $description,
+  $date,
+  $dueDate,
+  $selectedTags,
+  $selectedList,
+  resetForm,
+  onTitleChange,
+  onTagsToggle,
+  onDescriptionChange,
+  onDateChange,
+  onDueDateChange,
+  onListChange
+} from './model'
 
 type TaskFormProps = {
   onSubmit(payload: CreateTaskPayload): void
@@ -67,16 +83,17 @@ function renderDate(date: Date) {
 export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
   // eslint-disable-next-line
   function TaskForm_ForwardRef({onSubmit, onVisibilityChange}, ref) {
-    const [title, setTitle] = useState('')
     const inputRef = useRef<HTMLInputElement>(null)
     const backdropRef = useRef<HTMLDivElement>(null)
-    const [description, setDescription] = useState('')
-    const [date, setDate] = useState(() => new Date())
-    const [dueDate, setDueDate] = useState<Date | null>(null)
+    const title = useStore($title)
+    const description = useStore($description)
+    const date = useStore($date)
+    const dueDate = useStore($dueDate)
+    const selectedTags = useStore($selectedTags)
+    const selectedList = useStore($selectedList)
+
     const {data: tags} = useTagsQuery()
     const {data: lists} = useListsQuery()
-    const [selectedTags, setSelectedTags] = useState(new Set<number>())
-    const [selectedList, setSelectedList] = useState<TaskList | null>(null)
     const [search, setSearch] = useState('')
     const [isVisible, setIsVisible] = useFormVisibility({onVisibilityChange})
 
@@ -114,16 +131,11 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
         }
       })
 
-      setTitle('')
-      setDescription('')
-      setSelectedTags(new Set())
-      setSelectedList(null)
-      setDate(new Date())
-      setDueDate(null)
+      resetForm()
     }
 
     function onReset() {
-      setTitle('')
+      onTitleChange('')
 
       if (inputRef.current) {
         inputRef.current.focus()
@@ -131,15 +143,7 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
     }
 
     function toggleTag(tag: TaskTag) {
-      const newSet = new Set(selectedTags)
-
-      if (newSet.has(tag.id)) {
-        newSet.delete(tag.id)
-      } else {
-        newSet.add(tag.id)
-      }
-
-      setSelectedTags(newSet)
+      onTagsToggle(tag.id)
     }
 
     return (
@@ -188,7 +192,7 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                   type="text"
                   value={title}
                   onInput={e => {
-                    setTitle((e.target as HTMLInputElement).value)
+                    onTitleChange((e.target as HTMLInputElement).value)
                   }}
                   enterKeyHint="send"
                 />
@@ -260,7 +264,7 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                     value={description}
                     className="mt-4"
                     placeholder="Add note"
-                    onChange={setDescription}
+                    onChange={onDescriptionChange}
                   />
                 </div>
                 {!isEmpty(title) && (
@@ -284,20 +288,24 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
               name="task-date"
               title="Schedule task"
               date={date}
-              fixedChildren={<DatePickerShortcut onPick={setDate} />}
+              fixedChildren={<DatePickerShortcut onPick={onDateChange} />}
             >
-              <DatePicker date={date} minDate={new Date()} onChange={setDate} />
+              <DatePicker
+                date={date}
+                minDate={new Date()}
+                onChange={onDateChange}
+              />
             </DatePickerSheet>
             <DatePickerSheet
               name="task-due-date"
               title="Set task due date"
               date={dueDate}
-              fixedChildren={<DatePickerShortcut onPick={setDueDate} />}
+              fixedChildren={<DatePickerShortcut onPick={onDueDateChange} />}
             >
               <DatePicker
                 date={dueDate}
                 minDate={new Date()}
-                onChange={setDueDate}
+                onChange={onDueDateChange}
               />
             </DatePickerSheet>
             <div className="mt-auto p-4 bg-gradient-to-t from-gray-600 dark:from-dark-600">
@@ -342,9 +350,9 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                       )}
                       onClick={() => {
                         if (list.id === selectedList?.id) {
-                          setSelectedList(null)
+                          onListChange(null)
                         } else {
-                          setSelectedList(list)
+                          onListChange(list)
                         }
                         hideBottomSheet()
                       }}
