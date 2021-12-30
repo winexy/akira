@@ -10,6 +10,7 @@ function GetServerConfig() {
   }
 
   return {
+    open: true,
     https: {
       key: readFileSync('./cert/localhost-key.pem'),
       cert: readFileSync('./cert/localhost.pem')
