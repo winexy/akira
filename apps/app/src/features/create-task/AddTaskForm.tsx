@@ -4,8 +4,7 @@ import React, {
   useState,
   useLayoutEffect,
   useImperativeHandle,
-  FormEventHandler,
-  useEffect
+  FormEventHandler
 } from 'react'
 import isEmpty from 'lodash/fp/isEmpty'
 import isUndefined from 'lodash/fp/isUndefined'
@@ -43,6 +42,7 @@ import {DatePicker} from 'shared/ui/datepicker'
 import {DatePickerShortcut} from 'shared/ui/datepicker-shortcut'
 import {List} from 'shared/ui/list'
 import {useListsQuery} from 'modules/lists/hooks'
+import {useFormVisibility} from './use-form-visibility'
 
 type TaskFormProps = {
   onSubmit(payload: CreateTaskPayload): void
@@ -71,7 +71,6 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
     const [title, setTitle] = useState('')
     const inputRef = useRef<HTMLInputElement>(null)
     const backdropRef = useRef<HTMLDivElement>(null)
-    const [isVisible, setIsVisible] = useState(false)
     const [description, setDescription] = useState('')
     const [date, setDate] = useState(() => new Date())
     const {data: tags} = useTagsQuery()
@@ -79,6 +78,7 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
     const [selectedTags, setSelectedTags] = useState(new Set<number>())
     const [selectedList, setSelectedList] = useState<TaskList | null>(null)
     const [search, setSearch] = useState('')
+    const [isVisible, setIsVisible] = useFormVisibility({onVisibilityChange})
 
     const filteredList = filter(list => {
       return lowerCase(list.title).includes(search)
@@ -88,38 +88,9 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
       show: () => setIsVisible(true)
     }))
 
-    useEffect(() => {
-      onVisibilityChange(isVisible)
-    }, [isVisible, onVisibilityChange])
-
     useLayoutEffect(() => {
       if (isVisible && inputRef.current) {
         inputRef.current.focus()
-      }
-    }, [isVisible])
-
-    useHotkey(HotKey.of('k', HotKey.Meta), {
-      description: 'open task form',
-      handler() {
-        setIsVisible(true)
-      }
-    })
-
-    useEffect(() => {
-      if (!isVisible) {
-        return () => {}
-      }
-
-      const handler = (event: KeyboardEvent) => {
-        if (event.key === 'Escape') {
-          setIsVisible(false)
-        }
-      }
-
-      window.addEventListener('keydown', handler)
-
-      return () => {
-        window.removeEventListener('keydown', handler)
       }
     }, [isVisible])
 
@@ -134,6 +105,7 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
         task: {
           title,
           description
+          // due_date:
         },
         meta: {
           date: format(date, 'yyyy-MM-dd'),
