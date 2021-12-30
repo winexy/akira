@@ -56,6 +56,7 @@ export type CreateTaskPayload = {
   task: {
     title: string
     description: string
+    due_date: string | null
   }
   meta: CreateTaskMeta
 }
