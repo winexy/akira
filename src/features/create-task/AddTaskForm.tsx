@@ -28,9 +28,8 @@ import {TaskList} from 'modules/lists/types.d'
 import filter from 'lodash/fp/filter'
 import lowerCase from 'lodash/fp/lowerCase'
 import toLower from 'lodash/fp/toLower'
+import isNull from 'lodash/fp/isNull'
 import format from 'date-fns/format'
-import {useHotkey} from 'modules/hotkeys/HotKeyContext'
-import {HotKey} from 'modules/hotkeys/HotKey'
 import {TextArea} from 'modules/tasks/components'
 import {CalendarIcon} from '@heroicons/react/outline'
 import {CreateTaskPayload} from 'modules/tasks/types.d'
@@ -73,6 +72,7 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
     const backdropRef = useRef<HTMLDivElement>(null)
     const [description, setDescription] = useState('')
     const [date, setDate] = useState(() => new Date())
+    const [dueDate, setDueDate] = useState<Date | null>(null)
     const {data: tags} = useTagsQuery()
     const {data: lists} = useListsQuery()
     const [selectedTags, setSelectedTags] = useState(new Set<number>())
@@ -104,8 +104,8 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
       onSubmit({
         task: {
           title,
-          description
-          // due_date:
+          description,
+          due_date: isNull(dueDate) ? null : format(dueDate, 'yyyy-MM-dd')
         },
         meta: {
           date: format(date, 'yyyy-MM-dd'),
@@ -119,6 +119,7 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
       setSelectedTags(new Set())
       setSelectedList(null)
       setDate(new Date())
+      setDueDate(null)
     }
 
     function onReset() {
@@ -238,7 +239,21 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                       showBottomSheet('task-date')
                     }}
                   >
-                    {renderDate(date)}
+                    Date: {renderDate(date)}
+                    <CalendarIcon className="w-6 h-6" />
+                  </Button>
+                  <Button
+                    size="sm"
+                    className="mt-4 text-left justify-between"
+                    variant="transparent"
+                    type="button"
+                    onClick={() => {
+                      showBottomSheet('task-due-date')
+                    }}
+                  >
+                    {isNull(dueDate)
+                      ? 'Set due date'
+                      : `Due date: ${renderDate(dueDate)}`}
                     <CalendarIcon className="w-6 h-6" />
                   </Button>
                   <TextArea
@@ -272,6 +287,18 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
               fixedChildren={<DatePickerShortcut onPick={setDate} />}
             >
               <DatePicker date={date} minDate={new Date()} onChange={setDate} />
+            </DatePickerSheet>
+            <DatePickerSheet
+              name="task-due-date"
+              title="Set task due date"
+              date={dueDate}
+              fixedChildren={<DatePickerShortcut onPick={setDueDate} />}
+            >
+              <DatePicker
+                date={dueDate}
+                minDate={new Date()}
+                onChange={setDueDate}
+              />
             </DatePickerSheet>
             <div className="mt-auto p-4 bg-gradient-to-t from-gray-600 dark:from-dark-600">
               {isEmpty(title) ? (
