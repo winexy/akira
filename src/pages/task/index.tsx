@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {useParams} from 'react-router'
 import {PageView} from 'shared/ui/page-view'
 import format from 'date-fns/format'
@@ -37,6 +37,7 @@ import capitalize from 'lodash/capitalize'
 
 const TaskPage: React.FC = () => {
   const {taskId} = useParams<{taskId: string}>()
+  const [isActionToastVisible, setIsActionToastVisible] = useState(true)
   const {data: task, isFetching} = useTaskQuery(taskId, {
     suspense: true
   })
@@ -172,8 +173,15 @@ const TaskPage: React.FC = () => {
         </div>
         <Recurrence taskId={task.id} />
       </BottomSheet>
-      {task && <ChecklistManager task={task} />}
+      {task && (
+        <ChecklistManager
+          task={task}
+          onFocus={() => setIsActionToastVisible(false)}
+          onBlur={() => setIsActionToastVisible(true)}
+        />
+      )}
       <TaskActionToast
+        isForcedVisible={isActionToastVisible}
         taskId={taskId}
         isCompleted={task.is_completed}
         isImportant={task.is_important}
