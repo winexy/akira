@@ -10,9 +10,13 @@ type ActionToastButtonProps = NativeButtonProps & {
   isLoading?: boolean
 }
 
-export const ActionToast: React.FC & {
+type ActionToastProps = {
+  isForcedVisible?: boolean
+}
+
+export const ActionToast: React.FC<ActionToastProps> & {
   Button: React.FC<ActionToastButtonProps>
-} = ({children}) => {
+} = ({children, isForcedVisible = true}) => {
   const [isVisible, setIsVisible] = useState(true)
   const ref = useRef<HTMLDivElement | null>(null)
   const prevScrollYRef = useRef(0)
@@ -40,7 +44,7 @@ export const ActionToast: React.FC & {
   return (
     <CSSTransition
       nodeRef={ref}
-      in={isVisible}
+      in={isVisible && isForcedVisible}
       timeout={300}
       unmountOnExit
       classNames="action-toast"

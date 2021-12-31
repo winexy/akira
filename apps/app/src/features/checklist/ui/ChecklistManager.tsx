@@ -7,9 +7,11 @@ import {useAddTodoMutation} from '../model'
 
 type Props = {
   task: ApiTask
+  onFocus(): void
+  onBlur(): void
 }
 
-export const ChecklistManager: React.FC<Props> = ({task}) => {
+export const ChecklistManager: React.FC<Props> = ({task, onFocus, onBlur}) => {
   const [todoTitle, setTodoTitle] = useState('')
   const todoInputRef = useRef<HTMLInputElement | null>(null)
   const addTodoMutation = useAddTodoMutation(task.id)
@@ -40,6 +42,8 @@ export const ChecklistManager: React.FC<Props> = ({task}) => {
               {'animate-pulse': !isEmpty(todoTitle)}
             )}
             onInput={e => setTodoTitle((e.target as HTMLInputElement).value)}
+            onFocus={onFocus}
+            onBlur={onBlur}
             enterKeyHint="send"
           />
         </form>

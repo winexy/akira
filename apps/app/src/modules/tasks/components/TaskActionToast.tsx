@@ -16,12 +16,14 @@ type Props = {
   taskId: TaskId
   isCompleted: boolean
   isImportant: boolean
+  isForcedVisible: boolean
 }
 
 export const TaskActionToast: React.FC<Props> = ({
   taskId,
   isCompleted,
-  isImportant
+  isImportant,
+  isForcedVisible
 }) => {
   const history = useHistory()
   const toggleCompletedMutation = useToggleCompletedMutation()
@@ -36,7 +38,7 @@ export const TaskActionToast: React.FC<Props> = ({
 
   return (
     <>
-      <ActionToast>
+      <ActionToast isForcedVisible={isForcedVisible}>
         <ActionToast.Button
           Icon={CheckIcon}
           className={clsx('active:text-green-600', {
