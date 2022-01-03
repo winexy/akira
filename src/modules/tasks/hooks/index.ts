@@ -37,27 +37,16 @@ export function useToggleCompletedMutation() {
 
   return useMutation(akira.tasks.toggleCompletness, {
     onMutate(taskId) {
-      const [prevTask, newTask] = TaskCacheUtils.writeTaskCache(
+      return TaskCacheUtils.writeOptimisticUpdate(
         taskId,
         queryClient,
         draft => {
           draft.is_completed = !draft.is_completed
         }
       )
-
-      const prevTasksRecord = TaskCacheUtils.writeTaskListsCache(
-        queryClient,
-        newTask
-      )
-
-      return {prevTask, prevTasksRecord}
     },
     onError(_, taskId, context: any) {
-      TaskCacheUtils.rollbackTaskMutation(taskId, queryClient, context.prevTask)
-      TaskCacheUtils.rollbackTaskListMutations(
-        queryClient,
-        context.prevTasksRecord
-      )
+      TaskCacheUtils.rollbackOptimisticUpdate(taskId, queryClient, context)
     }
   })
 }
@@ -67,27 +56,16 @@ export function useToggleImportantMutation() {
 
   return useMutation(akira.tasks.toggleImportance, {
     onMutate(taskId) {
-      const [prevTask, newTask] = TaskCacheUtils.writeTaskCache(
+      return TaskCacheUtils.writeOptimisticUpdate(
         taskId,
         queryClient,
         draft => {
           draft.is_important = !draft.is_important
         }
       )
-
-      const prevTasksRecord = TaskCacheUtils.writeTaskListsCache(
-        queryClient,
-        newTask
-      )
-
-      return {prevTask, prevTasksRecord}
     },
     onError(_, taskId, context: any) {
-      TaskCacheUtils.rollbackTaskMutation(taskId, queryClient, context.prevTask)
-      TaskCacheUtils.rollbackTaskListMutations(
-        queryClient,
-        context.prevTasksRecord
-      )
+      TaskCacheUtils.rollbackOptimisticUpdate(taskId, queryClient, context)
     }
   })
 }
@@ -118,31 +96,16 @@ export function useAddTaskTagMutation(task: ApiTask) {
     },
     {
       onMutate(tag) {
-        const [prevTask, newTask] = TaskCacheUtils.writeTaskCache(
+        return TaskCacheUtils.writeOptimisticUpdate(
           task.id,
           queryClient,
           draft => {
             draft.tags.push(tag)
           }
         )
-
-        const prevTasksRecord = TaskCacheUtils.writeTaskListsCache(
-          queryClient,
-          newTask
-        )
-
-        return {prevTask, prevTasksRecord}
       },
       onError(_, __, context: any) {
-        TaskCacheUtils.rollbackTaskMutation(
-          task.id,
-          queryClient,
-          context.prevTask
-        )
-        TaskCacheUtils.rollbackTaskListMutations(
-          queryClient,
-          context.prevTasksRecord
-        )
+        TaskCacheUtils.rollbackOptimisticUpdate(task.id, queryClient, context)
       }
     }
   )
@@ -157,31 +120,16 @@ export function useRemoveTaskTagMutation(task: ApiTask) {
     },
     {
       onMutate(tag) {
-        const [prevTask, newTask] = TaskCacheUtils.writeTaskCache(
+        return TaskCacheUtils.writeOptimisticUpdate(
           task.id,
           queryClient,
           draft => {
             draft.tags = filter(t => t.id !== tag.id, task.tags)
           }
         )
-
-        const prevTasksRecord = TaskCacheUtils.writeTaskListsCache(
-          queryClient,
-          newTask
-        )
-
-        return {prevTask, prevTasksRecord}
       },
       onError(_, __, context: any) {
-        TaskCacheUtils.rollbackTaskMutation(
-          task.id,
-          queryClient,
-          context.prevTask
-        )
-        TaskCacheUtils.rollbackTaskListMutations(
-          queryClient,
-          context.prevTasksRecord
-        )
+        TaskCacheUtils.rollbackOptimisticUpdate(task.id, queryClient, context)
       }
     }
   )
