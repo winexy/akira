@@ -42,6 +42,8 @@ import {DatePicker} from 'shared/ui/datepicker'
 import {DatePickerShortcut} from 'shared/ui/datepicker-shortcut'
 import {List} from 'shared/ui/list'
 import {useListsQuery} from 'modules/lists/hooks'
+import {StickyBottomSheetBox} from 'shared/ui/sticky-bottom-sheet-box'
+import {NewListLink, NoLists} from 'entities/task-list'
 import {useFormVisibility} from './use-form-visibility'
 import {
   $title,
@@ -330,15 +332,18 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
               )}
             </div>
             <BottomSheet name="lists" className="pt-6">
-              <div className="px-4">
-                <input
-                  className="w-full rounded appearance-none text-lg font-bold focus:outline-none bg-transparent"
-                  placeholder="Search list..."
-                  onInput={e =>
-                    setSearch(toLower((e.target as HTMLInputElement).value))
-                  }
-                />
-              </div>
+              {!isEmpty(lists) && (
+                <div className="px-4">
+                  <input
+                    className="w-full rounded appearance-none text-lg font-bold focus:outline-none bg-transparent"
+                    placeholder="Search list..."
+                    onInput={e =>
+                      setSearch(toLower((e.target as HTMLInputElement).value))
+                    }
+                  />
+                </div>
+              )}
+              {isEmpty(lists) && <NoLists />}
               {lists && (
                 <List className="mt-4">
                   {filteredList.map(list => (
@@ -362,6 +367,9 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                   ))}
                 </List>
               )}
+              <StickyBottomSheetBox>
+                <NewListLink />
+              </StickyBottomSheetBox>
             </BottomSheet>
           </div>
         )}
