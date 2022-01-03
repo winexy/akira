@@ -1,0 +1,18 @@
+.ui-fade-appear,
+.ui-fade-enter {
+  opacity: 0;
+}
+
+.ui-fade-appear-active,
+.ui-fade-enter-active {
+  opacity: 1;
+  transition: opacity var(--ui-fade-enter-duration, 300ms);
+}
+
+.ui-fade-exit {
+  opacity: 1;
+}
+.ui-fade-exit-active {
+  opacity: 0;
+  transition: opacity var(--ui-fade-exit-duration, 300ms);
+}

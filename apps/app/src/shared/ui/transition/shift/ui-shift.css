@@ -1,0 +1,24 @@
+.ui-shift-appear,
+.ui-shift-enter {
+  transform: translate(
+    var(--ui-shift-translate-x),
+    var(--ui-shift-translate-y)
+  );
+}
+
+.ui-shift-appear-active,
+.ui-shift-enter-active {
+  transform: translateY(0%);
+  transition: transform var(--ui-shift-enter-duration, 300ms);
+}
+
+.ui-shift-exit {
+  transform: translateY(0%);
+}
+.ui-shift-exit-active {
+  transform: translate(
+    var(--ui-shift-translate-x),
+    var(--ui-shift-translate-y)
+  );
+  transition: transform var(--ui-shift-exit-duration, 300ms);
+}
