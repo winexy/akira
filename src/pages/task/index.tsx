@@ -118,7 +118,7 @@ const TaskPage: React.FC = () => {
         />
       </section>
       <TaskActionList className="mt-4">
-        {isNull(task.list_id) ? (
+        {isNull(task.list) ? (
           <TaskActionList.Item>
             <TaskActionList.Button
               Icon={PlusIcon}
@@ -131,7 +131,7 @@ const TaskPage: React.FC = () => {
           <TaskActionList.Item>
             <TaskActionList.Button Icon={ViewListIcon} className="truncate">
               <Link
-                to={`/lists/${task.list_id}`}
+                to={`/lists/${task.list.id}`}
                 className="w-full text-left truncate"
               >
                 {task.list.title}
