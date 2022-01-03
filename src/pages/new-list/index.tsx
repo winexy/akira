@@ -43,7 +43,8 @@ const NewListPage: React.FC = () => {
           placeholder="Untitled list"
           className="
             w-full px-4 py-2
-            text-2xl font-semibold 
+            text-2xl font-semibold
+            dark:bg-dark-600 
             text-gray-700 dark:text-gray-200
             appearance-none 
             transition ease-in duration-150
