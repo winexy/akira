@@ -3,12 +3,12 @@ import {useListsQuery} from 'modules/lists/hooks'
 import {usePatchTaskMutation} from 'modules/tasks/hooks'
 import {ApiTask} from 'modules/tasks/types.d'
 import clsx from 'clsx'
-import {CheckIcon, InboxIcon} from '@heroicons/react/solid'
+import {CheckIcon} from '@heroicons/react/solid'
 import {Spin} from 'shared/ui/spin'
 import {List} from 'shared/ui/list'
 import isEmpty from 'lodash/fp/isEmpty'
 import get from 'lodash/fp/get'
-import {NewListLink} from 'entities/task-list'
+import {NewListLink, NoLists} from 'entities/task-list'
 import {StickyBottomSheetBox} from 'shared/ui/sticky-bottom-sheet-box'
 
 type Props = {
@@ -68,10 +68,7 @@ export const TaskListPicker: React.FC<Props> = ({taskId, activeListId}) => {
           </div>
         </Match.Case>
         <Match.Case when={isEmpty(lists)}>
-          <div className="p-4 flex justify-center items-center flex-col">
-            <InboxIcon className="w-8 h-8" />
-            <p className="mt-2 font-semibold text-xl">You have no lists yet</p>
-          </div>
+          <NoLists />
         </Match.Case>
         <Match.Default>
           <List>
