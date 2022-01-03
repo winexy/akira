@@ -3,13 +3,12 @@ import {useListsQuery} from 'modules/lists/hooks'
 import {usePatchTaskMutation} from 'modules/tasks/hooks'
 import {ApiTask} from 'modules/tasks/types.d'
 import clsx from 'clsx'
-import {CheckIcon, ChevronRightIcon, InboxIcon} from '@heroicons/react/solid'
-import {Link} from 'react-router-dom'
+import {CheckIcon, InboxIcon} from '@heroicons/react/solid'
 import {Spin} from 'shared/ui/spin'
-import {Button} from 'shared/ui/button'
 import {List} from 'shared/ui/list'
 import isEmpty from 'lodash/fp/isEmpty'
 import get from 'lodash/fp/get'
+import {NewListLink} from 'entities/task-list'
 
 type Props = {
   taskId: ApiTask['id']
@@ -115,11 +114,7 @@ export const TaskListPicker: React.FC<Props> = ({taskId, activeListId}) => {
         </Match.Default>
       </Match>
       <div className="sticky bottom-0 px-4 pt-4 pb-6 border-t border-gray-100 dark:border-dark-500">
-        <Link to="/lists/new">
-          <Button size="md" className="w-full">
-            Create new list <ChevronRightIcon className="ml-auto w-6 h-6" />
-          </Button>
-        </Link>
+        <NewListLink />
       </div>
     </>
   )
