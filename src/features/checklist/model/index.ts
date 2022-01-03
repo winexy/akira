@@ -3,14 +3,9 @@ import uniqueId from 'lodash/fp/uniqueId'
 import {TaskId, Todo, TodoId, TodoPatch} from 'modules/tasks/types.d'
 import {akira} from 'shared/api'
 import {TaskQuery} from 'modules/tasks/config'
-import {
-  rollbackTaskListMutations,
-  rollbackTaskMutation,
-  writeTaskCache,
-  writeTaskListsCache
-} from 'modules/tasks/hooks'
 import filter from 'lodash/fp/filter'
 import findIndex from 'lodash/fp/findIndex'
+import {TaskCacheUtils} from 'entities/task'
 
 export function useAddTodoMutation(taskId: TaskId) {
   const queryClient = useQueryClient()
@@ -31,24 +26,19 @@ export function useAddTodoMutation(taskId: TaskId) {
           task_id: taskId
         }
 
-        const [prevTask, newTask] = writeTaskCache(
+        return TaskCacheUtils.writeOptimisticUpdate(
           taskId,
           queryClient,
           draft => {
             draft.checklist.push(todo)
           }
         )
-
-        const prevTasksRecord = writeTaskListsCache(queryClient, newTask)
-
-        return {prevTask, prevTasksRecord}
       },
       onSuccess() {
         queryClient.invalidateQueries(TaskQuery.One(taskId))
       },
       onError(_, __, context: any) {
-        rollbackTaskMutation(taskId, queryClient, context.prevTask)
-        rollbackTaskListMutations(queryClient, context.prevTasksRecord)
+        TaskCacheUtils.rollbackOptimisticUpdate(taskId, queryClient, context)
       }
     }
   )
@@ -63,7 +53,7 @@ export function usePatchTodoMutation(taskId: TaskId) {
     },
     {
       onMutate({todoId, patch}) {
-        const [prevTask, newTask] = writeTaskCache(
+        return TaskCacheUtils.writeOptimisticUpdate(
           taskId,
           queryClient,
           (draft, prevTask) => {
@@ -74,14 +64,9 @@ export function usePatchTodoMutation(taskId: TaskId) {
             }
           }
         )
-
-        const prevTasksRecord = writeTaskListsCache(queryClient, newTask)
-
-        return {prevTask, prevTasksRecord}
       },
       onError(_, __, context: any) {
-        rollbackTaskMutation(taskId, queryClient, context.prevTask)
-        rollbackTaskListMutations(queryClient, context.prevTasksRecord)
+        TaskCacheUtils.rollbackOptimisticUpdate(taskId, queryClient, context)
       }
     }
   )
@@ -96,7 +81,7 @@ export function useRemoveTodoMutation(taskId: TaskId) {
     },
     {
       onMutate(todoId) {
-        const [prevTask, newTask] = writeTaskCache(
+        return TaskCacheUtils.writeOptimisticUpdate(
           taskId,
           queryClient,
           draft => {
@@ -106,14 +91,13 @@ export function useRemoveTodoMutation(taskId: TaskId) {
             )
           }
         )
-
-        const prevTasksRecord = writeTaskListsCache(queryClient, newTask)
-
-        return {prevTask, prevTasksRecord}
       },
       onError(_, __, context: any) {
-        rollbackTaskMutation(taskId, queryClient, context.prevTask)
-        rollbackTaskListMutations(queryClient, context.prevTasksRecord)
+        return TaskCacheUtils.rollbackOptimisticUpdate(
+          taskId,
+          queryClient,
+          context
+        )
       }
     }
   )
