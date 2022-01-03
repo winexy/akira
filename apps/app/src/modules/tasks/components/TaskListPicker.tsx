@@ -9,6 +9,7 @@ import {List} from 'shared/ui/list'
 import isEmpty from 'lodash/fp/isEmpty'
 import get from 'lodash/fp/get'
 import {NewListLink} from 'entities/task-list'
+import {StickyBottomSheetBox} from 'shared/ui/sticky-bottom-sheet-box'
 
 type Props = {
   taskId: ApiTask['id']
@@ -113,9 +114,9 @@ export const TaskListPicker: React.FC<Props> = ({taskId, activeListId}) => {
           </List>
         </Match.Default>
       </Match>
-      <div className="sticky bottom-0 px-4 pt-4 pb-6 border-t border-gray-100 dark:border-dark-500">
+      <StickyBottomSheetBox>
         <NewListLink />
-      </div>
+      </StickyBottomSheetBox>
     </>
   )
 }
