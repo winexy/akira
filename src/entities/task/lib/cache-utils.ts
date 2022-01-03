@@ -12,7 +12,7 @@ type PrevTasksEntries = Array<[Array<string>, Array<ApiTask> | null]>
 
 export type MutationContext = {
   prevTask: ApiTask | null
-  prevTasksRecord: PrevTasksEntries
+  prevTasksEntries: PrevTasksEntries
 }
 
 type DraftMutation = (
@@ -26,9 +26,9 @@ export function writeOptimisticUpdate(
   mutateDraft: DraftMutation
 ): MutationContext {
   const [prevTask, newTask] = writeTaskCache(taskId, queryClient, mutateDraft)
-  const prevTasksRecord = writeTaskListsCache(queryClient, newTask)
+  const prevTasksEntries = writeTaskListsCache(queryClient, newTask)
 
-  return {prevTask, prevTasksRecord}
+  return {prevTask, prevTasksEntries}
 }
 
 export function rollbackOptimisticUpdate(
@@ -37,7 +37,7 @@ export function rollbackOptimisticUpdate(
   context: MutationContext
 ) {
   rollbackTaskMutation(taskId, queryClient, context.prevTask)
-  rollbackTaskListMutations(queryClient, context.prevTasksRecord)
+  rollbackTaskListMutations(queryClient, context.prevTasksEntries)
 }
 
 export function writeTaskCache(
