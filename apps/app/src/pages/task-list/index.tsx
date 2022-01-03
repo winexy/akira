@@ -6,6 +6,7 @@ import {api} from 'shared/api'
 import {ApiTask} from 'modules/tasks/types.d'
 import {TaskList} from 'modules/tasks/components/TaskList'
 import {PageView} from 'shared/ui/page-view'
+import {TaskQuery} from '../../modules/tasks/config/index'
 
 type ApiList = {
   id: number
@@ -18,7 +19,7 @@ type ApiList = {
 const TaskListPage: React.FC = () => {
   const {listId} = useParams<{listId: string}>()
 
-  const {data: list, isLoading} = useQuery(['list', listId], () =>
+  const {data: list, isLoading} = useQuery(TaskQuery.List(listId), () =>
     api.get<ApiList>(`lists/${listId}/tasks`).then(r => r.data)
   )
 
