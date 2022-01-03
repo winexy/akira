@@ -7,6 +7,7 @@ import {QueryClient} from 'react-query'
 import {ApiTask, TaskId} from 'modules/tasks/types.d'
 import {TaskQuery} from 'modules/tasks/config'
 import {forEach} from 'lodash/fp'
+import {ApiList} from 'modules/lists/types.d'
 
 type PrevTasksEntries = Array<[Array<string>, Array<ApiTask> | null]>
 
@@ -38,6 +39,33 @@ export function rollbackOptimisticUpdate(
 ) {
   rollbackTaskMutation(taskId, queryClient, context.prevTask)
   rollbackTaskListMutations(queryClient, context.prevTasksEntries)
+  writeTaskListQueryCache(context.prevTask, queryClient)
+}
+
+function writeTaskListQueryCache(
+  task: ApiTask | null,
+  queryClient: QueryClient
+) {
+  if (isNull(task) || isNull(task.list_id)) {
+    return
+  }
+
+  const listId = String(task.list_id)
+  const tasksList = queryClient.getQueryData<ApiList>(TaskQuery.List(listId))
+
+  if (isUndefined(tasksList)) {
+    return
+  }
+
+  const newTasksList = produce(tasksList, draft => {
+    const index = findIndex({id: task.id}, draft.tasks)
+
+    if (index !== -1) {
+      draft.tasks[index] = task
+    }
+  })
+
+  queryClient.setQueryData(TaskQuery.List(listId), newTasksList)
 }
 
 export function writeTaskCache(
@@ -50,6 +78,9 @@ export function writeTaskCache(
   if (!isUndefined(prevTask)) {
     const newTask = produce(prevTask, draft => mutateDraft(draft, prevTask))
     queryClient.setQueriesData(TaskQuery.One(taskId), newTask)
+
+    writeTaskListQueryCache(newTask, queryClient)
+
     return [prevTask, newTask]
   }
 

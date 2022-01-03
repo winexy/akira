@@ -32,7 +32,7 @@ export type ApiTask = {
   due_date: string | null
   is_completed: boolean
   list_id: number | null
-  list: Omit<TaskList, 'tasksCount'>
+  list: Omit<TaskList, 'tasksCount'> | null
   is_important: boolean
   checklist: Array<Todo>
   tags: Array<TaskTag>
