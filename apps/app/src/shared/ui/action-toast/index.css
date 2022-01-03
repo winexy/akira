@@ -1,7 +1,10 @@
 .action-toast {
+  &-appear,
   &-enter {
     transform: translateY(100%);
   }
+
+  &-appear-active,
   &-enter-active {
     transform: translateY(0);
   }

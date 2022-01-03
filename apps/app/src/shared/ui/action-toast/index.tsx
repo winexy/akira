@@ -43,6 +43,7 @@ export const ActionToast: React.FC<ActionToastProps> & {
 
   return (
     <CSSTransition
+      appear
       nodeRef={ref}
       in={isVisible && isForcedVisible}
       timeout={300}
