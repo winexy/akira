@@ -51,7 +51,7 @@ const TaskPage: React.FC = () => {
   const createdAt = format(parseISO(task.created_at), 'd LLL yyyy')
 
   return (
-    <PageView className="pb-32">
+    <PageView className="pb-32" withBackNavigation>
       <div className="mt-1 flex px-4 space-x-2">
         <div className="space-x-2 flex-1">
           <Tag variant={task.is_completed ? 'green' : 'gray'}>
