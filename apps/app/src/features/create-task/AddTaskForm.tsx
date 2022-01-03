@@ -25,10 +25,10 @@ import {
 import {Button} from 'shared/ui/button'
 import {TaskTag} from 'modules/tags/types.d'
 import {TagsGrid} from 'modules/tags/components/TagsGrid'
-import {TaskList} from 'modules/lists/types.d'
 import filter from 'lodash/fp/filter'
 import lowerCase from 'lodash/fp/lowerCase'
 import toLower from 'lodash/fp/toLower'
+import trim from 'lodash/fp/trim'
 import isNull from 'lodash/fp/isNull'
 import format from 'date-fns/format'
 import {TextArea} from 'modules/tasks/components'
@@ -82,6 +82,15 @@ function renderDate(date: Date) {
   return format(date, 'dd.MM.yyyy')
 }
 
+function withHighlight(originalText: string, search: string): string {
+  return `<pre class="font-sans">${originalText.replace(
+    new RegExp(search, 'i'),
+    text => {
+      return `<span class="text-blue-500 dark:text-gray-300">${text}</span>`
+    }
+  )}</pre>`
+}
+
 export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
   // eslint-disable-next-line
   function TaskForm_ForwardRef({onSubmit, onVisibilityChange}, ref) {
@@ -100,7 +109,7 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
     const [isVisible, setIsVisible] = useFormVisibility({onVisibilityChange})
 
     const filteredList = filter(list => {
-      return lowerCase(list.title).includes(search)
+      return lowerCase(list.title).includes(trim(search))
     }, lists)
 
     useImperativeHandle(ref, () => ({
@@ -337,6 +346,7 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                   <input
                     className="w-full rounded appearance-none text-lg font-bold focus:outline-none bg-transparent"
                     placeholder="Search list..."
+                    value={search}
                     onInput={e =>
                       setSearch(toLower((e.target as HTMLInputElement).value))
                     }
@@ -361,9 +371,10 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                         }
                         hideBottomSheet()
                       }}
-                    >
-                      {list.title}
-                    </List.Item>
+                      dangerouslySetInnerHTML={{
+                        __html: withHighlight(list.title, search)
+                      }}
+                    />
                   ))}
                 </List>
               )}

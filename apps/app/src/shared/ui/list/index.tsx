@@ -6,7 +6,12 @@ type ItemProps = {className?: string} & React.DetailedHTMLProps<
   HTMLLIElement
 >
 
-const Item: React.FC<ItemProps> = ({children, className, onClick}) => {
+const Item: React.FC<ItemProps> = ({
+  children,
+  className,
+  onClick,
+  dangerouslySetInnerHTML
+}) => {
   return (
     <li
       className={clsx(
@@ -16,6 +21,8 @@ const Item: React.FC<ItemProps> = ({children, className, onClick}) => {
         className
       )}
       onClick={onClick}
+      // eslint-disable-next-line react/no-danger
+      dangerouslySetInnerHTML={dangerouslySetInnerHTML}
     >
       {children}
     </li>
