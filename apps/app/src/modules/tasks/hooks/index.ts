@@ -16,6 +16,20 @@ export function useTasksQuery() {
   })
 }
 
+export function useTasksListQuery(listId: string) {
+  const queryClient = useQueryClient()
+
+  return useQuery(
+    TaskQuery.List(listId),
+    () => akira.lists.findTasks(Number(listId)),
+    {
+      onSuccess(data) {
+        TaskCacheUtils.writeTasksToCache(queryClient, data.tasks)
+      }
+    }
+  )
+}
+
 export function usePatchTaskMutation(taskId: TaskId) {
   const queryClient = useQueryClient()
 
