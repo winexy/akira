@@ -71,6 +71,7 @@ const ReportsPage = lazy(() => import('pages/reports'))
 const PreferencesPage = lazy(() => import('pages/preferences'))
 const NotePage = lazy(() => import('pages/note'))
 const RecurrentTasksPage = lazy(() => import('pages/recurrent-tasks'))
+const PomodoroPage = lazy(() => import('pages/pomodoro'))
 
 const LoadingView: React.FC = () => (
   <PageView className="p-4">loading...</PageView>
@@ -114,6 +115,11 @@ function App() {
               <Route path="/search">
                 <Suspense fallback={<LoadingView />}>
                   <SearchPage />
+                </Suspense>
+              </Route>
+              <Route path="/pomodoro">
+                <Suspense fallback={<LoadingView />}>
+                  <PomodoroPage />
                 </Suspense>
               </Route>
               <Route path="/wip">

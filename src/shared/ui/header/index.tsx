@@ -6,7 +6,10 @@ import {toggleMenu} from 'shared/ui/menu'
 import {Link} from 'react-router-dom'
 import {Akira} from 'shared/ui/akira'
 
-export const Header: React.FC = ({children}) => {
+export const Header: React.FC<{className?: string}> = ({
+  className,
+  children
+}) => {
   const [isFloating, setIsFloating] = useState(false)
 
   useEffect(() => {
@@ -30,7 +33,8 @@ export const Header: React.FC = ({children}) => {
         'bg-white dark:bg-dark-600 text-gray-700 dark:text-white',
         {
           'shadow-2xl border-b bg-gray-100 dark:border-gray-600': isFloating
-        }
+        },
+        className
       )}
     >
       {isUndefined(children) ? (
