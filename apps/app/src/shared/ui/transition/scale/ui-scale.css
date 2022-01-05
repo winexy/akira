@@ -1,0 +1,18 @@
+.ui-scale-appear,
+.ui-scale-enter {
+  transform: scale(var(--ui-scale-from));
+}
+
+.ui-scale-appear-active,
+.ui-scale-enter-active {
+  transform: scale(var(--ui-scale-to));
+  transition: transform var(--ui-scale-enter-duration, 300ms) ease-in;
+}
+
+.ui-scale-exit {
+  transform: scale(var(--ui-scale-to));
+}
+.ui-scale-exit-active {
+  transform: scale(var(--ui-scale-from));
+  transition: transform var(--ui-scale-exit-duration, 300ms) ease-in;
+}
