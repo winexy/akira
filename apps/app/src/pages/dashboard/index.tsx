@@ -232,16 +232,18 @@ export function DashboardPage() {
         onSubmit={createTaskMutation.mutate}
         onVisibilityChange={addTaskControl.onFormVisiblityChange}
       />
-      <div className="px-4 pb-2 flex space-x-4 overflow-auto">
-        <Habbit variant="outline" Icon={PlusIcon}>
-          New
-        </Habbit>
-        {['Drink Water', 'Leetcode Hello There', 'Run'].map(text => (
-          <Habbit key={text} Icon={BookOpenIcon}>
-            {text}
+      {false && (
+        <div className="px-4 pb-2 flex space-x-4 overflow-auto">
+          <Habbit variant="outline" Icon={PlusIcon}>
+            New
           </Habbit>
-        ))}
-      </div>
+          {['Drink Water', 'Leetcode Hello There', 'Run'].map(text => (
+            <Habbit key={text} Icon={BookOpenIcon}>
+              {text}
+            </Habbit>
+          ))}
+        </div>
+      )}
       <div className="flex">
         <Control activeValue={mode} value="today" onClick={setMode}>
           Today
