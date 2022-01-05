@@ -3,6 +3,7 @@ import clsx from 'clsx'
 import {CheckIcon} from '@heroicons/react/solid'
 import noop from 'lodash/fp/noop'
 import {createMatcher} from 'shared/ui/create-matcher'
+import {Transition} from '../transition'
 
 type Props = {
   isChecked?: boolean
@@ -56,7 +57,15 @@ export const Checkbox: React.FC<Props> = ({
           matchSize(size)
         )}
       >
-        {isChecked && <CheckIcon className="h-4 w-4 text-white" />}
+        <Transition.Scale
+          appear
+          in={isChecked}
+          scaleFrom={0.5}
+          timeout={150}
+          unmountOnExit
+        >
+          <CheckIcon className="h-4 w-4 text-white" />
+        </Transition.Scale>
       </div>
     </Element>
   )
