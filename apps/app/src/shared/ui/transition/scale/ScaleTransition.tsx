@@ -12,9 +12,9 @@ type Props = Omit<CSSTransitionProps, 'timeout'> & {
 export const ScaleTransition: FC<Props> = ({
   appear = false,
   in: inProp = true,
-  timeout = 300,
+  timeout = 150,
   children,
-  scaleFrom = 0.8,
+  scaleFrom = 0.5,
   scaleTo = 1,
   ...props
 }) => {
