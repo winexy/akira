@@ -4,7 +4,6 @@ import {ApiTask} from 'modules/tasks/types.d'
 import ContentLoader from 'react-content-loader'
 import isEmpty from 'lodash/fp/isEmpty'
 import times from 'lodash/fp/times'
-import {InboxIcon} from '@heroicons/react/solid'
 import noop from 'lodash/fp/noop'
 import {
   useToggleCompletedMutation,
@@ -13,6 +12,7 @@ import {
 } from 'modules/tasks/hooks'
 import clsx from 'clsx'
 import {useShimmerColors} from 'shared/ui/shimmer'
+import {Empty} from 'shared/ui/empty'
 
 type Props = {
   isPending: boolean
@@ -66,13 +66,7 @@ export const TaskList: React.FC<Props> = ({
   }
 
   if (isEmpty(tasks)) {
-    return (
-      <div className="flex flex-col justify-center items-center pt-12">
-        <InboxIcon className="w-12 h-12" />
-        <h2 className="mt-2 font-semibold text-lg">No tasks</h2>
-        {noTasksSlot}
-      </div>
-    )
+    return <Empty message="No tasks">{noTasksSlot}</Empty>
   }
 
   return (
