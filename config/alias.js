@@ -41,5 +41,5 @@ const toJestMapper = pipe(
 module.exports = {
   eslint: () => toESLint(tsConfigPaths),
   rollup: () => toRollup(tsConfigPaths),
-  jest: () => toJestMapper(tsConfigPaths)
+  jest: override => ({...toJestMapper(tsConfigPaths), ...override})
 }
