@@ -16,6 +16,7 @@ import ContentLoader from 'react-content-loader'
 import isEmpty from 'lodash/fp/isEmpty'
 import {useShimmerColors} from 'shared/ui/shimmer'
 import {ApiTask} from 'modules/tasks/types.d'
+import {Empty} from 'shared/ui/empty'
 
 type Report = {
   date: string
@@ -82,7 +83,7 @@ function ReportView() {
         </Match.Case>
         <Match.Case when={!isUndefined(report)}>
           {isEmpty(report?.tasks) ? (
-            <p className="mt-4">No data</p>
+            <Empty message="Looks like you've done nothing" />
           ) : (
             <ul className="mt-4 space-y-2">
               {report?.tasks.map(task => (
