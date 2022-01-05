@@ -2,7 +2,7 @@ import React from 'react'
 import clsx from 'clsx'
 import {FilterIcon, SortAscendingIcon} from '@heroicons/react/solid'
 import {showBottomSheet} from 'shared/ui/bottom-sheet'
-import {ShiftTransition} from 'shared/ui/transition'
+import {Transition} from 'shared/ui/transition'
 
 type Props = {
   isFiltered: boolean
@@ -11,7 +11,7 @@ type Props = {
 
 export const TaskListOperations: React.FC<Props> = ({isFiltered, isSorted}) => {
   return (
-    <ShiftTransition appear>
+    <Transition.Shift appear>
       <div className="fixed bottom-0 right-0 left-0 py-7 flex items-center mt-4 px-4 from-gray-100 dark:from-dark-600 bg-gradient-to-t">
         <button
           className={clsx(
@@ -49,6 +49,6 @@ export const TaskListOperations: React.FC<Props> = ({isFiltered, isSorted}) => {
           Sort
         </button>
       </div>
-    </ShiftTransition>
+    </Transition.Shift>
   )
 }

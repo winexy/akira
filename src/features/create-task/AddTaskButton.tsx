@@ -3,7 +3,7 @@ import clsx from 'clsx'
 import isNull from 'lodash/fp/isNull'
 import {PlusIcon} from '@heroicons/react/solid'
 import {TaskFormRef} from 'features/create-task/AddTaskForm'
-import {ShiftTransition} from 'shared/ui/transition'
+import {Transition} from 'shared/ui/transition'
 
 export function useAddTaskControl() {
   const [isVisible, setIsVisible] = useState(true)
@@ -24,7 +24,7 @@ export function useAddTaskControl() {
 
 export const AddTaskButton: React.FC<NativeButtonProps> = ({onClick}) => {
   return (
-    <ShiftTransition appear>
+    <Transition.Shift appear>
       <div>
         <button
           className={clsx(
@@ -48,6 +48,6 @@ export const AddTaskButton: React.FC<NativeButtonProps> = ({onClick}) => {
           <PlusIcon className="w-8 h-8" />
         </button>
       </div>
-    </ShiftTransition>
+    </Transition.Shift>
   )
 }

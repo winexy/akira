@@ -44,7 +44,7 @@ import {List} from 'shared/ui/list'
 import {useListsQuery} from 'modules/lists/hooks'
 import {StickyBottomSheetBox} from 'shared/ui/sticky-bottom-sheet-box'
 import {NewListLink, NoLists} from 'entities/task-list'
-import {ShiftTransition} from 'shared/ui/transition'
+import {Transition} from 'shared/ui/transition'
 import {useFormVisibility} from './use-form-visibility'
 import {
   $title,
@@ -279,7 +279,7 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                     onChange={onDescriptionChange}
                   />
                 </div>
-                <ShiftTransition
+                <Transition.Shift
                   in={!isEmpty(title)}
                   from="right"
                   unmountOnExit
@@ -296,7 +296,7 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                   >
                     <XCircleIcon className="h-5 w-5" />
                   </button>
-                </ShiftTransition>
+                </Transition.Shift>
               </div>
             </form>
             <DatePickerSheet
