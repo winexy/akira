@@ -38,10 +38,17 @@ import {useFirebaseAuth} from 'shared/lib/firebase'
 import {closeMenu, openMenu, $isMenuOpen} from './model'
 import './index.css'
 
-type MenuItemProps = {
-  Icon: SVGIconElement
-  to: string
-}
+type MenuItemProps =
+  | {
+      Icon: SVGIconElement
+      to: string
+      CustomIcon?: never
+    }
+  | {
+      CustomIcon: React.ReactNode
+      to: string
+      Icon?: never
+    }
 
 type ButtonProps = {
   onClick(): void
@@ -52,13 +59,14 @@ export * from './model'
 
 export const MenuItem: React.FC<MenuItemProps> & {
   Button: React.FC<ButtonProps>
-} = ({Icon, children, to}) => {
+} = ({Icon, CustomIcon, children, to}) => {
   const onClick = () => closeMenu()
 
   return (
     <li>
       <Link className="menu-item --interactive" to={to} onClick={onClick}>
-        <Icon className="mr-4 w-6 h-6 text-gray-400" />
+        {Icon && <Icon className="mr-4 w-6 h-6 text-gray-400" />}
+        {CustomIcon}
         {children}
       </Link>
     </li>
@@ -284,6 +292,20 @@ export const Menu: React.FC = ({children}) => {
               {todayTasksCount ? (
                 <span className="ml-auto mr-4">{todayTasksCount}</span>
               ) : null}
+            </MenuItem>
+            <MenuItem
+              to="/pomodoro"
+              CustomIcon={
+                <span
+                  role="img"
+                  aria-label="tomato emoji"
+                  className="text-2xl mr-4"
+                >
+                  🍅
+                </span>
+              }
+            >
+              Pomodoro
             </MenuItem>
             <MenuItem to="/reports" Icon={DocumentTextIcon}>
               Daily Report
