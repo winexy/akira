@@ -42,11 +42,13 @@ Context.displayName = 'FirebaseAuth'
 
 type Props = {
   onAuthSuccess?(): void
+  onAuthStateChanged: typeof auth.onAuthStateChanged
 }
 
 export const FirebaseAuthProvider: React.FC<Props> = ({
   children,
-  onAuthSuccess = noop
+  onAuthSuccess = noop,
+  onAuthStateChanged
 }) => {
   const [user, setUser] = useState<ContextValueT['user']>(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -71,7 +73,8 @@ export const FirebaseAuthProvider: React.FC<Props> = ({
 
   useEffect(() => {
     setIsLoading(true)
-    return auth.onAuthStateChanged(firebaseUser => {
+
+    return onAuthStateChanged(firebaseUser => {
       setIsLoading(false)
 
       if (firebaseUser) {
@@ -83,7 +86,7 @@ export const FirebaseAuthProvider: React.FC<Props> = ({
         setIsAuthenticated(false)
       }
     })
-  }, [setIsLoading, onAuthSuccess])
+  }, [setIsLoading, onAuthSuccess, onAuthStateChanged])
 
   return <Context.Provider value={value}>{children}</Context.Provider>
 }
