@@ -186,7 +186,16 @@ export function useWeekQuery() {
 }
 
 export function useCloneTaskMutation(taskId: TaskId) {
-  return useMutation(() => {
-    return akira.tasks.clone(taskId)
-  })
+  const queryClient = useQueryClient()
+
+  return useMutation(
+    () => {
+      return akira.tasks.clone(taskId)
+    },
+    {
+      onSuccess() {
+        queryClient.invalidateQueries(TaskQuery.MyDay())
+      }
+    }
+  )
 }
