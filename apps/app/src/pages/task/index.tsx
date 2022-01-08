@@ -1,14 +1,10 @@
 import React, {useState} from 'react'
-import {useHistory, useParams} from 'react-router'
+import {useParams} from 'react-router'
 import {PageView} from 'shared/ui/page-view'
 import format from 'date-fns/format'
 import parseISO from 'date-fns/parseISO'
 import isEmpty from 'lodash/fp/isEmpty'
-import {
-  ExclamationIcon,
-  PlusIcon,
-  ClipboardCopyIcon
-} from '@heroicons/react/outline'
+import {ExclamationIcon, PlusIcon} from '@heroicons/react/outline'
 import isNil from 'lodash/fp/isNil'
 import {showBottomSheet, BottomSheet} from 'shared/ui/bottom-sheet'
 import {Button} from 'shared/ui/button'
@@ -18,11 +14,7 @@ import {
   TextArea
 } from 'modules/tasks/components'
 import {TagsManager, TaskTag} from 'modules/tags/components'
-import {
-  usePatchTaskMutation,
-  useTaskQuery,
-  useCloneTaskMutation
-} from 'modules/tasks/hooks'
+import {usePatchTaskMutation, useTaskQuery} from 'modules/tasks/hooks'
 import {Tag} from 'modules/tags/components/Tag'
 import {
   DotsVerticalIcon,
@@ -42,8 +34,7 @@ import {ChecklistManager} from 'features/checklist'
 import {IconButton} from 'shared/ui/icon-button'
 import {Recurrence} from 'features/recurrence'
 import capitalize from 'lodash/capitalize'
-import {Spin} from 'shared/ui/spin'
-import {Transition} from 'shared/ui/transition'
+import {CloneTaskAction} from 'features/clone-task'
 
 const TaskPage: React.FC = () => {
   const {taskId} = useParams<{taskId: string}>()
@@ -53,20 +44,12 @@ const TaskPage: React.FC = () => {
   })
 
   const patchTaskMutation = usePatchTaskMutation(taskId)
-  const cloneTaskMutation = useCloneTaskMutation(taskId)
-  const history = useHistory()
 
   if (isNil(task)) {
     return null
   }
 
   const createdAt = format(parseISO(task.created_at), 'd LLL yyyy')
-
-  function cloneTask() {
-    cloneTaskMutation.mutateAsync().then(cloneId => {
-      history.push(`/tasks/${cloneId}`)
-    })
-  }
 
   return (
     <PageView className="pb-32" withBackNavigation>
@@ -173,22 +156,7 @@ const TaskPage: React.FC = () => {
           scheduledTaskDate={task.date}
           isFetchingTask={isFetching}
         />
-        <TaskActionList.Item>
-          <TaskActionList.Button
-            disabled={cloneTaskMutation.isLoading}
-            Icon={ClipboardCopyIcon}
-            onClick={cloneTask}
-          >
-            Clone task
-            <Transition.Scale
-              appear
-              in={cloneTaskMutation.isLoading}
-              unmountOnExit
-            >
-              <Spin className="ml-2 w-4 h-4 text-gray-400" />
-            </Transition.Scale>
-          </TaskActionList.Button>
-        </TaskActionList.Item>
+        <CloneTaskAction taskId={taskId} />
         <TaskActionList.Item>
           <TaskActionList.Button
             Icon={RefreshIcon}
