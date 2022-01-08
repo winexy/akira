@@ -1,12 +1,11 @@
 import clsx from 'clsx'
-import React, {FC} from 'react'
+import React, {FC, useRef} from 'react'
 import {
   combine,
   createEffect,
   createEvent,
   createStore,
   forward,
-  guard,
   sample
 } from 'effector'
 import {useStore} from 'effector-react'
@@ -242,6 +241,8 @@ const PomodoroPage: FC = () => {
   const mode = useStore($mode)
   const isFocusMode = useStore($isFocusMode)
   const isRestMode = useStore($isRestMode)
+  const triggerRef = useRef(null)
+  const textRef = useRef(null)
 
   function start() {
     switch (mode) {
@@ -300,8 +301,8 @@ const PomodoroPage: FC = () => {
           <Segment id={PomodoroMode.Rest}>Rest</Segment>
         </SegmentedControl>
         <div className="mt-8 flex flex-col justify-center items-center">
-          <Transition.Scale appear>
-            <div>
+          <Transition.Scale appear nodeRef={triggerRef}>
+            <div ref={triggerRef}>
               {isRunning ? (
                 <PressButton onClick={() => pauseTimer()}>PAUSE</PressButton>
               ) : (
@@ -311,8 +312,14 @@ const PomodoroPage: FC = () => {
               )}
             </div>
           </Transition.Scale>
-          <Transition.Scale appear in={isRunning} unmountOnExit>
+          <Transition.Scale
+            nodeRef={textRef}
+            appear
+            in={isRunning}
+            unmountOnExit
+          >
             <p
+              ref={textRef}
               className={clsx('mt-8 font-semibold text-3xl transition', {
                 'text-white': isRunning
               })}
