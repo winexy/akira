@@ -50,6 +50,9 @@ export function tasks(api: AxiosInstance) {
     },
     week(): Promise<Array<ApiTask>> {
       return api.get('task-scheduler/week').then(unwrap)
+    },
+    clone(taskId: TaskId): Promise<string> {
+      return api.post(`tasks/clone/${taskId}`).then(unwrap)
     }
   }
 }

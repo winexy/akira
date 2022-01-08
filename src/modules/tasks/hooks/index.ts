@@ -184,3 +184,9 @@ export function useWeekQuery() {
     }
   })
 }
+
+export function useCloneTaskMutation(taskId: TaskId) {
+  return useMutation(() => {
+    return akira.tasks.clone(taskId)
+  })
+}

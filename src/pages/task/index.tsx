@@ -1,10 +1,14 @@
 import React, {useState} from 'react'
-import {useParams} from 'react-router'
+import {useHistory, useParams} from 'react-router'
 import {PageView} from 'shared/ui/page-view'
 import format from 'date-fns/format'
 import parseISO from 'date-fns/parseISO'
 import isEmpty from 'lodash/fp/isEmpty'
-import {ExclamationIcon, PlusIcon} from '@heroicons/react/outline'
+import {
+  ExclamationIcon,
+  PlusIcon,
+  ClipboardCopyIcon
+} from '@heroicons/react/outline'
 import isNil from 'lodash/fp/isNil'
 import {showBottomSheet, BottomSheet} from 'shared/ui/bottom-sheet'
 import {Button} from 'shared/ui/button'
@@ -14,7 +18,11 @@ import {
   TextArea
 } from 'modules/tasks/components'
 import {TagsManager, TaskTag} from 'modules/tags/components'
-import {usePatchTaskMutation, useTaskQuery} from 'modules/tasks/hooks'
+import {
+  usePatchTaskMutation,
+  useTaskQuery,
+  useCloneTaskMutation
+} from 'modules/tasks/hooks'
 import {Tag} from 'modules/tags/components/Tag'
 import {
   DotsVerticalIcon,
@@ -43,12 +51,20 @@ const TaskPage: React.FC = () => {
   })
 
   const patchTaskMutation = usePatchTaskMutation(taskId)
+  const cloneTaskMutation = useCloneTaskMutation(taskId)
+  const history = useHistory()
 
   if (isNil(task)) {
     return null
   }
 
   const createdAt = format(parseISO(task.created_at), 'd LLL yyyy')
+
+  function cloneTask() {
+    cloneTaskMutation.mutateAsync().then(cloneId => {
+      history.push(`/tasks/${cloneId}`)
+    })
+  }
 
   return (
     <PageView className="pb-32" withBackNavigation>
@@ -155,6 +171,11 @@ const TaskPage: React.FC = () => {
           scheduledTaskDate={task.date}
           isFetchingTask={isFetching}
         />
+        <TaskActionList.Item>
+          <TaskActionList.Button Icon={ClipboardCopyIcon} onClick={cloneTask}>
+            Clone task
+          </TaskActionList.Button>
+        </TaskActionList.Item>
         <TaskActionList.Item>
           <TaskActionList.Button
             Icon={RefreshIcon}
