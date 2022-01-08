@@ -9,6 +9,7 @@ import {
 } from 'firebase/messaging'
 import {config} from 'shared/config'
 import {api} from 'shared/api'
+import noop from 'lodash/noop'
 import {exhaustiveCheck} from '../utils/index'
 
 const firebaseConfig = {
@@ -23,7 +24,53 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig)
 
-export const auth = getAuth()
+type FirebaseAuth = ReturnType<typeof getAuth>
+
+function getMockAuth(): FirebaseAuth {
+  globalThis.console.warn('Using mock auth')
+
+  const user: User = {
+    emailVerified: true,
+    refreshToken: 'refreshToken',
+    isAnonymous: false,
+    tenantId: 'tenantId',
+    async getIdToken() {
+      return 'mock-id-token'
+    },
+    delete: noop as User['delete'],
+    getIdTokenResult: noop as User['getIdTokenResult'],
+    reload: noop as User['reload'],
+    toJSON: noop as User['toJSON'],
+    displayName: 'John Doe',
+    email: 'test@winexy.xyz',
+    phoneNumber: null,
+    photoURL: null,
+    providerId: 'providerId',
+    uid: 'oVcn0LQNDOZjLAF0UalkpWKlkVs2',
+    providerData: [],
+    metadata: {
+      creationTime: String(Date.now()),
+      lastSignInTime: String(Date.now())
+    }
+  }
+
+  const currentUser: FirebaseAuth['currentUser'] = user
+  const onAuthStateChanged: FirebaseAuth['onAuthStateChanged'] = callback => {
+    // @ts-expect-error
+    callback(user)
+    return () => {}
+  }
+
+  return {
+    currentUser,
+    onAuthStateChanged
+  } as ReturnType<typeof getAuth>
+}
+
+export const auth = import.meta.env.VITE_USE_MOCK_AUTH
+  ? getMockAuth()
+  : getAuth()
+
 export {signInWithRedirect}
 export const GoogleProvider = new GoogleAuthProvider()
 
@@ -32,6 +79,11 @@ export type User = FirebaseUser
 const messaging = getMessaging(app)
 
 export async function setupCloudMessaging() {
+  if (import.meta.env.VITE_USE_MOCK_AUTH) {
+    globalThis.console.warn('Use mock auth. Skip fcm service initialization')
+    return
+  }
+
   const supported = await isSupported()
 
   if (!supported) {
