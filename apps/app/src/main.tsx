@@ -9,12 +9,8 @@ import {FirebaseAuthProvider, setupCloudMessaging} from 'shared/lib/firebase'
 import {HotkeyProvider} from 'modules/hotkeys/HotKeyContext'
 import {TaskQuery} from 'modules/tasks/config/index'
 import {initAppThemeFx} from 'features/darkmode/model/index'
-import {auth, User} from 'shared/lib/firebase/auth'
 import './app/index.css'
-import noop from 'lodash/fp/noop'
-import {TypeOfTag} from 'typescript'
 import App from './app/App'
-import {onDueDateChange} from './features/create-task/model/index'
 
 enableMapSet()
 
@@ -47,49 +43,10 @@ if (import.meta.env.PROD) {
   })
 }
 
-const MockAuthStateChange: typeof auth.onAuthStateChanged = callback => {
-  const user: User = {
-    emailVerified: true,
-    refreshToken: 'refreshToken',
-    isAnonymous: false,
-    tenantId: 'tenantId',
-    getIdToken: noop as User['getIdToken'],
-    delete: noop as User['delete'],
-    getIdTokenResult: noop as User['getIdTokenResult'],
-    reload: noop as User['reload'],
-    toJSON: noop as User['toJSON'],
-    displayName: 'John Doe',
-    email: 'test@winexy.xyz',
-    phoneNumber: null,
-    photoURL: null,
-    providerId: 'providerId',
-    uid: 'oVcn0LQNDOZjLAF0UalkpWKlkVs2',
-    providerData: [],
-    metadata: {
-      creationTime: String(Date.now()),
-      lastSignInTime: String(Date.now())
-    }
-  }
-
-  // @ts-expect-error
-  callback(user)
-
-  return () => {}
-}
-
-const onAuthStateChange = import.meta.env
-  .VITE_USE_MOCK_AUTH_STATE_CHANGE_CALLBACK
-  ? MockAuthStateChange
-  : (...args: Parameters<typeof auth.onAuthStateChanged>) =>
-      auth.onAuthStateChanged(...args)
-
 ReactDOM.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <FirebaseAuthProvider
-        onAuthSuccess={onAuthSuccess}
-        onAuthStateChanged={onAuthStateChange}
-      >
+      <FirebaseAuthProvider onAuthSuccess={onAuthSuccess}>
         <HotkeyProvider>
           <App />
         </HotkeyProvider>
