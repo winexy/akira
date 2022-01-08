@@ -23,7 +23,7 @@ const waitUntil = (selector: string, onReady: () => void) => {
 
     if (now - startTime >= 5_000) {
       throw new Error(
-        `[waitUnilt] element ${selector} is not ready after timeout`
+        `[waitUntil] element ${selector} is not ready after timeout`
       )
     }
 
