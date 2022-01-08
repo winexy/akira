@@ -1,6 +1,5 @@
 import clsx from 'clsx'
-import React, {FC, useEffect} from 'react'
-import {PageView} from 'shared/ui/page-view'
+import React, {FC} from 'react'
 import {
   combine,
   createEffect,
@@ -16,225 +15,314 @@ import floor from 'lodash/floor'
 import addMinutes from 'date-fns/addMinutes'
 import differenceInSeconds from 'date-fns/differenceInSeconds'
 import addSeconds from 'date-fns/addSeconds'
-import {Header} from 'shared/ui/header'
 import {Transition} from 'shared/ui/transition'
 import isNull from 'lodash/isNull'
+import {MenuIcon} from '@heroicons/react/solid'
+import {toggleMenu} from 'shared/ui/menu'
+import {exhaustiveCheck} from 'shared/lib/utils'
+import {Segment, SegmentedControl} from 'shared/ui/segmented-control'
 
-function createCountdown() {
-  const start = createEvent<Date>()
-  const abort = createEvent()
-  const pause = createEvent()
-
-  const wait = (ms: number): Promise<void> =>
-    new Promise(resolve => setTimeout(resolve, ms))
-
-  type Status = 'idle' | 'paused' | 'running' | 'aborted' | 'finished'
-
-  const $endsAt = createStore<Date | null>(null)
-  const $status = createStore<Status>('idle')
-  const $timeLeft = createStore(0)
-  const $isRunning = $status.map(status => status === 'running')
-  const $isPaused = $status.map(status => status === 'paused')
-  const $isIdle = $status.map(status => status === 'idle')
-  const $isFinished = $status.map(status => status === 'finished')
-  const tick = createEvent()
-
-  const updateDiffFx = createEffect((end: Date | null) => {
-    return isNull(end) ? 0 : differenceInSeconds(end, new Date())
-  })
-
-  const timerFx = createEffect(async (end: Date | null) => {
-    if (isNull(end)) {
-      return end
-    }
-
-    await wait(1000)
-    return end
-  })
-
-  forward({
-    from: timerFx.doneData,
-    to: updateDiffFx
-  })
-
-  forward({
-    from: start,
-    to: updateDiffFx
-  })
-
-  $endsAt.on(start, (_, date) => date)
-
-  const isFinishedGuard = guard({
-    source: updateDiffFx.doneData,
-    filter: ms => ms === 0
-  })
-
-  $status
-    .on(start, () => 'running')
-    .on(pause, () => 'paused')
-    .on(abort, () => 'aborted')
-    .on(isFinishedGuard, () => 'finished')
-
-  guard({
-    source: start,
-    filter: timerFx.pending.map(is => !is),
-    target: tick
-  })
-
-  sample({
-    clock: tick,
-    source: $endsAt,
-    fn: timerFx
-  })
-
-  const willTick = guard({
-    source: updateDiffFx.doneData,
-    filter: ms => ms >= 0
-  })
-
-  guard({
-    source: willTick,
-    filter: $isRunning,
-    target: tick
-  })
-
-  const shouldUpdateIfRunning = guard({
-    source: updateDiffFx.doneData,
-    filter: $isRunning
-  })
-
-  const shouldUpdateIfFinished = guard({
-    source: updateDiffFx.doneData,
-    filter: $isFinished
-  })
-
-  $timeLeft.on(shouldUpdateIfRunning, (_, time) => time)
-  $timeLeft.on(shouldUpdateIfFinished, (_, time) => time)
-
-  return {
-    startTimer: start,
-    abortTimer: abort,
-    pauseTimer: pause,
-    $isIdle,
-    $isRunning,
-    $isPaused,
-    $isFinished,
-    $timeLeft
-  }
+enum PomodoroMode {
+  Focus = 'focus',
+  Rest = 'rest'
 }
 
-const {
-  startTimer,
-  pauseTimer,
-  $timeLeft,
-  $isIdle,
-  $isPaused,
-  $isRunning,
-  $isFinished
-} = createCountdown()
+const MINUTES_25 = 60 * 25
+const MINUTES_5 = 60 * 5
 
-const $time = combine($timeLeft, $isIdle, (totalSeconds, isIdle) => {
-  if (isIdle) {
-    return {minutes: '25', seconds: '00'}
+const changeMode = createEvent<PomodoroMode>()
+const switchMode = createEvent()
+
+const $mode = createStore(PomodoroMode.Focus)
+
+$mode.on(changeMode, (_, mode) => mode)
+$mode.on(switchMode, mode => {
+  return mode === PomodoroMode.Focus ? PomodoroMode.Rest : PomodoroMode.Focus
+})
+
+const $isFocusMode = $mode.map(mode => mode === PomodoroMode.Focus)
+const $isRestMode = $mode.map(mode => mode === PomodoroMode.Rest)
+
+const startTimer = createEvent<Date>()
+const abortTimer = createEvent()
+const pauseTimer = createEvent()
+const finishTimer = createEvent()
+
+type Status = 'idle' | 'paused' | 'running' | 'aborted' | 'finished'
+
+const $intervalId = createStore<number | null>(null)
+const $timeLeft = createStore(MINUTES_25)
+
+const $status = createStore<Status>('idle')
+const $isIdle = $status.map(status => status === 'idle')
+const $isRunning = $status.map(status => status === 'running')
+const $isPaused = $status.map(status => status === 'paused')
+const $isAborted = $status.map(status => status === 'aborted')
+const $isFinished = $status.map(status => status === 'finished')
+
+const notifyFx = createEffect((mode: PomodoroMode) => {
+  const message =
+    mode === PomodoroMode.Focus ? 'Time to relax' : 'Time to get back to work'
+
+  if ('Notification' in window) {
+    // eslint-disable-next-line
+    new Notification(message, {})
+  }
+})
+
+$status
+  .on(startTimer, () => 'running')
+  .on(pauseTimer, () => 'paused')
+  .on(abortTimer, () => 'aborted')
+  .on(finishTimer, () => 'finished')
+
+sample({
+  clock: finishTimer,
+  source: $mode,
+  target: notifyFx
+})
+
+const updateTimer = createEvent<number>()
+
+const getRemainingTime = (endDate: Date) =>
+  differenceInSeconds(endDate, new Date())
+
+const runTimerFx = createEffect((endDate: Date) => {
+  const currentIntervalId = $intervalId.getState()
+
+  if (!isNull(currentIntervalId)) {
+    return currentIntervalId
   }
 
-  const format = (x: number) => padStart(String(floor(x)), 2, '0')
+  const timeLeft = getRemainingTime(endDate)
+  updateTimer(timeLeft)
 
-  const minutes = format(totalSeconds / 60)
-  const seconds = format(totalSeconds % 60)
+  const intervalId = setInterval(() => {
+    const timeLeft = getRemainingTime(endDate)
+    updateTimer(timeLeft)
+
+    if (timeLeft <= 0) {
+      finishTimer()
+    }
+  }, 1000)
+
+  return intervalId
+})
+
+const stopTimerFx = createEffect((timerId: number | null) => {
+  if (!isNull(timerId)) {
+    clearInterval(timerId)
+  }
+})
+
+sample({
+  clock: abortTimer,
+  source: $intervalId,
+  target: stopTimerFx
+})
+
+sample({
+  clock: pauseTimer,
+  source: $intervalId,
+  target: stopTimerFx
+})
+
+sample({
+  clock: finishTimer,
+  source: $intervalId,
+  target: stopTimerFx
+})
+
+$intervalId
+  .on(runTimerFx.doneData, (_, id) => id)
+  .on(stopTimerFx.done, () => null)
+
+forward({
+  from: startTimer,
+  to: runTimerFx
+})
+
+$timeLeft
+  .on(changeMode, (_, mode) => {
+    return mode === PomodoroMode.Focus ? MINUTES_25 : MINUTES_5
+  })
+  .on(updateTimer, (_, time) => time)
+
+const startFocusTimer = createEvent()
+const startRestTimer = createEvent()
+
+const startTimerMeta = combine($isPaused, $timeLeft, (isPaused, timeLeft) => ({
+  isPaused,
+  timeLeft
+}))
+
+sample({
+  clock: startFocusTimer,
+  source: startTimerMeta,
+  fn: source =>
+    source.isPaused
+      ? addSeconds(new Date(), source.timeLeft)
+      : addMinutes(new Date(), 25),
+  target: startTimer
+})
+
+sample({
+  clock: startRestTimer,
+  source: startTimerMeta,
+  fn: source =>
+    source.isPaused
+      ? addSeconds(new Date(), source.timeLeft)
+      : addMinutes(new Date(), 5),
+  target: startTimer
+})
+
+forward({
+  from: changeMode,
+  to: abortTimer
+})
+
+sample({
+  clock: notifyFx.done,
+  target: switchMode
+})
+
+const formatTimeUnit = (x: number) => padStart(String(floor(x)), 2, '0')
+
+const $time = combine($timeLeft, totalSeconds => {
+  const minutes = formatTimeUnit(totalSeconds / 60)
+  const seconds = formatTimeUnit(totalSeconds % 60)
 
   return {minutes, seconds}
 })
 
-const separator = (
-  <span className="space-y-1">
-    <span className="block w-2 h-2 rounded-full bg-white" />
-    <span className="block w-2 h-2 rounded-full bg-white" />
-  </span>
-)
+const Countdown: FC = () => {
+  const time = useStore($time)
+
+  return (
+    <strong className="text-4xl flex justify-center items-center">
+      <span className="w-14 text-center">{time.minutes}</span>
+      <span className="space-y-1">
+        <span className="block w-2 h-2 rounded-full bg-white" />
+        <span className="block w-2 h-2 rounded-full bg-white" />
+      </span>
+      <span className="w-14 text-center">{time.seconds}</span>
+    </strong>
+  )
+}
 
 const PressButton: FC<{onClick(): void}> = ({onClick, children}) => {
+  const isRestMode = useStore($isRestMode)
+  const isFocusMode = useStore($isFocusMode)
+
   return (
     <button
       className={clsx(
-        'w-48 h-48 rounded-full bg-red-500 text-white',
-        'border-4 border-red-600',
+        'w-48 h-48 rounded-full text-white',
+        'border-2 border-opacity-50',
         'shadow-xl transition ease-in duration-150',
         'focus:outline-none',
-        'active:bg-red-600 active:shadow-inner'
+        'active:shadow-inner',
+        {
+          'border-red-600 bg-red-500 active:bg-red-600': isFocusMode,
+          'border-green-500 bg-green-400 active:bg-green-500': isRestMode
+        }
       )}
       onClick={onClick}
     >
+      <Countdown />
       <span className="font-bold">{children}</span>
     </button>
   )
 }
 
 const PomodoroPage: FC = () => {
-  const timeLeft = useStore($timeLeft)
-  const time = useStore($time)
+  const isIdle = useStore($isIdle)
   const isRunning = useStore($isRunning)
   const isPaused = useStore($isPaused)
-  const isFinished = useStore($isFinished)
-
-  useEffect(() => {
-    if (isFinished) {
-      if ('Notification' in window) {
-        // eslint-disable-next-line
-        new Notification('Time to Relax')
-      }
-    }
-  }, [isFinished])
+  const mode = useStore($mode)
+  const isFocusMode = useStore($isFocusMode)
+  const isRestMode = useStore($isRestMode)
 
   function start() {
-    const endDate = isPaused
-      ? addSeconds(new Date(), timeLeft)
-      : addMinutes(new Date(), 25)
-
-    startTimer(endDate)
+    switch (mode) {
+      case PomodoroMode.Focus:
+        return startFocusTimer()
+      case PomodoroMode.Rest:
+        return startRestTimer()
+      default:
+        return exhaustiveCheck(mode)
+    }
   }
 
-  const countdown = (
-    <span className="text-4xl flex justify-center items-center">
-      <span className="w-14 text-center">{time.minutes}</span>
-      {separator}
-      <span className="w-14 text-center">{time.seconds}</span>
-    </span>
-  )
-
   return (
-    <PageView
-      className="p-4 h-full bg-red-500"
-      header={
-        <Header className="bg-red-500">
-          <span role="img" aria-label="tomato emoji" className="text-xl">
-            🍅
-          </span>{' '}
-          <span className="font-semibold ml-3 text-xl">Pomodoro</span>
-        </Header>
-      }
+    <div
+      className={clsx('h-full text-dark-600 dark:text-white', 'transition', {
+        'bg-red-400': isFocusMode && isRunning,
+        'bg-green-400': isRestMode && isRunning
+      })}
     >
-      <div className="flex flex-col justify-center items-center">
-        <Transition.Scale appear>
-          <div className="mt-6">
-            {isRunning ? (
-              <PressButton onClick={() => pauseTimer()}>
-                {countdown}
-                PAUSE
-              </PressButton>
-            ) : (
-              <PressButton onClick={start}>
-                {countdown}
-                {isPaused ? 'CONTINUE' : 'START'}
-              </PressButton>
-            )}
-          </div>
-        </Transition.Scale>
-        <Transition.Scale appear in={isRunning} unmountOnExit>
-          <p className="mt-8 font-semibold text-xl">Time to focus!</p>
-        </Transition.Scale>
-      </div>
-    </PageView>
+      <header className="flex items-center px-4 py-2">
+        <span role="img" aria-label="tomato emoji" className="text-xl">
+          🍅
+        </span>{' '}
+        <span
+          className={clsx('font-semibold ml-3 text-xl', {
+            'text-white': isRunning
+          })}
+        >
+          Pomodoro
+        </span>
+        <button
+          className={clsx(
+            'ml-auto w-8 h-8 -mr-1',
+            'flex items-center justify-center ',
+            'rounded ',
+            'transition ease-in duration-150',
+            'focus:outline-none',
+            {
+              'active:bg-red-600 focus:bg-red-600': isFocusMode && isRunning,
+              'active:bg-green-400 focus:bg-green-400': isRestMode && isRunning,
+              'dark:active:bg-dark-700': isIdle
+            }
+          )}
+          onClick={() => toggleMenu()}
+        >
+          <MenuIcon className="w-6 h-6" />
+        </button>
+      </header>
+      <main>
+        <SegmentedControl
+          className="mx-auto max-w-lg"
+          activeId={mode}
+          onChange={changeMode}
+        >
+          <Segment id={PomodoroMode.Focus}>Focus</Segment>
+          <Segment id={PomodoroMode.Rest}>Rest</Segment>
+        </SegmentedControl>
+        <div className="mt-8 flex flex-col justify-center items-center">
+          <Transition.Scale appear>
+            <div>
+              {isRunning ? (
+                <PressButton onClick={() => pauseTimer()}>PAUSE</PressButton>
+              ) : (
+                <PressButton onClick={start}>
+                  {isPaused ? 'CONTINUE' : 'START'}
+                </PressButton>
+              )}
+            </div>
+          </Transition.Scale>
+          <Transition.Scale appear in={isRunning} unmountOnExit>
+            <p
+              className={clsx('mt-8 font-semibold text-3xl transition', {
+                'text-white': isRunning
+              })}
+            >
+              {isFocusMode ? 'Time to focus! 👩🏼‍💻' : 'Time to rest! 🧘🏼‍♀️'}
+            </p>
+          </Transition.Scale>
+        </div>
+      </main>
+    </div>
   )
 }
 
