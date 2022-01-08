@@ -45,6 +45,7 @@ TaskActionList.Button = ({
       'transition ease-in duration-75',
       'active:text-blue-600 dark:text-blue-500 active:bg-gray-50 dark:active:bg-dark-500',
       'focus:outline-none',
+      'disabled:text-gray-400',
       {'flex-1': stretch},
       className
     )}

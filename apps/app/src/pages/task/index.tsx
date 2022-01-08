@@ -42,6 +42,8 @@ import {ChecklistManager} from 'features/checklist'
 import {IconButton} from 'shared/ui/icon-button'
 import {Recurrence} from 'features/recurrence'
 import capitalize from 'lodash/capitalize'
+import {Spin} from 'shared/ui/spin'
+import {Transition} from 'shared/ui/transition'
 
 const TaskPage: React.FC = () => {
   const {taskId} = useParams<{taskId: string}>()
@@ -172,8 +174,19 @@ const TaskPage: React.FC = () => {
           isFetchingTask={isFetching}
         />
         <TaskActionList.Item>
-          <TaskActionList.Button Icon={ClipboardCopyIcon} onClick={cloneTask}>
+          <TaskActionList.Button
+            disabled={cloneTaskMutation.isLoading}
+            Icon={ClipboardCopyIcon}
+            onClick={cloneTask}
+          >
             Clone task
+            <Transition.Scale
+              appear
+              in={cloneTaskMutation.isLoading}
+              unmountOnExit
+            >
+              <Spin className="ml-2 w-4 h-4 text-gray-400" />
+            </Transition.Scale>
           </TaskActionList.Button>
         </TaskActionList.Item>
         <TaskActionList.Item>
