@@ -78,10 +78,16 @@ const Segment: React.FC<SegmentProps> = ({id, children}) => {
 
 type Props = {
   activeId: string
+  className?: string
   onChange(id: string): void
 }
 
-const SegmentedControl: React.FC<Props> = ({activeId, onChange, children}) => {
+const SegmentedControl: React.FC<Props> = ({
+  className,
+  activeId,
+  onChange,
+  children
+}) => {
   const [styles, setStyles] = useState<CSSProperties>()
   const rootRef = useRef<HTMLDivElement>(null)
 
@@ -113,7 +119,10 @@ const SegmentedControl: React.FC<Props> = ({activeId, onChange, children}) => {
     <Context.Provider value={{update, activeId}}>
       <div
         ref={rootRef}
-        className="mt-2 relative flex p-1 w-full shadow-inner rounded-2xl bg-gray-100 dark:bg-dark-300 transition"
+        className={clsx(
+          'mt-2 relative flex p-1 w-full shadow-inner rounded-2xl bg-gray-100 dark:bg-dark-300 transition',
+          className
+        )}
       >
         {children}
         <div
