@@ -23,10 +23,13 @@ export function useAddTaskControl() {
 }
 
 export const AddTaskButton: React.FC<NativeButtonProps> = ({onClick}) => {
+  const ref = useRef(null)
+
   return (
-    <Transition.Shift appear>
+    <Transition.Shift nodeRef={ref} appear>
       <div>
         <button
+          ref={ref}
           className={clsx(
             `
               flex items-center justify-center

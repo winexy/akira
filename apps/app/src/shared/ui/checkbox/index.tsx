@@ -1,4 +1,4 @@
-import React, {MouseEventHandler} from 'react'
+import React, {MouseEventHandler, useRef} from 'react'
 import clsx from 'clsx'
 import {CheckIcon} from '@heroicons/react/solid'
 import noop from 'lodash/fp/noop'
@@ -29,6 +29,7 @@ export const Checkbox: React.FC<Props> = ({
   size = 'xs',
   labeled
 }) => {
+  const ref = useRef(null)
   const Element = labeled ? 'div' : 'label'
 
   return (
@@ -57,14 +58,10 @@ export const Checkbox: React.FC<Props> = ({
           matchSize(size)
         )}
       >
-        <Transition.Scale
-          appear
-          in={isChecked}
-          scaleFrom={0.5}
-          timeout={150}
-          unmountOnExit
-        >
-          <CheckIcon className="h-4 w-4 text-white" />
+        <Transition.Scale nodeRef={ref} appear in={isChecked} unmountOnExit>
+          <div ref={ref}>
+            <CheckIcon className="h-4 w-4 text-white" />
+          </div>
         </Transition.Scale>
       </div>
     </Element>

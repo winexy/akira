@@ -27,7 +27,7 @@ const app = initializeApp(firebaseConfig)
 type FirebaseAuth = ReturnType<typeof getAuth>
 
 function getMockAuth(): FirebaseAuth {
-  globalThis.console.warn('Using mock auth')
+  globalThis.console.info('[auth] Using mock auth')
 
   const user: User = {
     emailVerified: true,
@@ -80,7 +80,7 @@ const messaging = getMessaging(app)
 
 export async function setupCloudMessaging() {
   if (import.meta.env.VITE_USE_MOCK_AUTH) {
-    globalThis.console.warn('Use mock auth. Skip fcm service initialization')
+    globalThis.console.info('[auth] Skipping fcm service initialization')
     return
   }
 
