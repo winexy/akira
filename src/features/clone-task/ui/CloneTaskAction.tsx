@@ -1,4 +1,4 @@
-import React, {FC} from 'react'
+import React, {FC, useRef} from 'react'
 import {useHistory} from 'react-router'
 import {ClipboardCopyIcon} from '@heroicons/react/outline'
 import {TaskActionList} from 'modules/tasks/components'
@@ -13,6 +13,7 @@ type Props = {
 export const CloneTaskAction: FC<Props> = ({taskId}) => {
   const cloneTaskMutation = useCloneTaskMutation(taskId)
   const history = useHistory()
+  const spinRef = useRef(null)
 
   function cloneTask() {
     cloneTaskMutation.mutateAsync().then(cloneId => {
@@ -28,8 +29,13 @@ export const CloneTaskAction: FC<Props> = ({taskId}) => {
         onClick={cloneTask}
       >
         Clone task
-        <Transition.Scale appear in={cloneTaskMutation.isLoading} unmountOnExit>
-          <Spin className="ml-2 w-4 h-4 text-gray-400" />
+        <Transition.Scale
+          nodeRef={spinRef}
+          appear
+          in={cloneTaskMutation.isLoading}
+          unmountOnExit
+        >
+          <Spin ref={spinRef} className="ml-2 w-4 h-4 text-gray-400" />
         </Transition.Scale>
       </TaskActionList.Button>
     </TaskActionList.Item>
