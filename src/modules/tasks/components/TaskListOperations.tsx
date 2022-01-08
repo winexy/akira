@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useRef} from 'react'
 import clsx from 'clsx'
 import {FilterIcon, SortAscendingIcon} from '@heroicons/react/solid'
 import {showBottomSheet} from 'shared/ui/bottom-sheet'
@@ -10,9 +10,14 @@ type Props = {
 }
 
 export const TaskListOperations: React.FC<Props> = ({isFiltered, isSorted}) => {
+  const ref = useRef(null)
+
   return (
-    <Transition.Shift appear>
-      <div className="fixed bottom-0 right-0 left-0 py-7 flex items-center mt-4 px-4 from-gray-100 dark:from-dark-600 bg-gradient-to-t">
+    <Transition.Shift nodeRef={ref} appear>
+      <div
+        ref={ref}
+        className="fixed bottom-0 right-0 left-0 py-7 flex items-center mt-4 px-4 from-gray-100 dark:from-dark-600 bg-gradient-to-t"
+      >
         <button
           className={clsx(
             'flex items-center px-3 py-1 ',
