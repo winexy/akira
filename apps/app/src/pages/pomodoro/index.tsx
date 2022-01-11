@@ -257,7 +257,7 @@ const PomodoroPage: FC = () => {
 
   return (
     <div
-      className={clsx('h-full text-dark-600 dark:text-white', 'transition', {
+      className={clsx('flex-1 text-dark-600 dark:text-white', 'transition', {
         'bg-red-400': isFocusMode && isRunning,
         'bg-green-400': isRestMode && isRunning
       })}
@@ -291,7 +291,7 @@ const PomodoroPage: FC = () => {
           <MenuIcon className="w-6 h-6" />
         </button>
       </header>
-      <main>
+      <main className="px-4">
         <SegmentedControl
           className="mx-auto max-w-lg"
           activeId={mode}
