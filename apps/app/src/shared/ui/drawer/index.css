@@ -1,0 +1,30 @@
+.ui-drawer {
+  &-enter > .panel {
+    transform: translateX(100%);
+  }
+  &-enter-active > .panel {
+    transform: translateX(0);
+    transition: 200ms ease-in;
+  }
+
+  &-exit-active > .panel {
+    transform: translateX(100%);
+    transition: 200ms ease-in;
+  }
+
+  &-enter > .blackout {
+    opacity: 0;
+  }
+  &-enter-active > .blackout {
+    opacity: 0.5;
+    transition: 500ms;
+  }
+
+  &-exit > .blackout {
+    opacity: 0.5;
+  }
+  &-exit-active > .blackout {
+    opacity: 0;
+    transition: 500ms;
+  }
+}
