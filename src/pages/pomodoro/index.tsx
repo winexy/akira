@@ -285,7 +285,6 @@ const PomodoroPage: FC = () => {
   const mode = useStore($mode)
   const progress = useStore($progress)
   const isFocusMode = useStore($isFocusMode)
-  const isRestMode = useStore($isRestMode)
   const triggerRef = useRef(null)
   const textRef = useRef(null)
 
@@ -301,12 +300,7 @@ const PomodoroPage: FC = () => {
   }
 
   return (
-    <div
-      className={clsx('flex-1 text-dark-600 dark:text-white', 'transition', {
-        'bg-red-400': isFocusMode && isRunning,
-        'bg-green-400': isRestMode && isRunning
-      })}
-    >
+    <div className={clsx('flex-1 text-dark-600 dark:text-white')}>
       <header className="flex items-center px-4 py-2">
         <span role="img" aria-label="tomato emoji" className="text-xl">
           🍅
@@ -326,8 +320,6 @@ const PomodoroPage: FC = () => {
             'transition ease-in duration-150',
             'focus:outline-none',
             {
-              'active:bg-red-600 focus:bg-red-600': isFocusMode && isRunning,
-              'active:bg-green-400 focus:bg-green-400': isRestMode && isRunning,
               'dark:active:bg-dark-700': isIdle
             }
           )}
