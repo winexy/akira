@@ -1,13 +1,15 @@
+import clsx from 'clsx'
 import React, {FC} from 'react'
 import {CSSTransition} from 'react-transition-group'
 import './index.css'
 
 type Props = {
   visible: boolean
+  className?: string
   onClose(): void
 }
 
-const Drawer: FC<Props> = ({visible, children, onClose}) => {
+const Drawer: FC<Props> = ({visible, className, children, onClose}) => {
   return (
     <CSSTransition
       in={visible}
@@ -22,7 +24,12 @@ const Drawer: FC<Props> = ({visible, children, onClose}) => {
           tabIndex={0}
           onClick={onClose}
         />
-        <div className="panel fixed right-0 top-0 h-screen bg-white p-6">
+        <div
+          className={clsx(
+            'panel fixed right-0 top-0 h-screen bg-white',
+            className
+          )}
+        >
           {children}
         </div>
       </div>
