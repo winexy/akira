@@ -24,7 +24,7 @@ import './pomodoro.css'
 
 enum PomodoroMode {
   Focus = 'focus',
-  Rest = 'rest'
+  Break = 'break'
 }
 
 const MINUTES_25 = 60 * 25
@@ -37,11 +37,11 @@ const $mode = createStore(PomodoroMode.Focus)
 
 $mode.on(changeMode, (_, mode) => mode)
 $mode.on(switchMode, mode => {
-  return mode === PomodoroMode.Focus ? PomodoroMode.Rest : PomodoroMode.Focus
+  return mode === PomodoroMode.Focus ? PomodoroMode.Break : PomodoroMode.Focus
 })
 
 const $isFocusMode = $mode.map(mode => mode === PomodoroMode.Focus)
-const $isRestMode = $mode.map(mode => mode === PomodoroMode.Rest)
+const $isBreakMode = $mode.map(mode => mode === PomodoroMode.Break)
 
 const startTimer = createEvent<Date>()
 const abortTimer = createEvent()
@@ -149,7 +149,7 @@ $timeLeft
   .on(updateTimer, (_, time) => time)
 
 const startFocusTimer = createEvent()
-const startRestTimer = createEvent()
+const startBreakTimer = createEvent()
 
 const startTimerMeta = combine($isPaused, $timeLeft, (isPaused, timeLeft) => ({
   isPaused,
@@ -167,7 +167,7 @@ sample({
 })
 
 sample({
-  clock: startRestTimer,
+  clock: startBreakTimer,
   source: startTimerMeta,
   fn: source =>
     source.isPaused
@@ -221,7 +221,7 @@ const PressButton: FC<{className: string; onClick(): void}> = ({
   onClick,
   children
 }) => {
-  const isRestMode = useStore($isRestMode)
+  const isBreakMode = useStore($isBreakMode)
   const isFocusMode = useStore($isFocusMode)
 
   return (
@@ -234,7 +234,7 @@ const PressButton: FC<{className: string; onClick(): void}> = ({
         'active:shadow-inner',
         {
           'border-red-600 bg-red-500 active:bg-red-600': isFocusMode,
-          'border-green-500 bg-green-400 active:bg-green-500': isRestMode
+          'border-green-500 bg-green-400 active:bg-green-500': isBreakMode
         },
         className
       )}
@@ -292,8 +292,8 @@ const PomodoroPage: FC = () => {
     switch (mode) {
       case PomodoroMode.Focus:
         return startFocusTimer()
-      case PomodoroMode.Rest:
-        return startRestTimer()
+      case PomodoroMode.Break:
+        return startBreakTimer()
       default:
         return exhaustiveCheck(mode)
     }
@@ -335,9 +335,9 @@ const PomodoroPage: FC = () => {
           onChange={changeMode}
         >
           <Segment id={PomodoroMode.Focus}>Focus</Segment>
-          <Segment id={PomodoroMode.Rest}>Rest</Segment>
+          <Segment id={PomodoroMode.Break}>Break</Segment>
         </SegmentedControl>
-        <div className="mt-8 flex flex-col justify-center items-center">
+        <div className="mt-4 flex flex-col justify-center items-center">
           <Transition.Scale appear nodeRef={triggerRef}>
             <div
               ref={triggerRef}
@@ -362,8 +362,8 @@ const PomodoroPage: FC = () => {
                 </PressButton>
               )}
               <div
-                style={{width: 250, height: 250}}
-                className="rounded-full shadow-inner absolute bg-white"
+                style={{width: 248, height: 248}}
+                className="rounded-full shadow-inner absolute bg-white dark:bg-dark-500"
               />
             </div>
           </Transition.Scale>
@@ -379,7 +379,7 @@ const PomodoroPage: FC = () => {
                 'text-white': isRunning
               })}
             >
-              {isFocusMode ? 'Time to focus! 👩🏼‍💻' : 'Time to rest! 🧘🏼‍♀️'}
+              {isFocusMode ? 'Time to focus! 👩🏼‍💻' : 'Time to Break! 🧘🏼‍♀️'}
             </p>
           </Transition.Scale>
         </div>
