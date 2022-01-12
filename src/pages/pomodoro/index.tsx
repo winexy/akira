@@ -20,6 +20,7 @@ import {MenuIcon} from '@heroicons/react/solid'
 import {toggleMenu} from 'shared/ui/menu'
 import {exhaustiveCheck} from 'shared/lib/utils'
 import {Segment, SegmentedControl} from 'shared/ui/segmented-control'
+import './pomodoro.css'
 
 enum PomodoroMode {
   Focus = 'focus',
@@ -194,6 +195,12 @@ const $time = combine($timeLeft, totalSeconds => {
   return {minutes, seconds}
 })
 
+const $progress = combine($timeLeft, $mode, (total, mode) => {
+  return mode === PomodoroMode.Focus
+    ? 100 - (total / MINUTES_25) * 100
+    : 100 - (total / MINUTES_5) * 100
+})
+
 const Countdown: FC = () => {
   const time = useStore($time)
 
@@ -209,7 +216,11 @@ const Countdown: FC = () => {
   )
 }
 
-const PressButton: FC<{onClick(): void}> = ({onClick, children}) => {
+const PressButton: FC<{className: string; onClick(): void}> = ({
+  className,
+  onClick,
+  children
+}) => {
   const isRestMode = useStore($isRestMode)
   const isFocusMode = useStore($isFocusMode)
 
@@ -224,7 +235,8 @@ const PressButton: FC<{onClick(): void}> = ({onClick, children}) => {
         {
           'border-red-600 bg-red-500 active:bg-red-600': isFocusMode,
           'border-green-500 bg-green-400 active:bg-green-500': isRestMode
-        }
+        },
+        className
       )}
       onClick={onClick}
     >
@@ -234,11 +246,44 @@ const PressButton: FC<{onClick(): void}> = ({onClick, children}) => {
   )
 }
 
+type RingProps = {
+  className?: string
+  radius: number
+  stroke: number
+  progress: number
+}
+
+const Ring: FC<RingProps> = props => {
+  const {radius, stroke, progress, className} = props
+
+  const normalizedRadius = radius - stroke * 2
+  const circumference = normalizedRadius * 2 * Math.PI
+
+  const strokeDashoffset = circumference - (progress / 100) * circumference
+
+  return (
+    <svg className={className} height={radius * 2} width={radius * 2}>
+      <circle
+        stroke="currentColor"
+        fill="transparent"
+        strokeWidth={stroke}
+        strokeLinecap="round"
+        strokeDasharray={`${circumference} ${circumference}`}
+        style={{strokeDashoffset}}
+        r={normalizedRadius}
+        cx={radius}
+        cy={radius}
+      />
+    </svg>
+  )
+}
+
 const PomodoroPage: FC = () => {
   const isIdle = useStore($isIdle)
   const isRunning = useStore($isRunning)
   const isPaused = useStore($isPaused)
   const mode = useStore($mode)
+  const progress = useStore($progress)
   const isFocusMode = useStore($isFocusMode)
   const isRestMode = useStore($isRestMode)
   const triggerRef = useRef(null)
@@ -302,14 +347,32 @@ const PomodoroPage: FC = () => {
         </SegmentedControl>
         <div className="mt-8 flex flex-col justify-center items-center">
           <Transition.Scale appear nodeRef={triggerRef}>
-            <div ref={triggerRef}>
+            <div
+              ref={triggerRef}
+              className="relative flex items-center justify-center"
+            >
+              <Ring
+                className="z-10 text-blue-500 pointer-events-none"
+                radius={150}
+                progress={progress}
+                stroke={20}
+              />
               {isRunning ? (
-                <PressButton onClick={() => pauseTimer()}>PAUSE</PressButton>
+                <PressButton
+                  className="absolute z-10"
+                  onClick={() => pauseTimer()}
+                >
+                  PAUSE
+                </PressButton>
               ) : (
-                <PressButton onClick={start}>
+                <PressButton className="absolute z-10" onClick={start}>
                   {isPaused ? 'CONTINUE' : 'START'}
                 </PressButton>
               )}
+              <div
+                style={{width: 250, height: 250}}
+                className="rounded-full shadow-inner absolute bg-white"
+              />
             </div>
           </Transition.Scale>
           <Transition.Scale
