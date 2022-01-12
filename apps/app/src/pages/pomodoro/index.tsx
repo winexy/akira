@@ -21,6 +21,7 @@ import {toggleMenu} from 'shared/ui/menu'
 import {exhaustiveCheck} from 'shared/lib/utils'
 import {Segment, SegmentedControl} from 'shared/ui/segmented-control'
 import './pomodoro.css'
+import {WIP} from 'modules/tags/components/Tag'
 
 enum PomodoroMode {
   Focus = 'focus',
@@ -293,7 +294,10 @@ const PomodoroPage: FC = () => {
         <span role="img" aria-label="tomato emoji" className="text-xl">
           🍅
         </span>{' '}
-        <span className={clsx('font-semibold ml-3 text-xl')}>Pomodoro</span>
+        <span className={clsx('font-semibold ml-3 text-xl flex items-center')}>
+          Pomodoro
+          <WIP className="ml-3" />
+        </span>
         <button
           className={clsx(
             'ml-auto w-8 h-8 -mr-1',
