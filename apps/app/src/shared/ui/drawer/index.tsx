@@ -35,13 +35,15 @@ const Drawer: FC<Props> = ({visible, className, children, onClose}) => {
           tabIndex={0}
           onClick={onClose}
         />
-        <div
-          className={clsx(
-            'panel fixed right-0 top-0 h-screen bg-white',
-            className
-          )}
-        >
-          {children}
+        <div className={clsx('panel fixed right-0 bottom-0 p-3 h-screen')}>
+          <div
+            className={clsx(
+              'relative h-full bg-white rounded-lg shadow-2xl',
+              className
+            )}
+          >
+            {children}
+          </div>
         </div>
       </div>
     </CSSTransition>
