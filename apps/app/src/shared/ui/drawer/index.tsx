@@ -1,13 +1,13 @@
 import React, {FC} from 'react'
 import {CSSTransition} from 'react-transition-group'
-import {hideBottomSheet} from 'shared/ui/bottom-sheet'
 import './index.css'
 
 type Props = {
   visible: boolean
+  onClose(): void
 }
 
-const Drawer: FC<Props> = ({visible, children}) => {
+const Drawer: FC<Props> = ({visible, children, onClose}) => {
   return (
     <CSSTransition
       in={visible}
@@ -20,7 +20,7 @@ const Drawer: FC<Props> = ({visible, children}) => {
           className="fixed inset-0 bg-black opacity-50 blackout"
           role="button"
           tabIndex={0}
-          onClick={() => hideBottomSheet()}
+          onClick={onClose}
         />
         <div className="panel fixed right-0 top-0 h-screen bg-white p-6">
           {children}

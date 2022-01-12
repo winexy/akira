@@ -1,6 +1,6 @@
 import React, {ReactNode} from 'react'
 import format from 'date-fns/format'
-import {hideBottomSheet, BottomSheet} from 'shared/ui/bottom-sheet'
+import {bottomSheetModel, BottomSheet} from 'shared/ui/bottom-sheet'
 import {Button} from 'shared/ui/button'
 
 type DatePickerSheetProps = {
@@ -20,7 +20,7 @@ export const DatePickerSheet: React.FC<DatePickerSheetProps> = ({
   onApply
 }) => {
   return (
-    <BottomSheet name={name} className="pb-8">
+    <BottomSheet.Standalone name={name} className="pb-8">
       <h2 className="mt-4 px-4 text-center font-bold text-2xl">{title}</h2>
       <div className="px-4">{children}</div>
       <div className="sticky bottom-0 mt-2 px-4">
@@ -31,7 +31,7 @@ export const DatePickerSheet: React.FC<DatePickerSheetProps> = ({
           className="mt-4 w-full"
           onClick={event => {
             event.stopPropagation()
-            hideBottomSheet()
+            bottomSheetModel.hideBottomSheet()
             onApply?.()
           }}
         >
@@ -39,6 +39,6 @@ export const DatePickerSheet: React.FC<DatePickerSheetProps> = ({
           {date && <span className=" ml-auto">{format(date, 'dd.MM.yy')}</span>}
         </Button>
       </div>
-    </BottomSheet>
+    </BottomSheet.Standalone>
   )
 }
