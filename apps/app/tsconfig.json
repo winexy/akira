@@ -21,6 +21,7 @@
     "noEmit": true,
     "paths": {
       "modules/*": ["./src/modules/*"],
+      "widgets/*": ["./src/widgets/*"],
       "features/*": ["./src/features/*"],
       "entities/*": ["./src/entities/*"],
       "shared/*": ["./src/shared/*"],
