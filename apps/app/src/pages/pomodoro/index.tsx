@@ -28,6 +28,7 @@ import {exhaustiveCheck} from 'shared/lib/utils'
 import {Segment, SegmentedControl} from 'shared/ui/segmented-control'
 import './pomodoro.css'
 import {WIP} from 'modules/tags/components/Tag'
+import {UniversalDrawer, universalDrawerModel} from 'widgets/universal-drawer'
 
 enum PomodoroMode {
   Focus = 'focus',
@@ -395,7 +396,7 @@ const PomodoroPage: FC = (): JSX.Element => {
       </header>
       <main className="px-4">
         <SegmentedControl
-          className="mx-auto max-w-lg"
+          className="mx-auto max-w-lg text-xs sm:text-base"
           activeId={mode}
           onChange={changeMode}
         >
@@ -472,7 +473,14 @@ const PomodoroPage: FC = (): JSX.Element => {
               ref={controlsRef}
               className="fixed bottom-0 pb-10 flex items-center space-x-8"
             >
-              <Control withBorder size="sm" Icon={AdjustmentsIcon} />
+              <Control
+                withBorder
+                size="sm"
+                Icon={AdjustmentsIcon}
+                onClick={() =>
+                  universalDrawerModel.showDrawer('pomodoro-settings')
+                }
+              />
               <Control
                 size="md"
                 Icon={isRunning ? PauseIcon : PlayIcon}
@@ -488,6 +496,20 @@ const PomodoroPage: FC = (): JSX.Element => {
             </div>
           </Transition.Shift>
         </div>
+        <UniversalDrawer name="pomodoro-settings" className="p-6 space-y-2">
+          <label className="flex justify-between font-semibold">
+            Focus time duration
+            <input type="number" className="ml-6" />
+          </label>
+          <label className="flex justify-between font-semibold">
+            Short break duration
+            <input type="number" className="ml-6" />
+          </label>
+          <label className="flex justify-between font-semibold">
+            Long break duration
+            <input type="number" className="ml-6" />
+          </label>
+        </UniversalDrawer>
       </main>
     </div>
   )
