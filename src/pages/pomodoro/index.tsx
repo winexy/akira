@@ -16,7 +16,7 @@ import differenceInSeconds from 'date-fns/differenceInSeconds'
 import addSeconds from 'date-fns/addSeconds'
 import {Transition} from 'shared/ui/transition'
 import isNull from 'lodash/isNull'
-import {MenuIcon} from '@heroicons/react/solid'
+import {MenuIcon, PlayIcon, PauseIcon} from '@heroicons/react/solid'
 import {toggleMenu} from 'shared/ui/menu'
 import {exhaustiveCheck} from 'shared/lib/utils'
 import {Segment, SegmentedControl} from 'shared/ui/segmented-control'
@@ -205,44 +205,30 @@ const Countdown: FC = () => {
   const time = useStore($time)
 
   return (
-    <strong className="text-4xl flex justify-center items-center">
-      <span className="w-14 text-center">{time.minutes}</span>
+    <strong className="text-5xl flex justify-center items-center space-x-1">
+      <span className="w-18 text-center">{time.minutes}</span>
       <span className="space-y-1">
-        <span className="block w-2 h-2 rounded-full bg-white" />
-        <span className="block w-2 h-2 rounded-full bg-white" />
+        <span className="block w-2.5 h-2.5 rounded-full bg-indigo-500 dark:bg-white" />
+        <span className="block w-2.5 h-2.5 rounded-full bg-indigo-500 dark:bg-white" />
       </span>
-      <span className="w-14 text-center">{time.seconds}</span>
+      <span className="w-18 text-center">{time.seconds}</span>
     </strong>
   )
 }
 
-const PressButton: FC<{className: string; onClick(): void}> = ({
-  className,
-  onClick,
-  children
-}) => {
-  const isBreakMode = useStore($isBreakMode)
-  const isFocusMode = useStore($isFocusMode)
-
+const CountdownWrapper: FC<{className: string}> = ({className}) => {
   return (
-    <button
+    <div
       className={clsx(
-        'w-48 h-48 rounded-full text-white',
-        'border-2 border-opacity-50',
-        'shadow-xl transition ease-in duration-150',
+        'relative flex justify-center items-center',
+        'w-48 h-48 rounded-full text-indigo-500 dark:text-white bg-white dark:bg-dark-600',
+        'shadow transition ease-in duration-150',
         'focus:outline-none',
-        'active:shadow-inner',
-        {
-          'border-red-600 bg-red-500 active:bg-red-600': isFocusMode,
-          'border-green-500 bg-green-400 active:bg-green-500': isBreakMode
-        },
         className
       )}
-      onClick={onClick}
     >
       <Countdown />
-      <span className="font-bold">{children}</span>
-    </button>
+    </div>
   )
 }
 
@@ -285,6 +271,8 @@ const PomodoroPage: FC = () => {
   const mode = useStore($mode)
   const progress = useStore($progress)
   const isFocusMode = useStore($isFocusMode)
+  const isBreakMode = useStore($isBreakMode)
+  const countdownRef = useRef(null)
   const triggerRef = useRef(null)
   const textRef = useRef(null)
 
@@ -305,13 +293,7 @@ const PomodoroPage: FC = () => {
         <span role="img" aria-label="tomato emoji" className="text-xl">
           🍅
         </span>{' '}
-        <span
-          className={clsx('font-semibold ml-3 text-xl', {
-            'text-white': isRunning
-          })}
-        >
-          Pomodoro
-        </span>
+        <span className={clsx('font-semibold ml-3 text-xl')}>Pomodoro</span>
         <button
           className={clsx(
             'ml-auto w-8 h-8 -mr-1',
@@ -338,35 +320,28 @@ const PomodoroPage: FC = () => {
           <Segment id={PomodoroMode.Break}>Break</Segment>
         </SegmentedControl>
         <div className="mt-4 flex flex-col justify-center items-center">
-          <Transition.Scale appear nodeRef={triggerRef}>
+          <Transition.Fade appear nodeRef={countdownRef}>
             <div
-              ref={triggerRef}
+              ref={countdownRef}
               className="relative flex items-center justify-center"
             >
               <Ring
-                className="z-10 text-blue-500 pointer-events-none"
+                className={clsx('z-10 pointer-events-none', {
+                  'text-red-300': isFocusMode,
+                  'text-green-300': isBreakMode,
+                  'animate-pulse': isRunning
+                })}
                 radius={150}
                 progress={progress}
                 stroke={20}
               />
-              {isRunning ? (
-                <PressButton
-                  className="absolute z-10"
-                  onClick={() => pauseTimer()}
-                >
-                  PAUSE
-                </PressButton>
-              ) : (
-                <PressButton className="absolute z-10" onClick={start}>
-                  {isPaused ? 'CONTINUE' : 'START'}
-                </PressButton>
-              )}
+              <CountdownWrapper className="absolute z-10" />
               <div
                 style={{width: 248, height: 248}}
-                className="rounded-full shadow-inner absolute bg-white dark:bg-dark-500"
+                className="rounded-full shadow-inner absolute bg-gray-50 dark:bg-dark-500"
               />
             </div>
-          </Transition.Scale>
+          </Transition.Fade>
           <Transition.Scale
             nodeRef={textRef}
             appear
@@ -376,12 +351,41 @@ const PomodoroPage: FC = () => {
             <p
               ref={textRef}
               className={clsx('mt-8 font-semibold text-3xl transition', {
-                'text-white': isRunning
+                'dark:text-white': isRunning
               })}
             >
               {isFocusMode ? 'Time to focus! 👩🏼‍💻' : 'Time to Break! 🧘🏼‍♀️'}
             </p>
           </Transition.Scale>
+          <div className="fixed bottom-0 pb-10">
+            <Transition.Shift appear nodeRef={triggerRef}>
+              <button
+                ref={triggerRef}
+                className={clsx(
+                  'flex justify-center items-center w-24 h-24',
+                  'rounded-full shadow-2xl bg-gray-100 dark:bg-dark-500',
+                  'transition ease-in transform',
+                  'focus:outline-none',
+                  'dark:active:bg-dark-700',
+                  'active:shadow-lg active:scale-90',
+                  'text-indigo-500 dark:text-gray-200'
+                )}
+                onClick={() => {
+                  if (isRunning) {
+                    pauseTimer()
+                  } else {
+                    start()
+                  }
+                }}
+              >
+                {isRunning ? (
+                  <PauseIcon className="w-24 h-24" />
+                ) : (
+                  <PlayIcon className="w-24 h-24" />
+                )}
+              </button>
+            </Transition.Shift>
+          </div>
         </div>
       </main>
     </div>

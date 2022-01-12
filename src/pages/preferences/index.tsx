@@ -6,7 +6,7 @@ import {config} from 'shared/config'
 
 const PreferencesPage: React.FC = () => {
   return (
-    <PageView className="pb-6">
+    <PageView withBackNavigation className="pb-6">
       <div className="md:max-w-lg">
         <DarkModeControl />
         {config.env.dev && <ApiVersionControl />}
