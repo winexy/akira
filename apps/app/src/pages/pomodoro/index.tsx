@@ -16,7 +16,13 @@ import differenceInSeconds from 'date-fns/differenceInSeconds'
 import addSeconds from 'date-fns/addSeconds'
 import {Transition} from 'shared/ui/transition'
 import isNull from 'lodash/isNull'
-import {MenuIcon, PlayIcon, PauseIcon} from '@heroicons/react/solid'
+import {
+  MenuIcon,
+  PlayIcon,
+  PauseIcon,
+  AdjustmentsIcon,
+  FastForwardIcon
+} from '@heroicons/react/solid'
 import {toggleMenu} from 'shared/ui/menu'
 import {exhaustiveCheck} from 'shared/lib/utils'
 import {Segment, SegmentedControl} from 'shared/ui/segmented-control'
@@ -25,11 +31,13 @@ import {WIP} from 'modules/tags/components/Tag'
 
 enum PomodoroMode {
   Focus = 'focus',
-  Break = 'break'
+  ShortBreak = 'short-break',
+  LongBreak = 'long-break'
 }
 
 const MINUTES_25 = 60 * 25
 const MINUTES_5 = 60 * 5
+const MINUTES_10 = 60 * 10
 
 const changeMode = createEvent<PomodoroMode>()
 const switchMode = createEvent()
@@ -38,11 +46,13 @@ const $mode = createStore(PomodoroMode.Focus)
 
 $mode.on(changeMode, (_, mode) => mode)
 $mode.on(switchMode, mode => {
-  return mode === PomodoroMode.Focus ? PomodoroMode.Break : PomodoroMode.Focus
+  return mode === PomodoroMode.Focus
+    ? PomodoroMode.ShortBreak
+    : PomodoroMode.Focus
 })
 
 const $isFocusMode = $mode.map(mode => mode === PomodoroMode.Focus)
-const $isBreakMode = $mode.map(mode => mode === PomodoroMode.Break)
+const $isBreakMode = $mode.map(mode => mode === PomodoroMode.ShortBreak)
 
 const startTimer = createEvent<Date>()
 const abortTimer = createEvent()
@@ -145,12 +155,22 @@ forward({
 
 $timeLeft
   .on(changeMode, (_, mode) => {
-    return mode === PomodoroMode.Focus ? MINUTES_25 : MINUTES_5
+    switch (mode) {
+      case PomodoroMode.Focus:
+        return MINUTES_25
+      case PomodoroMode.ShortBreak:
+        return MINUTES_5
+      case PomodoroMode.LongBreak:
+        return MINUTES_10
+      default:
+        return exhaustiveCheck(mode)
+    }
   })
   .on(updateTimer, (_, time) => time)
 
 const startFocusTimer = createEvent()
-const startBreakTimer = createEvent()
+const startShortBreakTimer = createEvent()
+const startLongBreakTimer = createEvent()
 
 const startTimerMeta = combine($isPaused, $timeLeft, (isPaused, timeLeft) => ({
   isPaused,
@@ -168,12 +188,22 @@ sample({
 })
 
 sample({
-  clock: startBreakTimer,
+  clock: startShortBreakTimer,
   source: startTimerMeta,
   fn: source =>
     source.isPaused
       ? addSeconds(new Date(), source.timeLeft)
       : addMinutes(new Date(), 5),
+  target: startTimer
+})
+
+sample({
+  clock: startLongBreakTimer,
+  source: startTimerMeta,
+  fn: source =>
+    source.isPaused
+      ? addSeconds(new Date(), source.timeLeft)
+      : addMinutes(new Date(), 10),
   target: startTimer
 })
 
@@ -197,9 +227,16 @@ const $time = combine($timeLeft, totalSeconds => {
 })
 
 const $progress = combine($timeLeft, $mode, (total, mode) => {
-  return mode === PomodoroMode.Focus
-    ? 100 - (total / MINUTES_25) * 100
-    : 100 - (total / MINUTES_5) * 100
+  switch (mode) {
+    case PomodoroMode.Focus:
+      return 100 - (total / MINUTES_25) * 100
+    case PomodoroMode.ShortBreak:
+      return 100 - (total / MINUTES_5) * 100
+    case PomodoroMode.LongBreak:
+      return 100 - (total / MINUTES_10) * 100
+    default:
+      return exhaustiveCheck(mode)
+  }
 })
 
 const Countdown: FC = () => {
@@ -284,8 +321,10 @@ const PomodoroPage: FC = () => {
     switch (mode) {
       case PomodoroMode.Focus:
         return startFocusTimer()
-      case PomodoroMode.Break:
-        return startBreakTimer()
+      case PomodoroMode.ShortBreak:
+        return startShortBreakTimer()
+      case PomodoroMode.LongBreak:
+        return startLongBreakTimer()
       default:
         return exhaustiveCheck(mode)
     }
@@ -324,7 +363,8 @@ const PomodoroPage: FC = () => {
           onChange={changeMode}
         >
           <Segment id={PomodoroMode.Focus}>Focus</Segment>
-          <Segment id={PomodoroMode.Break}>Break</Segment>
+          <Segment id={PomodoroMode.ShortBreak}>Short break</Segment>
+          <Segment id={PomodoroMode.LongBreak}>Long break</Segment>
         </SegmentedControl>
         <div className="mt-4 flex flex-col justify-center items-center">
           <Transition.Fade appear nodeRef={countdownRef}>
