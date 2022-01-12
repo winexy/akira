@@ -305,7 +305,44 @@ const Ring: FC<RingProps> = props => {
   )
 }
 
-const PomodoroPage: FC = () => {
+type ControlProps = {
+  withBorder?: boolean
+  size: 'sm' | 'md'
+  Icon: SVGIconElement
+  onClick?(): void
+}
+
+const Control: FC<ControlProps> = ({withBorder, size, Icon, onClick}) => {
+  return (
+    <button
+      className={clsx(
+        'flex justify-center items-center',
+        'rounded-full shadow-2xl bg-gray-100 dark:bg-dark-500',
+        'transition ease-in transform',
+        'focus:outline-none',
+        'dark:active:bg-dark-700',
+        'active:shadow-lg active:scale-90',
+        'text-indigo-500 dark:text-gray-200',
+        'focus:scale-110 focus:text-indigo-400 dark:focus:text-white',
+        {
+          'border border-gray-200 border-opacity-50 dark:border-none': withBorder,
+          'w-24 h-24': size === 'md',
+          'w-16 h-16': size === 'sm'
+        }
+      )}
+      onClick={onClick}
+    >
+      <Icon
+        className={clsx({
+          'w-24 h-24': size === 'md',
+          'w-8 h-8': size === 'sm'
+        })}
+      />
+    </button>
+  )
+}
+
+const PomodoroPage: FC = (): JSX.Element => {
   const isIdle = useStore($isIdle)
   const isRunning = useStore($isRunning)
   const isPaused = useStore($isPaused)
@@ -314,7 +351,7 @@ const PomodoroPage: FC = () => {
   const isFocusMode = useStore($isFocusMode)
   const isBreakMode = useStore($isBreakMode)
   const countdownRef = useRef(null)
-  const triggerRef = useRef(null)
+  const controlsRef = useRef(null)
   const textRef = useRef(null)
 
   function start() {
@@ -430,19 +467,15 @@ const PomodoroPage: FC = () => {
               {isFocusMode ? 'Time to focus! 👩🏼‍💻' : 'Time to Break! 🧘🏼‍♀️'}
             </p>
           </Transition.Scale>
-          <div className="fixed bottom-0 pb-10">
-            <Transition.Shift appear nodeRef={triggerRef}>
-              <button
-                ref={triggerRef}
-                className={clsx(
-                  'flex justify-center items-center w-24 h-24',
-                  'rounded-full shadow-2xl bg-gray-100 dark:bg-dark-500',
-                  'transition ease-in transform',
-                  'focus:outline-none',
-                  'dark:active:bg-dark-700',
-                  'active:shadow-lg active:scale-90',
-                  'text-indigo-500 dark:text-gray-200'
-                )}
+          <Transition.Shift appear nodeRef={controlsRef}>
+            <div
+              ref={controlsRef}
+              className="fixed bottom-0 pb-10 flex items-center space-x-8"
+            >
+              <Control withBorder size="sm" Icon={AdjustmentsIcon} />
+              <Control
+                size="md"
+                Icon={isRunning ? PauseIcon : PlayIcon}
                 onClick={() => {
                   if (isRunning) {
                     pauseTimer()
@@ -450,15 +483,10 @@ const PomodoroPage: FC = () => {
                     start()
                   }
                 }}
-              >
-                {isRunning ? (
-                  <PauseIcon className="w-24 h-24" />
-                ) : (
-                  <PlayIcon className="w-24 h-24" />
-                )}
-              </button>
-            </Transition.Shift>
-          </div>
+              />
+              <Control size="sm" withBorder Icon={FastForwardIcon} />
+            </div>
+          </Transition.Shift>
         </div>
       </main>
     </div>
