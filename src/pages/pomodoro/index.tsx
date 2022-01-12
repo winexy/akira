@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import React, {FC, useRef} from 'react'
+import React, {FC, ReactNode, useRef} from 'react'
 import {
   combine,
   createEffect,
@@ -236,24 +236,27 @@ const CountdownWrapper: FC<{className: string}> = ({className}) => {
 type RingProps = {
   className?: string
   radius: number
-  stroke: number
+  stroke: string
+  defs: ReactNode
+  strokeWidth: number
   progress: number
 }
 
 const Ring: FC<RingProps> = props => {
-  const {radius, stroke, progress, className} = props
+  const {radius, strokeWidth, progress, className, stroke, defs} = props
 
-  const normalizedRadius = radius - stroke * 2
+  const normalizedRadius = radius - strokeWidth * 2
   const circumference = normalizedRadius * 2 * Math.PI
 
   const strokeDashoffset = circumference - (progress / 100) * circumference
 
   return (
     <svg className={className} height={radius * 2} width={radius * 2}>
+      <defs>{defs}</defs>
       <circle
-        stroke="currentColor"
+        stroke={stroke}
         fill="transparent"
-        strokeWidth={stroke}
+        strokeWidth={strokeWidth}
         strokeLinecap="round"
         strokeDasharray={`${circumference} ${circumference}`}
         style={{strokeDashoffset}}
@@ -332,12 +335,38 @@ const PomodoroPage: FC = () => {
               <Ring
                 className={clsx('z-10 pointer-events-none', {
                   'text-red-300': isFocusMode,
-                  'text-green-300': isBreakMode,
-                  'animate-pulse': isRunning
+                  'text-green-300': isBreakMode
                 })}
                 radius={150}
                 progress={progress}
-                stroke={20}
+                strokeWidth={20}
+                stroke={
+                  isFocusMode ? 'url(#focus-gradient)' : 'url(#break-gradient)'
+                }
+                defs={
+                  <>
+                    <radialGradient
+                      id="break-gradient"
+                      x1="0%"
+                      y1="0%"
+                      x2="0%"
+                      y2="100%"
+                    >
+                      <stop offset="50%" stopColor="#D1FAE5" />
+                      <stop offset="100%" stopColor="#6EE7B7" />
+                    </radialGradient>
+                    <radialGradient
+                      id="focus-gradient"
+                      x1="0%"
+                      y1="0%"
+                      x2="0%"
+                      y2="100%"
+                    >
+                      <stop offset="50%" stopColor="#FEE2E2" />
+                      <stop offset="100%" stopColor="#F87171" />
+                    </radialGradient>
+                  </>
+                }
               />
               <CountdownWrapper className="absolute z-10" />
               <div
