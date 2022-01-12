@@ -127,7 +127,7 @@ const SegmentedControl: React.FC<Props> = ({
         {children}
         <div
           style={styles}
-          className="absolute rounded-xl bg-blue-500 dark:bg-dark-600 shadow-lg transition-all ease-in-out"
+          className="absolute rounded-xl bg-indigo-500 dark:bg-dark-600 shadow-lg transition-all ease-in-out"
         />
       </div>
     </Context.Provider>
