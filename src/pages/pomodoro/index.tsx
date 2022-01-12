@@ -29,6 +29,8 @@ import {Segment, SegmentedControl} from 'shared/ui/segmented-control'
 import './pomodoro.css'
 import {WIP} from 'modules/tags/components/Tag'
 import {UniversalDrawer, universalDrawerModel} from 'widgets/universal-drawer'
+import {useHotkey} from 'modules/hotkeys/HotKeyContext'
+import {HotKey} from 'modules/hotkeys/HotKey'
 
 enum PomodoroMode {
   Focus = 'focus',
@@ -367,6 +369,31 @@ const PomodoroPage: FC = (): JSX.Element => {
         return exhaustiveCheck(mode)
     }
   }
+
+  useHotkey(HotKey.of('p', HotKey.Meta), {
+    description: 'open pomodoro preferences',
+    handler() {
+      universalDrawerModel.showDrawer('pomodoro-settings')
+    }
+  })
+
+  useHotkey(HotKey.of(' '), {
+    description: 'open pomodoro preferences',
+    handler() {
+      if (isRunning) {
+        pauseTimer()
+      } else {
+        start()
+      }
+    }
+  })
+
+  useHotkey(HotKey.of('s', HotKey.Meta), {
+    description: 'skip pomodoro',
+    handler() {
+      globalThis.console.info('skip ')
+    }
+  })
 
   return (
     <div className={clsx('flex-1 text-dark-600 dark:text-white')}>
