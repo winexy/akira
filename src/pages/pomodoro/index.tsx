@@ -209,8 +209,8 @@ const Countdown: FC = () => {
     <strong className="text-5xl flex justify-center items-center space-x-1">
       <span className="w-18 text-center">{time.minutes}</span>
       <span className="space-y-1">
-        <span className="block w-2.5 h-2.5 rounded-full bg-indigo-500 dark:bg-white" />
-        <span className="block w-2.5 h-2.5 rounded-full bg-indigo-500 dark:bg-white" />
+        <span className="block w-2 h-2 rounded-full bg-indigo-500 dark:bg-white" />
+        <span className="block w-2 h-2 rounded-full bg-indigo-500 dark:bg-white" />
       </span>
       <span className="w-18 text-center">{time.seconds}</span>
     </strong>
