@@ -4,11 +4,7 @@ import {Checkbox} from 'shared/ui/checkbox'
 import {RefreshIcon, XIcon} from '@heroicons/react/solid'
 import {Tag} from 'modules/tags/components/Tag'
 import format from 'date-fns/format'
-import {
-  hideBottomSheet,
-  showBottomSheet,
-  BottomSheet
-} from 'shared/ui/bottom-sheet'
+import {bottomSheetModel, BottomSheet} from 'shared/ui/bottom-sheet'
 import {TaskTag} from 'modules/tags/types.d'
 import {exhaustiveCheck} from 'shared/lib/utils'
 import {TagsGrid} from 'modules/tags/components/TagsGrid'
@@ -46,7 +42,7 @@ export const FiltersBottomSheet: React.FC<Props> = ({
 }) => {
   return (
     <>
-      <BottomSheet name="filters" className="px-4 pb-6 pt-4">
+      <BottomSheet.Standalone name="filters" className="px-4 pb-6 pt-4">
         <h2 className="flex items-center justify-between font-bold text-2xl">
           Filters
           {canReset && (
@@ -55,7 +51,7 @@ export const FiltersBottomSheet: React.FC<Props> = ({
               className="text-sm"
               onClick={() => {
                 onChange({type: 'reset'})
-                hideBottomSheet()
+                bottomSheetModel.hideBottomSheet()
               }}
             >
               <RefreshIcon className="w-4 h-4 mr-2" />
@@ -105,7 +101,7 @@ export const FiltersBottomSheet: React.FC<Props> = ({
         <div className="mt-4">
           <h2
             className="font-semibold"
-            onClick={() => showBottomSheet('datepicker')}
+            onClick={() => bottomSheetModel.showBottomSheet('datepicker')}
           >
             Date from: {state.dateFrom && format(state.dateFrom, 'dd.MM.yy')}
           </h2>
@@ -114,11 +110,11 @@ export const FiltersBottomSheet: React.FC<Props> = ({
           className="mt-6 w-full"
           variant="blue"
           size="md"
-          onClick={() => hideBottomSheet()}
+          onClick={() => bottomSheetModel.hideBottomSheet()}
         >
           Apply
         </Button>
-      </BottomSheet>
+      </BottomSheet.Standalone>
       <DatePickerSheet title="Select date from" date={state.dateFrom}>
         <DatePicker
           date={state.dateFrom}

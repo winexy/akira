@@ -17,11 +17,7 @@ import {
 } from '@heroicons/react/solid'
 import clsx from 'clsx'
 import {useTagsQuery} from 'modules/tags/hooks/index'
-import {
-  showBottomSheet,
-  hideBottomSheet,
-  BottomSheet
-} from 'shared/ui/bottom-sheet'
+import {bottomSheetModel, BottomSheet} from 'shared/ui/bottom-sheet'
 import {Button} from 'shared/ui/button'
 import {TaskTag} from 'modules/tags/types.d'
 import {TagsGrid} from 'modules/tags/components/TagsGrid'
@@ -231,7 +227,7 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                       className="w-full text-left justify-between font-bold"
                       variant="transparent"
                       type="button"
-                      onClick={() => showBottomSheet('lists')}
+                      onClick={() => bottomSheetModel.showBottomSheet('lists')}
                     >
                       {selectedList ? (
                         <>
@@ -252,7 +248,7 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                     variant="transparent"
                     type="button"
                     onClick={() => {
-                      showBottomSheet('task-date')
+                      bottomSheetModel.showBottomSheet('task-date')
                     }}
                   >
                     Date: {renderDate(date)}
@@ -264,7 +260,7 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                     variant="transparent"
                     type="button"
                     onClick={() => {
-                      showBottomSheet('task-due-date')
+                      bottomSheetModel.showBottomSheet('task-due-date')
                     }}
                   >
                     {isNull(dueDate)
@@ -344,7 +340,7 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                 </Button>
               )}
             </div>
-            <BottomSheet name="lists" className="pt-6">
+            <BottomSheet.Standalone name="lists" className="pt-6">
               {!isEmpty(lists) && (
                 <div className="px-4">
                   <input
@@ -373,7 +369,7 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                         } else {
                           onListChange(list)
                         }
-                        hideBottomSheet()
+                        bottomSheetModel.hideBottomSheet()
                       }}
                       dangerouslySetInnerHTML={{
                         __html: withHighlight(list.title, search)
@@ -385,7 +381,7 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
               <StickyBottomSheetBox>
                 <NewListLink />
               </StickyBottomSheetBox>
-            </BottomSheet>
+            </BottomSheet.Standalone>
           </div>
         )}
       </div>

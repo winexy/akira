@@ -1,7 +1,7 @@
 import React, {useRef} from 'react'
 import clsx from 'clsx'
 import {FilterIcon, SortAscendingIcon} from '@heroicons/react/solid'
-import {showBottomSheet} from 'shared/ui/bottom-sheet'
+import {bottomSheetModel} from 'shared/ui/bottom-sheet'
 import {Transition} from 'shared/ui/transition'
 
 type Props = {
@@ -30,7 +30,7 @@ export const TaskListOperations: React.FC<Props> = ({isFiltered, isSorted}) => {
               ? 'text-white bg-blue-500 border-blue-600 active:bg-blue-600 active:border-blue-700'
               : 'bg-gray-100 dark:bg-dark-500 border-gray-300 dark:border-dark-400 active:bg-gray-200 dark:active:bg-dark-600'
           )}
-          onClick={() => showBottomSheet('filters')}
+          onClick={() => bottomSheetModel.showBottomSheet('filters')}
         >
           <FilterIcon className="w-4 h-4 mr-2" />
           Filters
@@ -48,7 +48,7 @@ export const TaskListOperations: React.FC<Props> = ({isFiltered, isSorted}) => {
               ? 'text-white bg-blue-500 border-blue-600 active:bg-blue-600 active:border-blue-700'
               : 'bg-gray-100 dark:bg-dark-500 border-gray-300 dark:border-dark-400 active:bg-gray-200 dark:active:bg-dark-600'
           )}
-          onClick={() => showBottomSheet('sorting')}
+          onClick={() => bottomSheetModel.showBottomSheet('sorting')}
         >
           <SortAscendingIcon className="w-4 h-4 mr-2" />
           Sort

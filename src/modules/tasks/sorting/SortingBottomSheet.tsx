@@ -1,7 +1,7 @@
 import {exhaustiveCheck} from 'shared/lib/utils'
 import React, {useState} from 'react'
 import values from 'lodash/fp/values'
-import {hideBottomSheet, BottomSheet} from 'shared/ui/bottom-sheet'
+import {bottomSheetModel, BottomSheet} from 'shared/ui/bottom-sheet'
 import {Button} from 'shared/ui/button'
 import {CheckIcon, RefreshIcon} from '@heroicons/react/solid'
 import clsx from 'clsx'
@@ -54,11 +54,11 @@ export const SortingBottomSheet: React.FC<Props> = ({sortType, onChange}) => {
       localStorage.setItem('sort-selection', sortType)
     }
 
-    hideBottomSheet()
+    bottomSheetModel.hideBottomSheet()
   }
 
   return (
-    <BottomSheet name="sorting" className="px-4 pb-6 pt-4">
+    <BottomSheet.Standalone name="sorting" className="px-4 pb-6 pt-4">
       <div className="flex justify-between">
         <h2 className="font-bold text-2xl">Sort</h2>
         {sortType && (
@@ -107,6 +107,6 @@ export const SortingBottomSheet: React.FC<Props> = ({sortType, onChange}) => {
           </li>
         ))}
       </ul>
-    </BottomSheet>
+    </BottomSheet.Standalone>
   )
 }

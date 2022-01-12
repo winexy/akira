@@ -1,13 +1,13 @@
 import last from 'lodash/fp/last'
 import {app} from 'shared/lib/app-domain'
 
-type Sheet = {
+export type Sheet = {
   index: number
   name: string
 }
 
 export const showBottomSheet = app.event<string>()
-export const hideBottomSheet = app.event<string | undefined>()
+export const hideBottomSheet = app.event<string | void>()
 
 export const $bottomSheets = app
   .store<Sheet[]>([])

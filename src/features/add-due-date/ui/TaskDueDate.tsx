@@ -14,7 +14,7 @@ import {DatePicker} from 'shared/ui/datepicker'
 import {Portal} from 'shared/ui/portal'
 import {DatePickerSheet} from 'shared/ui/datepicker-sheet'
 import {DatePickerShortcut} from 'shared/ui/datepicker-shortcut'
-import {showBottomSheet} from 'shared/ui/bottom-sheet'
+import {bottomSheetModel} from 'shared/ui/bottom-sheet'
 import ContentLoader from 'react-content-loader'
 import {usePatchTaskMutation} from 'modules/tasks/hooks'
 import {Swipeable, SwipeableRefHandle} from 'shared/ui/swipeable'
@@ -97,7 +97,7 @@ export const TaskDueDate: React.FC<Props> = ({
           className="w-full bg-white dark:bg-dark-600"
           Icon={CalendarIcon}
           onClick={() => {
-            showBottomSheet('due-datepicker')
+            bottomSheetModel.showBottomSheet('due-datepicker')
           }}
         >
           <Match>

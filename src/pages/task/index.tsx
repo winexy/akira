@@ -6,7 +6,7 @@ import parseISO from 'date-fns/parseISO'
 import isEmpty from 'lodash/fp/isEmpty'
 import {ExclamationIcon, PlusIcon} from '@heroicons/react/outline'
 import isNil from 'lodash/fp/isNil'
-import {showBottomSheet, BottomSheet} from 'shared/ui/bottom-sheet'
+import {bottomSheetModel, BottomSheet} from 'shared/ui/bottom-sheet'
 import {Button} from 'shared/ui/button'
 import {
   TaskActionList,
@@ -101,13 +101,13 @@ const TaskPage: React.FC = () => {
         <Button
           variant="blue"
           className="text-sm"
-          onClick={() => showBottomSheet('tags')}
+          onClick={() => bottomSheetModel.showBottomSheet('tags')}
         >
           Add Tag <PlusIcon className="ml-2 w-5 h-5" />
         </Button>
-        <BottomSheet name="tags" className="pt-4">
+        <BottomSheet.Standalone name="tags" className="pt-4">
           <TagsManager task={task} />
-        </BottomSheet>
+        </BottomSheet.Standalone>
       </section>
       <section className="mt-4 px-4 flex flex-col items-start">
         <h2 className="font-semibold text-lg">Note</h2>
@@ -123,7 +123,7 @@ const TaskPage: React.FC = () => {
           <TaskActionList.Item>
             <TaskActionList.Button
               Icon={PlusIcon}
-              onClick={() => showBottomSheet('lists')}
+              onClick={() => bottomSheetModel.showBottomSheet('lists')}
             >
               Add to list
             </TaskActionList.Button>
@@ -140,7 +140,7 @@ const TaskPage: React.FC = () => {
             </TaskActionList.Button>
             <TaskActionList.Button
               stretch={false}
-              onClick={() => showBottomSheet('lists')}
+              onClick={() => bottomSheetModel.showBottomSheet('lists')}
             >
               <DotsVerticalIcon className="ml-auto w-5 h-5" />
             </TaskActionList.Button>
@@ -160,7 +160,7 @@ const TaskPage: React.FC = () => {
         <TaskActionList.Item>
           <TaskActionList.Button
             Icon={RefreshIcon}
-            onClick={() => showBottomSheet('repeat-patterns')}
+            onClick={() => bottomSheetModel.showBottomSheet('repeat-patterns')}
           >
             {task.recurrence
               ? capitalize(RRule.fromString(task.recurrence.rule).toText())
@@ -169,12 +169,12 @@ const TaskPage: React.FC = () => {
         </TaskActionList.Item>
       </TaskActionList>
       <div id="schedule-datepicker" />
-      <BottomSheet name="repeat-patterns">
+      <BottomSheet.Standalone name="repeat-patterns">
         <div className="text-center py-3">
           <h2 className="font-semibold text-2xl">Repeat</h2>
         </div>
         <Recurrence taskId={task.id} />
-      </BottomSheet>
+      </BottomSheet.Standalone>
       {task && (
         <ChecklistManager
           task={task}
@@ -188,9 +188,9 @@ const TaskPage: React.FC = () => {
         isCompleted={task.is_completed}
         isImportant={task.is_important}
       />
-      <BottomSheet name="lists" className="">
+      <BottomSheet.Standalone name="lists" className="">
         <TaskListPicker taskId={task.id} activeListId={task.list_id} />
-      </BottomSheet>
+      </BottomSheet.Standalone>
     </PageView>
   )
 }

@@ -6,7 +6,7 @@ import {TaskList} from 'modules/tasks/components/TaskList'
 import {AdjustmentsIcon, SearchIcon, XIcon} from '@heroicons/react/solid'
 import clsx from 'clsx'
 import {DatePicker} from 'shared/ui/datepicker'
-import {showBottomSheet, BottomSheet} from 'shared/ui/bottom-sheet'
+import {bottomSheetModel, BottomSheet} from 'shared/ui/bottom-sheet'
 import {Button} from 'shared/ui/button'
 import format from 'date-fns/format'
 import {PageView} from 'shared/ui/page-view'
@@ -85,15 +85,15 @@ const SearchPage: React.FC = () => {
               'active:text-indigo-400',
               'focus:outline-none'
             )}
-            onClick={() => showBottomSheet('search-filters')}
+            onClick={() => bottomSheetModel.showBottomSheet('search-filters')}
           >
             <AdjustmentsIcon className="w-6 h-6" />
           </button>
         </div>
       </form>
-      <BottomSheet name="search-filters" className="py-4">
+      <BottomSheet.Standalone name="search-filters" className="py-4">
         <h2 className="px-4 font-bold text-2xl">Search Filters</h2>
-        <section className="mt-4 border-t">
+        <section className="mt-4 border-t md:border-none">
           <div
             role="button"
             tabIndex={0}
@@ -102,7 +102,7 @@ const SearchPage: React.FC = () => {
             <h3 className="font-semibold">Created before</h3>
             {createdBefore && <span>{format(createdBefore, 'dd.MM.yy')}</span>}
           </div>
-          <div className="px-4">
+          <div className="px-4 md:w-96">
             <DatePicker date={createdBefore} onChange={setCreatedBefore} />
           </div>
         </section>
@@ -111,7 +111,7 @@ const SearchPage: React.FC = () => {
             Apply
           </Button>
         </div>
-      </BottomSheet>
+      </BottomSheet.Standalone>
       <section className="mt-4 px-4">
         <TaskList isPending={searchQuery.isLoading} tasks={searchQuery.data} />
       </section>
