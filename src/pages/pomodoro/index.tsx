@@ -471,7 +471,7 @@ const PomodoroPage: FC = (): JSX.Element => {
           <Transition.Shift appear nodeRef={controlsRef}>
             <div
               ref={controlsRef}
-              className="fixed bottom-0 pb-10 flex items-center space-x-8"
+              className="fixed bottom-0 pb-10 flex items-center space-x-4 sm:space-x-8"
             >
               <Control
                 withBorder
