@@ -1,4 +1,6 @@
 import clsx from 'clsx'
+import {useHotkey} from 'modules/hotkeys/HotKeyContext'
+import {HotKey} from 'modules/hotkeys/HotKey'
 import React, {FC} from 'react'
 import {CSSTransition} from 'react-transition-group'
 import './index.css'
@@ -10,6 +12,15 @@ type Props = {
 }
 
 const Drawer: FC<Props> = ({visible, className, children, onClose}) => {
+  useHotkey(HotKey.of('Escape'), {
+    description: 'close menu with Escape',
+    handler() {
+      if (visible) {
+        onClose()
+      }
+    }
+  })
+
   return (
     <CSSTransition
       in={visible}
