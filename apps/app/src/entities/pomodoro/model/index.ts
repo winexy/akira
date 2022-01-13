@@ -81,7 +81,7 @@ sample({
 const updateTimer = createEvent<number>()
 
 const getRemainingTime = (endDate: Date) =>
-  differenceInSeconds(endDate, new Date())
+  Math.max(differenceInSeconds(endDate, new Date()), 0)
 
 const runTimerFx = createEffect((endDate: Date) => {
   const currentIntervalId = $intervalId.getState()
