@@ -33,16 +33,14 @@ const Drawer: FC<Props> = ({visible, className, children, onClose}) => {
       classNames="ui-drawer"
       unmountOnExit
     >
-      <div className="z-50 relative">
+      <div ref={ref} className="z-50 relative">
+        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
         <div
           className="fixed inset-0 bg-black opacity-50 blackout"
-          role="button"
-          tabIndex={0}
           onClick={onClose}
         />
         <div className={clsx('panel fixed right-0 bottom-0 p-3 h-screen')}>
           <div
-            ref={ref}
             className={clsx(
               'relative h-full bg-white rounded-lg shadow-2xl',
               className
