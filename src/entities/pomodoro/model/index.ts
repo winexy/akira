@@ -24,6 +24,12 @@ const $focusDuration = createStore(25)
 const $shortBreakDuration = createStore(5)
 const $longBreakDuration = createStore(10)
 
+const saveSettings = createEvent<{
+  focusDuration: number
+  shortBreakDuration: number
+  longBreakDuration: number
+}>()
+
 const $settings = combine(
   {
     $focusDuration,
@@ -37,16 +43,12 @@ const $settings = combine(
   })
 )
 
-const changeFocusDuration = createEvent<number>()
-const changeShortBreakDuration = createEvent<number>()
-const changeLongBreakDuration = createEvent<number>()
-
-$focusDuration.on(changeFocusDuration, (_, duration) => Math.abs(duration))
-$shortBreakDuration.on(changeShortBreakDuration, (_, duration) =>
-  Math.abs(duration)
+$focusDuration.on(saveSettings, (_, data) => Math.abs(data.focusDuration))
+$shortBreakDuration.on(saveSettings, (_, data) =>
+  Math.abs(data.shortBreakDuration)
 )
-$longBreakDuration.on(changeLongBreakDuration, (_, duration) =>
-  Math.abs(duration)
+$longBreakDuration.on(saveSettings, (_, data) =>
+  Math.abs(data.longBreakDuration)
 )
 
 const changeMode = createEvent<PomodoroMode>()
@@ -72,7 +74,7 @@ const finishTimer = createEvent()
 type Status = 'idle' | 'paused' | 'running' | 'aborted' | 'finished'
 
 const $intervalId = createStore<number | null>(null)
-const $timeLeft = createStore($focusDuration.getState())
+const $timeLeft = createStore($settings.getState().focusDurationInSeconds)
 
 const $status = createStore<Status>('idle')
 const $isIdle = $status.map(status => status === 'idle')
@@ -83,7 +85,7 @@ const $isFinished = $status.map(status => status === 'finished')
 
 const notifyFx = createEffect((mode: PomodoroMode) => {
   const message =
-    mode === PomodoroMode.Focus ? 'Time to relax' : 'Time to get back to work'
+    mode === PomodoroMode.Focus ? 'Time to break' : 'Time to get back to work'
 
   if ('Notification' in window) {
     // eslint-disable-next-line
@@ -195,6 +197,29 @@ const startTimerMeta = combine({
   longBreakDuration: $longBreakDuration
 })
 
+forward({
+  from: saveSettings,
+  to: abortTimer
+})
+
+sample({
+  clock: saveSettings,
+  source: combine({settings: $settings, mode: $mode}),
+  fn(source) {
+    switch (source.mode) {
+      case PomodoroMode.Focus:
+        return source.settings.focusDurationInSeconds
+      case PomodoroMode.ShortBreak:
+        return source.settings.shortBreakDurationInSeconds
+      case PomodoroMode.LongBreak:
+        return source.settings.longBreakDurationInSeconds
+      default:
+        return exhaustiveCheck(source.mode)
+    }
+  },
+  target: updateTimer
+})
+
 sample({
   clock: startFocusTimer,
   source: startTimerMeta,
@@ -249,13 +274,15 @@ const $progress = combine(
   $mode,
   $settings,
   (total, mode, settings) => {
+    const progressFrom = (max: number) => 100 - (total / max) * 100
+
     switch (mode) {
       case PomodoroMode.Focus:
-        return 100 - (total / settings.focusDurationInSeconds) * 100
+        return progressFrom(settings.focusDurationInSeconds)
       case PomodoroMode.ShortBreak:
-        return 100 - (total / settings.shortBreakDurationInSeconds) * 100
+        return progressFrom(settings.shortBreakDurationInSeconds)
       case PomodoroMode.LongBreak:
-        return 100 - (total / settings.longBreakDurationInSeconds) * 100
+        return progressFrom(settings.longBreakDurationInSeconds)
       default:
         return exhaustiveCheck(mode)
     }
@@ -284,7 +311,5 @@ export {
   $focusDuration,
   $shortBreakDuration,
   $longBreakDuration,
-  changeFocusDuration,
-  changeShortBreakDuration,
-  changeLongBreakDuration
+  saveSettings
 }
