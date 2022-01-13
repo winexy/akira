@@ -4,7 +4,7 @@ import {useStore} from 'effector-react'
 import {useHotkey} from 'modules/hotkeys/HotKeyContext'
 import {HotKey} from 'modules/hotkeys/HotKey'
 import {pomodoroModel, pomodoroLib} from 'entities/pomodoro'
-import {PomodoroModeSwitcher, PomodoroTimer} from 'features/pomodoro'
+import {PomodoroModeSwitcher, PomodoroTimer} from 'features/pomodoro-timer'
 import {
   PomodoroPreferences,
   pomodoroPreferencesModel
