@@ -1,11 +1,24 @@
 import React, {FC} from 'react'
-import {UniversalDrawer} from 'widgets/universal-drawer'
+import {useStore} from 'effector-react'
+import clsx from 'clsx'
+import {UniversalDrawer, universalDrawerModel} from 'widgets/universal-drawer'
+import {pomodoroModel} from 'entities/pomodoro'
 
-const Input = () => (
+type InputProps = {} & React.DetailedHTMLProps<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  HTMLInputElement
+>
+
+const Input: FC<InputProps> = ({className, ...props}) => (
   <input
-    type="number"
-    min="0"
-    className="ml-6 appearance-none px-3 py-1 rounded-md border border-gray-100"
+    type="text"
+    className={clsx(
+      'appearance-none px-3 py-1 rounded-md border border-gray-100',
+      'focus:outline-none focus:border-indigo-500',
+      'transition',
+      className
+    )}
+    {...props}
   />
 )
 
@@ -16,20 +29,64 @@ const Label: FC = ({children}) => (
 )
 
 export const PomodoroPreferences: FC = () => {
+  const focusDuration = useStore(pomodoroModel.$focusDuration)
+  const shortBreakDuration = useStore(pomodoroModel.$shortBreakDuration)
+  const longBreakDuration = useStore(pomodoroModel.$longBreakDuration)
+
   return (
-    <UniversalDrawer name="pomodoro-settings" className="p-6 space-y-4">
-      <Label>
-        Focus time duration
-        <Input />
-      </Label>
-      <Label>
-        Short break duration
-        <Input />
-      </Label>
-      <Label>
-        Long break duration
-        <Input />
-      </Label>
+    <UniversalDrawer name="pomodoro-settings" className="p-6">
+      <form
+        className="h-full flex flex-col"
+        onSubmit={event => {
+          event.preventDefault()
+          universalDrawerModel.hideDrawer()
+        }}
+      >
+        <div className="space-y-4 mb-6 sm:w-80">
+          <Label>
+            Focus time (min)
+            <Input
+              type="number"
+              min="0"
+              value={focusDuration}
+              className="ml-6 w-20"
+              onChange={event =>
+                pomodoroModel.changeFocusDuration(
+                  parseInt(event.target.value, 10)
+                )
+              }
+            />
+          </Label>
+          <Label>
+            Short break (min)
+            <Input
+              type="number"
+              min="0"
+              value={shortBreakDuration}
+              className="ml-6 w-20"
+              onChange={event =>
+                pomodoroModel.changeShortBreakDuration(
+                  parseInt(event.target.value, 10)
+                )
+              }
+            />
+          </Label>
+          <Label>
+            Long break (min)
+            <Input
+              type="number"
+              min="0"
+              value={longBreakDuration}
+              className="ml-6 w-20"
+              onChange={event =>
+                pomodoroModel.changeLongBreakDuration(
+                  parseInt(event.target.value, 10)
+                )
+              }
+            />
+          </Label>
+        </div>
+      </form>
     </UniversalDrawer>
   )
 }
