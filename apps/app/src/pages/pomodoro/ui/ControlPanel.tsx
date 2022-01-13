@@ -13,6 +13,7 @@ import {Transition} from 'shared/ui/transition'
 
 export const ControlPanel: FC = () => {
   const isRunning = useStore(pomodoroModel.$isRunning)
+  const isPaused = useStore(pomodoroModel.$isPaused)
   const mode = useStore(pomodoroModel.$mode)
   const ref = useRef(null)
 
@@ -34,12 +35,19 @@ export const ControlPanel: FC = () => {
           onClick={() => {
             if (isRunning) {
               pomodoroModel.pauseTimer()
+            } else if (isPaused) {
+              pomodoroModel.continueTimer()
             } else {
               pomodoroLib.startTimer(mode)
             }
           }}
         />
-        <ControlButton size="sm" withBorder Icon={FastForwardIcon} />
+        <ControlButton
+          size="sm"
+          withBorder
+          Icon={FastForwardIcon}
+          onClick={pomodoroModel.skipPomodoro}
+        />
       </div>
     </Transition.Shift>
   )

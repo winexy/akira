@@ -30,19 +30,6 @@ const saveSettings = createEvent<{
   longBreakDuration: number
 }>()
 
-const $settings = combine(
-  {
-    $focusDuration,
-    $shortBreakDuration,
-    $longBreakDuration
-  },
-  settings => ({
-    focusDurationInSeconds: settings.$focusDuration * 60,
-    shortBreakDurationInSeconds: settings.$shortBreakDuration * 60,
-    longBreakDurationInSeconds: settings.$longBreakDuration * 60
-  })
-)
-
 $focusDuration.on(saveSettings, (_, data) => Math.abs(data.focusDuration))
 $shortBreakDuration.on(saveSettings, (_, data) =>
   Math.abs(data.shortBreakDuration)
@@ -52,11 +39,28 @@ $longBreakDuration.on(saveSettings, (_, data) =>
 )
 
 const changeMode = createEvent<PomodoroMode>()
+const modeRotated = createEvent<PomodoroMode>()
 const switchMode = createEvent()
 
 const $mode = createStore(PomodoroMode.Focus)
 
+const $settings = combine(
+  {
+    $focusDuration,
+    $shortBreakDuration,
+    $longBreakDuration,
+    $mode
+  },
+  settings => ({
+    focusDurationInSeconds: settings.$focusDuration * 60,
+    shortBreakDurationInSeconds: settings.$shortBreakDuration * 60,
+    longBreakDurationInSeconds: settings.$longBreakDuration * 60,
+    mode: settings.$mode
+  })
+)
+
 $mode.on(changeMode, (_, mode) => mode)
+$mode.on(modeRotated, (_, mode) => mode)
 $mode.on(switchMode, mode => {
   return mode === PomodoroMode.Focus
     ? PomodoroMode.ShortBreak
@@ -67,6 +71,7 @@ const $isFocusMode = $mode.map(mode => mode === PomodoroMode.Focus)
 const $isBreakMode = $mode.map(mode => mode === PomodoroMode.ShortBreak)
 
 const startTimer = createEvent<Date>()
+const continueTimer = createEvent()
 const abortTimer = createEvent()
 const pauseTimer = createEvent()
 const finishTimer = createEvent()
@@ -93,11 +98,10 @@ const notifyFx = createEffect((mode: PomodoroMode) => {
   }
 })
 
-$status
-  .on(startTimer, () => 'running')
-  .on(pauseTimer, () => 'paused')
-  .on(abortTimer, () => 'aborted')
-  .on(finishTimer, () => 'finished')
+$status.on(startTimer, () => 'running')
+$status.on(pauseTimer, () => 'paused')
+$status.on(abortTimer, () => 'aborted')
+$status.on(finishTimer, () => 'finished')
 
 sample({
   clock: finishTimer,
@@ -156,9 +160,8 @@ sample({
   target: stopTimerFx
 })
 
-$intervalId
-  .on(runTimerFx.doneData, (_, id) => id)
-  .on(stopTimerFx.done, () => null)
+$intervalId.on(runTimerFx.doneData, (_, id) => id)
+$intervalId.on(stopTimerFx.done, () => null)
 
 forward({
   from: startTimer,
@@ -189,14 +192,6 @@ const startFocusTimer = createEvent()
 const startShortBreakTimer = createEvent()
 const startLongBreakTimer = createEvent()
 
-const startTimerMeta = combine({
-  isPaused: $isPaused,
-  timeLeft: $timeLeft,
-  focusDuration: $focusDuration,
-  shortBreakDuration: $shortBreakDuration,
-  longBreakDuration: $longBreakDuration
-})
-
 forward({
   from: saveSettings,
   to: abortTimer
@@ -221,32 +216,30 @@ sample({
 })
 
 sample({
+  clock: continueTimer,
+  source: $timeLeft,
+  fn: timeLeft => addSeconds(new Date(), timeLeft),
+  target: startTimer
+})
+
+sample({
   clock: startFocusTimer,
-  source: startTimerMeta,
-  fn: source =>
-    source.isPaused
-      ? addSeconds(new Date(), source.timeLeft)
-      : addMinutes(new Date(), source.focusDuration),
+  source: $settings,
+  fn: source => addSeconds(new Date(), source.focusDurationInSeconds),
   target: startTimer
 })
 
 sample({
   clock: startShortBreakTimer,
-  source: startTimerMeta,
-  fn: source =>
-    source.isPaused
-      ? addSeconds(new Date(), source.timeLeft)
-      : addMinutes(new Date(), source.shortBreakDuration),
+  source: $settings,
+  fn: source => addSeconds(new Date(), source.shortBreakDurationInSeconds),
   target: startTimer
 })
 
 sample({
   clock: startLongBreakTimer,
-  source: startTimerMeta,
-  fn: source =>
-    source.isPaused
-      ? addSeconds(new Date(), source.timeLeft)
-      : addMinutes(new Date(), source.longBreakDuration),
+  source: $settings,
+  fn: source => addSeconds(new Date(), source.longBreakDurationInSeconds),
   target: startTimer
 })
 
@@ -255,8 +248,14 @@ forward({
   to: abortTimer
 })
 
+forward({
+  from: modeRotated,
+  to: abortTimer
+})
+
 sample({
   clock: notifyFx.done,
+  source: $settings,
   target: switchMode
 })
 
@@ -289,6 +288,56 @@ const $progress = combine(
   }
 )
 
+const $pomodoroIndex = createStore(0)
+
+const skipPomodoro = createEvent()
+
+function rotatePomodoroMode(index: number) {
+  const isEven = index % 2 === 0
+
+  if (isEven) {
+    return PomodoroMode.Focus
+  }
+
+  const focusModesPassed = 4
+  const shortBreaksPassed = 3
+  const pomodorosPased = focusModesPassed + shortBreaksPassed
+
+  return index >= pomodorosPased
+    ? PomodoroMode.LongBreak
+    : PomodoroMode.ShortBreak
+}
+
+sample({
+  clock: skipPomodoro,
+  source: $pomodoroIndex,
+  fn: rotatePomodoroMode,
+  target: modeRotated
+})
+
+sample({
+  clock: skipPomodoro,
+  source: $settings,
+  fn(settings) {
+    switch (settings.mode) {
+      case PomodoroMode.Focus:
+        return addSeconds(new Date(), settings.focusDurationInSeconds)
+      case PomodoroMode.ShortBreak:
+        return addSeconds(new Date(), settings.shortBreakDurationInSeconds)
+      case PomodoroMode.LongBreak:
+        return addSeconds(new Date(), settings.longBreakDurationInSeconds)
+      default:
+        return exhaustiveCheck(settings.mode)
+    }
+  },
+  target: startTimer
+})
+
+$pomodoroIndex
+  .on(finishTimer, index => index + 1)
+  .on(skipPomodoro, index => index + 1)
+  .reset(changeMode)
+
 export {
   PomodoroMode,
   $mode,
@@ -303,9 +352,11 @@ export {
   $time,
   changeMode,
   pauseTimer,
+  continueTimer,
   abortTimer,
   finishTimer,
   startFocusTimer,
+  skipPomodoro,
   startShortBreakTimer,
   startLongBreakTimer,
   $focusDuration,
