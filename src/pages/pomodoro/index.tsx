@@ -1,11 +1,14 @@
 import clsx from 'clsx'
 import React, {FC} from 'react'
 import {useStore} from 'effector-react'
-import {UniversalDrawer, universalDrawerModel} from 'widgets/universal-drawer'
 import {useHotkey} from 'modules/hotkeys/HotKeyContext'
 import {HotKey} from 'modules/hotkeys/HotKey'
 import {pomodoroModel, pomodoroLib} from 'entities/pomodoro'
 import {PomodoroModeSwitcher, PomodoroTimer} from 'features/pomodoro'
+import {
+  PomodoroPreferences,
+  pomodoroPreferencesModel
+} from 'features/pomodoro-preferences'
 import {Header, StatusText, ControlPanel} from './ui'
 import './pomodoro.css'
 
@@ -13,15 +16,10 @@ const PomodoroPage: FC = (): JSX.Element => {
   const isRunning = useStore(pomodoroModel.$isRunning)
   const mode = useStore(pomodoroModel.$mode)
 
-  useHotkey(HotKey.of('p', HotKey.Meta), {
-    description: 'open pomodoro preferences',
-    handler() {
-      universalDrawerModel.showDrawer('pomodoro-settings')
-    }
-  })
+  pomodoroPreferencesModel.usePreferencesHotKey()
 
   useHotkey(HotKey.of(' '), {
-    description: 'open pomodoro preferences',
+    description: 'toggle pomodor timer',
     handler() {
       if (isRunning) {
         pomodoroModel.pauseTimer()
@@ -48,20 +46,7 @@ const PomodoroPage: FC = (): JSX.Element => {
           <StatusText />
           <ControlPanel />
         </div>
-        <UniversalDrawer name="pomodoro-settings" className="p-6 space-y-2">
-          <label className="flex justify-between font-semibold">
-            Focus time duration
-            <input type="number" className="ml-6" />
-          </label>
-          <label className="flex justify-between font-semibold">
-            Short break duration
-            <input type="number" className="ml-6" />
-          </label>
-          <label className="flex justify-between font-semibold">
-            Long break duration
-            <input type="number" className="ml-6" />
-          </label>
-        </UniversalDrawer>
+        <PomodoroPreferences />
       </main>
     </div>
   )
