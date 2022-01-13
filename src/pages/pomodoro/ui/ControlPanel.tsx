@@ -7,7 +7,7 @@ import {
   PlayIcon
 } from '@heroicons/react/solid'
 import {universalDrawerModel} from 'widgets/universal-drawer'
-import {ControlButton} from 'features/pomodoro'
+import {ControlButton} from 'features/pomodoro-timer'
 import {pomodoroLib, pomodoroModel} from 'entities/pomodoro'
 import {Transition} from 'shared/ui/transition'
 
