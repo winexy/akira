@@ -20,9 +20,34 @@ enum PomodoroMode {
   LongBreak = 'long-break'
 }
 
-const MINUTES_25 = 60 * 25
-const MINUTES_5 = 60 * 5
-const MINUTES_10 = 60 * 10
+const $focusDuration = createStore(25)
+const $shortBreakDuration = createStore(5)
+const $longBreakDuration = createStore(10)
+
+const $settings = combine(
+  {
+    $focusDuration,
+    $shortBreakDuration,
+    $longBreakDuration
+  },
+  settings => ({
+    focusDurationInSeconds: settings.$focusDuration * 60,
+    shortBreakDurationInSeconds: settings.$shortBreakDuration * 60,
+    longBreakDurationInSeconds: settings.$longBreakDuration * 60
+  })
+)
+
+const changeFocusDuration = createEvent<number>()
+const changeShortBreakDuration = createEvent<number>()
+const changeLongBreakDuration = createEvent<number>()
+
+$focusDuration.on(changeFocusDuration, (_, duration) => Math.abs(duration))
+$shortBreakDuration.on(changeShortBreakDuration, (_, duration) =>
+  Math.abs(duration)
+)
+$longBreakDuration.on(changeLongBreakDuration, (_, duration) =>
+  Math.abs(duration)
+)
 
 const changeMode = createEvent<PomodoroMode>()
 const switchMode = createEvent()
@@ -47,7 +72,7 @@ const finishTimer = createEvent()
 type Status = 'idle' | 'paused' | 'running' | 'aborted' | 'finished'
 
 const $intervalId = createStore<number | null>(null)
-const $timeLeft = createStore(MINUTES_25)
+const $timeLeft = createStore($focusDuration.getState())
 
 const $status = createStore<Status>('idle')
 const $isIdle = $status.map(status => status === 'idle')
@@ -138,29 +163,37 @@ forward({
   to: runTimerFx
 })
 
-$timeLeft
-  .on(changeMode, (_, mode) => {
+sample({
+  clock: changeMode,
+  source: $settings,
+  fn(settings, mode) {
     switch (mode) {
       case PomodoroMode.Focus:
-        return MINUTES_25
+        return settings.focusDurationInSeconds
       case PomodoroMode.ShortBreak:
-        return MINUTES_5
+        return settings.shortBreakDurationInSeconds
       case PomodoroMode.LongBreak:
-        return MINUTES_10
+        return settings.longBreakDurationInSeconds
       default:
         return exhaustiveCheck(mode)
     }
-  })
-  .on(updateTimer, (_, time) => time)
+  },
+  target: updateTimer
+})
+
+$timeLeft.on(updateTimer, (_, time) => time)
 
 const startFocusTimer = createEvent()
 const startShortBreakTimer = createEvent()
 const startLongBreakTimer = createEvent()
 
-const startTimerMeta = combine($isPaused, $timeLeft, (isPaused, timeLeft) => ({
-  isPaused,
-  timeLeft
-}))
+const startTimerMeta = combine({
+  isPaused: $isPaused,
+  timeLeft: $timeLeft,
+  focusDuration: $focusDuration,
+  shortBreakDuration: $shortBreakDuration,
+  longBreakDuration: $longBreakDuration
+})
 
 sample({
   clock: startFocusTimer,
@@ -168,7 +201,7 @@ sample({
   fn: source =>
     source.isPaused
       ? addSeconds(new Date(), source.timeLeft)
-      : addMinutes(new Date(), 25),
+      : addMinutes(new Date(), source.focusDuration),
   target: startTimer
 })
 
@@ -178,7 +211,7 @@ sample({
   fn: source =>
     source.isPaused
       ? addSeconds(new Date(), source.timeLeft)
-      : addMinutes(new Date(), 5),
+      : addMinutes(new Date(), source.shortBreakDuration),
   target: startTimer
 })
 
@@ -188,7 +221,7 @@ sample({
   fn: source =>
     source.isPaused
       ? addSeconds(new Date(), source.timeLeft)
-      : addMinutes(new Date(), 10),
+      : addMinutes(new Date(), source.longBreakDuration),
   target: startTimer
 })
 
@@ -211,18 +244,23 @@ const $time = combine($timeLeft, totalSeconds => {
   return {minutes, seconds}
 })
 
-const $progress = combine($timeLeft, $mode, (total, mode) => {
-  switch (mode) {
-    case PomodoroMode.Focus:
-      return 100 - (total / MINUTES_25) * 100
-    case PomodoroMode.ShortBreak:
-      return 100 - (total / MINUTES_5) * 100
-    case PomodoroMode.LongBreak:
-      return 100 - (total / MINUTES_10) * 100
-    default:
-      return exhaustiveCheck(mode)
+const $progress = combine(
+  $timeLeft,
+  $mode,
+  $settings,
+  (total, mode, settings) => {
+    switch (mode) {
+      case PomodoroMode.Focus:
+        return 100 - (total / settings.focusDurationInSeconds) * 100
+      case PomodoroMode.ShortBreak:
+        return 100 - (total / settings.shortBreakDurationInSeconds) * 100
+      case PomodoroMode.LongBreak:
+        return 100 - (total / settings.longBreakDurationInSeconds) * 100
+      default:
+        return exhaustiveCheck(mode)
+    }
   }
-})
+)
 
 export {
   PomodoroMode,
@@ -242,5 +280,11 @@ export {
   finishTimer,
   startFocusTimer,
   startShortBreakTimer,
-  startLongBreakTimer
+  startLongBreakTimer,
+  $focusDuration,
+  $shortBreakDuration,
+  $longBreakDuration,
+  changeFocusDuration,
+  changeShortBreakDuration,
+  changeLongBreakDuration
 }
