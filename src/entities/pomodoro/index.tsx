@@ -1,2 +1,2 @@
 export * as pomodoroModel from './model'
-export * as pomodorLib from './lib'
+export * as pomodoroLib from './lib'
