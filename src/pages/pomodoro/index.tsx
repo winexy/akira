@@ -18,7 +18,7 @@ const PomodoroPage: FC = (): JSX.Element => {
 
   pomodoroPreferencesModel.usePreferencesHotKey()
 
-  useHotkey(HotKey.of(' '), {
+  useHotkey(HotKey.of('Enter', HotKey.Meta), {
     description: 'toggle pomodor timer',
     handler() {
       if (isRunning) {
