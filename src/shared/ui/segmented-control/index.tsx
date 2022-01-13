@@ -17,7 +17,7 @@ type Rect = {
 
 const Context = React.createContext<
   Undefined<{
-    update(newActiveId: string, rect: Rect): void
+    update(newActiveId: string): void
     activeId: string
   }>
 >(undefined)
@@ -36,20 +36,10 @@ const Segment: React.FC<SegmentProps> = ({id, children}) => {
 
   const isActive = context.activeId === id
 
-  useEffect(() => {
-    if (isActive && ref.current) {
-      context.update(id, {
-        height: ref.current.clientHeight,
-        width: ref.current.clientWidth,
-        offsetLeft: ref.current.offsetLeft
-      })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
   return (
     <button
       ref={ref}
+      data-segment-id={id}
       type="button"
       className={clsx(
         'flex-1 flex justify-center z-10',
@@ -61,15 +51,7 @@ const Segment: React.FC<SegmentProps> = ({id, children}) => {
           'active:text-gray-400': !isActive
         }
       )}
-      onClick={() => {
-        const control = ref.current!
-
-        context.update(id, {
-          height: control.clientHeight,
-          width: control.clientWidth,
-          offsetLeft: control.offsetLeft
-        })
-      }}
+      onClick={() => context.update(id)}
     >
       {children}
     </button>
@@ -91,21 +73,23 @@ const SegmentedControl: React.FC<Props> = ({
   const [styles, setStyles] = useState<CSSProperties>()
   const rootRef = useRef<HTMLDivElement>(null)
 
-  const update = (id: string, rect: Rect) => {
-    if (id !== activeId) {
-      onChange(id)
-    }
+  useEffect(() => {
+    const node = document.querySelector(`button[data-segment-id="${activeId}"]`)
 
-    const root = rootRef.current
-
-    if (isUndefined(rect)) {
-      globalThis.console.warn('[SegmentedControl] rect is undefined')
+    if (!node) {
+      globalThis.console.warn(`node rect was not found for ${activeId} segment`)
       return
     }
 
-    if (isNull(root)) {
-      globalThis.console.warn('[SegmentedControl] root is null')
+    if (!(node instanceof HTMLButtonElement)) {
+      globalThis.console.warn(`found rect is not type of button`)
       return
+    }
+
+    const rect = {
+      height: node.clientHeight,
+      width: node.clientWidth,
+      offsetLeft: node.offsetLeft
     }
 
     const INNER_PADDING = 4
@@ -115,6 +99,12 @@ const SegmentedControl: React.FC<Props> = ({
       height: rect.height,
       transform: `translateX(${rect.offsetLeft - INNER_PADDING}px)`
     })
+  }, [activeId])
+
+  const update = (id: string) => {
+    if (id !== activeId) {
+      onChange(id)
+    }
   }
 
   return (
