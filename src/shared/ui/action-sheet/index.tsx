@@ -6,7 +6,7 @@ import {
 import {useStore} from 'effector-react'
 import {CSSTransition} from 'react-transition-group'
 import clsx from 'clsx'
-import {createFocusTrap, FocusTrap} from 'focus-trap'
+import {useFocusTrap} from 'shared/lib/focus-trap'
 import {Portal} from 'shared/ui/portal'
 import './index.css'
 
@@ -54,24 +54,6 @@ const Action: React.FC<ActionProps> = ({
       </button>
     </li>
   )
-}
-
-function useFocusTrap(
-  isVisible: boolean,
-  ref: MutableRefObject<HTMLElement | null>
-) {
-  useEffect(() => {
-    let trap: FocusTrap | undefined
-
-    if (isVisible && ref.current) {
-      trap = createFocusTrap(ref.current)
-      trap.activate()
-    }
-
-    return () => {
-      trap?.deactivate()
-    }
-  }, [isVisible, ref])
 }
 
 function useInitialFocus(
