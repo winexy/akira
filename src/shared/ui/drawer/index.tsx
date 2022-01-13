@@ -30,6 +30,7 @@ const Drawer: FC<Props> = ({visible, className, children, onClose}) => {
     <CSSTransition
       in={visible}
       timeout={500}
+      nodeRef={ref}
       classNames="ui-drawer"
       unmountOnExit
     >
