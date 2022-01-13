@@ -92,7 +92,9 @@ const SegmentedControl: React.FC<Props> = ({
   const rootRef = useRef<HTMLDivElement>(null)
 
   const update = (id: string, rect: Rect) => {
-    onChange(id)
+    if (id !== activeId) {
+      onChange(id)
+    }
 
     const root = rootRef.current
 
