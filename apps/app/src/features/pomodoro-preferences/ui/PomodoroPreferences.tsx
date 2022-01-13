@@ -3,7 +3,6 @@ import {useStore} from 'effector-react'
 import clsx from 'clsx'
 import {UniversalDrawer, universalDrawerModel} from 'widgets/universal-drawer'
 import {pomodoroModel} from 'entities/pomodoro'
-import {saveSettings} from 'entities/pomodoro/model'
 import {Button} from 'shared/ui/button'
 
 type InputProps = {} & React.DetailedHTMLProps<
