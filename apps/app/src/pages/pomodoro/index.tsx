@@ -1,24 +1,20 @@
 import clsx from 'clsx'
-import React, {FC, ReactNode, useRef} from 'react'
+import React, {FC, useRef} from 'react'
 import {useStore} from 'effector-react'
 import {Transition} from 'shared/ui/transition'
 import {
-  MenuIcon,
   PlayIcon,
   PauseIcon,
   AdjustmentsIcon,
   FastForwardIcon
 } from '@heroicons/react/solid'
-import {toggleMenu} from 'shared/ui/menu'
-import {exhaustiveCheck} from 'shared/lib/utils'
-import {Segment, SegmentedControl} from 'shared/ui/segmented-control'
-import './pomodoro.css'
-import {WIP} from 'modules/tags/components/Tag'
 import {UniversalDrawer, universalDrawerModel} from 'widgets/universal-drawer'
 import {useHotkey} from 'modules/hotkeys/HotKeyContext'
 import {HotKey} from 'modules/hotkeys/HotKey'
-import {pomodoroModel} from 'entities/pomodoro'
-import {PomodoroTimer} from 'features/pomodoro'
+import {pomodorLib, pomodoroModel} from 'entities/pomodoro'
+import {PomodoroModeSwitcher, PomodoroTimer} from 'features/pomodoro'
+import {Header, StatusText} from './ui'
+import './pomodoro.css'
 
 type ControlProps = {
   withBorder?: boolean
@@ -58,27 +54,12 @@ const Control: FC<ControlProps> = ({withBorder, size, Icon, onClick}) => {
 }
 
 const PomodoroPage: FC = (): JSX.Element => {
-  const isIdle = useStore(pomodoroModel.$isIdle)
   const isRunning = useStore(pomodoroModel.$isRunning)
   const mode = useStore(pomodoroModel.$mode)
-  const progress = useStore(pomodoroModel.$progress)
-  const isFocusMode = useStore(pomodoroModel.$isFocusMode)
-  const isBreakMode = useStore(pomodoroModel.$isBreakMode)
-  const countdownRef = useRef(null)
   const controlsRef = useRef(null)
-  const textRef = useRef(null)
 
   function start() {
-    switch (mode) {
-      case pomodoroModel.PomodoroMode.Focus:
-        return pomodoroModel.startFocusTimer()
-      case pomodoroModel.PomodoroMode.ShortBreak:
-        return pomodoroModel.startShortBreakTimer()
-      case pomodoroModel.PomodoroMode.LongBreak:
-        return pomodoroModel.startLongBreakTimer()
-      default:
-        return exhaustiveCheck(mode)
-    }
+    pomodorLib.startTimer(mode)
   }
 
   useHotkey(HotKey.of('p', HotKey.Meta), {
@@ -108,61 +89,12 @@ const PomodoroPage: FC = (): JSX.Element => {
 
   return (
     <div className={clsx('flex-1 text-dark-600 dark:text-white')}>
-      <header className="flex items-center px-4 py-2">
-        <span role="img" aria-label="tomato emoji" className="text-xl">
-          🍅
-        </span>{' '}
-        <span className={clsx('font-semibold ml-3 text-xl flex items-center')}>
-          Pomodoro
-          <WIP className="ml-3" />
-        </span>
-        <button
-          className={clsx(
-            'ml-auto w-8 h-8 -mr-1',
-            'flex items-center justify-center ',
-            'rounded ',
-            'transition ease-in duration-150',
-            'focus:outline-none',
-            {
-              'dark:active:bg-dark-700': isIdle
-            }
-          )}
-          onClick={() => toggleMenu()}
-        >
-          <MenuIcon className="w-6 h-6" />
-        </button>
-      </header>
+      <Header />
       <main className="px-4">
-        <SegmentedControl
-          className="mx-auto max-w-lg text-xs sm:text-base"
-          activeId={mode}
-          onChange={pomodoroModel.changeMode}
-        >
-          <Segment id={pomodoroModel.PomodoroMode.Focus}>Focus</Segment>
-          <Segment id={pomodoroModel.PomodoroMode.ShortBreak}>
-            Short break
-          </Segment>
-          <Segment id={pomodoroModel.PomodoroMode.LongBreak}>
-            Long break
-          </Segment>
-        </SegmentedControl>
+        <PomodoroModeSwitcher />
         <div className="mt-4 flex flex-col justify-center items-center">
           <PomodoroTimer />
-          <Transition.Scale
-            nodeRef={textRef}
-            appear
-            in={isRunning}
-            unmountOnExit
-          >
-            <p
-              ref={textRef}
-              className={clsx('mt-8 font-semibold text-3xl transition', {
-                'dark:text-white': isRunning
-              })}
-            >
-              {isFocusMode ? 'Time to focus! 👩🏼‍💻' : 'Time to Break! 🧘🏼‍♀️'}
-            </p>
-          </Transition.Scale>
+          <StatusText />
           <Transition.Shift appear nodeRef={controlsRef}>
             <div
               ref={controlsRef}
