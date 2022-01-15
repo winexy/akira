@@ -22,6 +22,8 @@ enum PomodoroMode {
 
 type Status = 'idle' | 'paused' | 'running' | 'aborted' | 'finished'
 
+type Time = {minutes: string; seconds: string}
+
 const formatTimeUnit = (x: number) => padStart(String(floor(x)), 2, '0')
 
 const getRemainingTime = (endDate: Date) =>
@@ -82,12 +84,15 @@ const $isPaused = $status.map(status => status === 'paused')
 const $isAborted = $status.map(status => status === 'aborted')
 const $isFinished = $status.map(status => status === 'finished')
 
-const $time = combine($timeLeft, totalSeconds => {
-  const minutes = formatTimeUnit(totalSeconds / 60)
-  const seconds = formatTimeUnit(totalSeconds % 60)
+const $time = combine(
+  $timeLeft,
+  (totalSeconds): Time => {
+    const minutes = formatTimeUnit(totalSeconds / 60)
+    const seconds = formatTimeUnit(totalSeconds % 60)
 
-  return {minutes, seconds}
-})
+    return {minutes, seconds}
+  }
+)
 
 const $progress = combine(
   $timeLeft,
@@ -175,6 +180,10 @@ const stopTimerFx = createEffect((timerId: number | null) => {
   }
 })
 
+const updateDocumentTitleFx = createEffect((time: Time) => {
+  document.title = `${time.minutes}:${time.seconds}`
+})
+
 /** HANDLERS */
 
 $timeLeft.on(updateTimer, (_, time) => time)
@@ -231,6 +240,12 @@ forward({
   from: modeRotated,
   to: abortTimer
 })
+
+forward({
+  from: $time,
+  to: updateDocumentTitleFx
+})
+
 /** SAMPLE  */
 
 sample({
