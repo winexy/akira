@@ -13,6 +13,7 @@ import floor from 'lodash/floor'
 import isNull from 'lodash/isNull'
 import padStart from 'lodash/padStart'
 import {exhaustiveCheck} from 'shared/lib/utils'
+import TimerSound from 'src/assets/sounds/timer-sound.mp3'
 
 enum PomodoroMode {
   Focus = 'focus',
@@ -142,6 +143,8 @@ const skipPomodoro = createEvent()
 
 /** EFFECTS  */
 
+const audio = new Audio(TimerSound)
+
 const notifyFx = createEffect((mode: PomodoroMode) => {
   const message =
     mode === PomodoroMode.Focus ? 'Time to break' : 'Time to get back to work'
@@ -150,6 +153,8 @@ const notifyFx = createEffect((mode: PomodoroMode) => {
     // eslint-disable-next-line
     new Notification(message, {})
   }
+
+  audio.play()
 })
 
 const runTimerFx = createEffect((endDate: Date) => {
