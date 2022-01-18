@@ -43,7 +43,7 @@ const Drawer: FC<Props> = ({visible, className, children, onClose}) => {
         <div className={clsx('panel fixed right-0 bottom-0 p-3 h-screen')}>
           <div
             className={clsx(
-              'relative h-full bg-white rounded-3xl shadow-2xl',
+              'relative h-full bg-white dark:bg-dark-600 rounded-3xl shadow-2xl',
               className
             )}
           >
