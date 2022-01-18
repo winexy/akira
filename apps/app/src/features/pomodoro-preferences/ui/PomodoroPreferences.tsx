@@ -15,6 +15,7 @@ const Input: FC<InputProps> = ({className, ...props}) => (
     type="text"
     className={clsx(
       'appearance-none px-3 py-1 rounded-md border border-gray-100',
+      'dark:bg-dark-500 dark:border-dark-400',
       'focus:outline-none focus:border-indigo-500',
       'transition',
       className
