@@ -1,7 +1,7 @@
 import React, {ReactNode} from 'react'
 import format from 'date-fns/format'
-import {bottomSheetModel, BottomSheet} from 'shared/ui/bottom-sheet'
 import {Button} from 'shared/ui/button'
+import {UniversalDrawer, universalDrawerModel} from 'widgets/universal-drawer'
 
 type DatePickerSheetProps = {
   name?: string
@@ -20,10 +20,13 @@ export const DatePickerSheet: React.FC<DatePickerSheetProps> = ({
   onApply
 }) => {
   return (
-    <BottomSheet.Standalone name={name} className="pb-8">
+    <UniversalDrawer
+      name={name}
+      className="pb-8 md:pb-4 md:pt-0 md:w-96 md:flex flex-col"
+    >
       <h2 className="mt-4 px-4 text-center font-bold text-2xl">{title}</h2>
       <div className="px-4">{children}</div>
-      <div className="sticky bottom-0 mt-2 px-4">
+      <div className="mt-auto sticky bottom-0 px-4">
         {fixedChildren}
         <Button
           size="md"
@@ -31,7 +34,7 @@ export const DatePickerSheet: React.FC<DatePickerSheetProps> = ({
           className="mt-4 w-full"
           onClick={event => {
             event.stopPropagation()
-            bottomSheetModel.hideBottomSheet()
+            universalDrawerModel.hideDrawer()
             onApply?.()
           }}
         >
@@ -39,6 +42,6 @@ export const DatePickerSheet: React.FC<DatePickerSheetProps> = ({
           {date && <span className=" ml-auto">{format(date, 'dd.MM.yy')}</span>}
         </Button>
       </div>
-    </BottomSheet.Standalone>
+    </UniversalDrawer>
   )
 }
