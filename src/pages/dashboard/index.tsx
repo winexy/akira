@@ -1,4 +1,5 @@
 import React, {useState} from 'react'
+import {Route, Switch, useParams} from 'react-router'
 import {TaskList} from 'modules/tasks/components/TaskList'
 import size from 'lodash/fp/size'
 import filter from 'lodash/fp/filter'
@@ -34,6 +35,7 @@ import {useShimmerColors} from 'shared/ui/shimmer'
 import {CreateTaskPayload} from 'modules/tasks/types.d'
 import {usePullToRefresh} from 'shared/lib/hooks/pull-to-refresh'
 import {BookOpenIcon, PlusIcon} from '@heroicons/react/solid'
+import {useHistory} from 'react-router-dom'
 
 const Control: React.FC<{
   value: string
@@ -209,6 +211,9 @@ const Habbit: React.FC<HabbitProps> = ({Icon, variant, children}) => {
 }
 
 export function DashboardPage() {
+  const history = useHistory()
+  const {type: mode = 'today'} = useParams<{type?: 'today' | 'week'}>()
+
   const addTaskControl = useAddTaskControl()
   const queryClient = useQueryClient()
   const createTaskMutation = useMutation(
@@ -222,8 +227,6 @@ export function DashboardPage() {
       }
     }
   )
-
-  const [mode, setMode] = useState('today')
 
   return (
     <PageView className="flex-1">
@@ -245,15 +248,34 @@ export function DashboardPage() {
         </div>
       )}
       <div className="flex">
-        <Control activeValue={mode} value="today" onClick={setMode}>
+        <Control
+          activeValue={mode}
+          value="today"
+          onClick={() => {
+            history.push('/dashboard/today')
+          }}
+        >
           Today
         </Control>
-        <Control activeValue={mode} value="week" onClick={setMode}>
+        <Control
+          activeValue={mode}
+          value="week"
+          onClick={() => {
+            history.push('/dashboard/week')
+          }}
+        >
           Week
         </Control>
         <div className="flex-1 border-b-2 border-gray-200 dark:border-gray-600" />
       </div>
-      {mode === 'today' ? <Today /> : <Week />}
+      <Switch>
+        <Route path="/dashboard/today">
+          <Today />
+        </Route>
+        <Route path="/dashboard/week">
+          <Week />
+        </Route>
+      </Switch>
       {addTaskControl.isVisible && (
         <div className="z-20 fixed bottom-0 right-0 p-4">
           <AddTaskButton onClick={addTaskControl.onAddIntent} />
