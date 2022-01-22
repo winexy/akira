@@ -5,6 +5,7 @@ import {TouchBackend} from 'react-dnd-touch-backend'
 import {ErrorBoundary, FallbackProps} from 'react-error-boundary'
 import {
   BrowserRouter as Router,
+  Redirect,
   Route,
   Switch,
   useHistory
