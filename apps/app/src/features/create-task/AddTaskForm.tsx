@@ -159,13 +159,9 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
         {isVisible && (
           <div
             ref={backdropRef}
-            className={clsx(
-              'flex flex-col',
-              'transition ease-in duration-75 backdrop-filter',
-              {
-                'z-20 fixed inset-0 bg-black dark:bg-dark-500 bg-opacity-60 dark:bg-opacity-60 backdrop-blur-sm': isVisible
-              }
-            )}
+            className={clsx('flex flex-col', 'transition ease-in duration-75', {
+              'z-20 fixed inset-0 bg-black dark:bg-dark-500 bg-opacity-60 dark:bg-opacity-60 backdrop-blur-sm': isVisible
+            })}
           >
             <div className="p-2 flex items-center justify-between">
               <button
