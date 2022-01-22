@@ -63,6 +63,7 @@ export const Header: React.FC<{className?: string}> = ({
           active:bg-gray-300
           focus:outline-none
           focus:bg-gray-200
+          dark:focus:bg-dark-500
         "
         onClick={() => toggleMenu()}
       >
