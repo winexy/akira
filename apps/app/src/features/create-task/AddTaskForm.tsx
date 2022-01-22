@@ -299,7 +299,14 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
               name="task-date"
               title="Schedule task"
               date={date}
-              fixedChildren={<DatePickerShortcut onPick={onDateChange} />}
+              fixedChildren={({hide}) => (
+                <DatePickerShortcut
+                  onPick={date => {
+                    hide()
+                    onDateChange(date)
+                  }}
+                />
+              )}
             >
               <DatePicker
                 date={date}
@@ -311,7 +318,14 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
               name="task-due-date"
               title="Set task due date"
               date={dueDate}
-              fixedChildren={<DatePickerShortcut onPick={onDueDateChange} />}
+              fixedChildren={({hide}) => (
+                <DatePickerShortcut
+                  onPick={date => {
+                    hide()
+                    onDueDateChange(date)
+                  }}
+                />
+              )}
             >
               <DatePicker
                 date={dueDate}
