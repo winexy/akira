@@ -270,7 +270,7 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                   </Button>
                   <TextArea
                     value={description}
-                    className="mt-4"
+                    className="mt-4 text-white"
                     placeholder="Add note"
                     onChange={onDescriptionChange}
                   />
