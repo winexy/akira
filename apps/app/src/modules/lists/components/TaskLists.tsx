@@ -93,7 +93,7 @@ const TaskListItem: React.FC<TaskListItemProps> = ({list, allowRemoval}) => {
           to={`/lists/${list.id}`}
           className={clsx(
             'flex items-center justify-between',
-            'bg-gray-700 dark:bg-dark-700 px-4 py-2',
+            'bg-zinc-700 dark:bg-dark-700 px-4 py-2',
             'rounded-md',
             'transition ease-in duration-150',
             'active:text-gray-400',
