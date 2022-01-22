@@ -66,7 +66,7 @@ export const TextArea: React.FC<Props> = ({
       ref={ref}
       style={{height}}
       className={clsx(
-        'w-full p-0 bg-transparent text-white focus:outline-none',
+        'w-full p-0 bg-transparent focus:outline-none',
         className
       )}
       value={localValue}
