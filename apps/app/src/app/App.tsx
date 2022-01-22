@@ -100,6 +100,9 @@ function App() {
           <Menu>
             <Switch>
               <Route path="/" exact>
+                <Redirect to="/dashboard/today" />
+              </Route>
+              <Route path="/dashboard/:type" exact>
                 <DashboardPage />
               </Route>
               <Route path="/tasks" exact>
