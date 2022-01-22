@@ -1,6 +1,6 @@
 {
   "name": "akira",
-  "version": "1.122.0",
+  "version": "1.122.1",
   "private": true,
   "scripts": {
     "prepare": "husky install",
