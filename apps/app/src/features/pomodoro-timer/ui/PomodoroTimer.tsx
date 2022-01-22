@@ -10,7 +10,7 @@ const Countdown: FC<{className: string}> = ({className}) => {
   return (
     <div
       className={clsx(
-        'relative flex justify-center items-center',
+        'flex justify-center items-center',
         'w-48 h-48 rounded-full text-indigo-500 dark:text-white bg-white dark:bg-dark-600',
         'shadow transition ease-in duration-150',
         'focus:outline-none',
