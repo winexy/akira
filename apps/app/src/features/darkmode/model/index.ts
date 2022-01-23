@@ -1,7 +1,8 @@
-import {app} from 'shared/lib/app-domain'
 import {forward} from 'effector'
+import {app} from 'shared/lib/app-domain'
+import {withPersist} from 'shared/lib/with-persist'
 
-export const $isDarkMode = app.createStore(false, {
+const $isDarkModeStore = app.createStore(false, {
   name: 'isDarkMode'
 })
 
@@ -15,30 +16,11 @@ const toggleDarkModeClassFx = app.createEffect((isDarkMode: boolean) => {
   }
 })
 
-const key = 'app:darkmode'
-
-export const initAppThemeFx = app.createEffect(() => {
-  return localStorage.getItem(key) === '1'
-})
-
-export const persistDarkModeFx = app.createEffect((isDarkMode: boolean) => {
-  if (isDarkMode) {
-    localStorage.setItem(key, '1')
-  } else {
-    localStorage.removeItem(key)
-  }
-})
-
 forward({
-  from: $isDarkMode,
+  from: $isDarkModeStore,
   to: toggleDarkModeClassFx
 })
 
-forward({
-  from: $isDarkMode,
-  to: persistDarkModeFx
-})
+export const $isDarkMode = withPersist($isDarkModeStore)
 
-$isDarkMode
-  .on(toggleDarkMode, isDarkMode => !isDarkMode)
-  .on(initAppThemeFx.doneData, (_, isDarkMode) => isDarkMode)
+$isDarkMode.on(toggleDarkMode, isDarkMode => !isDarkMode)

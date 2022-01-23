@@ -26,7 +26,7 @@ export const DarkModeControl: React.FC = () => {
   return (
     <>
       <div className="mt-2 px-4 w-full flex justify-between">
-        <span className="font-semibold text-lg ">Dark mode</span>
+        <span className="font-semibold text-lg">Dark mode</span>
         <Toggle isChecked={isDarkMode} onChange={toggleDarkMode} />
       </div>
       <ThemePreview />
