@@ -8,7 +8,6 @@ import {akira} from 'shared/api/akira'
 import {FirebaseAuthProvider, setupCloudMessaging} from 'shared/lib/firebase'
 import {HotkeyProvider} from 'modules/hotkeys/HotKeyContext'
 import {TaskQuery} from 'modules/tasks/config/index'
-import {initAppThemeFx} from 'features/darkmode/model/index'
 import './app/index.css'
 import App from './app/App'
 
@@ -32,8 +31,6 @@ function onAuthSuccess() {
   prefetchQueries()
   setupCloudMessaging()
 }
-
-initAppThemeFx()
 
 if (import.meta.env.PROD) {
   Sentry.init({
