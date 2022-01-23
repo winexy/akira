@@ -13,7 +13,9 @@ import {
   getDefaultKeyBinding,
   DefaultDraftBlockRenderMap,
   DraftEditorCommand,
-  ContentBlock
+  ContentBlock,
+  Editor,
+  EditorProps
 } from 'draft-js'
 import {convertFromHTML, convertToHTML} from 'draft-convert'
 import Immutable from 'immutable'
@@ -316,15 +318,16 @@ const plugins: Array<EditorPlugin> = [createMarkdownShortcutsPlugin()]
 
 export type KeyCommand = DraftEditorCommand | 'accent'
 
-function blockStyleFn(block: ContentBlock) {
+const blockStyleFn: EditorProps['blockStyleFn'] = (block): string => {
   const type = block.getType()
 
   switch (type) {
-    case BlockType.h1: {
+    case BlockType.h1:
       return 'editor-h1'
-    }
     case BlockType.h2:
       return 'editor-h2'
+    default:
+      return ''
   }
 }
 
