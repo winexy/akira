@@ -71,6 +71,7 @@ const SearchPage = lazy(() => import('pages/search'))
 const ReportsPage = lazy(() => import('pages/reports'))
 const PreferencesPage = lazy(() => import('pages/preferences'))
 const NotePage = lazy(() => import('pages/note'))
+const NotesPage = lazy(() => import('pages/notes'))
 const RecurrentTasksPage = lazy(() => import('pages/recurrent-tasks'))
 const PomodoroPage = lazy(() => import('pages/pomodoro'))
 
@@ -149,9 +150,14 @@ function App() {
                   <ListsPage />
                 </Suspense>
               </Route>
-              <Route path="/note">
+              <Route path="/notes/:uuid" exact>
                 <Suspense fallback={<LoadingView />}>
                   <NotePage />
+                </Suspense>
+              </Route>
+              <Route path="/notes" exact>
+                <Suspense fallback={<LoadingView />}>
+                  <NotesPage />
                 </Suspense>
               </Route>
               <Route path="/reports">
