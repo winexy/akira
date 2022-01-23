@@ -20,11 +20,11 @@ export const Toggle: React.FC<Props> = ({
       <div
         className={clsx(
           'w-14 h-8 p-1',
-          'rounded-full bg-gray-200 shadow-inner',
+          'rounded-full shadow-inner',
           'transition',
           {
             'bg-blue-500 active:bg-blue-600 dark:bg-blue-500 dark:active:bg-blue-600': isChecked,
-            'active:bg-gray-300': !isChecked
+            'bg-gray-200 active:bg-gray-300': !isChecked
           }
         )}
       >
