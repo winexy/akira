@@ -16,7 +16,7 @@ import {
   SearchIcon,
   DocumentTextIcon,
   RefreshIcon,
-  DocumentIcon
+  NewspaperIcon
 } from '@heroicons/react/solid'
 import {config} from 'shared/config'
 import {Tag} from 'modules/tags/components/Tag'
@@ -308,7 +308,7 @@ export const Menu: React.FC = ({children}) => {
             >
               Pomodoro
             </MenuItem>
-            <MenuItem to="/reports" Icon={DocumentTextIcon}>
+            <MenuItem to="/reports" Icon={NewspaperIcon}>
               Daily Report
             </MenuItem>
             <MenuItem to="/tasks" Icon={CollectionIcon}>
@@ -317,7 +317,7 @@ export const Menu: React.FC = ({children}) => {
             <MenuItem to="/recurrent-tasks" Icon={RefreshIcon}>
               Recurrent Tasks
             </MenuItem>
-            <MenuItem to="/notes" Icon={DocumentIcon}>
+            <MenuItem to="/notes" Icon={DocumentTextIcon}>
               Notes
             </MenuItem>
             <MenuItem to="/preferences" Icon={AdjustmentsIcon}>
