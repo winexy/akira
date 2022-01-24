@@ -19,6 +19,7 @@ import {
 import {api} from 'shared/api'
 import isNil from 'lodash/isNil'
 import isError from 'lodash/isError'
+import {EditableHeading} from 'shared/ui/editable-heading'
 
 const TextEditor: React.FC = () => {
   const editor = useEditorContext()
@@ -70,6 +71,10 @@ const NotePage: React.FC = () => {
 
   useNotePageTitle(noteQuery.data)
 
+  function onTitleChange(title: string) {
+    globalThis.console.info(title)
+  }
+
   if (noteQuery.isLoading) {
     return <PageView className="px-4">...fetching</PageView>
   }
@@ -85,7 +90,11 @@ const NotePage: React.FC = () => {
 
   return (
     <PageView withBackNavigation className="py-10 px-24">
-      <h1 className="text-6xl font-bold">{noteQuery.data.title}</h1>
+      <EditableHeading
+        className="text-6xl"
+        value={noteQuery.data.title}
+        onChange={onTitleChange}
+      />
       <TextEditorProvider>
         <div className="mt-8 text-xl">
           <TextEditor />
