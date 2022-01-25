@@ -118,8 +118,8 @@
     "prettier": "2.2.1",
     "semantic-release": "^17.4.2",
     "tailwind-caret-color": "^1.1.0",
-    "tailwindcss": "^3.0.15",
-    "vite": "^2.1.5"
+    "tailwindcss": "3.0.16",
+    "vite": "2.7.13"
   },
   "config": {
     "commitizen": {
