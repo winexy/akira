@@ -44,6 +44,10 @@ export const TextArea: React.FC<Props> = ({
   }
 
   useEffect(() => {
+    setLocalValue(value)
+  }, [value])
+
+  useEffect(() => {
     syncHeight()
   }, [localValue])
 
