@@ -11,17 +11,17 @@ export function useAddTodoMutation(taskId: TaskId) {
   const queryClient = useQueryClient()
 
   return useMutation(
-    (Todoitle: string) => {
+    (todoTitle: string) => {
       return akira.checklist.addTodo({
         taskId,
-        title: Todoitle
+        title: todoTitle
       })
     },
     {
-      onMutate(Todoitle) {
+      onMutate(todoTitle) {
         const todo: Todo = {
-          id: uniqueId(Todoitle),
-          title: Todoitle,
+          id: uniqueId(todoTitle),
+          title: todoTitle,
           is_completed: false,
           task_id: taskId
         }
@@ -31,6 +31,47 @@ export function useAddTodoMutation(taskId: TaskId) {
           queryClient,
           draft => {
             draft.checklist.push(todo)
+          }
+        )
+      },
+      onSuccess() {
+        queryClient.invalidateQueries(TaskQuery.One(taskId))
+      },
+      onError(_, __, context: any) {
+        TaskCacheUtils.rollbackOptimisticUpdate(taskId, queryClient, context)
+      }
+    }
+  )
+}
+
+export function useBatchAddTodoMutation(taskId: TaskId) {
+  const queryClient = useQueryClient()
+
+  return useMutation(
+    async (todos: Array<string>) => {
+      // eslint-disable-next-line no-restricted-syntax
+      for await (const title of todos) {
+        await akira.checklist.addTodo({taskId, title})
+      }
+    },
+    {
+      onMutate(todos) {
+        const optimisticTodos = todos.map(
+          (todo): Todo => ({
+            id: uniqueId(todo),
+            title: todo,
+            is_completed: false,
+            task_id: taskId
+          })
+        )
+
+        return TaskCacheUtils.writeOptimisticUpdate(
+          taskId,
+          queryClient,
+          draft => {
+            optimisticTodos.forEach(todo => {
+              draft.checklist.push(todo)
+            })
           }
         )
       },

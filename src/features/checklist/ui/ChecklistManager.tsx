@@ -1,9 +1,16 @@
 import isEmpty from 'lodash/fp/isEmpty'
-import React, {FormEventHandler, useRef, useState} from 'react'
+import React, {
+  ClipboardEventHandler,
+  FormEventHandler,
+  useRef,
+  useState
+} from 'react'
 import {ApiTask} from 'modules/tasks/types.d'
 import clsx from 'clsx'
+import compact from 'lodash/compact'
+import {Spin} from 'shared/ui/spin'
 import {Checklist} from './Checklist'
-import {useAddTodoMutation} from '../model'
+import {useAddTodoMutation, useBatchAddTodoMutation} from '../model'
 
 type Props = {
   task: ApiTask
@@ -15,6 +22,7 @@ export const ChecklistManager: React.FC<Props> = ({task, onFocus, onBlur}) => {
   const [todoTitle, setTodoTitle] = useState('')
   const todoInputRef = useRef<HTMLInputElement | null>(null)
   const addTodoMutation = useAddTodoMutation(task.id)
+  const batchAddTodoMutation = useBatchAddTodoMutation(task.id)
 
   const onSubmit: FormEventHandler = event => {
     event.preventDefault()
@@ -25,9 +33,35 @@ export const ChecklistManager: React.FC<Props> = ({task, onFocus, onBlur}) => {
     }
   }
 
+  const onPaste: ClipboardEventHandler<HTMLInputElement> = event => {
+    const content = event.clipboardData.getData('text/plain')
+    const items = compact(content.split(/\n/g))
+
+    if (items.length === 1) {
+      return
+    }
+
+    batchAddTodoMutation.mutateAsync(items)
+
+    requestAnimationFrame(() => {
+      setTodoTitle('')
+    })
+  }
+
   return (
     <>
-      <h2 className="mt-2 px-4 font-bold text-2xl">Checklist</h2>
+      <div className="mt-2 px-4 flex items-center">
+        <h2
+          className={clsx('font-bold text-2xl', {
+            'animate-pulse': batchAddTodoMutation.isLoading
+          })}
+        >
+          Checklist
+        </h2>
+        {batchAddTodoMutation.isLoading && (
+          <Spin className="ml-auto w-5 h-5 text-gray-300" />
+        )}
+      </div>
       <Checklist taskId={task.id} checklist={task.checklist} />
       <section className="px-4">
         <form onSubmit={onSubmit}>
@@ -44,6 +78,7 @@ export const ChecklistManager: React.FC<Props> = ({task, onFocus, onBlur}) => {
             onInput={e => setTodoTitle((e.target as HTMLInputElement).value)}
             onFocus={onFocus}
             onBlur={onBlur}
+            onPaste={onPaste}
             enterKeyHint="send"
           />
         </form>
