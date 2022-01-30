@@ -169,12 +169,7 @@ const TaskPage: React.FC = () => {
         </TaskActionList.Item>
       </TaskActionList>
       <div id="schedule-datepicker" />
-      <BottomSheet.Standalone name="repeat-patterns">
-        <div className="text-center py-3">
-          <h2 className="font-semibold text-2xl">Repeat</h2>
-        </div>
-        <Recurrence taskId={task.id} />
-      </BottomSheet.Standalone>
+      <Recurrence taskId={task.id} />
       {task && (
         <ChecklistManager
           task={task}

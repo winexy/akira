@@ -11,6 +11,8 @@ export function matchRecurrenceType(type: RecurrenceEnum) {
       return 'Monthly'
     case RecurrenceEnum.Weekdays:
       return 'Weekdays'
+    case RecurrenceEnum.Custom:
+      return 'Custom'
     default:
       return exhaustiveCheck(type)
   }
