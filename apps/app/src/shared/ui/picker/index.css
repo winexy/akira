@@ -1,0 +1,16 @@
+.rmc-picker-indicator {
+  @apply border-gray-100 dark:border-dark-500;
+}
+
+.dark .rmc-picker-mask {
+  background-image: linear-gradient(
+      to bottom,
+      rgba(46, 46, 46, 1),
+      rgba(46, 46, 46, 0.8)
+    ),
+    linear-gradient(to top, rgba(46, 46, 46, 1), rgba(46, 46, 46, 0.8));
+}
+
+.rmc-picker-item {
+  @apply text-gray-700 dark:text-white;
+}
