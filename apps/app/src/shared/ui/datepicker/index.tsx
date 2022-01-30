@@ -1,10 +1,21 @@
 import React from 'react'
 import clsx from 'clsx'
-import ReactDatePicker from 'react-datepicker'
+import ReactDatePicker, {registerLocale} from 'react-datepicker'
+import en from 'date-fns/locale/en-US'
 import ChevronLeftIcon from '@heroicons/react/solid/ChevronLeftIcon'
 import ChevronRightIcon from '@heroicons/react/solid/ChevronRightIcon'
 import format from 'date-fns/format'
 import './index.css'
+
+const locale = {
+  ...en,
+  options: {
+    ...en.options,
+    weekStartsOn: 1
+  }
+}
+
+registerLocale('en', locale)
 
 type Props = {
   date?: Date | null
@@ -55,6 +66,7 @@ export const DatePicker: React.FC<Props> = ({
       monthsShown={1}
       minDate={minDate}
       maxDate={maxDate}
+      locale="en"
       className={clsx('flex flex-col justify-center', className)}
       renderCustomHeader={params => {
         return (
