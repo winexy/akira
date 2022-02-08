@@ -6,7 +6,7 @@
 import Editor from 'draft-js-plugins-editor'
 import React, {useEffect} from 'react'
 import {PageView} from 'shared/ui/page-view'
-import {useQuery} from 'react-query'
+import {useQuery, useMutation} from 'react-query'
 import {useParams} from 'react-router'
 import {
   customStyleMap,
@@ -14,15 +14,23 @@ import {
   TextEditorProvider,
   blockRenderMap,
   plugins,
-  blockStyleFn
+  blockStyleFn,
+  useEditor
 } from 'shared/lib/editor'
 import {api} from 'shared/api'
 import isNil from 'lodash/isNil'
 import isError from 'lodash/isError'
+import debounce from 'lodash/debounce'
 import {EditableHeading} from 'shared/ui/editable-heading'
+import {EditorState} from 'draft-js'
 
-const TextEditor: React.FC = () => {
+const TextEditor: React.FC<{onChange(): void}> = ({onChange}) => {
   const editor = useEditorContext()
+
+  function handleChange(editorState: EditorState) {
+    editor.onChange(editorState)
+    onChange()
+  }
 
   return (
     <Editor
@@ -33,7 +41,7 @@ const TextEditor: React.FC = () => {
       handleKeyCommand={editor.handleKeyCommand}
       keyBindingFn={editor.handlerKeyBinding}
       editorState={editor.state}
-      onChange={editor.onChange}
+      onChange={handleChange}
     />
   )
 }
@@ -44,6 +52,11 @@ type Note = {
   content: string
   // eslint-disable-next-line camelcase
   author_uid: string
+}
+
+type NotePatch = {
+  title?: string
+  content?: string
 }
 
 function useNotePageTitle(note: Note | undefined) {
@@ -65,15 +78,51 @@ function useNotePageTitle(note: Note | undefined) {
 
 const NotePage: React.FC = () => {
   const {uuid} = useParams<{uuid: string}>()
-  const noteQuery = useQuery(['notes', uuid], () =>
-    api.get<Note>(`notes/${uuid}`).then(res => res.data)
+  const editor = useEditor()
+  const noteQuery = useQuery(
+    ['notes', uuid],
+    () => api.get<Note>(`notes/${uuid}`).then(res => res.data),
+    {
+      onSuccess(note) {
+        editor.hydrate(note.content)
+      }
+    }
+  )
+
+  const patchNoteMutation = useMutation(
+    ({noteId, patch}: {noteId: string; patch: NotePatch}) => {
+      return api.patch(`notes/${noteId}`, patch).then(res => res.data)
+    }
   )
 
   useNotePageTitle(noteQuery.data)
 
   function onTitleChange(title: string) {
-    globalThis.console.info(title)
+    const note = noteQuery.data
+
+    if (isNil(note)) {
+      globalThis.console.warn('note is nil')
+      return
+    }
+
+    patchNoteMutation.mutate({noteId: note.uuid, patch: {title}})
   }
+
+  const onContentChange = debounce(() => {
+    const note = noteQuery.data
+
+    if (isNil(note)) {
+      globalThis.console.warn('note is nil')
+      return
+    }
+
+    const html = editor.toHtml()
+
+    patchNoteMutation.mutate({
+      noteId: note.uuid,
+      patch: {content: html}
+    })
+  }, 3000)
 
   if (noteQuery.isLoading) {
     return <PageView className="px-4">...fetching</PageView>
@@ -95,11 +144,11 @@ const NotePage: React.FC = () => {
         value={noteQuery.data.title}
         onChange={onTitleChange}
       />
-      <TextEditorProvider>
-        <div className="mt-8 text-xl">
-          <TextEditor />
-        </div>
-      </TextEditorProvider>
+      <div className="mt-8 text-xl">
+        <TextEditorProvider editor={editor}>
+          <TextEditor onChange={onContentChange} />
+        </TextEditorProvider>
+      </div>
     </PageView>
   )
 }
