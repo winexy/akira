@@ -13,7 +13,6 @@ import {
   getDefaultKeyBinding,
   DefaultDraftBlockRenderMap,
   DraftEditorCommand,
-  ContentBlock,
   Editor,
   EditorProps
 } from 'draft-js'
@@ -69,7 +68,7 @@ const customStyleMap = {
   }
 }
 
-const stateToHTML = convertToHTML<InlineStyle, BlockType>({
+export const stateToHTML = convertToHTML<InlineStyle, BlockType>({
   styleToHTML: style => {
     switch (style) {
       case InlineStyle.BOLD:
@@ -102,7 +101,7 @@ const stateToHTML = convertToHTML<InlineStyle, BlockType>({
   }
 })
 
-const HTMLtoState = convertFromHTML<DOMStringMap, BlockType>({
+export const HTMLtoState = convertFromHTML<DOMStringMap, BlockType>({
   htmlToStyle: (nodeName, node, currentStyle) => {
     if (nodeName === 'strong') {
       return currentStyle.add(InlineStyle.BOLD)
@@ -144,6 +143,10 @@ function useEditor(html?: string) {
   const toggleBlockType = React.useCallback((blockType: BlockType) => {
     console.log('toggleBlockType', blockType)
     setState(currentState => RichUtils.toggleBlockType(currentState, blockType))
+  }, [])
+
+  const hydrate = React.useCallback((html: string) => {
+    setState(EditorState.createWithContent(HTMLtoState(html)))
   }, [])
 
   const currentBlockType = React.useMemo(() => {
@@ -267,6 +270,7 @@ function useEditor(html?: string) {
       handleKeyCommand,
       handlerKeyBinding,
       toHtml,
+      hydrate,
       onChange: setState
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -288,9 +292,10 @@ function useEditorContext() {
   return context
 }
 
-const TextEditorProvider: React.FC = ({children}) => {
-  const editor = useEditor(sessionStorage.getItem('editor') ?? '')
-
+const TextEditorProvider: React.FC<{editor: EditorAPI}> = ({
+  editor,
+  children
+}) => {
   return (
     <TextEditorContext.Provider value={editor}>
       {children}
