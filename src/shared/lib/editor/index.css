@@ -1,0 +1,21 @@
+.DraftEditor-editorContainer {
+  @apply p-4;
+}
+
+.editor-h1 {
+  @apply text-5xl font-semibold;
+}
+
+.editor-blockquote {
+  @apply border-l-4 border-gray-300 bg-gray-100;
+  @apply pl-4;
+  @apply first-of-type:pt-4 last-of-type:pb-4;
+}
+
+.public-DraftStyleDefault-ul {
+  @apply list-inside list-disc;
+}
+
+.editor-list > div {
+  @apply inline;
+}

@@ -21,6 +21,7 @@ import Immutable from 'immutable'
 // @ts-expect-error no type anotations
 import createMarkdownShortcutsPlugin from 'draft-js-markdown-shortcuts-plugin'
 import {EditorPlugin} from 'draft-js-plugins-editor'
+import './index.css'
 
 enum InlineStyle {
   BOLD = 'BOLD',
@@ -303,17 +304,9 @@ const TextEditorProvider: React.FC<{editor: EditorAPI}> = ({
   )
 }
 
-const Heading: React.FC = props => {
-  return <div style={{fontSize: 48}}>{props.children}</div>
-}
-
 const customBlockRenderMap = Immutable.Map({
   [BlockType.cite]: {
     element: 'cite'
-  },
-  [BlockType.h1]: {
-    element: 'h1',
-    wrapper: <Heading />
   }
 })
 
@@ -331,6 +324,10 @@ const blockStyleFn: EditorProps['blockStyleFn'] = (block): string => {
       return 'editor-h1'
     case BlockType.h2:
       return 'editor-h2'
+    case BlockType.blockquote:
+      return 'editor-blockquote'
+    case BlockType.list:
+      return 'editor-list'
     default:
       return ''
   }
