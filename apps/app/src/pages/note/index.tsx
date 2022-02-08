@@ -140,7 +140,7 @@ const NotePage: React.FC = () => {
   return (
     <PageView withBackNavigation className="py-10 px-24">
       <EditableHeading
-        className="text-6xl"
+        className="text-6xl font-bold"
         value={noteQuery.data.title}
         onChange={onTitleChange}
       />
