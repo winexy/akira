@@ -34,7 +34,7 @@ export const EditableHeading: React.FC<Props> = ({
       className={clsx(
         `
         px-4 
-        font-semibold text-2xl 
+        font-semibold 
         focus:outline-none 
         focus:text-gray-500
       `,
