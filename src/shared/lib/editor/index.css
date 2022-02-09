@@ -1,5 +1,14 @@
 .DraftEditor-editorContainer {
-  @apply p-4;
+  @apply px-4 py-2 sm:py-4;
+  @apply dark:text-white;
+
+  --code-style-color: theme('colors.gray.800');
+  --code-style-bg: theme('colors.gray.100');
+}
+
+.dark .DraftEditor-editorContainer {
+  --code-style-color: theme('colors.white');
+  --code-style-bg: theme('colors.dark.300');
 }
 
 .editor-h1 {
@@ -7,9 +16,20 @@
 }
 
 .editor-blockquote {
-  @apply border-l-4 border-gray-300 bg-gray-100;
-  @apply pl-4;
-  @apply first-of-type:pt-4 last-of-type:pb-4;
+  @apply border-l-4 border-gray-300 dark:border-dark-300;
+  @apply pl-4 pb-4;
+}
+
+.editor-blockquote + .editor-blockquote {
+  /* @apply pb-0; */
+}
+
+:not(.editor-blockquote) + .editor-blockquote {
+  @apply mt-4 pt-4;
+}
+
+.editor-blockquote + :not(.editor-blockquote) {
+  @apply mt-4;
 }
 
 .public-DraftStyleDefault-ul {
@@ -18,4 +38,9 @@
 
 .editor-list > div {
   @apply inline;
+}
+
+.public-DraftStyleDefault-pre {
+  @apply bg-gray-100 first-letter:dark:bg-dark-500;
+  @apply p-4 rounded-md;
 }

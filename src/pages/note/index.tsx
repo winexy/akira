@@ -138,13 +138,13 @@ const NotePage: React.FC = () => {
   }
 
   return (
-    <PageView withBackNavigation className="py-10 px-24">
+    <PageView withBackNavigation className="sm:py-10 sm:px-24">
       <EditableHeading
-        className="text-6xl font-bold"
+        className="text-4xl sm:text-6xl font-bold"
         value={noteQuery.data.title}
         onChange={onTitleChange}
       />
-      <div className="mt-8 text-xl">
+      <div className="mt-2 sm:mt-8 text-xl">
         <TextEditorProvider editor={editor}>
           <TextEditor onChange={onContentChange} />
         </TextEditorProvider>

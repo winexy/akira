@@ -27,7 +27,8 @@ enum InlineStyle {
   BOLD = 'BOLD',
   ITALIC = 'ITALIC',
   UNDERLINE = 'UNDERLINE',
-  ACCENT = 'ACCENT' // код нашего произвольного стиля
+  ACCENT = 'ACCENT', // код нашего произвольного стиля
+  CODE = 'CODE'
 }
 
 enum BlockType {
@@ -66,6 +67,13 @@ const customStyleMap = {
   },
   [BlockType.h2]: {
     color: 'red'
+  },
+  [InlineStyle.CODE]: {
+    backgroundColor: 'var(--code-style-bg)',
+    color: 'var(--code-style-color)',
+    borderRadius: 6,
+    padding: '2px 8px',
+    fontWeight: 600
   }
 }
 
