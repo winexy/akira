@@ -42,6 +42,6 @@
 }
 
 .public-DraftStyleDefault-pre {
-  @apply bg-gray-100 first-letter:dark:bg-dark-500;
+  @apply bg-gray-100 dark:bg-dark-500;
   @apply p-4 rounded-md;
 }
