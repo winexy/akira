@@ -5,9 +5,7 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import Editor from 'draft-js-plugins-editor'
 import React, {useEffect} from 'react'
-import {PageView} from 'shared/ui/page-view'
 import {useQuery, useMutation} from 'react-query'
-import {useParams} from 'react-router'
 import {
   customStyleMap,
   useEditorContext,
@@ -20,20 +18,22 @@ import {
 import {api} from 'shared/api'
 import isNil from 'lodash/isNil'
 import isError from 'lodash/isError'
-import debounce from 'lodash/debounce'
 import {EditableHeading} from 'shared/ui/editable-heading'
 import {EditorState} from 'draft-js'
+import clsx from 'clsx'
 
 const TextEditor: React.FC<{onChange(): void}> = ({onChange}) => {
   const editor = useEditorContext()
 
   function handleChange(editorState: EditorState) {
+    console.log('handleChange')
     editor.onChange(editorState)
     onChange()
   }
 
   return (
     <Editor
+      ref={editor.ref}
       plugins={plugins}
       blockRenderMap={blockRenderMap}
       customStyleMap={customStyleMap}
@@ -76,8 +76,14 @@ function useNotePageTitle(note: Note | undefined) {
   }, [note])
 }
 
-const NotePage: React.FC = () => {
-  const {uuid} = useParams<{uuid: string}>()
+const f = ({noteId, patch}: {noteId: string; patch: NotePatch}) => {
+  return api.patch(`notes/${noteId}`, patch).then(res => res.data)
+}
+
+const NotePage: React.FC<{uuid: string; className: string}> = ({
+  uuid,
+  className
+}) => {
   const editor = useEditor()
   const noteQuery = useQuery(
     ['notes', uuid],
@@ -89,11 +95,7 @@ const NotePage: React.FC = () => {
     }
   )
 
-  const patchNoteMutation = useMutation(
-    ({noteId, patch}: {noteId: string; patch: NotePatch}) => {
-      return api.patch(`notes/${noteId}`, patch).then(res => res.data)
-    }
-  )
+  const patchNoteMutation = useMutation(f)
 
   useNotePageTitle(noteQuery.data)
 
@@ -108,48 +110,54 @@ const NotePage: React.FC = () => {
     patchNoteMutation.mutate({noteId: note.uuid, patch: {title}})
   }
 
-  const onContentChange = debounce(() => {
-    const note = noteQuery.data
-
-    if (isNil(note)) {
+  const onContentChange = () => {
+    if (isNil(uuid)) {
       globalThis.console.warn('note is nil')
       return
     }
 
     const html = editor.toHtml()
 
+    console.log({html})
+
     patchNoteMutation.mutate({
-      noteId: note.uuid,
+      noteId: uuid,
       patch: {content: html}
     })
-  }, 3000)
+  }
 
   if (noteQuery.isLoading) {
-    return <PageView className="px-4">...fetching</PageView>
+    return <div className="px-4 py-6">...fetching</div>
   }
 
   if (noteQuery.isError || isNil(noteQuery.data)) {
     return (
-      <PageView className="px-4">
+      <div className="px-4 py-6">
         Failed to load note.{' '}
         {isError(noteQuery.error) && noteQuery.error.message}
-      </PageView>
+      </div>
     )
   }
 
   return (
-    <PageView withBackNavigation className="sm:py-10 sm:px-24">
-      <EditableHeading
-        className="text-4xl sm:text-6xl font-bold"
-        value={noteQuery.data.title}
-        onChange={onTitleChange}
-      />
-      <div className="mt-2 sm:mt-8 text-xl">
+    <div className={clsx('py-6 flex flex-col', className)}>
+      <div className="px-4">
+        <EditableHeading
+          className="text-4xl sm:text-6xl font-bold"
+          value={noteQuery.data.title}
+          onChange={onTitleChange}
+        />
+      </div>
+      {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+      <div
+        className="flex-1 pt-2 sm:pt-8 px-4 text-xl"
+        onClick={() => editor.ref.current?.focus()}
+      >
         <TextEditorProvider editor={editor}>
           <TextEditor onChange={onContentChange} />
         </TextEditorProvider>
       </div>
-    </PageView>
+    </div>
   )
 }
 
