@@ -24,6 +24,7 @@
   /* @apply pb-0; */
 }
 
+.editor-blockquote:first-child,
 :not(.editor-blockquote) + .editor-blockquote {
   @apply mt-4 pt-4;
 }

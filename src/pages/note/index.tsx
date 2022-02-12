@@ -4,8 +4,8 @@
 /* eslint-disable jsx-a11y/heading-has-content */
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import Editor from 'draft-js-plugins-editor'
-import React, {useEffect} from 'react'
-import {useQuery, useMutation} from 'react-query'
+import React, {useEffect, useRef} from 'react'
+import {useQuery, useMutation, useQueryClient} from 'react-query'
 import {
   customStyleMap,
   useEditorContext,
@@ -21,6 +21,7 @@ import isError from 'lodash/isError'
 import {EditableHeading} from 'shared/ui/editable-heading'
 import {EditorState} from 'draft-js'
 import clsx from 'clsx'
+import debouncePromise from 'debounce-promise'
 
 const TextEditor: React.FC<{onChange(): void}> = ({onChange}) => {
   const editor = useEditorContext()
@@ -76,15 +77,20 @@ function useNotePageTitle(note: Note | undefined) {
   }, [note])
 }
 
-const f = ({noteId, patch}: {noteId: string; patch: NotePatch}) => {
-  return api.patch(`notes/${noteId}`, patch).then(res => res.data)
-}
+const patchNote = debouncePromise(
+  ({noteId, patch}: {noteId: string; patch: NotePatch}) => {
+    return api.patch(`notes/${noteId}`, patch).then(res => res.data)
+  },
+  5000
+)
 
 const NotePage: React.FC<{uuid: string; className: string}> = ({
   uuid,
   className
 }) => {
   const editor = useEditor()
+  const queryClient = useQueryClient()
+  const prevHtmlRef = useRef('')
   const noteQuery = useQuery(
     ['notes', uuid],
     () => api.get<Note>(`notes/${uuid}`).then(res => res.data),
@@ -95,7 +101,11 @@ const NotePage: React.FC<{uuid: string; className: string}> = ({
     }
   )
 
-  const patchNoteMutation = useMutation(f)
+  const patchNoteMutation = useMutation(patchNote, {
+    onSuccess() {
+      queryClient.invalidateQueries(['notes', uuid])
+    }
+  })
 
   useNotePageTitle(noteQuery.data)
 
@@ -118,7 +128,11 @@ const NotePage: React.FC<{uuid: string; className: string}> = ({
 
     const html = editor.toHtml()
 
-    console.log({html})
+    if (prevHtmlRef.current === html) {
+      return
+    }
+
+    prevHtmlRef.current = html
 
     patchNoteMutation.mutate({
       noteId: uuid,
