@@ -22,6 +22,8 @@ import {EditableHeading} from 'shared/ui/editable-heading'
 import {EditorState} from 'draft-js'
 import clsx from 'clsx'
 import debouncePromise from 'debounce-promise'
+import ContentLoader from 'react-content-loader'
+import {useShimmerColors} from 'shared/ui/shimmer'
 
 const TextEditor: React.FC<{onChange(): void}> = ({onChange}) => {
   const editor = useEditorContext()
@@ -140,8 +142,28 @@ const NotePage: React.FC<{uuid: string; className: string}> = ({
     })
   }
 
+  const {backgroundColor, foregroundColor} = useShimmerColors()
+
   if (noteQuery.isLoading) {
-    return <div className="px-4 py-6">...fetching</div>
+    return (
+      <div className="px-8 py-6 w-full text-left">
+        <ContentLoader
+          speed={2}
+          width="100%"
+          height="100%"
+          backgroundColor={backgroundColor}
+          foregroundColor={foregroundColor}
+        >
+          <rect x="0" y="0" width="360" height="60" rx="8" ry="8" />
+          <rect x="0" y="92" width="520" height="40" rx="8" ry="8" />
+          <rect x="0" y="142" width="400" height="40" rx="8" ry="8" />
+          <rect x="0" y="192" width="340" height="40" rx="8" ry="8" />
+          <rect x="0" y="242" width="80%" height="160" rx="8" ry="8" />
+          <rect x="0" y="412" width="380" height="40" rx="8" ry="8" />
+          <rect x="0" y="462" width="340" height="40" rx="8" ry="8" />
+        </ContentLoader>
+      </div>
+    )
   }
 
   if (noteQuery.isError || isNil(noteQuery.data)) {
