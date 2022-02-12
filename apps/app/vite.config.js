@@ -1,8 +1,8 @@
 import {defineConfig} from 'vite'
+import react from '@vitejs/plugin-react'
 import {readFileSync} from 'fs'
 import pkg from './package.json'
 import alias from './config/alias'
-import reactRefresh from '@vitejs/plugin-react-refresh'
 
 function GetServerConfig() {
   if (process.env.NODE_ENV !== 'development') {
@@ -27,5 +27,5 @@ export default defineConfig({
   define: {
     __VERSION__: JSON.stringify(pkg.version)
   },
-  plugins: [reactRefresh()]
+  plugins: [react()]
 })
