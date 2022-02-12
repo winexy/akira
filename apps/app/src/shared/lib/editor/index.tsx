@@ -4,7 +4,7 @@
 /* eslint-disable jsx-a11y/heading-has-content */
 /* eslint-disable  */
 
-import React from 'react'
+import React, {useRef} from 'react'
 
 import {
   EditorState,
@@ -20,7 +20,7 @@ import {convertFromHTML, convertToHTML} from 'draft-convert'
 import Immutable from 'immutable'
 // @ts-expect-error no type anotations
 import createMarkdownShortcutsPlugin from 'draft-js-markdown-shortcuts-plugin'
-import {EditorPlugin} from 'draft-js-plugins-editor'
+import PluginEditor, {EditorPlugin} from 'draft-js-plugins-editor'
 import './index.css'
 
 enum InlineStyle {
@@ -93,7 +93,6 @@ export const stateToHTML = convertToHTML<InlineStyle, BlockType>({
     }
   },
   blockToHTML: block => {
-    console.log(block)
     switch (block.type) {
       case BlockType.h1:
         return <h1 />
@@ -102,7 +101,6 @@ export const stateToHTML = convertToHTML<InlineStyle, BlockType>({
     }
   },
   entityToHTML: (entity, originalText) => {
-    console.log({entity, originalText})
     if (entity.type === EntityType.link) {
       return <a href={entity.data.href}>{originalText}</a>
     }
@@ -148,9 +146,9 @@ function useEditor(html?: string) {
       ? EditorState.createWithContent(HTMLtoState(html))
       : EditorState.createEmpty()
   )
+  const ref = useRef<PluginEditor>(null)
 
   const toggleBlockType = React.useCallback((blockType: BlockType) => {
-    console.log('toggleBlockType', blockType)
     setState(currentState => RichUtils.toggleBlockType(currentState, blockType))
   }, [])
 
@@ -167,7 +165,6 @@ function useEditor(html?: string) {
   }, [state])
 
   const toggleInlineStyle = React.useCallback((inlineStyle: InlineStyle) => {
-    console.log('toggleInlineStyle', inlineStyle)
     setState(currentState =>
       RichUtils.toggleInlineStyle(currentState, inlineStyle)
     )
@@ -186,7 +183,6 @@ function useEditor(html?: string) {
       data: Record<string, string>,
       mutability: DraftEntityMutability
     ) => {
-      console.log('addEntity', entityType)
       setState(currentState => {
         /* Получаем текущий контент */
         const contentState = currentState.getCurrentContent()
@@ -215,14 +211,12 @@ function useEditor(html?: string) {
 
   const addLink = React.useCallback(
     href => {
-      console.log('addLine', href)
       addEntity(EntityType.link, {href}, 'MUTABLE')
     },
     [addEntity]
   )
 
   const setEntityData = React.useCallback((entityKey, data) => {
-    console.log('setEntityDate', entityKey)
     setState(currentState => {
       /* Получаем текущий контент */
       const content = currentState.getCurrentContent()
@@ -235,7 +229,6 @@ function useEditor(html?: string) {
 
   const handleKeyCommand = React.useCallback(
     (command: KeyCommand, editorState: EditorState) => {
-      console.log('handleKeyCommand', command)
       const newState = RichUtils.handleKeyCommand(editorState, command)
 
       if (command === 'accent') {
@@ -269,6 +262,7 @@ function useEditor(html?: string) {
 
   return React.useMemo(
     () => ({
+      ref,
       state,
       toggleBlockType,
       currentBlockType,
