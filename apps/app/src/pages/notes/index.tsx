@@ -34,7 +34,10 @@ const Notes: FC = () => {
     <PageView className="flex-1 grid grid-cols-12">
       <div className="col-span-3 h-full px-2 border-r border-t dark:border-dark-500">
         <div className="mt-4 px-2 flex justify-between">
-          <h1 className="font-bold text-3xl">All notes</h1>
+          <h1 className="flex items-center font-bold text-3xl">
+            <DocumentTextIcon className="mr-2" width={28} height={28} />
+            All notes
+          </h1>
           <button
             disabled={createEmptyNoteMutation.isLoading}
             className={clsx(
@@ -52,7 +55,7 @@ const Notes: FC = () => {
         </div>
         {isEmpty(notes) && <Empty message="You haven't created any note" />}
         {Array.isArray(notes) && (
-          <ul className="mt-4 space-y-1">
+          <ul className="mt-4">
             {notes.map(note => (
               <li key={note.uuid}>
                 <button
@@ -66,8 +69,6 @@ const Notes: FC = () => {
                   )}
                   onClick={() => setNoteUUID(note.uuid)}
                 >
-                  <DocumentTextIcon className="mr-2" width={24} height={24} />
-
                   {note.title}
                 </button>
               </li>
