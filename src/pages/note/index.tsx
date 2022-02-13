@@ -83,8 +83,14 @@ function useNotePageTitle(note: Note | undefined) {
   }, [note])
 }
 
+const createDebugger = (tag: string) => (...args: any[]) =>
+  console.debug(`[${tag}]`, ...args)
+
+const debug = createDebugger('editor')
+
 const patchNote = debouncePromise(
   ({noteId, patch}: {noteId: string; patch: NotePatch}) => {
+    debug('patch-note', noteId, patch)
     return api.patch(`notes/${noteId}`, patch).then(res => res.data)
   },
   1000,
@@ -104,6 +110,7 @@ const NotePage: React.FC<{uuid: string; className: string}> = ({
     () => api.get<Note>(`notes/${uuid}`).then(res => res.data),
     {
       onSuccess(note) {
+        debug('success query, hydrate content')
         editor.hydrate(note.content)
       },
     },
@@ -113,6 +120,7 @@ const NotePage: React.FC<{uuid: string; className: string}> = ({
     const content = noteQuery.data?.content
 
     if (noteQuery.isFetched && isString(content)) {
+      debug('hydrate prefetched content')
       editor.hydrate(content)
     }
   }, [])
@@ -141,6 +149,8 @@ const NotePage: React.FC<{uuid: string; className: string}> = ({
     if (isNull(editorState.getLastChangeType())) {
       return
     }
+
+    debug('call patch mutation')
 
     const html = editor.toHtml(editorState)
 
