@@ -256,9 +256,9 @@ function useEditor(html?: string) {
     return getDefaultKeyBinding(e)
   }, [])
 
-  const toHtml = React.useCallback(() => {
+  const toHtml = React.useCallback((state: EditorState) => {
     return stateToHTML(state.getCurrentContent())
-  }, [state])
+  }, [])
 
   return React.useMemo(
     () => ({
