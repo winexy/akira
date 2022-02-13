@@ -44,7 +44,7 @@ export const AddTaskButton: React.FC<NativeButtonProps> = ({onClick}) => {
               active:scale-110
               active:shadow-md
               focus:outline-none
-          `
+          `,
           )}
           onClick={onClick}
         >

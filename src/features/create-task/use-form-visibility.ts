@@ -3,7 +3,7 @@ import {HotKey} from 'modules/hotkeys/HotKey'
 import {useHotkey} from 'modules/hotkeys/HotKeyContext'
 
 export function useFormVisibility({
-  onVisibilityChange
+  onVisibilityChange,
 }: {
   onVisibilityChange(isVisible: boolean): void
 }): [boolean, (v: boolean) => void] {
@@ -35,7 +35,7 @@ export function useFormVisibility({
     description: 'open task form',
     handler() {
       setIsVisible(true)
-    }
+    },
   })
 
   return [isVisible, setIsVisible]

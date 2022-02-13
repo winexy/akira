@@ -22,7 +22,7 @@ export const DatePickerSheet: React.FC<DatePickerSheetProps> = ({
   children,
   date,
   fixedChildren,
-  onApply
+  onApply,
 }) => {
   const hide = () => universalDrawerModel.hideDrawer()
   return (

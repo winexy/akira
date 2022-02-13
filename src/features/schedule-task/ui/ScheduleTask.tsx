@@ -26,7 +26,7 @@ type Props = {
 export const ScheduleTask: React.FC<Props> = ({
   taskId,
   isFetchingTask,
-  scheduledTaskDate
+  scheduledTaskDate,
 }) => {
   const [scheduledDate, setScheduledDate] = useState<Date | null>(() => {
     return !isNull(scheduledTaskDate) ? parseISO(scheduledTaskDate) : null

@@ -22,6 +22,6 @@ export function checklist(api: AxiosInstance) {
     },
     patchTodo(taskId: TaskId, todoId: TodoId, patch: TodoPatch): Promise<Todo> {
       return api.patch(`/checklist/${taskId}/${todoId}`, patch).then(unwrap)
-    }
+    },
   }
 }

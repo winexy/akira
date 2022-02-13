@@ -10,7 +10,7 @@ const Item: React.FC<ItemProps> = ({
   children,
   className,
   onClick,
-  dangerouslySetInnerHTML
+  dangerouslySetInnerHTML,
 }) => {
   return (
     <li
@@ -18,7 +18,7 @@ const Item: React.FC<ItemProps> = ({
         'flex items-center',
         'select-none transition',
         'active:bg-gray-200 dark:active:bg-dark-500',
-        className
+        className,
       )}
       onClick={onClick}
       // eslint-disable-next-line react/no-danger
@@ -35,13 +35,13 @@ type Props = {
 
 export const List: {Item: typeof Item} & React.FC<Props> = ({
   children,
-  className
+  className,
 }) => {
   return (
     <ul
       className={clsx(
         'divide-y divide-gray-100 dark:divide-dark-500',
-        className
+        className,
       )}
     >
       {children}

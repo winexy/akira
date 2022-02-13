@@ -13,7 +13,7 @@ export const Tag: React.FC<TagPropsT> = ({
   variant,
   children,
   className,
-  onClick
+  onClick,
 }) => {
   return (
     <button
@@ -35,9 +35,9 @@ export const Tag: React.FC<TagPropsT> = ({
           'bg-indigo-500 border-indigo-600 focus-within:ring-indigo-300':
             variant === 'purple',
           'bg-blue-500 border-blue-700 focus-within:ring-blue-300':
-            variant === 'blue'
+            variant === 'blue',
         },
-        className
+        className,
       )}
       tabIndex={onClick ? 0 : -1}
       onClick={onClick}

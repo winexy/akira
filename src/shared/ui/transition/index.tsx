@@ -5,5 +5,5 @@ import {ScaleTransition} from './scale/ScaleTransition'
 export const Transition = {
   Scale: ScaleTransition,
   Shift: ShiftTransition,
-  Fade: FadeTransition
+  Fade: FadeTransition,
 }

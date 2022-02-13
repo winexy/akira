@@ -7,6 +7,6 @@ export function usePreferencesHotKey() {
     description: 'open pomodoro preferences',
     handler() {
       universalDrawerModel.showDrawer('pomodoro-settings')
-    }
+    },
   })
 }

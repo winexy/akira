@@ -30,10 +30,10 @@ export const HotKey = {
         (bit & HotKey.Meta) === HotKey.Meta && 'cmd',
         (bit & HotKey.Shift) === HotKey.Shift && 'shift',
         (bit & HotKey.Ctrl) === HotKey.Ctrl && 'ctrl',
-        (bit & HotKey.Alt) === HotKey.Alt && 'alt'
-      ])
+        (bit & HotKey.Alt) === HotKey.Alt && 'alt',
+      ]),
     )
 
     return `HotKey(${extrasString}${extrasString && ' '}key=${key})`
-  }
+  },
 }

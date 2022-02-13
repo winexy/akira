@@ -19,7 +19,7 @@ async function run() {
       ...repo,
       title,
       body,
-      assignees
+      assignees,
     })
 
     core.setOutput('issue', JSON.stringify(response.data))

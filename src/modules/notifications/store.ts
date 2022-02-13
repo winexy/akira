@@ -27,7 +27,7 @@ export const removeNotification = app.effect({
         resolve(notification)
       }, 3000)
     })
-  }
+  },
 })
 
 export const $notifications = app.store<Array<Notification>>([])
@@ -36,14 +36,14 @@ sample({
   clock: pushNotification,
   fn: params => ({
     id: nanoid(),
-    ...params
+    ...params,
   }),
-  target: addNotification
+  target: addNotification,
 })
 
 forward({
   from: addNotification,
-  to: removeNotification
+  to: removeNotification,
 })
 
 $notifications

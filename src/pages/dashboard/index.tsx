@@ -14,12 +14,12 @@ import {FiltersBottomSheet} from 'modules/tasks/filters/FiltersBottomSheet'
 import {TaskListOperations} from 'modules/tasks/components/TaskListOperations'
 import {
   SortingBottomSheet,
-  useTaskSorting
+  useTaskSorting,
 } from 'modules/tasks/sorting/SortingBottomSheet'
 import {
   AddTaskForm,
   AddTaskButton,
-  useAddTaskControl
+  useAddTaskControl,
 } from 'features/create-task'
 import clsx from 'clsx'
 import groupBy from 'lodash/fp/groupBy'
@@ -55,7 +55,7 @@ const Control: React.FC<{
       'transition',
       'active:text-purple-500 dark:active:text-gray-300',
       'focus:outline-none',
-      {'border-purple-500 dark:border-purple-500': activeValue === value}
+      {'border-purple-500 dark:border-purple-500': activeValue === value},
     )}
     onClick={() => onClick(value)}
   >
@@ -80,7 +80,7 @@ function transformResponse(tasks: Array<ApiTask> | undefined) {
 
   const byDay = merge(
     defaultRecord,
-    groupBy(task => formatISO(parseISO(task.date ?? '')), tasks)
+    groupBy(task => formatISO(parseISO(task.date ?? '')), tasks),
   )
 
   const days = keys(byDay).sort()
@@ -95,7 +95,7 @@ const Week: React.FC = () => {
 
   usePullToRefresh({
     mainElement: '#week-wrapper',
-    onRefresh: refetchTasks
+    onRefresh: refetchTasks,
   })
 
   if (isLoading) {
@@ -164,7 +164,7 @@ const Today: React.FC = () => {
 
   usePullToRefresh({
     mainElement: '#today-wrapper',
-    onRefresh: refetchTasks
+    onRefresh: refetchTasks,
   })
 
   return (
@@ -209,7 +209,7 @@ const Habbit: React.FC<HabbitProps> = ({Icon, variant, children}) => {
           'transition',
           variant === 'outline'
             ? 'bg-white active:bg-gray-100 dark:bg-dark-500 dark:active:bg-dark-400'
-            : 'bg-indigo-400 active:bg-indigo-500'
+            : 'bg-indigo-400 active:bg-indigo-500',
         )}
       >
         <div
@@ -217,7 +217,7 @@ const Habbit: React.FC<HabbitProps> = ({Icon, variant, children}) => {
             'absolute flex items-center justify-center w-11 h-11 rounded-full border-2 transition',
             variant === 'outline'
               ? 'border-gray-400 dark:border-dark-600'
-              : 'border-white dark:border-dark-500'
+              : 'border-white dark:border-dark-500',
           )}
         />
         <Icon
@@ -225,7 +225,7 @@ const Habbit: React.FC<HabbitProps> = ({Icon, variant, children}) => {
             'w-6 h-6',
             variant === 'outline'
               ? 'text-gray-400 dark:text-dark-100'
-              : 'text-white'
+              : 'text-white',
           )}
         />
       </div>
@@ -250,8 +250,8 @@ export function DashboardPage() {
       onSuccess() {
         queryClient.invalidateQueries(TaskQuery.MyDay())
         queryClient.invalidateQueries(TaskQuery.Week())
-      }
-    }
+      },
+    },
   )
 
   return (

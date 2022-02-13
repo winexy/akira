@@ -16,7 +16,7 @@ export const FadeTransition: FC<Props> = ({
 }) => {
   const style = {
     '--ui-fade-enter-duration': `${timeout}ms`,
-    '--ui-fade-exit-duration': `${timeout}ms`
+    '--ui-fade-exit-duration': `${timeout}ms`,
   }
 
   const child = React.Children.only(children)

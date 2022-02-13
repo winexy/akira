@@ -14,7 +14,7 @@ export const $bottomSheets = app
   .on(showBottomSheet, (sheets, name) => {
     const sheet = {
       index: sheets.length + 1,
-      name
+      name,
     }
 
     return [...sheets, sheet]

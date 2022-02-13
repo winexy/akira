@@ -28,7 +28,7 @@ export const TaskListOperations: React.FC<Props> = ({isFiltered, isSorted}) => {
             'focus:outline-none ',
             isFiltered
               ? 'text-white bg-blue-500 border-blue-600 active:bg-blue-600 active:border-blue-700'
-              : 'bg-gray-100 dark:bg-dark-500 border-gray-300 dark:border-dark-400 active:bg-gray-200 dark:active:bg-dark-600'
+              : 'bg-gray-100 dark:bg-dark-500 border-gray-300 dark:border-dark-400 active:bg-gray-200 dark:active:bg-dark-600',
           )}
           onClick={() => bottomSheetModel.showBottomSheet('filters')}
         >
@@ -46,7 +46,7 @@ export const TaskListOperations: React.FC<Props> = ({isFiltered, isSorted}) => {
             'focus:outline-none',
             isSorted
               ? 'text-white bg-blue-500 border-blue-600 active:bg-blue-600 active:border-blue-700'
-              : 'bg-gray-100 dark:bg-dark-500 border-gray-300 dark:border-dark-400 active:bg-gray-200 dark:active:bg-dark-600'
+              : 'bg-gray-100 dark:bg-dark-500 border-gray-300 dark:border-dark-400 active:bg-gray-200 dark:active:bg-dark-600',
           )}
           onClick={() => bottomSheetModel.showBottomSheet('sorting')}
         >

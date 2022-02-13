@@ -22,7 +22,7 @@ export const ScaleTransition: FC<Props> = ({
     '--ui-scale-enter-duration': `${timeout}ms`,
     '--ui-scale-exit-duration': `${timeout}ms`,
     '--ui-scale-from': scaleFrom,
-    '--ui-scale-to': scaleTo
+    '--ui-scale-to': scaleTo,
   }
 
   const child = React.Children.only(children)

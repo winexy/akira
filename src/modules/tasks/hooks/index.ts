@@ -12,7 +12,7 @@ export function useTasksQuery() {
   return useQuery(TaskQuery.All(), () => akira.tasks.findAll(), {
     onSuccess(tasks) {
       TaskCacheUtils.writeTasksToCache(queryClient, tasks)
-    }
+    },
   })
 }
 
@@ -25,8 +25,8 @@ export function useTasksListQuery(listId: string) {
     {
       onSuccess(data) {
         TaskCacheUtils.writeTasksToCache(queryClient, data.tasks)
-      }
-    }
+      },
+    },
   )
 }
 
@@ -41,8 +41,8 @@ export function usePatchTaskMutation(taskId: TaskId) {
       onSuccess(task) {
         queryClient.setQueryData(TaskQuery.One(taskId), task)
         TaskCacheUtils.writeTaskListCache(TaskQuery.MyDay(), queryClient, task)
-      }
-    }
+      },
+    },
   )
 }
 
@@ -56,12 +56,12 @@ export function useToggleCompletedMutation() {
         queryClient,
         draft => {
           draft.is_completed = !draft.is_completed
-        }
+        },
       )
     },
     onError(_, taskId, context: any) {
       TaskCacheUtils.rollbackOptimisticUpdate(taskId, queryClient, context)
-    }
+    },
   })
 }
 
@@ -75,12 +75,12 @@ export function useToggleImportantMutation() {
         queryClient,
         draft => {
           draft.is_important = !draft.is_important
-        }
+        },
       )
     },
     onError(_, taskId, context: any) {
       TaskCacheUtils.rollbackOptimisticUpdate(taskId, queryClient, context)
-    }
+    },
   })
 }
 
@@ -94,10 +94,10 @@ export function useRemoveTaskMutation() {
       TaskCacheUtils.removeTasksFromCache(
         queryClient,
         TaskQuery.MyDay(),
-        taskId
+        taskId,
       )
       TaskCacheUtils.removeTasksFromCache(queryClient, TaskQuery.All(), taskId)
-    }
+    },
   })
 }
 
@@ -115,13 +115,13 @@ export function useAddTaskTagMutation(task: ApiTask) {
           queryClient,
           draft => {
             draft.tags.push(tag)
-          }
+          },
         )
       },
       onError(_, __, context: any) {
         TaskCacheUtils.rollbackOptimisticUpdate(task.id, queryClient, context)
-      }
-    }
+      },
+    },
   )
 }
 
@@ -139,13 +139,13 @@ export function useRemoveTaskTagMutation(task: ApiTask) {
           queryClient,
           draft => {
             draft.tags = filter(t => t.id !== tag.id, task.tags)
-          }
+          },
         )
       },
       onError(_, __, context: any) {
         TaskCacheUtils.rollbackOptimisticUpdate(task.id, queryClient, context)
-      }
-    }
+      },
+    },
   )
 }
 
@@ -153,15 +153,15 @@ export function useTaskQuery<Select = ApiTask>(
   taskId: string,
   {
     suspense,
-    select
+    select,
   }: Partial<{
     select(task: ApiTask): Select
     suspense: boolean
-  }> = {}
+  }> = {},
 ) {
   return useQuery(TaskQuery.One(taskId), () => akira.tasks.findOne(taskId), {
     suspense,
-    select
+    select,
   })
 }
 
@@ -171,7 +171,7 @@ export function useMyDayQuery() {
   return useQuery(TaskQuery.MyDay(), () => akira.myday.tasks(), {
     onSuccess(tasks) {
       TaskCacheUtils.writeTasksToCache(queryClient, tasks)
-    }
+    },
   })
 }
 
@@ -181,6 +181,6 @@ export function useWeekQuery() {
   return useQuery<Array<ApiTask>>(TaskQuery.Week(), () => akira.tasks.week(), {
     onSuccess(tasks) {
       TaskCacheUtils.writeTasksToCache(queryClient, tasks)
-    }
+    },
   })
 }

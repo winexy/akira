@@ -14,11 +14,11 @@ export const AuthPage: React.FC = () => {
         className={clsx(
           'absolute top-0 mt-3',
           'text-sm font-bold text-center font-mono',
-          'bg-gradient-to-r from-indigo-500 to-pink-600'
+          'bg-gradient-to-r from-indigo-500 to-pink-600',
         )}
         style={{
           WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent'
+          WebkitTextFillColor: 'transparent',
         }}
       >
         akira.app

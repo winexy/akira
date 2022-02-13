@@ -13,7 +13,7 @@ const isTaskOnMyDay = (task: ApiTask): boolean =>
 
 export const MyDayToggle: React.FC<{taskId: TaskId}> = ({taskId}) => {
   const {data: isOnMyDay, isLoading, isFetching} = useTaskQuery(taskId, {
-    select: isTaskOnMyDay
+    select: isTaskOnMyDay,
   })
 
   const addToMyDayMutation = useAddToMyDayMutation()

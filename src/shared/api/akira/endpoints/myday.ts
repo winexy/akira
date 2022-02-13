@@ -14,6 +14,6 @@ export function myday(api: AxiosInstance) {
     },
     remove(taskId: TaskId) {
       return api.delete(`task-scheduler/schedule/${taskId}`)
-    }
+    },
   }
 }

@@ -20,7 +20,7 @@ function createFiltersState(): FiltersState {
     important: false,
     notCompleted: false,
     dateFrom: null,
-    tags: new Set<number>()
+    tags: new Set<number>(),
   }
 }
 
@@ -72,7 +72,7 @@ export function filterTasks(tasks: ApiTask[], state: FiltersState) {
     byImportance,
     byNotCompleted,
     bySomeTags,
-    byDateFrom
+    byDateFrom,
   ]
 
   return tasks.filter(task => {
@@ -135,7 +135,7 @@ export function useTaskFilters(): [FiltersState, React.Dispatch<FilterAction>] {
       }
     }),
     null,
-    createFiltersState
+    createFiltersState,
   )
 
   return [state, dispatch]

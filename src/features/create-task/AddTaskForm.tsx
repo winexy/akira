@@ -4,7 +4,7 @@ import React, {
   useState,
   useLayoutEffect,
   useImperativeHandle,
-  FormEventHandler
+  FormEventHandler,
 } from 'react'
 import {useStore} from 'effector-react'
 import isEmpty from 'lodash/fp/isEmpty'
@@ -13,7 +13,7 @@ import {
   ChevronLeftIcon,
   PlusIcon,
   XCircleIcon,
-  PencilAltIcon
+  PencilAltIcon,
 } from '@heroicons/react/solid'
 import clsx from 'clsx'
 import {useTagsQuery} from 'modules/tags/hooks/index'
@@ -55,7 +55,7 @@ import {
   onDescriptionChange,
   onDateChange,
   onDueDateChange,
-  onListChange
+  onListChange,
 } from './model'
 
 type TaskFormProps = {
@@ -84,7 +84,7 @@ function withHighlight(originalText: string, search: string): string {
     new RegExp(search, 'i'),
     text => {
       return `<span class="text-blue-500 dark:text-gray-300">${text}</span>`
-    }
+    },
   )}</pre>`
 }
 
@@ -110,7 +110,7 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
     }, lists)
 
     useImperativeHandle(ref, () => ({
-      show: () => setIsVisible(true)
+      show: () => setIsVisible(true),
     }))
 
     useLayoutEffect(() => {
@@ -130,13 +130,13 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
         task: {
           title,
           description,
-          due_date: isNull(dueDate) ? null : format(dueDate, 'yyyy-MM-dd')
+          due_date: isNull(dueDate) ? null : format(dueDate, 'yyyy-MM-dd'),
         },
         meta: {
           date: format(date, 'yyyy-MM-dd'),
           tags: [...selectedTags],
-          list_id: selectedList?.id
-        }
+          list_id: selectedList?.id,
+        },
       })
 
       resetForm()
@@ -160,7 +160,7 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
           <div
             ref={backdropRef}
             className={clsx('flex flex-col', 'transition ease-in duration-75', {
-              'z-20 fixed inset-0 bg-black dark:bg-dark-500 bg-opacity-60 dark:bg-opacity-60 backdrop-blur-sm': isVisible
+              'z-20 fixed inset-0 bg-black dark:bg-dark-500 bg-opacity-60 dark:bg-opacity-60 backdrop-blur-sm': isVisible,
             })}
           >
             <div className="p-2 flex items-center justify-between">
@@ -371,7 +371,7 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                       key={list.id}
                       className={clsx(
                         'px-4 py-3 font-semibold ',
-                        list.id === selectedList?.id ? 'text-blue-500' : ''
+                        list.id === selectedList?.id ? 'text-blue-500' : '',
                       )}
                       onClick={() => {
                         if (list.id === selectedList?.id) {
@@ -382,7 +382,7 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
                         bottomSheetModel.hideBottomSheet()
                       }}
                       dangerouslySetInnerHTML={{
-                        __html: withHighlight(list.title, search)
+                        __html: withHighlight(list.title, search),
                       }}
                     />
                   ))}
@@ -396,5 +396,5 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
         )}
       </div>
     )
-  }
+  },
 )

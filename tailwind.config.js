@@ -18,10 +18,10 @@ module.exports = {
           600: '#2E2E2E',
           700: '#292929',
           800: '#212121',
-          900: '#121212'
-        }
-      }
-    }
+          900: '#121212',
+        },
+      },
+    },
   },
-  plugins: [TwCaretColor(), TwPaddingSafe()]
+  plugins: [TwCaretColor(), TwPaddingSafe()],
 }

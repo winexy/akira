@@ -14,7 +14,7 @@ const Countdown: FC<{className: string}> = ({className}) => {
         'w-48 h-48 rounded-full text-indigo-500 dark:text-white bg-white dark:bg-dark-600',
         'shadow transition ease-in duration-150',
         'focus:outline-none',
-        className
+        className,
       )}
     >
       <strong className="text-5xl flex justify-center items-center space-x-1">
@@ -76,7 +76,7 @@ export const PomodoroTimer: FC = () => {
         <Ring
           className={clsx('z-10 pointer-events-none', {
             'text-red-300': isFocusMode,
-            'text-green-300': isBreakMode
+            'text-green-300': isBreakMode,
           })}
           radius={150}
           progress={progress}

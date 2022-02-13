@@ -3,7 +3,7 @@ import {app} from 'shared/lib/app-domain'
 import {withPersist} from 'shared/lib/with-persist'
 
 const $isDarkModeStore = app.createStore(false, {
-  name: 'isDarkMode'
+  name: 'isDarkMode',
 })
 
 export const toggleDarkMode = app.createEvent()
@@ -18,7 +18,7 @@ const toggleDarkModeClassFx = app.createEffect((isDarkMode: boolean) => {
 
 forward({
   from: $isDarkModeStore,
-  to: toggleDarkModeClassFx
+  to: toggleDarkModeClassFx,
 })
 
 export const $isDarkMode = withPersist($isDarkModeStore)

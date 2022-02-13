@@ -14,7 +14,7 @@ export const StatusText: FC = () => {
       <p
         ref={ref}
         className={clsx('mt-8 font-semibold text-3xl transition', {
-          'dark:text-white': isRunning
+          'dark:text-white': isRunning,
         })}
       >
         {isFocusMode ? 'Time to focus! 👩🏼‍💻' : 'Time to Break! 🧘🏼‍♀️'}

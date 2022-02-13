@@ -9,7 +9,7 @@ import {openActionSheet} from 'shared/ui/action-sheet/model'
 import {
   useRemoveTaskMutation,
   useToggleCompletedMutation,
-  useToggleImportantMutation
+  useToggleImportantMutation,
 } from '../hooks'
 
 type Props = {
@@ -23,7 +23,7 @@ export const TaskActionToast: React.FC<Props> = ({
   taskId,
   isCompleted,
   isImportant,
-  isForcedVisible
+  isForcedVisible,
 }) => {
   const history = useHistory()
   const toggleCompletedMutation = useToggleCompletedMutation()
@@ -42,14 +42,14 @@ export const TaskActionToast: React.FC<Props> = ({
         <ActionToast.Button
           Icon={CheckIcon}
           className={clsx('active:text-green-600', {
-            'text-green-500 dark:text-green-400': isCompleted
+            'text-green-500 dark:text-green-400': isCompleted,
           })}
           onClick={() => toggleCompletedMutation.mutate(taskId)}
         />
         <ActionToast.Button
           Icon={FireIcon}
           className={clsx('active:text-red-600', {
-            'text-red-500 dark:text-red-400': isImportant
+            'text-red-500 dark:text-red-400': isImportant,
           })}
           onClick={() => toggleImportantMutation.mutate(taskId)}
         />

@@ -3,7 +3,7 @@ import React, {
   useContext,
   useEffect,
   useRef,
-  useState
+  useState,
 } from 'react'
 import clsx from 'clsx'
 import isNull from 'lodash/fp/isNull'
@@ -48,8 +48,8 @@ const Segment: React.FC<SegmentProps> = ({id, children}) => {
         'focus:outline-none',
         {
           'text-white': isActive,
-          'active:text-gray-400': !isActive
-        }
+          'active:text-gray-400': !isActive,
+        },
       )}
       onClick={() => context.update(id)}
     >
@@ -68,7 +68,7 @@ const SegmentedControl: React.FC<Props> = ({
   className,
   activeId,
   onChange,
-  children
+  children,
 }) => {
   const [styles, setStyles] = useState<CSSProperties>()
   const rootRef = useRef<HTMLDivElement>(null)
@@ -89,7 +89,7 @@ const SegmentedControl: React.FC<Props> = ({
     const rect = {
       height: node.clientHeight,
       width: node.clientWidth,
-      offsetLeft: node.offsetLeft
+      offsetLeft: node.offsetLeft,
     }
 
     const INNER_PADDING = 4
@@ -97,7 +97,7 @@ const SegmentedControl: React.FC<Props> = ({
     setStyles({
       width: rect.width,
       height: rect.height,
-      transform: `translateX(${rect.offsetLeft - INNER_PADDING}px)`
+      transform: `translateX(${rect.offsetLeft - INNER_PADDING}px)`,
     })
   }, [activeId])
 
@@ -113,7 +113,7 @@ const SegmentedControl: React.FC<Props> = ({
         ref={rootRef}
         className={clsx(
           'mt-2 relative flex p-1 w-full shadow-inner rounded-2xl bg-gray-100 dark:bg-dark-300 transition',
-          className
+          className,
         )}
       >
         {children}

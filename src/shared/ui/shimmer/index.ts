@@ -6,6 +6,6 @@ export function useShimmerColors() {
 
   return {
     backgroundColor: isDarkMode ? '#474747' : '#ffffff',
-    foregroundColor: isDarkMode ? '#383838' : '#e9e9e9'
+    foregroundColor: isDarkMode ? '#383838' : '#e9e9e9',
   }
 }

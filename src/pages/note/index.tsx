@@ -13,7 +13,7 @@ import {
   blockRenderMap,
   plugins,
   blockStyleFn,
-  useEditor
+  useEditor,
 } from 'shared/lib/editor'
 import {api} from 'shared/api'
 import isNil from 'lodash/isNil'
@@ -83,12 +83,12 @@ const patchNote = debouncePromise(
   ({noteId, patch}: {noteId: string; patch: NotePatch}) => {
     return api.patch(`notes/${noteId}`, patch).then(res => res.data)
   },
-  2000
+  2000,
 )
 
 const NotePage: React.FC<{uuid: string; className: string}> = ({
   uuid,
-  className
+  className,
 }) => {
   const editor = useEditor()
   const queryClient = useQueryClient()
@@ -99,14 +99,14 @@ const NotePage: React.FC<{uuid: string; className: string}> = ({
     {
       onSuccess(note) {
         editor.hydrate(note.content)
-      }
-    }
+      },
+    },
   )
 
   const patchNoteMutation = useMutation(patchNote, {
     onSuccess() {
       queryClient.invalidateQueries(['notes', uuid])
-    }
+    },
   })
 
   useNotePageTitle(noteQuery.data)
@@ -138,7 +138,7 @@ const NotePage: React.FC<{uuid: string; className: string}> = ({
 
     patchNoteMutation.mutate({
       noteId: uuid,
-      patch: {content: html}
+      patch: {content: html},
     })
   }
 

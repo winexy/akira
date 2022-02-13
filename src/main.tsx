@@ -17,9 +17,9 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 1000 * 60 * 2,
-      refetchIntervalInBackground: false
-    }
-  }
+      refetchIntervalInBackground: false,
+    },
+  },
 })
 
 async function prefetchQueries() {
@@ -36,7 +36,7 @@ if (import.meta.env.PROD) {
   Sentry.init({
     dsn: import.meta.env.VITE_SENTRY_DSN,
     integrations: [new Integrations.BrowserTracing()],
-    tracesSampleRate: 1.0
+    tracesSampleRate: 1.0,
   })
 }
 
@@ -50,5 +50,5 @@ ReactDOM.render(
       </FirebaseAuthProvider>
     </QueryClientProvider>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById('root'),
 )

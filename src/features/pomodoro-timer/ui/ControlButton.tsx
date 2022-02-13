@@ -23,15 +23,15 @@ export const ControlButton: FC<Props> = ({withBorder, size, Icon, onClick}) => {
         {
           'border border-gray-200 border-opacity-50 dark:border-none': withBorder,
           'w-24 h-24': size === 'md',
-          'w-16 h-16': size === 'sm'
-        }
+          'w-16 h-16': size === 'sm',
+        },
       )}
       onClick={onClick}
     >
       <Icon
         className={clsx({
           'w-24 h-24': size === 'md',
-          'w-8 h-8': size === 'sm'
+          'w-8 h-8': size === 'sm',
         })}
       />
     </button>

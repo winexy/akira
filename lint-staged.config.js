@@ -8,5 +8,5 @@ module.exports = {
         return `yarn run compile-action --action=${action}`
       })
       .concat(`git add ./.github/actions/*/dist/index.js`)
-  }
+  },
 }

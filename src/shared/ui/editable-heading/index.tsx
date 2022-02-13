@@ -14,7 +14,7 @@ export const EditableHeading: React.FC<Props> = ({
   value,
   placeholder = '',
   className = '',
-  onChange
+  onChange,
 }) => {
   const escaped = useMemo(() => escape(value), [value]) || placeholder
 
@@ -38,12 +38,12 @@ export const EditableHeading: React.FC<Props> = ({
         focus:outline-none 
         focus:text-gray-500
       `,
-        className
+        className,
       )}
       contentEditable
       // eslint-disable-next-line react/no-danger
       dangerouslySetInnerHTML={{
-        __html: escaped
+        __html: escaped,
       }}
       onBlur={handleChange}
     />

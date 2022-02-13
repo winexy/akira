@@ -11,7 +11,7 @@ export const NotificationManager: React.FC = () => {
     <Portal to="notifications-root">
       <div
         className={clsx(
-          'fixed bottom-0 right-0 left-0 p-4 pointer-events-none'
+          'fixed bottom-0 right-0 left-0 p-4 pointer-events-none',
         )}
         style={{zIndex: 100000}}
       >
@@ -20,7 +20,7 @@ export const NotificationManager: React.FC = () => {
             key={notification.id}
             className={clsx(
               'w-full px-4 py-2 bg-white rounded border-l-8 border-red-500',
-              'shadow-xl'
+              'shadow-xl',
             )}
           >
             <h2 className={clsx('font-semibold text-red-500')}>

@@ -11,7 +11,7 @@ import {Button} from 'shared/ui/button'
 import {
   TaskActionList,
   TaskActionToast,
-  TextArea
+  TextArea,
 } from 'modules/tasks/components'
 import {TagsManager, TaskTag} from 'modules/tags/components'
 import {usePatchTaskMutation, useTaskQuery} from 'modules/tasks/hooks'
@@ -19,7 +19,7 @@ import {Tag} from 'modules/tags/components/Tag'
 import {
   DotsVerticalIcon,
   ViewListIcon,
-  RefreshIcon
+  RefreshIcon,
 } from '@heroicons/react/solid'
 import {Link} from 'react-router-dom'
 import isNull from 'lodash/fp/isNull'
@@ -40,7 +40,7 @@ const TaskPage: React.FC = () => {
   const {taskId} = useParams<{taskId: string}>()
   const [isActionToastVisible, setIsActionToastVisible] = useState(true)
   const {data: task, isFetching} = useTaskQuery(taskId, {
-    suspense: true
+    suspense: true,
   })
 
   const patchTaskMutation = usePatchTaskMutation(taskId)
@@ -66,7 +66,7 @@ const TaskPage: React.FC = () => {
               className={clsx(
                 'w-6 h-6 text-gray-400',
                 'transition',
-                'transform active:scale-110'
+                'transform active:scale-110',
               )}
             />
           </IconButton>
@@ -77,7 +77,7 @@ const TaskPage: React.FC = () => {
         className="mt-4"
         onChange={newTitle => {
           patchTaskMutation.mutate({
-            title: newTitle
+            title: newTitle,
           })
         }}
       />

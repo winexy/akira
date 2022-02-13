@@ -4,7 +4,7 @@ import {withPersist} from 'shared/lib/with-persist'
 
 enum ApiVersionEnum {
   Dev = 'dev',
-  Prod = 'prod'
+  Prod = 'prod',
 }
 
 const changeApiVersion = app.event<ApiVersionEnum>()
@@ -14,7 +14,7 @@ const defaultApiVersion = config.env.dev
   : ApiVersionEnum.Prod
 
 const $apiVersion = withPersist(
-  app.store(defaultApiVersion, {name: 'ApiVersion'})
+  app.store(defaultApiVersion, {name: 'ApiVersion'}),
 )
 
 $apiVersion.on(changeApiVersion, (_, version) => version)

@@ -18,7 +18,7 @@ const Input: FC<InputProps> = ({className, ...props}) => (
       'dark:bg-dark-500 dark:border-dark-400',
       'focus:outline-none focus:border-indigo-500',
       'transition',
-      className
+      className,
     )}
     {...props}
   />
@@ -37,10 +37,10 @@ export const PomodoroPreferences: FC = () => {
 
   const [focusDurationDraft, setFocusDuration] = useState(focusDuration)
   const [shortBreakDurationDraft, setShortBreakDuration] = useState(
-    shortBreakDuration
+    shortBreakDuration,
   )
   const [longBreakDurationDraft, setLongBreakDuration] = useState(
-    longBreakDuration
+    longBreakDuration,
   )
 
   const onSubmit: FormEventHandler = event => {
@@ -50,7 +50,7 @@ export const PomodoroPreferences: FC = () => {
     pomodoroModel.saveSettings({
       focusDuration: focusDurationDraft,
       shortBreakDuration: shortBreakDurationDraft,
-      longBreakDuration: longBreakDurationDraft
+      longBreakDuration: longBreakDurationDraft,
     })
   }
 

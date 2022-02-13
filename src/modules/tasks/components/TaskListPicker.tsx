@@ -46,7 +46,7 @@ Match.Default = ({children}) => {
 }
 
 Match.Default.defaultProps = {
-  default: true
+  default: true,
 }
 
 export const TaskListPicker: React.FC<Props> = ({taskId, activeListId}) => {
@@ -81,12 +81,12 @@ export const TaskListPicker: React.FC<Props> = ({taskId, activeListId}) => {
                     'font-semibold text-left ',
                     'focus:outline-none',
                     {
-                      'text-blue-500': list.id === activeListId
-                    }
+                      'text-blue-500': list.id === activeListId,
+                    },
                   )}
                   onClick={() => {
                     patchTaskMutation.mutate({
-                      list_id: list.id
+                      list_id: list.id,
                     })
                   }}
                   disabled={list.id === activeListId}

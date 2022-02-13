@@ -10,7 +10,7 @@ type Props = {
 export const BottomSheetStandalone: React.FC<Props> = ({
   name,
   children,
-  className
+  className,
 }) => {
   const props = bottomSheetModel.useBottomSheet(name)
 

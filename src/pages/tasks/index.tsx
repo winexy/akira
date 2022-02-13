@@ -8,12 +8,12 @@ import {useMutation, useQueryClient} from 'react-query'
 import {FiltersBottomSheet} from 'modules/tasks/filters/FiltersBottomSheet'
 import {
   SortingBottomSheet,
-  useTaskSorting
+  useTaskSorting,
 } from 'modules/tasks/sorting/SortingBottomSheet'
 import {
   AddTaskForm,
   AddTaskButton,
-  useAddTaskControl
+  useAddTaskControl,
 } from 'features/create-task'
 import {useTaskFilters, filterTasks} from 'modules/tasks/filters'
 import size from 'lodash/fp/size'
@@ -34,14 +34,14 @@ const TasksPage: React.FC = () => {
   const createTaskMutation = useMutation(akira.tasks.create, {
     onSuccess(task) {
       queryClient.setQueryData(TaskQuery.All(), [task, ...tasks])
-    }
+    },
   })
 
   const sorted = sort(filterTasks(tasks, filtersState))
 
   usePullToRefresh({
     mainElement: '#tasks-wrapper',
-    onRefresh: refetchTasks
+    onRefresh: refetchTasks,
   })
 
   return (

@@ -3,7 +3,7 @@ import {createFocusTrap, FocusTrap} from 'focus-trap'
 
 export function useFocusTrap(
   visible: boolean,
-  ref: MutableRefObject<HTMLElement | null>
+  ref: MutableRefObject<HTMLElement | null>,
 ) {
   useEffect(() => {
     let trap: FocusTrap | undefined

@@ -28,8 +28,8 @@ export const Checklist: React.FC<Props> = ({taskId, checklist}) => {
           className={clsx(
             'px-4 rounded-md flex active:bg-gray-100 dark:active:bg-dark-500 transition',
             {
-              'line-through': todo.is_completed
-            }
+              'line-through': todo.is_completed,
+            },
           )}
         >
           <label className="py-1 w-full flex items-center">
@@ -42,8 +42,8 @@ export const Checklist: React.FC<Props> = ({taskId, checklist}) => {
                 patchTodoMutation.mutate({
                   todoId: todo.id,
                   patch: {
-                    is_completed: !todo.is_completed
-                  }
+                    is_completed: !todo.is_completed,
+                  },
                 })
               }
             />
@@ -56,7 +56,7 @@ export const Checklist: React.FC<Props> = ({taskId, checklist}) => {
               'text-red-500 rounded',
               'transition ease-in duration-150',
               'active:text-red-600 active:bg-gray-100 dark:active:bg-dark-400',
-              'focus:outline-none focus:bg-gray-200 focus:bg-opacity-75'
+              'focus:outline-none focus:bg-gray-200 focus:bg-opacity-75',
             )}
             onClick={() => removeTodoMutation.mutate(todo.id)}
           >

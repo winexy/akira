@@ -19,8 +19,8 @@ const search = debounce((searchText: string) => {
   return api
     .get('tasks/search', {
       params: {
-        query: searchText
-      }
+        query: searchText,
+      },
     })
     .then(res => res.data)
 }, 300)
@@ -42,7 +42,7 @@ const SearchPage: React.FC = () => {
             'border border-gray-200 dark:border-dark-400',
             'transition ease-in duration-150',
             'focus-within:border-indigo-400',
-            'focus-within:ring-1 focus-within:ring-indigo-100 dark:focus-within:ring-indigo-500'
+            'focus-within:ring-1 focus-within:ring-indigo-100 dark:focus-within:ring-indigo-500',
           )}
         >
           <div className="relative flex flex-1 items-center">
@@ -83,7 +83,7 @@ const SearchPage: React.FC = () => {
               'rounded-r-md px-3',
               'transition ease-in duration-150',
               'active:text-indigo-400',
-              'focus:outline-none'
+              'focus:outline-none',
             )}
             onClick={() => bottomSheetModel.showBottomSheet('search-filters')}
           >

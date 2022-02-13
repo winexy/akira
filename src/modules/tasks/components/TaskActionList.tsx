@@ -22,7 +22,7 @@ export const TaskActionList: React.FC<Props> & {
   <ul
     className={clsx(
       'mt-4 border-t border-b border-gray-50 dark:border-dark-600 divide-y divide-gray-100 dark:divide-dark-500',
-      className
+      className,
     )}
   >
     {children}
@@ -47,7 +47,7 @@ TaskActionList.Button = ({
       'focus:outline-none',
       'disabled:text-gray-400',
       {'flex-1': stretch},
-      className
+      className,
     )}
     {...props}
   >

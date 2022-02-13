@@ -34,7 +34,7 @@ const TaskListItem: React.FC<TaskListItemProps> = ({list, allowRemoval}) => {
     mutationKey: 'remove-tasks-list',
     onSuccess() {
       queryClient.invalidateQueries('lists')
-    }
+    },
   })
 
   const isRemoving = Boolean(
@@ -42,8 +42,8 @@ const TaskListItem: React.FC<TaskListItemProps> = ({list, allowRemoval}) => {
       mutationKey: 'remove-tasks-list',
       predicate(mutation) {
         return mutation.options.variables === list.id
-      }
-    })
+      },
+    }),
   )
 
   function onRemoveIntent() {
@@ -61,7 +61,7 @@ const TaskListItem: React.FC<TaskListItemProps> = ({list, allowRemoval}) => {
       key={list.id}
       className={clsx(
         'rounded-md',
-        'focus-within:ring-2 focus-within:ring-gray-600 dark:focus-within:ring-dark:600'
+        'focus-within:ring-2 focus-within:ring-gray-600 dark:focus-within:ring-dark:600',
       )}
       after={
         allowRemoval ? (
@@ -97,7 +97,7 @@ const TaskListItem: React.FC<TaskListItemProps> = ({list, allowRemoval}) => {
             'rounded-md',
             'transition ease-in duration-150',
             'active:text-gray-400',
-            'focus:bg-gray-500'
+            'focus:bg-gray-500',
           )}
           onClick={() => closeMenu()}
         >
@@ -117,7 +117,7 @@ const TaskListItem: React.FC<TaskListItemProps> = ({list, allowRemoval}) => {
 
 export const TaskLists: React.FC<Props> = ({
   allowRemoval = true,
-  className
+  className,
 }) => {
   const {data: lists} = useListsQuery()
 

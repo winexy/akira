@@ -32,7 +32,7 @@ type DragObject = {
 function onDragHover(
   dropRef: React.MutableRefObject<Undefined<Element>>,
   index: number,
-  updatePosition: (params: UpdatePositionParams) => void
+  updatePosition: (params: UpdatePositionParams) => void,
 ) {
   return function dragHover(item: DragObject, monitor: DropTargetMonitor) {
     if (!dropRef.current) {
@@ -94,7 +94,7 @@ const collectProps = (monitor: DragSourceMonitor) => {
 
   return {
     isDragging,
-    opacity: isDragging ? 0.4 : 1
+    opacity: isDragging ? 0.4 : 1,
   }
 }
 
@@ -105,7 +105,7 @@ type ProgressBarProps = {
 
 const ChecklistProgressBar: React.FC<ProgressBarProps> = ({
   className,
-  checklist
+  checklist,
 }) => {
   const percentage = ChecklistLib.getPercentageOfCompleted(checklist)
 
@@ -113,13 +113,13 @@ const ChecklistProgressBar: React.FC<ProgressBarProps> = ({
     <div
       className={clsx(
         className,
-        'w-full h-1 flex bg-gray-200 rounded overflow-hidden'
+        'w-full h-1 flex bg-gray-200 rounded overflow-hidden',
       )}
     >
       <div
         className="h-1 bg-green-400"
         style={{
-          width: `${percentage}%`
+          width: `${percentage}%`,
         }}
       />
     </div>
@@ -133,7 +133,7 @@ export const Task: React.FC<TaskProps> = ({
   onRemove,
   onCheck,
   onOrderChange,
-  onSetImportant
+  onSetImportant,
 }) => {
   const dropRef = useRef<Element & SwipeableRefHandle>()
   const dragRef = useRef<HTMLButtonElement>()
@@ -145,9 +145,9 @@ export const Task: React.FC<TaskProps> = ({
     () => ({
       type: ItemType,
       item: {id: task.id, index},
-      collect: collectProps
+      collect: collectProps,
     }),
-    [index]
+    [index],
   )
 
   const isDeleting = Boolean(
@@ -155,13 +155,13 @@ export const Task: React.FC<TaskProps> = ({
       mutationKey: 'delete-task',
       predicate(mutation) {
         return mutation.options.variables === task.id
-      }
-    })
+      },
+    }),
   )
 
   const [, connectDropTarget] = useDrop({
     accept: ItemType,
-    hover: onDragHover(dropRef, index, onOrderChange)
+    hover: onDragHover(dropRef, index, onOrderChange),
   })
 
   if (sortable) {
@@ -191,8 +191,8 @@ export const Task: React.FC<TaskProps> = ({
         'shadow-xs',
         'transition ease-in duration-100',
         {
-          'scale-95 -rotate-1': isDragging
-        }
+          'scale-95 -rotate-1': isDragging,
+        },
       )}
       style={{opacity}}
       after={
@@ -225,7 +225,7 @@ export const Task: React.FC<TaskProps> = ({
           'bg-white dark:bg-dark-500 pl-4 p-2 text-lg text-black',
           'rounded-md dark:text-white',
           'transition ease-in duration-150',
-          'active:bg-gray-50'
+          'active:bg-gray-50',
         )}
       >
         <Checkbox
@@ -239,7 +239,7 @@ export const Task: React.FC<TaskProps> = ({
           <p
             className={clsx('truncate', {
               'text-red-500 dark:text-red-400': isOverdue,
-              'line-through text-gray-300 dark:text-gray-400': isCompleted
+              'line-through text-gray-300 dark:text-gray-400': isCompleted,
             })}
           >
             {task.title}
@@ -253,7 +253,7 @@ export const Task: React.FC<TaskProps> = ({
                     ? 'text-amber-500 dark:text-amber-200'
                     : isOverdue
                     ? 'text-red-500 dark:text-red-400'
-                    : 'text-gray-400'
+                    : 'text-gray-400',
                 )}
               >
                 <CalendarIcon className={clsx('w-4 h-4 mr-1')} />
@@ -272,7 +272,7 @@ export const Task: React.FC<TaskProps> = ({
             'focus:outline-none',
             task.is_important
               ? 'text-red-500 active:text-red-400'
-              : 'text-gray-300 bg-opacity-70 active:text-opacity-100'
+              : 'text-gray-300 bg-opacity-70 active:text-opacity-100',
           )}
           onClick={e => {
             e.preventDefault()
@@ -281,7 +281,7 @@ export const Task: React.FC<TaskProps> = ({
         >
           <FireIcon
             className={clsx(
-              'w-5 h-5 transform active:scale-150 transition ease-in duration'
+              'w-5 h-5 transform active:scale-150 transition ease-in duration',
             )}
           />
         </button>

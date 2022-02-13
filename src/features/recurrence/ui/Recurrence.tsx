@@ -12,7 +12,7 @@ import {
   makeRecurrencePayload,
   RecurrenceParams,
   makeCustomRule,
-  CustomRecurrenceType
+  CustomRecurrenceType,
 } from '../lib/make-recurrence-payload'
 import {matchRecurrenceType} from '../lib/match-recurrence-type'
 import {RecurrenceEnum, recurrenceTypes} from '../model'
@@ -23,18 +23,18 @@ type Props = {
 
 enum ViewMode {
   Options = 'options',
-  Custom = 'custom'
+  Custom = 'custom',
 }
 
 const config = {
   valueGroups: {
     interval: 1,
-    type: RecurrenceEnum.Daily
+    type: RecurrenceEnum.Daily,
   },
   optionGroups: {
     interval: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-    type: [RecurrenceEnum.Daily, RecurrenceEnum.Weekly, RecurrenceEnum.Monthly]
-  }
+    type: [RecurrenceEnum.Daily, RecurrenceEnum.Weekly, RecurrenceEnum.Monthly],
+  },
 }
 
 const CustomRecurrence: React.FC<{
@@ -43,7 +43,7 @@ const CustomRecurrence: React.FC<{
 }> = ({onBack, onSave}) => {
   const [customInterval, setCustomInterval] = useState(1)
   const [customType, setCustomType] = useState<CustomRecurrenceType>(
-    RecurrenceEnum.Daily
+    RecurrenceEnum.Daily,
   )
 
   return (
@@ -105,8 +105,8 @@ export const Recurrence: React.FC<Props> = ({taskId}) => {
     {
       onSuccess() {
         queryClient.invalidateQueries(TaskQuery.One(taskId))
-      }
-    }
+      },
+    },
   )
 
   const onSelect = (type: RecurrenceEnum) => {
@@ -120,7 +120,7 @@ export const Recurrence: React.FC<Props> = ({taskId}) => {
 
   const onCustomRuleSave = (
     customType: CustomRecurrenceType,
-    customInterval: number
+    customInterval: number,
   ) => {
     bottomSheetModel.hideBottomSheet('repeat-patterns')
     makeRecurringTaskMutation.mutate(makeCustomRule(customType, customInterval))

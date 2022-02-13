@@ -38,7 +38,7 @@ export const FiltersBottomSheet: React.FC<Props> = ({
   canReset,
   state,
   tags,
-  onChange
+  onChange,
 }) => {
   return (
     <>
@@ -122,7 +122,7 @@ export const FiltersBottomSheet: React.FC<Props> = ({
           onChange={date =>
             onChange({
               type: 'date-from',
-              date
+              date,
             })
           }
         />

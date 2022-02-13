@@ -5,7 +5,7 @@ import {
   getMessaging,
   getToken,
   isSupported,
-  onMessage
+  onMessage,
 } from 'firebase/messaging'
 import {config} from 'shared/config'
 import {api} from 'shared/api'
@@ -19,7 +19,7 @@ const firebaseConfig = {
   storageBucket: 'akira-wnx.appspot.com',
   messagingSenderId: '252721708576',
   appId: '1:252721708576:web:48f406bc8ba729b021c645',
-  measurementId: 'G-DFBDL3KN6W'
+  measurementId: 'G-DFBDL3KN6W',
 }
 
 const app = initializeApp(firebaseConfig)
@@ -50,8 +50,8 @@ function getMockAuth(): FirebaseAuth {
     providerData: [],
     metadata: {
       creationTime: String(Date.now()),
-      lastSignInTime: String(Date.now())
-    }
+      lastSignInTime: String(Date.now()),
+    },
   }
 
   const currentUser: FirebaseAuth['currentUser'] = user
@@ -63,7 +63,7 @@ function getMockAuth(): FirebaseAuth {
 
   return {
     currentUser,
-    onAuthStateChanged
+    onAuthStateChanged,
   } as ReturnType<typeof getAuth>
 }
 
@@ -96,7 +96,7 @@ export async function setupCloudMessaging() {
   switch (permission) {
     case 'granted': {
       const token = await getToken(messaging, {
-        vapidKey: config.webPush.vapidKey
+        vapidKey: config.webPush.vapidKey,
       })
 
       if (import.meta.env.DEV) {

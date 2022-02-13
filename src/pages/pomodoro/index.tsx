@@ -7,7 +7,7 @@ import {pomodoroModel, pomodoroLib} from 'entities/pomodoro'
 import {PomodoroModeSwitcher, PomodoroTimer} from 'features/pomodoro-timer'
 import {
   PomodoroPreferences,
-  pomodoroPreferencesModel
+  pomodoroPreferencesModel,
 } from 'features/pomodoro-preferences'
 import {Header, StatusText, ControlPanel} from './ui'
 import './pomodoro.css'
@@ -26,14 +26,14 @@ const PomodoroPage: FC = (): JSX.Element => {
       } else {
         pomodoroLib.startTimer(mode)
       }
-    }
+    },
   })
 
   useHotkey(HotKey.of('s', HotKey.Meta), {
     description: 'skip pomodoro',
     handler() {
       globalThis.console.info('skip ')
-    }
+    },
   })
 
   return (

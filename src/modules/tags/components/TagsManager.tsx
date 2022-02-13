@@ -9,7 +9,7 @@ import {PencilAltIcon} from '@heroicons/react/solid'
 
 import {
   useAddTaskTagMutation,
-  useRemoveTaskTagMutation
+  useRemoveTaskTagMutation,
 } from 'modules/tasks/hooks'
 import {ApiTask} from 'modules/tasks/types.d'
 import {Button} from 'shared/ui/button'
@@ -76,7 +76,7 @@ export const TagsManager: React.FC<{task: ApiTask}> = ({task}) => {
           'px-4 py-3 sticky bottom-0',
           'bg-white dark:bg-dark-600 border-t dark:border-dark-500',
           'transition ease-in duration-150',
-          'active:bg-gray-100 dark:active:bg-dark-500'
+          'active:bg-gray-100 dark:active:bg-dark-500',
         )}
       >
         <Link to="/tags" className="flex justify-between items-center ">
