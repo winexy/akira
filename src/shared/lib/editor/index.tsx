@@ -15,6 +15,7 @@ import {
   DraftEditorCommand,
   Editor,
   EditorProps,
+  KeyBindingUtil,
 } from 'draft-js'
 import {convertFromHTML, convertToHTML} from 'draft-convert'
 import Immutable from 'immutable'
@@ -140,7 +141,11 @@ export const HTMLtoState = convertFromHTML<DOMStringMap, BlockType>({
   },
 })
 
-function useEditor(html?: string) {
+type UseEditorProps = {
+  onSave?(editorState: EditorState): void
+}
+
+function useEditor(html: string | undefined, props: UseEditorProps = {}) {
   const [state, setState] = React.useState(() =>
     html
       ? EditorState.createWithContent(HTMLtoState(html))
@@ -236,6 +241,11 @@ function useEditor(html?: string) {
         return 'handled'
       }
 
+      if (command === 'save') {
+        props.onSave?.(state)
+        return 'handled'
+      }
+
       if (newState) {
         setState(newState)
         return 'handled'
@@ -243,15 +253,16 @@ function useEditor(html?: string) {
 
       return 'not-handled'
     },
-    [toggleInlineStyle],
+    [toggleInlineStyle, props.onSave],
   )
 
   const handlerKeyBinding = React.useCallback((e: React.KeyboardEvent) => {
-    // const isCommandA = e.keyCode === 65 && KeyBindingUtil.hasCommandModifier(e)
-
-    // if (isCommandA) {
-    // return 'accent'
-    // }
+    if (
+      e.keyCode === 83 /* `S` key */ &&
+      KeyBindingUtil.hasCommandModifier(e)
+    ) {
+      return 'save'
+    }
 
     return getDefaultKeyBinding(e)
   }, [])
@@ -316,7 +327,7 @@ const blockRenderMap = DefaultDraftBlockRenderMap.merge(customBlockRenderMap)
 
 const plugins: Array<EditorPlugin> = [createMarkdownShortcutsPlugin()]
 
-export type KeyCommand = DraftEditorCommand | 'accent'
+export type KeyCommand = DraftEditorCommand | 'accent' | 'save'
 
 const blockStyleFn: EditorProps['blockStyleFn'] = (block): string => {
   const type = block.getType()
