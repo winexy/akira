@@ -104,7 +104,12 @@ const NotePage: React.FC<{uuid: string; className: string}> = ({
   uuid,
   className,
 }) => {
-  const editor = useEditor()
+  const editor = useEditor(undefined, {
+    onSave() {
+      debug('save')
+    },
+  })
+
   const noteQuery = useQuery(
     NoteQuery.One(uuid),
     () => api.get<Note>(`notes/${uuid}`).then(res => res.data),
