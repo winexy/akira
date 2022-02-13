@@ -4,8 +4,8 @@
 /* eslint-disable jsx-a11y/heading-has-content */
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import Editor from 'draft-js-plugins-editor'
-import React, {useEffect} from 'react'
-import {useQuery, useMutation} from 'react-query'
+import React, {useEffect, useRef, useState} from 'react'
+import {useQuery, useMutation, useQueryClient} from 'react-query'
 import {
   customStyleMap,
   useEditorContext,
@@ -18,7 +18,6 @@ import {
 import {api} from 'shared/api'
 import isNil from 'lodash/isNil'
 import isError from 'lodash/isError'
-import isString from 'lodash/isString'
 import {EditableHeading} from 'shared/ui/editable-heading'
 import {EditorState} from 'draft-js'
 import clsx from 'clsx'
@@ -26,7 +25,12 @@ import debouncePromise from 'debounce-promise'
 import ContentLoader from 'react-content-loader'
 import {useShimmerColors} from 'shared/ui/shimmer'
 import isNull from 'lodash/isNull'
+import noop from 'lodash/noop'
+import isUndefined from 'lodash/isUndefined'
 import {Spin} from 'shared/ui/spin'
+import produce from 'immer'
+import parseISO from 'date-fns/parseISO'
+import formatRelative from 'date-fns/formatRelative'
 
 const TextEditor: React.FC<{onChange(editorState: EditorState): void}> = ({
   onChange,
@@ -59,6 +63,10 @@ type Note = {
   content: string
   // eslint-disable-next-line camelcase
   author_uid: string
+  // eslint-disable-next-line camelcase
+  updated_at: string
+  // eslint-disable-next-line camelcase
+  created_at: string
 }
 
 type NotePatch = {
@@ -110,27 +118,69 @@ const NotePage: React.FC<{uuid: string; className: string}> = ({
     },
   })
 
+  const [updatedAt, setUpdatedAt] = useState<string>()
+  const contentRef = useRef<string>()
+
   const noteQuery = useQuery(
     NoteQuery.One(uuid),
     () => api.get<Note>(`notes/${uuid}`).then(res => res.data),
     {
+      refetchOnMount: true,
       onSuccess(note) {
         debug('success query, hydrate content')
         editor.hydrate(note.content)
+        setUpdatedAt(note.updated_at)
+      },
+      onSettled() {
+        debug('note query fetched')
       },
     },
   )
 
-  useEffect(() => {
-    const content = noteQuery.data?.content
+  const queryClient = useQueryClient()
 
-    if (noteQuery.isFetched && isString(content)) {
+  useEffect(() => {
+    debug('mount')
+
+    const note = noteQuery.data
+
+    if (isUndefined(note)) {
+      return noop
+    }
+
+    if (noteQuery.isFetched) {
       debug('hydrate prefetched content')
-      editor.hydrate(content)
+      editor.hydrate(note.content)
+    }
+
+    return () => {
+      const content = contentRef.current
+
+      debug('unmount')
+
+      if (!isUndefined(content)) {
+        debug('update query cache')
+
+        queryClient.setQueryData(
+          NoteQuery.One(note.uuid),
+          produce(note, draft => {
+            draft.content = content
+          }),
+        )
+      }
     }
   }, [])
 
-  const patchNoteMutation = useMutation(patchNote)
+  const patchNoteMutation = useMutation(patchNote, {
+    // eslint-disable-next-line camelcase
+    onSuccess(response: {uuid: string; updated_at: string}) {
+      setUpdatedAt(response.updated_at)
+      debug('success patch', response)
+    },
+    onError(error) {
+      debug('failed to patch', error)
+    },
+  })
 
   useNotePageTitle(noteQuery.data)
 
@@ -151,17 +201,20 @@ const NotePage: React.FC<{uuid: string; className: string}> = ({
       return
     }
 
-    if (isNull(editorState.getLastChangeType())) {
+    const lastChangeType = editorState.getLastChangeType()
+
+    if (isNull(lastChangeType)) {
       return
     }
 
-    debug('call patch mutation')
+    debug('call patch mutation', lastChangeType)
 
-    const html = editor.toHtml(editorState)
+    const content = editor.toHtml(editorState)
 
+    contentRef.current = content
     patchNoteMutation.mutate({
       noteId: uuid,
-      patch: {content: html},
+      patch: {content},
     })
   }
 
@@ -200,12 +253,19 @@ const NotePage: React.FC<{uuid: string; className: string}> = ({
 
   return (
     <div className={clsx('py-6 flex flex-col relative', className)}>
-      {patchNoteMutation.isLoading && (
-        <div className="absolute right-0 top-0 mr-8 mt-6 flex items-center animate-pulse">
-          <Spin className="w-4 h-4 text-gray-300 " />
-          <span className="ml-3 text-sm text-gray-400">Saving</span>
-        </div>
-      )}
+      <div className="absolute right-0 top-0 mr-8 mt-6">
+        {patchNoteMutation.isLoading && (
+          <div className=" flex items-center animate-pulse">
+            <Spin className="w-4 h-4 text-gray-300 " />
+            <span className="ml-3 text-sm text-gray-400">Saving</span>
+          </div>
+        )}
+        {!patchNoteMutation.isLoading && !isUndefined(updatedAt) && (
+          <div className="text-gray-400 text-sm">
+            {formatRelative(parseISO(updatedAt), new Date())}
+          </div>
+        )}
+      </div>
       <div className="px-4">
         <EditableHeading
           className="text-4xl sm:text-6xl font-bold"
