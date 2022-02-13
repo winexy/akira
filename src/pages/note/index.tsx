@@ -18,6 +18,7 @@ import {
 import {api} from 'shared/api'
 import isNil from 'lodash/isNil'
 import isError from 'lodash/isError'
+import isString from 'lodash/isString'
 import {EditableHeading} from 'shared/ui/editable-heading'
 import {EditorState} from 'draft-js'
 import clsx from 'clsx'
@@ -29,7 +30,6 @@ const TextEditor: React.FC<{onChange(): void}> = ({onChange}) => {
   const editor = useEditorContext()
 
   function handleChange(editorState: EditorState) {
-    console.log('handleChange')
     editor.onChange(editorState)
     onChange()
   }
@@ -103,11 +103,15 @@ const NotePage: React.FC<{uuid: string; className: string}> = ({
     },
   )
 
-  const patchNoteMutation = useMutation(patchNote, {
-    onSuccess() {
-      queryClient.invalidateQueries(['notes', uuid])
-    },
-  })
+  useEffect(() => {
+    const content = noteQuery.data?.content
+
+    if (noteQuery.isFetched && isString(content)) {
+      editor.hydrate(content)
+    }
+  }, [])
+
+  const patchNoteMutation = useMutation(patchNote)
 
   useNotePageTitle(noteQuery.data)
 
