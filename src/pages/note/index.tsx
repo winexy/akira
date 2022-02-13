@@ -25,13 +25,17 @@ import clsx from 'clsx'
 import debouncePromise from 'debounce-promise'
 import ContentLoader from 'react-content-loader'
 import {useShimmerColors} from 'shared/ui/shimmer'
+import isNull from 'lodash/isNull'
+import {Spin} from 'shared/ui/spin'
 
-const TextEditor: React.FC<{onChange(): void}> = ({onChange}) => {
+const TextEditor: React.FC<{onChange(editorState: EditorState): void}> = ({
+  onChange,
+}) => {
   const editor = useEditorContext()
 
   function handleChange(editorState: EditorState) {
     editor.onChange(editorState)
-    onChange()
+    onChange(editorState)
   }
 
   return (
@@ -180,7 +184,13 @@ const NotePage: React.FC<{uuid: string; className: string}> = ({
   }
 
   return (
-    <div className={clsx('py-6 flex flex-col', className)}>
+    <div className={clsx('py-6 flex flex-col relative', className)}>
+      {patchNoteMutation.isLoading && (
+        <div className="absolute right-0 top-0 mr-8 mt-6 flex items-center animate-pulse">
+          <Spin className="w-4 h-4 text-gray-300 " />
+          <span className="ml-3 text-sm text-gray-400">Saving</span>
+        </div>
+      )}
       <div className="px-4">
         <EditableHeading
           className="text-4xl sm:text-6xl font-bold"
