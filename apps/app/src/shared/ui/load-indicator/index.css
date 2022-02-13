@@ -1,0 +1,41 @@
+.dots-loader {
+  @apply flex space-x-1;
+
+  &__dot {
+    animation: bouncedelay 2s infinite cubic-bezier(0.62, 0.28, 0.23, 0.99) both;
+
+    @apply w-2.5 h-2.5 rounded-full bg-gray-200;
+  }
+
+  &__dot:first-child {
+    animation-delay: -160ms;
+  }
+
+  &__dot:nth-child(2) {
+    animation-delay: -80ms;
+  }
+}
+
+@keyframes bouncedelay {
+  0% {
+    transform: translateY(0);
+  }
+  16.66% {
+    transform: translateY(8px);
+  }
+  33.33% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(8px);
+  }
+  66.66% {
+    transform: translateY(0px);
+  }
+  83.33% {
+    transform: translateY(8px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
