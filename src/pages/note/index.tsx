@@ -142,7 +142,7 @@ const NotePage: React.FC<{uuid: string; className: string}> = ({
       return
     }
 
-    const html = editor.toHtml()
+    const html = editor.toHtml(editorState)
 
     patchNoteMutation.mutate({
       noteId: uuid,
