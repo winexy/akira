@@ -13,15 +13,20 @@ import isNull from 'lodash/isNull'
 import ContentLoader from 'react-content-loader'
 import {useShimmerColors} from 'shared/ui/shimmer'
 
+type NotePreview = {
+  uuid: string
+  title: string
+  // eslint-disable-next-line camelcase
+  updated_at: string
+}
+
 const Notes: FC = () => {
   const history = useHistory()
   const [noteUUID, setNoteUUID] = useState<string | null>(null)
   const {backgroundColor, foregroundColor} = useShimmerColors()
 
   const {data: notes, isLoading} = useQuery('notes', () =>
-    api
-      .get<Array<{uuid: string; title: string}>>('notes/preview')
-      .then(res => res.data),
+    api.get<Array<NotePreview>>('notes/preview').then(res => res.data),
   )
 
   const createEmptyNoteMutation = useMutation(() =>
@@ -79,7 +84,7 @@ const Notes: FC = () => {
               <li key={note.uuid}>
                 <button
                   className={clsx(
-                    'w-full flex px-2 py-2',
+                    'w-full flex items-center px-2 py-2',
                     'rounded-md dark:text-white',
                     'hover:bg-gray-100 hover:text-blue-500 dark:hover:bg-dark-500',
                     'transition ease-in duration-150',
