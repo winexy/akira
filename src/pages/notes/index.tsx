@@ -5,22 +5,25 @@ import {api} from 'shared/api'
 import {PageView} from 'shared/ui/page-view'
 import isEmpty from 'lodash/isEmpty'
 import {Empty} from 'shared/ui/empty'
-import {Button} from 'shared/ui/button'
 import {DocumentTextIcon} from '@heroicons/react/outline'
 import {useHistory} from 'react-router'
 import clsx from 'clsx'
 import NotePage from 'pages/note'
 import isNull from 'lodash/isNull'
+import ContentLoader from 'react-content-loader'
+import {useShimmerColors} from 'shared/ui/shimmer'
 
 const Notes: FC = () => {
   const history = useHistory()
   const [noteUUID, setNoteUUID] = useState<string | null>(null)
+  const {backgroundColor, foregroundColor} = useShimmerColors()
 
-  const {data: notes} = useQuery('notes', () =>
+  const {data: notes, isLoading} = useQuery('notes', () =>
     api
       .get<Array<{uuid: string; title: string}>>('notes/preview')
       .then(res => res.data),
   )
+
   const createEmptyNoteMutation = useMutation(() =>
     api.post('notes').then(res => res.data),
   )
@@ -53,7 +56,23 @@ const Notes: FC = () => {
             <PlusIcon width={32} height={32} />
           </button>
         </div>
-        {isEmpty(notes) && <Empty message="You haven't created any note" />}
+        {isLoading && (
+          <ContentLoader
+            className="mt-4 px-2"
+            width="100%"
+            backgroundColor={backgroundColor}
+            foregroundColor={foregroundColor}
+          >
+            <rect x="0" y="0" rx="8" ry="8" width="90%" height="24" />
+            <rect x="0" y="32" rx="8" ry="8" width="70%" height="24" />
+            <rect x="0" y="64" rx="8" ry="8" width="80%" height="24" />
+            <rect x="0" y="96" rx="8" ry="8" width="60%" height="24" />
+            <rect x="0" y="128" rx="8" ry="8" width="40%" height="24" />
+          </ContentLoader>
+        )}
+        {!isLoading && isEmpty(notes) && (
+          <Empty message="You haven't created any note" />
+        )}
         {Array.isArray(notes) && (
           <ul className="mt-4">
             {notes.map(note => (
