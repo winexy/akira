@@ -18,7 +18,7 @@ function useHotkey(definition: string, info: HotKeyInfo) {
 
   if (isNil(context)) {
     throw new Error(
-      'useHotkey hook should be used within HotkeyContext.Provider'
+      'useHotkey hook should be used within HotkeyContext.Provider',
     )
   }
 
@@ -40,7 +40,7 @@ function Handler(event: KeyboardEvent) {
 
   if (import.meta.env.DEV) {
     window.console.debug(
-      `[HotKeyContext]: ${HotKey.inspect(hotkey)} "${hotkeyInfo.description}"`
+      `[HotKeyContext]: ${HotKey.inspect(hotkey)} "${hotkeyInfo.description}"`,
     )
   }
 

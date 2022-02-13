@@ -95,7 +95,7 @@ export const SortingBottomSheet: React.FC<Props> = ({sortType, onChange}) => {
               <CheckIcon
                 className={clsx(
                   'mr-2 w-6 h-6 ',
-                  type === sortType ? 'text-blue-500' : 'text-gray-200'
+                  type === sortType ? 'text-blue-500' : 'text-gray-200',
                 )}
               />
               <span

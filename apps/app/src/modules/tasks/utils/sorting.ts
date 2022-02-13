@@ -6,13 +6,13 @@ export enum SortEnum {
   ImportantASC = 'Important::ASC',
   ImportantDESC = 'Important::DESC',
   CompletedASC = 'Completed::ASC',
-  CompletedDESC = 'Completed::DESC'
+  CompletedDESC = 'Completed::DESC',
 }
 
 function compareBy(
   key: 'is_important' | 'is_completed',
   taskA: ApiTask,
-  taskB: ApiTask
+  taskB: ApiTask,
 ) {
   if (taskA[key] && !taskB[key]) return -1
   if (taskB[key] && !taskA[key]) return 1

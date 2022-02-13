@@ -9,7 +9,7 @@ export function useAddToMyDayMutation() {
       queryClient.invalidateQueries(TaskQuery.MyDay())
       queryClient.invalidateQueries(TaskQuery.One(taskId))
       queryClient.invalidateQueries(TaskQuery.Week())
-    }
+    },
   })
 }
 
@@ -21,6 +21,6 @@ export function useRemoveFromMyDayMutation() {
       queryClient.invalidateQueries(TaskQuery.MyDay())
       queryClient.invalidateQueries(TaskQuery.One(taskId))
       queryClient.invalidateQueries(TaskQuery.Week())
-    }
+    },
   })
 }

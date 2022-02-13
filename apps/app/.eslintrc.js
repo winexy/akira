@@ -5,7 +5,7 @@ module.exports = {
   plugins: ['jsx-a11y', 'react-hooks', 'jest'],
   env: {
     browser: true,
-    'jest/globals': true
+    'jest/globals': true,
   },
   overrides: [
     {
@@ -15,19 +15,19 @@ module.exports = {
         ecmaVersion: 2021,
         sourceType: 'module',
         ecmaFeatures: {
-          jsx: true
+          jsx: true,
         },
-        project: './tsconfig.json'
+        project: './tsconfig.json',
       },
-      plugins: ['@typescript-eslint']
-    }
+      plugins: ['@typescript-eslint'],
+    },
   ],
   rules: {
     'react/jsx-filename-extension': [
       1,
       {
-        extensions: ['.tsx', '.jsx']
-      }
+        extensions: ['.tsx', '.jsx'],
+      },
     ],
     'react/prop-types': 'off',
     'comma-dangle': 'off',
@@ -45,22 +45,22 @@ module.exports = {
       'error',
       {
         functions: false,
-        classes: false
-      }
+        classes: false,
+      },
     ],
     'no-unused-expressions': [
       'error',
       {
         allowShortCircuit: true,
-        allowTernary: true
-      }
+        allowTernary: true,
+      },
     ],
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': [
       'warn',
       {
-        additionalHooks: 'useDispatch'
-      }
+        additionalHooks: 'useDispatch',
+      },
     ],
     'react/destructuring-assignment': 'off',
     'react/jsx-props-no-spreading': 'off',
@@ -72,25 +72,25 @@ module.exports = {
     'arrow-body-style': 'off',
     'no-param-reassign': [
       'error',
-      {props: true, ignorePropertyModificationsFor: ['draft', 'acc']}
+      {props: true, ignorePropertyModificationsFor: ['draft', 'acc']},
     ],
     'object-curly-newline': 'off', // prefer prettier
     'no-undef': 'off', // false positive error,
     'no-nested-ternary': 'off',
     'import/no-extraneous-dependencies': [
       'error',
-      {devDependencies: ['**/*.test.jsx', '**/*.test.tsx', '**/*.test.js']}
-    ]
+      {devDependencies: ['**/*.test.jsx', '**/*.test.tsx', '**/*.test.js']},
+    ],
   },
   settings: {
     'import/resolver': {
       node: {
-        extensions: ['.js', '.jsx', '.ts', '.tsx']
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
       },
       alias: {
         map: alias.eslint(),
-        extensions: ['.jsx', '.jsx', '.ts', '.tsx']
-      }
-    }
-  }
+        extensions: ['.jsx', '.jsx', '.ts', '.tsx'],
+      },
+    },
+  },
 }

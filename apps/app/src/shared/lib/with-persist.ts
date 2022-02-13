@@ -6,14 +6,14 @@ type PersistConfig = {
 }
 
 const defaultConfig = {
-  key: 'persist'
+  key: 'persist',
 }
 
 const isExpired = (expire: number) => expire < Date.now()
 
 export const withPersist = <State>(
   store: Store<State>,
-  config: PersistConfig = defaultConfig
+  config: PersistConfig = defaultConfig,
 ) => {
   const name = store.shortName
   const {key, expire} = config

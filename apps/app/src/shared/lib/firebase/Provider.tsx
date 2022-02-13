@@ -33,7 +33,7 @@ const defaultContextValue: ContextValueT = {
   login,
   logout,
   isAuthenticated: false,
-  isLoading: false
+  isLoading: false,
 }
 
 const Context = createContext<ContextValueT>(defaultContextValue)
@@ -46,7 +46,7 @@ type Props = {
 
 export const FirebaseAuthProvider: React.FC<Props> = ({
   children,
-  onAuthSuccess = noop
+  onAuthSuccess = noop,
 }) => {
   const [user, setUser] = useState<ContextValueT['user']>(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -59,14 +59,14 @@ export const FirebaseAuthProvider: React.FC<Props> = ({
           isAuthenticated,
           isLoading,
           login,
-          logout
+          logout,
         }
       : {
           user: null,
           isAuthenticated: false,
           isLoading,
           login,
-          logout
+          logout,
         }
 
   useEffect(() => {

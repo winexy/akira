@@ -1,7 +1,7 @@
 import React, {MutableRefObject, useEffect, useRef} from 'react'
 import {
   $activeActionSheet,
-  closeActionSheet
+  closeActionSheet,
 } from 'shared/ui/action-sheet/model'
 import {useStore} from 'effector-react'
 import {CSSTransition} from 'react-transition-group'
@@ -24,7 +24,7 @@ const TRANSITION_DURATION = 500
 const Action: React.FC<ActionProps> = ({
   children,
   onClick,
-  destructive = false
+  destructive = false,
 }) => {
   const handleClick = (event: React.MouseEvent) => {
     event.preventDefault()
@@ -45,7 +45,7 @@ const Action: React.FC<ActionProps> = ({
           'rounded-lg',
           'focus:outline-none active:bg-gray-200 dark:active:bg-dark-400',
           'focus-visible:ring-4 focus-visible:ring-blue-500',
-          destructive ? 'text-red-500' : 'text-blue-500'
+          destructive ? 'text-red-500' : 'text-blue-500',
         )}
         type="button"
         onClick={handleClick}
@@ -58,7 +58,7 @@ const Action: React.FC<ActionProps> = ({
 
 function useInitialFocus(
   isVisible: boolean,
-  ref: MutableRefObject<HTMLElement | null>
+  ref: MutableRefObject<HTMLElement | null>,
 ) {
   useEffect(() => {
     if (isVisible && ref.current) {
@@ -79,7 +79,7 @@ function useCleanup(isVisible: boolean) {
 
 const ActionSheet: React.FC<Props> & {Action: typeof Action} = ({
   children,
-  name
+  name,
 }) => {
   const ref = useRef<HTMLDivElement>(null)
   const cancelRef = useRef<HTMLButtonElement>(null)
@@ -131,7 +131,7 @@ const ActionSheet: React.FC<Props> & {Action: typeof Action} = ({
                 'transition ease-in duration-75',
                 'focus:outline-none',
                 'focus-visible:ring-4 focus-visible:ring-blue-500',
-                'active:bg-gray-200 dark:active:bg-dark-400'
+                'active:bg-gray-200 dark:active:bg-dark-400',
               )}
               onClick={onCancel}
             >

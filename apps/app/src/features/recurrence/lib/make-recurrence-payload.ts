@@ -22,11 +22,11 @@ function matchFrequency(type: CustomRecurrenceType) {
 
 export function makeCustomRule(
   type: CustomRecurrenceType,
-  interval: number
+  interval: number,
 ): RecurrenceParams {
   return {
     frequency: matchFrequency(type),
-    interval
+    interval,
   }
 }
 
@@ -37,25 +37,25 @@ export type RecurrenceParams = {
 }
 
 export function makeRecurrencePayload(
-  type: Exclude<RecurrenceEnum, RecurrenceEnum.Custom>
+  type: Exclude<RecurrenceEnum, RecurrenceEnum.Custom>,
 ): RecurrenceParams {
   switch (type) {
     case RecurrenceEnum.Daily:
       return {
-        frequency: RRule.DAILY
+        frequency: RRule.DAILY,
       }
     case RecurrenceEnum.Weekly:
       return {
-        frequency: RRule.WEEKLY
+        frequency: RRule.WEEKLY,
       }
     case RecurrenceEnum.Monthly:
       return {
-        frequency: RRule.MONTHLY
+        frequency: RRule.MONTHLY,
       }
     case RecurrenceEnum.Weekdays:
       return {
         frequency: RRule.DAILY,
-        weekDays: ['MO', 'TU', 'WE', 'TH', 'FR']
+        weekDays: ['MO', 'TU', 'WE', 'TH', 'FR'],
       }
     default:
       return exhaustiveCheck(type)

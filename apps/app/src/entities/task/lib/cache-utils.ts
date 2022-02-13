@@ -18,13 +18,13 @@ export type MutationContext = {
 
 type DraftMutation = (
   draft: Draft<ApiTask>,
-  prevTask: Immutable<ApiTask>
+  prevTask: Immutable<ApiTask>,
 ) => void
 
 export function writeOptimisticUpdate(
   taskId: TaskId,
   queryClient: QueryClient,
-  mutateDraft: DraftMutation
+  mutateDraft: DraftMutation,
 ): MutationContext {
   const [prevTask, newTask] = writeTaskCache(taskId, queryClient, mutateDraft)
   const prevTasksEntries = writeTaskListsCache(queryClient, newTask)
@@ -35,7 +35,7 @@ export function writeOptimisticUpdate(
 export function rollbackOptimisticUpdate(
   taskId: TaskId,
   queryClient: QueryClient,
-  context: MutationContext
+  context: MutationContext,
 ) {
   rollbackTaskMutation(taskId, queryClient, context.prevTask)
   rollbackTaskListMutations(queryClient, context.prevTasksEntries)
@@ -44,7 +44,7 @@ export function rollbackOptimisticUpdate(
 
 function writeTaskListQueryCache(
   task: ApiTask | null,
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ) {
   if (isNull(task) || isNull(task.list_id)) {
     return
@@ -71,7 +71,7 @@ function writeTaskListQueryCache(
 export function writeTaskCache(
   taskId: TaskId,
   queryClient: QueryClient,
-  mutateDraft: DraftMutation
+  mutateDraft: DraftMutation,
 ): [null, null] | [ApiTask, ApiTask] {
   const prevTask = queryClient.getQueryData<ApiTask>(TaskQuery.One(taskId))
 
@@ -90,7 +90,7 @@ export function writeTaskCache(
 export function writeTaskListCache(
   tasksQueryKey: Array<string>,
   queryClient: QueryClient,
-  updatedTask: ApiTask | null
+  updatedTask: ApiTask | null,
 ): ApiTask[] | null {
   const prevTasks = queryClient.getQueryData<ApiTask[]>(tasksQueryKey)
 
@@ -106,7 +106,7 @@ export function writeTaskListCache(
       if (index !== -1) {
         draft[index] = updatedTask
       }
-    })
+    }),
   )
 
   return prevTasks
@@ -114,7 +114,7 @@ export function writeTaskListCache(
 
 export function writeTaskListsCache(
   queryClient: QueryClient,
-  updatedTask: ApiTask | null
+  updatedTask: ApiTask | null,
 ) {
   const keys = [TaskQuery.All(), TaskQuery.MyDay(), TaskQuery.Week()]
 
@@ -123,18 +123,18 @@ export function writeTaskListsCache(
     (entries, queryKey) => {
       entries.push([
         queryKey,
-        writeTaskListCache(queryKey, queryClient, updatedTask)
+        writeTaskListCache(queryKey, queryClient, updatedTask),
       ])
 
       return entries
     },
-    [] as PrevTasksEntries
+    [] as PrevTasksEntries,
   )
 }
 
 export function rollbackTaskListMutations(
   queryClient: QueryClient,
-  prevTasksEntries: PrevTasksEntries
+  prevTasksEntries: PrevTasksEntries,
 ) {
   forEach(([queryKey, tasks]) => {
     rollbackTaskListMutation(queryKey, queryClient, tasks)
@@ -144,7 +144,7 @@ export function rollbackTaskListMutations(
 export function rollbackTaskMutation(
   taskId: TaskId,
   queryClient: QueryClient,
-  prevTask: ApiTask | null
+  prevTask: ApiTask | null,
 ) {
   if (prevTask) {
     queryClient.setQueryData(TaskQuery.One(taskId), prevTask)
@@ -154,7 +154,7 @@ export function rollbackTaskMutation(
 export function rollbackTaskListMutation(
   tasksQueryKey: Array<string>,
   queryClient: QueryClient,
-  prevTasks: ApiTask[] | null
+  prevTasks: ApiTask[] | null,
 ) {
   if (prevTasks) {
     queryClient.setQueryData(tasksQueryKey, prevTasks)
@@ -163,7 +163,7 @@ export function rollbackTaskListMutation(
 
 export function writeTasksToCache(
   queryClient: QueryClient,
-  tasks: Array<ApiTask>
+  tasks: Array<ApiTask>,
 ) {
   tasks.forEach(task => queryClient.setQueryData(TaskQuery.One(task.id), task))
 }
@@ -181,7 +181,7 @@ export function removeTask(tasks: ApiTask[], taskId: TaskId) {
 export function removeTasksFromCache(
   queryClient: QueryClient,
   queryKey: Array<string>,
-  taskId: TaskId
+  taskId: TaskId,
 ) {
   const tasks = queryClient.getQueryData<ApiTask[]>(queryKey)
 

@@ -11,7 +11,7 @@ type Props = {
 export const Empty: FC<Props> = ({
   className,
   message = 'No data',
-  children
+  children,
 }) => {
   const imgRef = useRef(null)
 
@@ -19,7 +19,7 @@ export const Empty: FC<Props> = ({
     <div
       className={clsx(
         'flex flex-col justify-center items-center pt-12',
-        className
+        className,
       )}
     >
       <Transition.Scale nodeRef={imgRef} appear scaleFrom={0.5}>

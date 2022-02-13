@@ -18,7 +18,7 @@ const TagsPage: React.FC = () => {
       queryClient.setQueryData('tags', () => {
         return tags.filter(tag => tag.id !== tagId)
       })
-    }
+    },
   })
 
   const isTagPending = (id: number) =>

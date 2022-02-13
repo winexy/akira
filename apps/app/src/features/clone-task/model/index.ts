@@ -13,7 +13,7 @@ export function useCloneTaskMutation(taskId: TaskId) {
     {
       onSuccess() {
         queryClient.invalidateQueries(TaskQuery.MyDay())
-      }
-    }
+      },
+    },
   )
 }

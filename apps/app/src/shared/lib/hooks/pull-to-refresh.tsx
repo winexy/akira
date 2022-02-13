@@ -23,7 +23,7 @@ const waitUntil = (selector: string, onReady: () => void) => {
 
     if (now - startTime >= 5_000) {
       throw new Error(
-        `[waitUntil] element ${selector} is not ready after timeout`
+        `[waitUntil] element ${selector} is not ready after timeout`,
       )
     }
 
@@ -48,7 +48,7 @@ const waitUntil = (selector: string, onReady: () => void) => {
 
 export function usePullToRefresh({
   onRefresh,
-  mainElement = 'body'
+  mainElement = 'body',
 }: PullToRefresh.Options) {
   const ref = useRef<PullToRefreshInstance>()
 
@@ -58,7 +58,7 @@ export function usePullToRefresh({
         mainElement,
         distReload: 30,
         iconArrow: ReactDOMServer.renderToString(
-          <ArrowDownIcon className="w-4 h-4 mx-auto" />
+          <ArrowDownIcon className="w-4 h-4 mx-auto" />,
         ),
         iconRefreshing: ReactDOMServer.renderToString(
           <div className="relative flex items-center justify-center">
@@ -73,9 +73,9 @@ export function usePullToRefresh({
             >
               <rect rx="0" ry="0" x="0" y="0" width="100%" height="30" />
             </ContentLoader>
-          </div>
+          </div>,
         ),
-        onRefresh
+        onRefresh,
       })
     })
 

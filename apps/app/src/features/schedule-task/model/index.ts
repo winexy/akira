@@ -10,14 +10,14 @@ export function useScheduleTaskMutation(taskId: TaskId) {
     (date: string) =>
       api.post(`task-scheduler/schedule`, {
         task_id: taskId,
-        date
+        date,
       }),
     {
       onSuccess() {
         queryClient.refetchQueries(TaskQuery.One(taskId))
         queryClient.invalidateQueries(TaskQuery.MyDay())
         queryClient.invalidateQueries(TaskQuery.Week())
-      }
-    }
+      },
+    },
   )
 }

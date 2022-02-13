@@ -17,7 +17,7 @@ const toESLint = pipe(
     const [alias, fullpath] = unpackPair(pair)
     const resolvedPath = path.resolve(root, fullpath)
     return map(withoutWildCard)([alias, resolvedPath])
-  })
+  }),
 )
 
 const toRollup = pipe(toESLint, fromPairs)
@@ -32,14 +32,14 @@ const toJestMapper = pipe(
 
     return [
       pipe(withoutWildCard, toAliasRegex)(alias),
-      pipe(withoutWildCard, withoutPrefix, toPathRegex)(fullpath)
+      pipe(withoutWildCard, withoutPrefix, toPathRegex)(fullpath),
     ]
   }),
-  fromPairs
+  fromPairs,
 )
 
 module.exports = {
   eslint: () => toESLint(tsConfigPaths),
   rollup: () => toRollup(tsConfigPaths),
-  jest: override => ({...toJestMapper(tsConfigPaths), ...override})
+  jest: override => ({...toJestMapper(tsConfigPaths), ...override}),
 }

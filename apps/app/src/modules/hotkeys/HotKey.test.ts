@@ -12,20 +12,20 @@ describe('Hotkey.fromEvent', () => {
     ({key, property, expected}) => {
       const event = new KeyboardEvent('keydown', {
         key,
-        [property]: true
+        [property]: true,
       })
 
       const def = HotKey.fromEvent(event)
 
       expect(def).toBe(expected)
-    }
+    },
   )
 
   it('should combine hot key extras', () => {
     const event = new KeyboardEvent('keydown', {
       key: 'k',
       shiftKey: true,
-      metaKey: true
+      metaKey: true,
     })
 
     const def = HotKey.fromEvent(event)

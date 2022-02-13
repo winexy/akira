@@ -24,7 +24,7 @@ type RecurrentTask = {
 const ReccurentTasksPage: React.FC = () => {
   const queryClient = useQueryClient()
   const query = useQuery<Array<RecurrentTask>>('recurrent-tasks', () =>
-    api.get('recurrence/tasks').then(res => res.data)
+    api.get('recurrence/tasks').then(res => res.data),
   )
 
   const removeMutation = useMutation(
@@ -32,8 +32,8 @@ const ReccurentTasksPage: React.FC = () => {
     {
       onSuccess() {
         queryClient.invalidateQueries('recurrent-tasks')
-      }
-    }
+      },
+    },
   )
 
   return (
@@ -47,7 +47,7 @@ const ReccurentTasksPage: React.FC = () => {
               <>
                 <section
                   className={clsx(
-                    'border dark:border-dark-400 shadow-lg rounded-lg'
+                    'border dark:border-dark-400 shadow-lg rounded-lg',
                   )}
                 >
                   <div className="px-4 py-3">
@@ -74,12 +74,12 @@ const ReccurentTasksPage: React.FC = () => {
                       'px-4 py-2 w-full border-t dark:border-dark-400',
                       'active:bg-red-500 active:text-white',
                       'focus:outline-none rounded-b-lg',
-                      'transition ease-in duration-75'
+                      'transition ease-in duration-75',
                     )}
                     type="button"
                     onClick={() => {
                       openActionSheet(
-                        `confirm-recurrence-removal-${recurrence.id}`
+                        `confirm-recurrence-removal-${recurrence.id}`,
                       )
                     }}
                   >

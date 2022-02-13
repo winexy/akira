@@ -4,7 +4,7 @@ import React, {
   useRef,
   forwardRef,
   CSSProperties,
-  useImperativeHandle
+  useImperativeHandle,
 } from 'react'
 import clsx, {ClassValue} from 'clsx'
 import pipe from 'lodash/fp/pipe'
@@ -36,7 +36,7 @@ export const Swipeable = forwardRef<
 >(
   (
     {Component = 'div', children, before, after, className, ...props},
-    parentRef
+    parentRef,
   ) => {
     const [shift, setShift] = useState(0)
     const touchStartRef = useRef(0)
@@ -47,7 +47,7 @@ export const Swipeable = forwardRef<
     const afterRef = useRef<HTMLDivElement>(null)
 
     useImperativeHandle(parentRef, () => ({
-      unshift: () => setShift(0)
+      unshift: () => setShift(0),
     }))
 
     useEffect(() => {
@@ -62,7 +62,7 @@ export const Swipeable = forwardRef<
       const onTouchEnd = () => {
         const {isSwipeLeft, isSwipeRight} = swipeInfoRef.current
         const finalShift = Math.abs(
-          finalTouchRef.current - touchStartRef.current
+          finalTouchRef.current - touchStartRef.current,
         )
 
         const isOverSwipeLeft = isSwipeLeft && finalShift > afterWidth
@@ -155,5 +155,5 @@ export const Swipeable = forwardRef<
         )}
       </Component>
     )
-  }
+  },
 )

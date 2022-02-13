@@ -2,6 +2,6 @@ export {
   auth,
   signInWithRedirect,
   GoogleProvider,
-  setupCloudMessaging
+  setupCloudMessaging,
 } from './auth'
 export {useFirebaseAuth, FirebaseAuthProvider} from './Provider'

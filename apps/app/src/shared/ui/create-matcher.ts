@@ -6,7 +6,7 @@ export function createMatcher<T extends string>(name: string) {
       }
 
       globalThis.console.warn(
-        `[Matcher] unknown "${variant}" variant for "${name}" matcher`
+        `[Matcher] unknown "${variant}" variant for "${name}" matcher`,
       )
 
       return ''

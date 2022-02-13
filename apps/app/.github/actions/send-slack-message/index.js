@@ -9,11 +9,11 @@ async function run() {
     await fetch(webhook, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        blocks: getBlocks()
-      })
+        blocks: getBlocks(),
+      }),
     })
 
     core.debug('message sent')
@@ -29,7 +29,7 @@ async function run() {
     return [
       {
         type: 'section',
-        text: md(message)
+        text: md(message),
       },
       {
         type: 'section',
@@ -37,9 +37,9 @@ async function run() {
           info('Repository', context.repo.repo),
           info('Event', context.eventName),
           info('SHA', context.sha),
-          info('Ref', context.ref)
-        ]
-      }
+          info('Ref', context.ref),
+        ],
+      },
     ]
 
     function info(label, value) {
@@ -49,7 +49,7 @@ async function run() {
     function md(text) {
       return {
         type: 'mrkdwn',
-        text
+        text,
       }
     }
   }

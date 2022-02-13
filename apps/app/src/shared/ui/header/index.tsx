@@ -8,7 +8,7 @@ import {Akira} from 'shared/ui/akira'
 
 export const Header: React.FC<{className?: string}> = ({
   className,
-  children
+  children,
 }) => {
   const [isFloating, setIsFloating] = useState(false)
 
@@ -32,9 +32,9 @@ export const Header: React.FC<{className?: string}> = ({
         'transition-shadow ease-in duration-100',
         'bg-white dark:bg-dark-600 text-gray-700 dark:text-white',
         {
-          'shadow-2xl border-b bg-gray-100 dark:border-gray-600': isFloating
+          'shadow-2xl border-b bg-gray-100 dark:border-gray-600': isFloating,
         },
-        className
+        className,
       )}
     >
       {isUndefined(children) ? (

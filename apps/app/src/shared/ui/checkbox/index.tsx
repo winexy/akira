@@ -27,7 +27,7 @@ export const Checkbox: React.FC<Props> = ({
   onClick = noop,
   className = '',
   size = 'xs',
-  labeled
+  labeled,
 }) => {
   const ref = useRef(null)
   const Element = labeled ? 'div' : 'label'
@@ -36,7 +36,7 @@ export const Checkbox: React.FC<Props> = ({
     <Element
       className={clsx(
         className,
-        'focus-within:ring-2 rounded transition ease-in duration-150'
+        'focus-within:ring-2 rounded transition ease-in duration-150',
       )}
       onClick={onClick}
     >
@@ -53,9 +53,9 @@ export const Checkbox: React.FC<Props> = ({
           'transition ease-in duration-75',
           {
             'bg-indigo-400 border-indigo-500': isChecked,
-            'bg-white dark:bg-dark-500 border-gray-400 dark:border-dark-400': !isChecked
+            'bg-white dark:bg-dark-500 border-gray-400 dark:border-dark-400': !isChecked,
           },
-          matchSize(size)
+          matchSize(size),
         )}
       >
         <Transition.Scale nodeRef={ref} appear in={isChecked} unmountOnExit>

@@ -3,7 +3,7 @@ import identity from 'lodash/fp/identity'
 import {
   extractError,
   mutableInjectToken,
-  mutableInjectBaseURL
+  mutableInjectBaseURL,
 } from './interceptors'
 
 const api = axios.create()

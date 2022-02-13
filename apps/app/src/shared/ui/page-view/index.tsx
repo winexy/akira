@@ -17,7 +17,7 @@ export const PageView: React.FC<ViewProps> = ({
   children,
   className,
   header,
-  withBackNavigation = false
+  withBackNavigation = false,
 }) => {
   const history = useHistory()
   const canGoBack = history.length > 2
@@ -44,7 +44,7 @@ export const PageView: React.FC<ViewProps> = ({
         id={id}
         className={clsx(
           'bg-white text-gray-700 dark:bg-dark-600 dark:text-white',
-          className
+          className,
         )}
       >
         {children}

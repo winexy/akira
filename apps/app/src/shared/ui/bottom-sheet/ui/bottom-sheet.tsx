@@ -43,7 +43,7 @@ export const BottomSheet: FC<BottomSheetProps> = props => {
     onBlackoutTouchEnd,
     onSheetTouchStart,
     onSheetTouchMove,
-    onSheetTouchEnd
+    onSheetTouchEnd,
   } = props
 
   return (
@@ -103,7 +103,7 @@ export const BottomSheet: FC<BottomSheetProps> = props => {
               ref={contentRef}
               className={clsx(
                 'max-h-screen overscroll-none overflow-scroll',
-                className
+                className,
               )}
             >
               <ErrorBoundary FallbackComponent={Fallback}>

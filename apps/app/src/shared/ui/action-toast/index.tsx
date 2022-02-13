@@ -68,7 +68,7 @@ ActionToast.Button = ({className, Icon, isLoading = false, ...props}) => {
       className={clsx(
         'flex justify-center items-center',
         'h-12 w-12 focus:outline-none',
-        className
+        className,
       )}
       type="button"
       {...props}

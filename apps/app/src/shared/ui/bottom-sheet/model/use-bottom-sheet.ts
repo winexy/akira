@@ -1,7 +1,7 @@
 import {
   clearAllBodyScrollLocks,
   disableBodyScroll,
-  enableBodyScroll
+  enableBodyScroll,
 } from 'body-scroll-lock'
 import {useStore, useStoreMap} from 'effector-react'
 import find from 'lodash/fp/find'
@@ -12,13 +12,13 @@ import {
   TouchEventHandler,
   useEffect,
   useRef,
-  useState
+  useState,
 } from 'react'
 import {
   $activeBottomSheet,
   $bottomSheets,
   hideBottomSheet,
-  Sheet
+  Sheet,
 } from './store'
 
 export type BottomSheetState = {
@@ -40,11 +40,11 @@ export type BottomSheetEvents = {
 const extractTouch = get('changedTouches.0.clientY')
 
 export function useBottomSheet(
-  name: string
+  name: string,
 ): BottomSheetState & BottomSheetEvents {
   const sheet = useStoreMap(
     $bottomSheets,
-    sheets => find({name}, sheets) ?? null
+    sheets => find({name}, sheets) ?? null,
   )
   const activeBottomSheet = useStore($activeBottomSheet)
   const [isBlackoutTouchStarted, setIsBlackoutTouchStarted] = useState(false)
@@ -128,6 +128,6 @@ export function useBottomSheet(
     onSheetTouchMove,
     onSheetTouchStart,
     onBlackoutTouchEnd,
-    onBlackoutTouchStart
+    onBlackoutTouchStart,
   }
 }

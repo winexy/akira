@@ -5,5 +5,5 @@ export const TaskQuery = {
   All: constant(['tasks', 'all']),
   MyDay: constant(['tasks', 'myday']),
   Week: constant(['tasks', 'week']),
-  List: (taskId: string) => ['tasks', 'lists', taskId]
+  List: (taskId: string) => ['tasks', 'lists', taskId],
 }

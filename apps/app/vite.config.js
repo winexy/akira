@@ -13,8 +13,8 @@ function GetServerConfig() {
     open: true,
     https: {
       key: readFileSync('./cert/localhost-key.pem'),
-      cert: readFileSync('./cert/localhost.pem')
-    }
+      cert: readFileSync('./cert/localhost.pem'),
+    },
   }
 }
 
@@ -22,10 +22,10 @@ function GetServerConfig() {
 export default defineConfig({
   server: GetServerConfig(),
   resolve: {
-    alias: alias.rollup()
+    alias: alias.rollup(),
   },
   define: {
-    __VERSION__: JSON.stringify(pkg.version)
+    __VERSION__: JSON.stringify(pkg.version),
   },
-  plugins: [react()]
+  plugins: [react()],
 })

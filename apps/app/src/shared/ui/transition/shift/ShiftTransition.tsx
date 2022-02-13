@@ -12,14 +12,14 @@ const TranslateY = {
   left: 0,
   right: 0,
   top: '-100%',
-  bottom: '100%'
+  bottom: '100%',
 }
 
 const TranslateX = {
   top: 0,
   bottom: 0,
   left: '-100%',
-  right: '100%'
+  right: '100%',
 }
 
 export const ShiftTransition: FC<Props> = ({
@@ -34,7 +34,7 @@ export const ShiftTransition: FC<Props> = ({
     '--ui-shift-enter-duration': `${timeout}ms`,
     '--ui-shift-exit-duration': `${timeout}ms`,
     '--ui-shift-translate-y': TranslateY[from],
-    '--ui-shift-translate-x': TranslateX[from]
+    '--ui-shift-translate-x': TranslateX[from],
   }
 
   const child = React.Children.only(children)

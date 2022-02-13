@@ -3,7 +3,7 @@ import React, {
   PropsWithChildren,
   useEffect,
   useRef,
-  useState
+  useState,
 } from 'react'
 import clsx from 'clsx'
 import {
@@ -16,7 +16,7 @@ import {
   SearchIcon,
   DocumentTextIcon,
   RefreshIcon,
-  NewspaperIcon
+  NewspaperIcon,
 } from '@heroicons/react/solid'
 import {config} from 'shared/config'
 import {Tag} from 'modules/tags/components/Tag'
@@ -30,7 +30,7 @@ import {TaskLists} from 'modules/lists/components/TaskLists'
 import {
   clearAllBodyScrollLocks,
   disableBodyScroll,
-  enableBodyScroll
+  enableBodyScroll,
 } from 'body-scroll-lock'
 import {useHotkey} from 'modules/hotkeys/HotKeyContext'
 import {HotKey} from 'modules/hotkeys/HotKey'
@@ -76,7 +76,7 @@ export const MenuItem: React.FC<MenuItemProps> & {
 
 const getContentTranslateX = (
   menuElement: HTMLElement | null,
-  contentElement: HTMLDivElement | null
+  contentElement: HTMLDivElement | null,
 ) => {
   if (isNull(menuElement) || isNull(contentElement)) {
     return '85%'
@@ -122,7 +122,7 @@ MenuItem.Button = ({onClick, Icon}) => (
 function useOpenMenuLock(
   rootId: string,
   isOpen: boolean,
-  menu: HTMLElement | null
+  menu: HTMLElement | null,
 ) {
   useEffect(() => {
     const root = document.getElementById(rootId)
@@ -133,7 +133,7 @@ function useOpenMenuLock(
         disableBodyScroll(root, {
           allowTouchMove(el) {
             return menu?.contains(el)
-          }
+          },
         })
       } else {
         enableBodyScroll(root)
@@ -181,7 +181,7 @@ const ScrollShadow = forwardRef<
           'from-zinc-700 dark:from-dark-700 bg-gradient-to-b',
           'transition ease-in duration-75',
           'pointer-events-none',
-          {'opacity-0': (state & 0b1) !== 0b1}
+          {'opacity-0': (state & 0b1) !== 0b1},
         )}
       />
       <div ref={ref} className="h-full overflow-auto" onScroll={onScroll}>
@@ -193,7 +193,7 @@ const ScrollShadow = forwardRef<
           'from-zinc-700 dark:from-dark-700 bg-gradient-to-t',
           'transition ease-in duration-75',
           'pointer-events-none',
-          {'opacity-0': (state & 0b10) !== 0b10}
+          {'opacity-0': (state & 0b10) !== 0b10},
         )}
       />
     </div>
@@ -218,7 +218,7 @@ export const Menu: React.FC = ({children}) => {
       if (!isOpen) {
         openMenu()
       }
-    }
+    },
   })
 
   useHotkey(HotKey.of('Escape'), {
@@ -227,7 +227,7 @@ export const Menu: React.FC = ({children}) => {
       if (isOpen) {
         closeMenu()
       }
-    }
+    },
   })
 
   return (
@@ -241,10 +241,10 @@ export const Menu: React.FC = ({children}) => {
           'transform',
           'transition ease-out duration-300',
           !isOpen && '-translate-x-full',
-          isOpen && 'delay-200'
+          isOpen && 'delay-200',
         )}
         style={{
-          maxWidth: '90vw'
+          maxWidth: '90vw',
         }}
       >
         <div className="p-4 flex">
@@ -374,8 +374,8 @@ export const Menu: React.FC = ({children}) => {
           'transition-transform ease-in duration-300',
           isOpen ? 'max-vh-full ' : 'vh-full',
           {
-            'scale-90 rounded-3xl shadow-2xl h-screen overflow-hidden pointer-events-none filter opacity-75': isOpen
-          }
+            'scale-90 rounded-3xl shadow-2xl h-screen overflow-hidden pointer-events-none filter opacity-75': isOpen,
+          },
         )}
         style={{
           '--tw-translate-x': isOpen
@@ -383,7 +383,7 @@ export const Menu: React.FC = ({children}) => {
             : 'none',
           WebkitMaskImage: isOpen
             ? '-webkit-radial-gradient(white, black)'
-            : 'none'
+            : 'none',
         }}
       >
         {children}

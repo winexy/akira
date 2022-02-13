@@ -7,7 +7,7 @@ import {
   createEvent,
   createStore,
   forward,
-  sample
+  sample,
 } from 'effector'
 import floor from 'lodash/floor'
 import isNull from 'lodash/isNull'
@@ -18,7 +18,7 @@ import TimerSound from 'src/assets/sounds/timer-sound.mp3'
 enum PomodoroMode {
   Focus = 'focus',
   ShortBreak = 'short-break',
-  LongBreak = 'long-break'
+  LongBreak = 'long-break',
 }
 
 type Status = 'idle' | 'paused' | 'running' | 'aborted' | 'finished'
@@ -64,14 +64,14 @@ const $settings = combine(
     $focusDuration,
     $shortBreakDuration,
     $longBreakDuration,
-    $mode
+    $mode,
   },
   settings => ({
     focusDurationInSeconds: settings.$focusDuration * 60,
     shortBreakDurationInSeconds: settings.$shortBreakDuration * 60,
     longBreakDurationInSeconds: settings.$longBreakDuration * 60,
-    mode: settings.$mode
-  })
+    mode: settings.$mode,
+  }),
 )
 
 const $intervalId = createStore<number | null>(null)
@@ -92,7 +92,7 @@ const $time = combine(
     const seconds = formatTimeUnit(totalSeconds % 60)
 
     return {minutes, seconds}
-  }
+  },
 )
 
 const $progress = combine(
@@ -112,7 +112,7 @@ const $progress = combine(
       default:
         return exhaustiveCheck(mode)
     }
-  }
+  },
 )
 
 /** EVENTS */
@@ -203,10 +203,10 @@ $intervalId.on(stopTimerFx.done, () => null)
 
 $focusDuration.on(saveSettings, (_, data) => Math.abs(data.focusDuration))
 $shortBreakDuration.on(saveSettings, (_, data) =>
-  Math.abs(data.shortBreakDuration)
+  Math.abs(data.shortBreakDuration),
 )
 $longBreakDuration.on(saveSettings, (_, data) =>
-  Math.abs(data.longBreakDuration)
+  Math.abs(data.longBreakDuration),
 )
 
 $mode.on(changeMode, (_, mode) => mode)
@@ -228,27 +228,27 @@ $status.on(finishTimer, () => 'finished')
 
 forward({
   from: startTimer,
-  to: runTimerFx
+  to: runTimerFx,
 })
 
 forward({
   from: saveSettings,
-  to: abortTimer
+  to: abortTimer,
 })
 
 forward({
   from: changeMode,
-  to: abortTimer
+  to: abortTimer,
 })
 
 forward({
   from: modeRotated,
-  to: abortTimer
+  to: abortTimer,
 })
 
 forward({
   from: $time,
-  to: updateDocumentTitleFx
+  to: updateDocumentTitleFx,
 })
 
 /** SAMPLE  */
@@ -256,25 +256,25 @@ forward({
 sample({
   clock: finishTimer,
   source: $mode,
-  target: notifyFx
+  target: notifyFx,
 })
 
 sample({
   clock: abortTimer,
   source: $intervalId,
-  target: stopTimerFx
+  target: stopTimerFx,
 })
 
 sample({
   clock: pauseTimer,
   source: $intervalId,
-  target: stopTimerFx
+  target: stopTimerFx,
 })
 
 sample({
   clock: finishTimer,
   source: $intervalId,
-  target: stopTimerFx
+  target: stopTimerFx,
 })
 
 sample({
@@ -292,7 +292,7 @@ sample({
         return exhaustiveCheck(mode)
     }
   },
-  target: updateTimer
+  target: updateTimer,
 })
 
 sample({
@@ -310,48 +310,48 @@ sample({
         return exhaustiveCheck(source.mode)
     }
   },
-  target: updateTimer
+  target: updateTimer,
 })
 
 sample({
   clock: continueTimer,
   source: $timeLeft,
   fn: timeLeft => addSeconds(new Date(), timeLeft),
-  target: startTimer
+  target: startTimer,
 })
 
 sample({
   clock: startFocusTimer,
   source: $settings,
   fn: source => addSeconds(new Date(), source.focusDurationInSeconds),
-  target: startTimer
+  target: startTimer,
 })
 
 sample({
   clock: startShortBreakTimer,
   source: $settings,
   fn: source => addSeconds(new Date(), source.shortBreakDurationInSeconds),
-  target: startTimer
+  target: startTimer,
 })
 
 sample({
   clock: startLongBreakTimer,
   source: $settings,
   fn: source => addSeconds(new Date(), source.longBreakDurationInSeconds),
-  target: startTimer
+  target: startTimer,
 })
 
 sample({
   clock: notifyFx.done,
   source: $settings,
-  target: switchMode
+  target: switchMode,
 })
 
 sample({
   clock: skipPomodoro,
   source: $pomodoroIndex,
   fn: rotatePomodoroMode,
-  target: modeRotated
+  target: modeRotated,
 })
 
 sample({
@@ -369,7 +369,7 @@ sample({
         return exhaustiveCheck(settings.mode)
     }
   },
-  target: startTimer
+  target: startTimer,
 })
 
 export {
@@ -396,5 +396,5 @@ export {
   $focusDuration,
   $shortBreakDuration,
   $longBreakDuration,
-  saveSettings
+  saveSettings,
 }

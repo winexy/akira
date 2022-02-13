@@ -11,8 +11,8 @@ const locale = {
   ...en,
   options: {
     ...en.options,
-    weekStartsOn: 1
-  }
+    weekStartsOn: 1,
+  },
 }
 
 registerLocale('en', locale)
@@ -28,7 +28,7 @@ type Props = {
 const ChangeMonth: React.FC<{isDisabled: boolean; onClick(): void}> = ({
   isDisabled,
   onClick,
-  children
+  children,
 }) => {
   return (
     <button
@@ -41,7 +41,7 @@ const ChangeMonth: React.FC<{isDisabled: boolean; onClick(): void}> = ({
         'active:bg-gray-100',
         'focus:outline-none',
         'disabled:text-gray-200 dark:disabled:text-dark-400',
-        'disabled:bg-transparent dark:disabled:bg-transparent'
+        'disabled:bg-transparent dark:disabled:bg-transparent',
       )}
       type="button"
       disabled={isDisabled}
@@ -57,7 +57,7 @@ export const DatePicker: React.FC<Props> = ({
   onChange,
   minDate = null,
   maxDate = null,
-  className
+  className,
 }) => {
   return (
     <ReactDatePicker

@@ -28,7 +28,7 @@ type Props = {
 export const TaskDueDate: React.FC<Props> = ({
   taskId,
   isFetchingTask,
-  dueDate
+  dueDate,
 }) => {
   const swipeableRef = useRef<SwipeableRefHandle>()
   const [date, setDate] = useState<Date | null>(() => {
@@ -50,7 +50,7 @@ export const TaskDueDate: React.FC<Props> = ({
 
     if (date && shouldChangeDate) {
       patchTaskMutation.mutate({
-        due_date: format(date, 'yyyy-MM-dd')
+        due_date: format(date, 'yyyy-MM-dd'),
       })
     }
   }
@@ -63,7 +63,7 @@ export const TaskDueDate: React.FC<Props> = ({
     setDate(null)
 
     patchTaskMutation.mutate({
-      due_date: null
+      due_date: null,
     })
 
     swipeableRef.current?.unshift()

@@ -3,5 +3,5 @@ import {BottomSheetStandalone} from './standalone'
 
 export const BottomSheet = {
   UI: BottomSheetUI,
-  Standalone: BottomSheetStandalone
+  Standalone: BottomSheetStandalone,
 }

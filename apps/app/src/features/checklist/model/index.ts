@@ -14,7 +14,7 @@ export function useAddTodoMutation(taskId: TaskId) {
     (todoTitle: string) => {
       return akira.checklist.addTodo({
         taskId,
-        title: todoTitle
+        title: todoTitle,
       })
     },
     {
@@ -23,7 +23,7 @@ export function useAddTodoMutation(taskId: TaskId) {
           id: uniqueId(todoTitle),
           title: todoTitle,
           is_completed: false,
-          task_id: taskId
+          task_id: taskId,
         }
 
         return TaskCacheUtils.writeOptimisticUpdate(
@@ -31,7 +31,7 @@ export function useAddTodoMutation(taskId: TaskId) {
           queryClient,
           draft => {
             draft.checklist.push(todo)
-          }
+          },
         )
       },
       onSuccess() {
@@ -39,8 +39,8 @@ export function useAddTodoMutation(taskId: TaskId) {
       },
       onError(_, __, context: any) {
         TaskCacheUtils.rollbackOptimisticUpdate(taskId, queryClient, context)
-      }
-    }
+      },
+    },
   )
 }
 
@@ -61,8 +61,8 @@ export function useBatchAddTodoMutation(taskId: TaskId) {
             id: uniqueId(todo),
             title: todo,
             is_completed: false,
-            task_id: taskId
-          })
+            task_id: taskId,
+          }),
         )
 
         return TaskCacheUtils.writeOptimisticUpdate(
@@ -72,7 +72,7 @@ export function useBatchAddTodoMutation(taskId: TaskId) {
             optimisticTodos.forEach(todo => {
               draft.checklist.push(todo)
             })
-          }
+          },
         )
       },
       onSuccess() {
@@ -80,8 +80,8 @@ export function useBatchAddTodoMutation(taskId: TaskId) {
       },
       onError(_, __, context: any) {
         TaskCacheUtils.rollbackOptimisticUpdate(taskId, queryClient, context)
-      }
-    }
+      },
+    },
   )
 }
 
@@ -103,13 +103,13 @@ export function usePatchTodoMutation(taskId: TaskId) {
             if (index !== -1) {
               Object.assign(draft.checklist[index], patch)
             }
-          }
+          },
         )
       },
       onError(_, __, context: any) {
         TaskCacheUtils.rollbackOptimisticUpdate(taskId, queryClient, context)
-      }
-    }
+      },
+    },
   )
 }
 
@@ -128,18 +128,18 @@ export function useRemoveTodoMutation(taskId: TaskId) {
           draft => {
             draft.checklist = filter(
               todo => todo.id !== todoId,
-              draft.checklist
+              draft.checklist,
             )
-          }
+          },
         )
       },
       onError(_, __, context: any) {
         return TaskCacheUtils.rollbackOptimisticUpdate(
           taskId,
           queryClient,
-          context
+          context,
         )
-      }
-    }
+      },
+    },
   )
 }

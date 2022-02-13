@@ -3,7 +3,7 @@ import React, {
   ClipboardEventHandler,
   FormEventHandler,
   useRef,
-  useState
+  useState,
 } from 'react'
 import {ApiTask} from 'modules/tasks/types.d'
 import clsx from 'clsx'
@@ -53,7 +53,7 @@ export const ChecklistManager: React.FC<Props> = ({task, onFocus, onBlur}) => {
       <div className="mt-2 px-4 flex items-center">
         <h2
           className={clsx('font-bold text-2xl', {
-            'animate-pulse': batchAddTodoMutation.isLoading
+            'animate-pulse': batchAddTodoMutation.isLoading,
           })}
         >
           Checklist
@@ -73,7 +73,7 @@ export const ChecklistManager: React.FC<Props> = ({task, onFocus, onBlur}) => {
               'w-full bg-transparent py-2 rounded-md border',
               'appearance-none border-none',
               'focus:outline-none focus:animate-none',
-              {'animate-pulse': !isEmpty(todoTitle)}
+              {'animate-pulse': !isEmpty(todoTitle)},
             )}
             onInput={e => setTodoTitle((e.target as HTMLInputElement).value)}
             onFocus={onFocus}

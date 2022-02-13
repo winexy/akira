@@ -4,7 +4,7 @@ import {
   AdjustmentsIcon,
   FastForwardIcon,
   PauseIcon,
-  PlayIcon
+  PlayIcon,
 } from '@heroicons/react/solid'
 import {universalDrawerModel} from 'widgets/universal-drawer'
 import {ControlButton} from 'features/pomodoro-timer'

@@ -8,7 +8,7 @@ import noop from 'lodash/fp/noop'
 import {
   useToggleCompletedMutation,
   useToggleImportantMutation,
-  useRemoveTaskMutation
+  useRemoveTaskMutation,
 } from 'modules/tasks/hooks'
 import clsx from 'clsx'
 import {useShimmerColors} from 'shared/ui/shimmer'
@@ -25,7 +25,7 @@ export const TaskList: React.FC<Props> = ({
   isPending,
   tasks,
   noTasksSlot,
-  className
+  className,
 }) => {
   const toggleTaskCompleteMutation = useToggleCompletedMutation()
   const toggleImportantMutation = useToggleImportantMutation()
@@ -58,7 +58,7 @@ export const TaskList: React.FC<Props> = ({
                 height={taskHeight}
               />
             ),
-            count
+            count,
           )}
         </ContentLoader>
       </section>

@@ -8,7 +8,7 @@ import {
   Redirect,
   Route,
   Switch,
-  useHistory
+  useHistory,
 } from 'react-router-dom'
 import {HomeIcon, RefreshIcon} from '@heroicons/react/solid'
 import {DashboardPage} from 'pages/dashboard'
@@ -22,7 +22,7 @@ import {NotificationManager} from 'modules/notifications/NotificationManager'
 import {TaskPageFallback} from 'pages/task/fallback'
 
 const dndConfig = {
-  enableMouseEvents: true
+  enableMouseEvents: true,
 }
 
 function Fallback({error, resetErrorBoundary}: FallbackProps) {

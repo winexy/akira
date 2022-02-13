@@ -17,6 +17,6 @@ export function lists(api: AxiosInstance) {
     },
     findTasks(listId: TaskList['id']): Promise<ApiList> {
       return api.get(`lists/${listId}/tasks`).then(unwrap)
-    }
+    },
   }
 }

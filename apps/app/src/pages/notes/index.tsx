@@ -19,10 +19,10 @@ const Notes: FC = () => {
   const {data: notes} = useQuery('notes', () =>
     api
       .get<Array<{uuid: string; title: string}>>('notes/preview')
-      .then(res => res.data)
+      .then(res => res.data),
   )
   const createEmptyNoteMutation = useMutation(() =>
-    api.post('notes').then(res => res.data)
+    api.post('notes').then(res => res.data),
   )
 
   async function createEmptyNote() {
@@ -46,7 +46,7 @@ const Notes: FC = () => {
               'transition',
               'hover:border-gray-300 dark:hover:border-dark-300',
               'active:bg-gray-100 dark:active:bg-dark-500',
-              'focus:outline-none focus:border-blue-500 dark:focus:border-blue-500'
+              'focus:outline-none focus:border-blue-500 dark:focus:border-blue-500',
             )}
             onClick={createEmptyNote}
           >
@@ -65,7 +65,7 @@ const Notes: FC = () => {
                     'hover:bg-gray-100 hover:text-blue-500 dark:hover:bg-dark-500',
                     'transition ease-in duration-150',
                     'active:bg-gray-200 active:text-indigo-600',
-                    'focus:outline-none focus:bg-gray-100 focus:text-blue-500 dark:focus:bg-dark-400'
+                    'focus:outline-none focus:bg-gray-100 focus:text-blue-500 dark:focus:bg-dark-400',
                   )}
                   onClick={() => setNoteUUID(note.uuid)}
                 >

@@ -21,7 +21,7 @@ export const Header: FC = () => {
           'rounded ',
           'transition ease-in duration-150',
           'focus:outline-none',
-          'dark:active:bg-dark-700'
+          'dark:active:bg-dark-700',
         )}
         onClick={() => toggleMenu()}
       >

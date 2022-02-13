@@ -5,7 +5,7 @@ export enum RecurrenceEnum {
   Weekly = 'weekly',
   Monthly = 'monthly',
   Weekdays = 'weekdays',
-  Custom = 'custom'
+  Custom = 'custom',
 }
 
 export const recurrenceTypes = values(RecurrenceEnum)

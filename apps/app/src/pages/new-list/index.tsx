@@ -11,7 +11,7 @@ const NewListPage: React.FC = () => {
   const createListMutation = useMutation(akira.lists.create, {
     onSuccess() {
       queryClient.invalidateQueries('lists')
-    }
+    },
   })
 
   const {data: list} = createListMutation

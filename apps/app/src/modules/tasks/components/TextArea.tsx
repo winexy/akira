@@ -3,7 +3,7 @@ import React, {
   FocusEventHandler,
   useEffect,
   useRef,
-  useState
+  useState,
 } from 'react'
 import noop from 'lodash/fp/noop'
 import size from 'lodash/fp/size'
@@ -22,7 +22,7 @@ export const TextArea: React.FC<Props> = ({
   placeholder = '',
   className = '',
   onChange,
-  onInput = noop
+  onInput = noop,
 }) => {
   const ref = useRef<HTMLTextAreaElement>(null)
   const [localValue, setLocalValue] = useState(value)
@@ -71,7 +71,7 @@ export const TextArea: React.FC<Props> = ({
       style={{height}}
       className={clsx(
         'w-full p-0 bg-transparent focus:outline-none',
-        className
+        className,
       )}
       value={localValue}
       placeholder={placeholder}

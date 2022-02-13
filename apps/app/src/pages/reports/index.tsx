@@ -32,7 +32,7 @@ function useReportQuery(date: string) {
         if (error.type === 'NotFound') {
           return {
             date,
-            tasks: []
+            tasks: [],
           }
         }
 
@@ -92,7 +92,7 @@ function ReportView() {
                     <div className="flex items-center">
                       <h2
                         className={clsx('font-semibold text-xl truncate', {
-                          'line-through': task.is_completed
+                          'line-through': task.is_completed,
                         })}
                       >
                         {task.title}

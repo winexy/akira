@@ -6,7 +6,7 @@ import {
   ApiTask,
   TaskId,
   TaskPatch,
-  CreateTaskPayload
+  CreateTaskPayload,
 } from 'modules/tasks/types.d'
 
 type IntBool = 1 | 0
@@ -55,6 +55,6 @@ export function tasks(api: AxiosInstance) {
       return api.post<ApiTask>(`tasks/clone/${taskId}`).then(res => {
         return res.data.id
       })
-    }
+    },
   }
 }

@@ -32,7 +32,7 @@ const matchVariant = createMatcher<ButtonVariant>('button-variant')({
   red,
   outline,
   transparent,
-  indigo
+  indigo,
 })
 
 export const Button: React.FC<Props> = ({
@@ -58,7 +58,7 @@ export const Button: React.FC<Props> = ({
   `,
     matchSize(size),
     matchVariant(variant),
-    className
+    className,
   )
 
   return (

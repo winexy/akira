@@ -14,7 +14,7 @@ import {
   DefaultDraftBlockRenderMap,
   DraftEditorCommand,
   Editor,
-  EditorProps
+  EditorProps,
 } from 'draft-js'
 import {convertFromHTML, convertToHTML} from 'draft-convert'
 import Immutable from 'immutable'
@@ -28,7 +28,7 @@ enum InlineStyle {
   ITALIC = 'ITALIC',
   UNDERLINE = 'UNDERLINE',
   ACCENT = 'ACCENT', // код нашего произвольного стиля
-  CODE = 'CODE'
+  CODE = 'CODE',
 }
 
 enum BlockType {
@@ -50,11 +50,11 @@ enum BlockType {
   /* Сноска */
   cite = 'cite',
   /* Простой текст */
-  default = 'unstyled'
+  default = 'unstyled',
 }
 
 enum EntityType {
-  link = 'LINK'
+  link = 'LINK',
 }
 
 const customStyleMap = {
@@ -63,18 +63,18 @@ const customStyleMap = {
     color: '#A41E68',
     borderRadius: 4,
     padding: '1px 4px',
-    fontWeight: 600
+    fontWeight: 600,
   },
   [BlockType.h2]: {
-    color: 'red'
+    color: 'red',
   },
   [InlineStyle.CODE]: {
     backgroundColor: 'var(--code-style-bg)',
     color: 'var(--code-style-color)',
     borderRadius: 6,
     padding: '2px 8px',
-    fontWeight: 600
-  }
+    fontWeight: 600,
+  },
 }
 
 export const stateToHTML = convertToHTML<InlineStyle, BlockType>({
@@ -105,7 +105,7 @@ export const stateToHTML = convertToHTML<InlineStyle, BlockType>({
       return <a href={entity.data.href}>{originalText}</a>
     }
     return originalText
-  }
+  },
 })
 
 export const HTMLtoState = convertFromHTML<DOMStringMap, BlockType>({
@@ -137,14 +137,14 @@ export const HTMLtoState = convertFromHTML<DOMStringMap, BlockType>({
     }
 
     return undefined
-  }
+  },
 })
 
 function useEditor(html?: string) {
   const [state, setState] = React.useState(() =>
     html
       ? EditorState.createWithContent(HTMLtoState(html))
-      : EditorState.createEmpty()
+      : EditorState.createEmpty(),
   )
   const ref = useRef<PluginEditor>(null)
 
@@ -166,7 +166,7 @@ function useEditor(html?: string) {
 
   const toggleInlineStyle = React.useCallback((inlineStyle: InlineStyle) => {
     setState(currentState =>
-      RichUtils.toggleInlineStyle(currentState, inlineStyle)
+      RichUtils.toggleInlineStyle(currentState, inlineStyle),
     )
   }, [])
 
@@ -174,14 +174,14 @@ function useEditor(html?: string) {
     (inlineStyle: InlineStyle) => {
       return state.getCurrentInlineStyle().has(inlineStyle)
     },
-    [state]
+    [state],
   )
 
   const addEntity = React.useCallback(
     (
       entityType: EntityType,
       data: Record<string, string>,
-      mutability: DraftEntityMutability
+      mutability: DraftEntityMutability,
     ) => {
       setState(currentState => {
         /* Получаем текущий контент */
@@ -190,30 +190,30 @@ function useEditor(html?: string) {
         const contentStateWithEntity = contentState.createEntity(
           entityType,
           mutability,
-          data
+          data,
         )
         /* Получаем уникальный ключ Entity */
         const entityKey = contentStateWithEntity.getLastCreatedEntityKey()
         /* Обьединяем текущее состояние с новым */
         const newState = EditorState.set(currentState, {
-          currentContent: contentStateWithEntity
+          currentContent: contentStateWithEntity,
         })
         /* Вставляем ссылку в указанное место */
         return RichUtils.toggleLink(
           newState,
           newState.getSelection(),
-          entityKey
+          entityKey,
         )
       })
     },
-    []
+    [],
   )
 
   const addLink = React.useCallback(
     href => {
       addEntity(EntityType.link, {href}, 'MUTABLE')
     },
-    [addEntity]
+    [addEntity],
   )
 
   const setEntityData = React.useCallback((entityKey, data) => {
@@ -243,7 +243,7 @@ function useEditor(html?: string) {
 
       return 'not-handled'
     },
-    [toggleInlineStyle]
+    [toggleInlineStyle],
   )
 
   const handlerKeyBinding = React.useCallback((e: React.KeyboardEvent) => {
@@ -274,10 +274,10 @@ function useEditor(html?: string) {
       handlerKeyBinding,
       toHtml,
       hydrate,
-      onChange: setState
+      onChange: setState,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [state]
+    [state],
   )
 }
 
@@ -297,7 +297,7 @@ function useEditorContext() {
 
 const TextEditorProvider: React.FC<{editor: EditorAPI}> = ({
   editor,
-  children
+  children,
 }) => {
   return (
     <TextEditorContext.Provider value={editor}>
@@ -308,8 +308,8 @@ const TextEditorProvider: React.FC<{editor: EditorAPI}> = ({
 
 const customBlockRenderMap = Immutable.Map({
   [BlockType.cite]: {
-    element: 'cite'
-  }
+    element: 'cite',
+  },
 })
 
 const blockRenderMap = DefaultDraftBlockRenderMap.merge(customBlockRenderMap)
@@ -348,5 +348,5 @@ export {
   InlineStyle,
   BlockType,
   EntityType,
-  customStyleMap
+  customStyleMap,
 }

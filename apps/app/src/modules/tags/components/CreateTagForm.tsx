@@ -19,8 +19,8 @@ export const CreateTagForm: React.FC<Props> = ({className}) => {
     {
       onSuccess() {
         queryClient.invalidateQueries(['tags'])
-      }
-    }
+      },
+    },
   )
 
   const onSubmit: FormEventHandler = event => {
@@ -52,8 +52,8 @@ export const CreateTagForm: React.FC<Props> = ({className}) => {
           'focus:outline-none focus:border-blue-500',
           'focus:ring',
           {
-            'border-red-500': hasError
-          }
+            'border-red-500': hasError,
+          },
         )}
         onChange={e => setName(e.target.value)}
       />

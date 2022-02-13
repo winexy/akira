@@ -26,7 +26,7 @@ Match.Case = ({children}) => <>{children}</>
 Match.Default = ({children}) => <>{children}</>
 
 Match.Default.defaultProps = {
-  default: true
+  default: true,
 }
 
 export {Match}

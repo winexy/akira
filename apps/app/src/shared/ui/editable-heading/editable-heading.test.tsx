@@ -9,7 +9,7 @@ describe('EditableHeading', () => {
     const TEST_VALUE = 'Hello World'
 
     const result = render(
-      <EditableHeading value={TEST_VALUE} onChange={() => {}} />
+      <EditableHeading value={TEST_VALUE} onChange={() => {}} />,
     )
 
     expect(result.getByRole('heading')).toHaveTextContent(TEST_VALUE)
@@ -19,11 +19,11 @@ describe('EditableHeading', () => {
     const TEST_VALUE = '<img onerror="alert(1)" />'
 
     const result = render(
-      <EditableHeading value={TEST_VALUE} onChange={() => {}} />
+      <EditableHeading value={TEST_VALUE} onChange={() => {}} />,
     )
 
     expect(result.getByRole('heading')).toContainHTML(
-      '&lt;img onerror="alert(1)" /&gt;'
+      '&lt;img onerror="alert(1)" /&gt;',
     )
   })
 

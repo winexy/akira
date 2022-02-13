@@ -15,17 +15,17 @@ export const isOverdue = (task: ApiTask, today: Date): boolean =>
     parseDueDate(task),
     O.filter(isBefore(today)),
     O.filter(() => !task.is_completed),
-    O.fold(constFalse, constTrue)
+    O.fold(constFalse, constTrue),
   )
 
 export const isDeadlineToday = flow(
   parseDueDate,
   O.map(isToday),
-  O.getOrElse(constFalse)
+  O.getOrElse(constFalse),
 )
 
 export const getFormattedDueDate = flow(
   parseDueDate,
   O.map(format('dd.MM.yy')),
-  O.getOrElse(() => '')
+  O.getOrElse(() => ''),
 )

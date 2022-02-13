@@ -23,7 +23,7 @@ const Drawer: FC<Props> = ({visible, className, children, onClose}) => {
       if (visible) {
         onClose()
       }
-    }
+    },
   })
 
   return (
@@ -44,7 +44,7 @@ const Drawer: FC<Props> = ({visible, className, children, onClose}) => {
           <div
             className={clsx(
               'relative h-full bg-white dark:bg-dark-600 rounded-3xl shadow-2xl',
-              className
+              className,
             )}
           >
             {children}
