@@ -4,8 +4,8 @@
 /* eslint-disable jsx-a11y/heading-has-content */
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import Editor from 'draft-js-plugins-editor'
-import React, {useEffect, useRef} from 'react'
-import {useQuery, useMutation, useQueryClient} from 'react-query'
+import React, {useEffect} from 'react'
+import {useQuery, useMutation} from 'react-query'
 import {
   customStyleMap,
   useEditorContext,
@@ -91,8 +91,6 @@ const NotePage: React.FC<{uuid: string; className: string}> = ({
   className,
 }) => {
   const editor = useEditor()
-  const queryClient = useQueryClient()
-  const prevHtmlRef = useRef('')
   const noteQuery = useQuery(
     ['notes', uuid],
     () => api.get<Note>(`notes/${uuid}`).then(res => res.data),
@@ -126,19 +124,17 @@ const NotePage: React.FC<{uuid: string; className: string}> = ({
     patchNoteMutation.mutate({noteId: note.uuid, patch: {title}})
   }
 
-  const onContentChange = () => {
-    if (isNil(uuid)) {
+  const onContentChange = (editorState: EditorState) => {
+    if (isNil(uuid) || isNil(noteQuery.data)) {
       globalThis.console.warn('note is nil')
       return
     }
 
-    const html = editor.toHtml()
-
-    if (prevHtmlRef.current === html) {
+    if (isNull(editorState.getLastChangeType())) {
       return
     }
 
-    prevHtmlRef.current = html
+    const html = editor.toHtml()
 
     patchNoteMutation.mutate({
       noteId: uuid,
