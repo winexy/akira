@@ -83,7 +83,7 @@ const patchNote = debouncePromise(
   ({noteId, patch}: {noteId: string; patch: NotePatch}) => {
     return api.patch(`notes/${noteId}`, patch).then(res => res.data)
   },
-  2000,
+  1000,
 )
 
 const NotePage: React.FC<{uuid: string; className: string}> = ({
