@@ -37,8 +37,8 @@ const Notes: FC = () => {
     <PageView className="flex-1 grid grid-cols-12">
       <div className="col-span-3 h-full px-2 border-r border-t dark:border-dark-500">
         <div className="mt-4 px-2 flex justify-between">
-          <h1 className="flex items-center font-bold text-3xl">
-            <DocumentTextIcon className="mr-2" width={28} height={28} />
+          <h1 className="flex items-center font-bold text-2xl lg:text-3xl">
+            <DocumentTextIcon className="mr-2 w-6 h-6 lg:w-7 lg:h-7" />
             All notes
           </h1>
           <button
