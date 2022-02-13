@@ -86,13 +86,17 @@ const patchNote = debouncePromise(
   1000,
 )
 
+const NoteQuery = {
+  One: (uuid: string) => ['notes', uuid],
+}
+
 const NotePage: React.FC<{uuid: string; className: string}> = ({
   uuid,
   className,
 }) => {
   const editor = useEditor()
   const noteQuery = useQuery(
-    ['notes', uuid],
+    NoteQuery.One(uuid),
     () => api.get<Note>(`notes/${uuid}`).then(res => res.data),
     {
       onSuccess(note) {
