@@ -50,6 +50,10 @@
     <title>Akira</title>
     <script>
       window.global = window
+
+      if ('serviceWorker' in navigator) {
+        // navigator.serviceWorker.register('/sw.js?v=2')
+      }
     </script>
   </head>
   <body ontouchstart="">
