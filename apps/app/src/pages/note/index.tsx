@@ -110,17 +110,17 @@ const NoteQuery = {
   One: (uuid: string) => ['notes', uuid],
 }
 
-const putCache = app.event<{id: string; content: string}>()
+const writeCache = app.event<{id: string; content: string}>()
 
-const $contentCache = app.store(new Map<string, string>())
+const $contentCache = app
+  .store(new Map<string, string>())
+  .on(writeCache, (map, event) => {
+    map.set(event.id, event.content)
+    return map
+  })
 
-$contentCache.on(putCache, (map, event) => {
-  map.set(event.id, event.content)
-  return map
-})
-
-const NotePage: React.FC<{uuid: string; className: string}> = ({
-  uuid,
+const NotePage: React.FC<{id: string; className: string}> = ({
+  id,
   className,
 }) => {
   const editor = useEditor(undefined, {
@@ -133,8 +133,8 @@ const NotePage: React.FC<{uuid: string; className: string}> = ({
   const contentCache = useStore($contentCache)
 
   const noteQuery = useQuery(
-    NoteQuery.One(uuid),
-    () => api.get<Note>(`notes/${uuid}`).then(res => res.data),
+    NoteQuery.One(id),
+    () => api.get<Note>(`notes/${id}`).then(res => res.data),
     {
       refetchOnMount: true,
       onSuccess(note) {
@@ -207,7 +207,7 @@ const NotePage: React.FC<{uuid: string; className: string}> = ({
   }
 
   const onContentChange = (editorState: EditorState) => {
-    if (isNil(uuid) || isNil(noteQuery.data)) {
+    if (isNil(id) || isNil(noteQuery.data)) {
       globalThis.console.warn('note is nil')
       return
     }
@@ -222,10 +222,10 @@ const NotePage: React.FC<{uuid: string; className: string}> = ({
 
     const content = editor.toHtml(editorState)
 
-    putCache({id: uuid, content})
+    writeCache({id, content})
 
     patchNoteMutation.mutate({
-      noteId: uuid,
+      noteId: id,
       patch: {content},
     })
   }
@@ -287,7 +287,7 @@ const NotePage: React.FC<{uuid: string; className: string}> = ({
       </div>
       {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
       <div
-        className="flex-1 pt-2 sm:pt-8 px-4 text-xl"
+        className="flex-1 pt-2 sm:pt-4 px-4 text-xl"
         onClick={() => editor.ref.current?.focus()}
       >
         <TextEditorProvider editor={editor}>
