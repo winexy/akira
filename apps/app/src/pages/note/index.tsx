@@ -4,7 +4,7 @@
 /* eslint-disable jsx-a11y/heading-has-content */
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import Editor from 'draft-js-plugins-editor'
-import React, {useEffect, useRef, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {useStore} from 'effector-react'
 import {useQuery, useMutation, useQueryClient} from 'react-query'
 import {
@@ -22,7 +22,6 @@ import isError from 'lodash/isError'
 import {EditableHeading} from 'shared/ui/editable-heading'
 import {EditorState} from 'draft-js'
 import clsx from 'clsx'
-import debouncePromise from 'debounce-promise'
 import ContentLoader from 'react-content-loader'
 import {useShimmerColors} from 'shared/ui/shimmer'
 import isNull from 'lodash/isNull'
@@ -32,7 +31,8 @@ import {Spin} from 'shared/ui/spin'
 import produce from 'immer'
 import parseISO from 'date-fns/parseISO'
 import formatRelative from 'date-fns/formatRelative'
-import {app} from '../../shared/lib/app-domain'
+import {app} from 'shared/lib/app-domain'
+import {forward} from 'effector'
 
 const TextEditor: React.FC<{onChange(editorState: EditorState): void}> = ({
   onChange,
@@ -98,19 +98,66 @@ const createDebugger = (tag: string) => (...args: any[]) =>
 
 const debug = createDebugger('editor')
 
-const patchNote = debouncePromise(
-  ({noteId, patch}: {noteId: string; patch: NotePatch}) => {
-    debug('patch-note', noteId, patch)
-    return api.patch(`notes/${noteId}`, patch).then(res => res.data)
-  },
-  1000,
-)
+const patchNote = ({noteId, patch}: {noteId: string; patch: NotePatch}) => {
+  return api.patch(`notes/${noteId}`, patch).then(res => res.data)
+}
 
 const NoteQuery = {
   One: (uuid: string) => ['notes', uuid],
 }
 
-const writeCache = app.event<{id: string; content: string}>()
+type UpdateEvent = {
+  id: string
+  content: string
+}
+
+const writeCache = app.event<UpdateEvent>()
+const forceSave = app.event<UpdateEvent>()
+
+const enqueueUpdateFx = app.effect((event: UpdateEvent) => {
+  return new Promise<UpdateEvent>((resolve, reject) => {
+    debug('enqueue')
+
+    const commit = () => {
+      debug('commit')
+      unwatchEnqueueUpdate()
+      unwatchForceSave()
+      resolve(event)
+    }
+
+    const abort = () => {
+      debug('abort')
+      clearTimeout(timeoutId)
+      unwatchEnqueueUpdate()
+      unwatchForceSave()
+      reject()
+    }
+
+    const timeoutId = setTimeout(commit, 2000)
+    const unwatchEnqueueUpdate = enqueueUpdateFx.watch(abort)
+    const unwatchForceSave = forceSave.watch(abort)
+  })
+})
+
+const updateNoteFx = app.effect((event: UpdateEvent) => {
+  debug('update', event)
+  return patchNote({
+    noteId: event.id,
+    patch: {
+      content: event.content,
+    },
+  })
+})
+
+forward({
+  from: enqueueUpdateFx.doneData,
+  to: updateNoteFx,
+})
+
+forward({
+  from: forceSave,
+  to: updateNoteFx,
+})
 
 const $contentCache = app
   .store(new Map<string, string>())
@@ -123,14 +170,22 @@ const NotePage: React.FC<{id: string; className: string}> = ({
   id,
   className,
 }) => {
+  const contentCache = useStore($contentCache)
+
   const editor = useEditor(undefined, {
     onSave() {
-      debug('save')
+      const content = contentCache.get(id)
+
+      if (isUndefined(content)) {
+        debug('nothing to save, skip force save')
+      } else {
+        debug('force save')
+        forceSave({id, content})
+      }
     },
   })
 
   const [updatedAt, setUpdatedAt] = useState<string>()
-  const contentCache = useStore($contentCache)
 
   const noteQuery = useQuery(
     NoteQuery.One(id),
@@ -218,16 +273,12 @@ const NotePage: React.FC<{id: string; className: string}> = ({
       return
     }
 
-    debug('call patch mutation', lastChangeType)
+    debug('content changed', lastChangeType)
 
     const content = editor.toHtml(editorState)
 
     writeCache({id, content})
-
-    patchNoteMutation.mutate({
-      noteId: id,
-      patch: {content},
-    })
+    enqueueUpdateFx({id, content})
   }
 
   const {backgroundColor, foregroundColor} = useShimmerColors()
