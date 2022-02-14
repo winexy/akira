@@ -5,6 +5,7 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import Editor from 'draft-js-plugins-editor'
 import React, {useEffect, useRef, useState} from 'react'
+import {useStore} from 'effector-react'
 import {useQuery, useMutation, useQueryClient} from 'react-query'
 import {
   customStyleMap,
@@ -31,6 +32,7 @@ import {Spin} from 'shared/ui/spin'
 import produce from 'immer'
 import parseISO from 'date-fns/parseISO'
 import formatRelative from 'date-fns/formatRelative'
+import {app} from '../../shared/lib/app-domain'
 
 const TextEditor: React.FC<{onChange(editorState: EditorState): void}> = ({
   onChange,
@@ -108,6 +110,15 @@ const NoteQuery = {
   One: (uuid: string) => ['notes', uuid],
 }
 
+const putCache = app.event<{id: string; content: string}>()
+
+const $contentCache = app.store(new Map<string, string>())
+
+$contentCache.on(putCache, (map, event) => {
+  map.set(event.id, event.content)
+  return map
+})
+
 const NotePage: React.FC<{uuid: string; className: string}> = ({
   uuid,
   className,
@@ -119,7 +130,7 @@ const NotePage: React.FC<{uuid: string; className: string}> = ({
   })
 
   const [updatedAt, setUpdatedAt] = useState<string>()
-  const contentRef = useRef<string>()
+  const contentCache = useStore($contentCache)
 
   const noteQuery = useQuery(
     NoteQuery.One(uuid),
@@ -154,12 +165,12 @@ const NotePage: React.FC<{uuid: string; className: string}> = ({
     }
 
     return () => {
-      const content = contentRef.current
-
       debug('unmount')
 
+      const content = contentCache.get(note.uuid)
+
       if (!isUndefined(content)) {
-        debug('update query cache')
+        debug('update query cache', content)
 
         queryClient.setQueryData(
           NoteQuery.One(note.uuid),
@@ -211,7 +222,8 @@ const NotePage: React.FC<{uuid: string; className: string}> = ({
 
     const content = editor.toHtml(editorState)
 
-    contentRef.current = content
+    putCache({id: uuid, content})
+
     patchNoteMutation.mutate({
       noteId: uuid,
       patch: {content},
