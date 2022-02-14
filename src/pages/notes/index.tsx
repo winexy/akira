@@ -102,7 +102,7 @@ const Notes: FC = () => {
       </div>
       <div className="border-t col-span-9 flex dark:border-dark-500">
         {!isNull(noteUUID) && (
-          <NotePage key={noteUUID} uuid={noteUUID} className="flex-1" />
+          <NotePage key={noteUUID} id={noteUUID} className="flex-1" />
         )}
       </div>
     </PageView>
