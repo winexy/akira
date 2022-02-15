@@ -6,7 +6,7 @@ import {PageView} from 'shared/ui/page-view'
 import isEmpty from 'lodash/isEmpty'
 import {Empty} from 'shared/ui/empty'
 import {DocumentTextIcon} from '@heroicons/react/outline'
-import {useHistory} from 'react-router'
+import {useHistory, useLocation} from 'react-router'
 import clsx from 'clsx'
 import NotePage from 'pages/note'
 import isNull from 'lodash/isNull'
@@ -21,8 +21,11 @@ type NotePreview = {
 }
 
 const Notes: FC = () => {
+  const {search} = useLocation()
   const history = useHistory()
-  const [noteUUID, setNoteUUID] = useState<string | null>(null)
+  const [noteUUID, setNoteUUID] = useState<string | null>(() => {
+    return new URLSearchParams(search).get('id')
+  })
   const {backgroundColor, foregroundColor} = useShimmerColors()
 
   const {data: notes, isLoading} = useQuery('notes', () =>
@@ -36,6 +39,11 @@ const Notes: FC = () => {
   async function createEmptyNote() {
     const note = await createEmptyNoteMutation.mutateAsync()
     history.push(`/notes/${note.uuid}`)
+  }
+
+  const selectNote = (id: string) => {
+    setNoteUUID(id)
+    history.replace({search: `id=${id}`})
   }
 
   return (
@@ -91,7 +99,7 @@ const Notes: FC = () => {
                     'active:bg-gray-200 active:text-indigo-600',
                     'focus:outline-none focus:bg-gray-100 focus:text-blue-500 dark:focus:bg-dark-400',
                   )}
-                  onClick={() => setNoteUUID(note.uuid)}
+                  onClick={() => selectNote(note.uuid)}
                 >
                   {note.title}
                 </button>
