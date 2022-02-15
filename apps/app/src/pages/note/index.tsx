@@ -121,8 +121,8 @@ type UpdateParams = {
   patch: NotePatch
 }
 
-const writeCache = app.event<UpdateEvent>()
-const forceSave = app.event<UpdateEvent>()
+const writeCache = app.event<Note>()
+const forceSave = app.event<Note>()
 const commit = app.event<string>()
 
 const enqueueUpdateFx = app.effect((event: UpdateEvent) => {
@@ -160,26 +160,57 @@ const updateNoteFx = app.effect((event: UpdateParams) => {
 
 forward({
   from: enqueueUpdateFx.doneData,
-  to: updateNoteFx.prepend(event => ({
-    id: event.id,
-    patch: {content: event.content},
+  to: updateNoteFx.prepend(note => ({
+    id: note.id,
+    patch: {content: note.content},
   })),
 })
 
 forward({
   from: forceSave,
-  to: updateNoteFx.prepend(event => ({
-    id: event.id,
-    patch: {content: event.content},
+  to: updateNoteFx.prepend(note => ({
+    id: note.uuid,
+    patch: {content: note.content},
   })),
 })
 
+forward({
+  from: updateNoteFx.doneData,
+  to: commit.prepend(event => event.uuid),
+})
+
+type CacheValue = {
+  synced: boolean
+  note: Note
+}
+
 const $contentCache = app
-  .store(new Map<string, string>())
-  .on(writeCache, (map, event) => {
-    map.set(event.id, event.content)
+  .store(new Map<string, CacheValue>())
+  .on(writeCache, (map, note) => {
+    return produce(map, draft => {
+      draft.set(note.uuid, {
+        synced: false,
+        note,
+      })
+    })
+  })
+  .on(commit, (map, id) => {
+    const cache = map.get(id)
+
+    debug('commited', id)
+
+    if (cache) {
+      return produce(map, draft => {
+        draft.set(id, {...cache, synced: true})
+      })
+    }
+
     return map
   })
+
+$contentCache.watch(state => {
+  debug('content cache updated', state)
+})
 
 const NotePage: React.FC<{id: string; className: string}> = ({
   id,
@@ -189,13 +220,13 @@ const NotePage: React.FC<{id: string; className: string}> = ({
 
   const editor = useEditor(undefined, {
     onSave() {
-      const content = contentCache.get(id)
+      const cache = contentCache.get(id)
 
-      if (isUndefined(content)) {
+      if (isUndefined(cache)) {
         debug('nothing to save, skip force save')
       } else {
         debug('force save')
-        forceSave({id, content})
+        forceSave(cache.note)
       }
     },
   })
@@ -214,6 +245,18 @@ const NotePage: React.FC<{id: string; className: string}> = ({
       },
       onSettled() {
         debug('note query fetched')
+      },
+      initialData() {
+        const cache = contentCache.get(id)
+
+        if (cache) {
+          debug('set initial data', id, cache)
+          return cache.note
+        }
+
+        debug('no cache skip initial data', id)
+
+        return undefined
       },
     },
   )
@@ -239,6 +282,9 @@ const NotePage: React.FC<{id: string; className: string}> = ({
   useEffect(() => {
     debug('mount')
 
+    const cache = contentCache.get(id)
+    debug(cache)
+
     const note = noteQuery.data
 
     if (isUndefined(note)) {
@@ -253,15 +299,15 @@ const NotePage: React.FC<{id: string; className: string}> = ({
     return () => {
       debug('unmount')
 
-      const content = contentCache.get(note.uuid)
+      const cachedNote = contentCache.get(note.uuid)
 
-      if (!isUndefined(content)) {
-        debug('update query cache', content)
+      if (!isUndefined(cachedNote)) {
+        debug('update query cache', cachedNote)
 
         queryClient.setQueryData(
           NoteQuery.One(note.uuid),
           produce(note, draft => {
-            draft.content = content
+            draft.content = cachedNote.note.content
           }),
         )
       }
@@ -302,7 +348,7 @@ const NotePage: React.FC<{id: string; className: string}> = ({
 
     const content = editor.toHtml(editorState)
 
-    writeCache({id, content})
+    writeCache({...noteQuery.data, content})
     enqueueUpdateFx({id, content})
   }
 
