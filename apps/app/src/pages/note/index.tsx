@@ -111,15 +111,21 @@ type UpdateEvent = {
   content: string
 }
 
+type UpdateParams = {
+  id: string
+  patch: NotePatch
+}
+
 const writeCache = app.event<UpdateEvent>()
 const forceSave = app.event<UpdateEvent>()
+const commit = app.event<string>()
 
 const enqueueUpdateFx = app.effect((event: UpdateEvent) => {
   return new Promise<UpdateEvent>((resolve, reject) => {
     debug('enqueue')
 
-    const commit = () => {
-      debug('commit')
+    const startUpdate = () => {
+      debug('startUpdate')
       unwatchEnqueueUpdate()
       unwatchForceSave()
       resolve(event)
@@ -133,30 +139,34 @@ const enqueueUpdateFx = app.effect((event: UpdateEvent) => {
       reject()
     }
 
-    const timeoutId = setTimeout(commit, 2000)
+    const timeoutId = setTimeout(startUpdate, 2000)
     const unwatchEnqueueUpdate = enqueueUpdateFx.watch(abort)
     const unwatchForceSave = forceSave.watch(abort)
   })
 })
 
-const updateNoteFx = app.effect((event: UpdateEvent) => {
+const updateNoteFx = app.effect((event: UpdateParams) => {
   debug('update', event)
   return patchNote({
     noteId: event.id,
-    patch: {
-      content: event.content,
-    },
+    patch: event.patch,
   })
 })
 
 forward({
   from: enqueueUpdateFx.doneData,
-  to: updateNoteFx,
+  to: updateNoteFx.prepend(event => ({
+    id: event.id,
+    patch: {content: event.content},
+  })),
 })
 
 forward({
   from: forceSave,
-  to: updateNoteFx,
+  to: updateNoteFx.prepend(event => ({
+    id: event.id,
+    patch: {content: event.content},
+  })),
 })
 
 const $contentCache = app
@@ -237,16 +247,7 @@ const NotePage: React.FC<{id: string; className: string}> = ({
     }
   }, [])
 
-  const patchNoteMutation = useMutation(patchNote, {
-    // eslint-disable-next-line camelcase
-    onSuccess(response: {uuid: string; updated_at: string}) {
-      setUpdatedAt(response.updated_at)
-      debug('success patch', response)
-    },
-    onError(error) {
-      debug('failed to patch', error)
-    },
-  })
+  const isPending = useStore(updateNoteFx.pending)
 
   useNotePageTitle(noteQuery.data)
 
@@ -258,7 +259,10 @@ const NotePage: React.FC<{id: string; className: string}> = ({
       return
     }
 
-    patchNoteMutation.mutate({noteId: note.uuid, patch: {title}})
+    updateNoteFx({
+      id: note.uuid,
+      patch: {title},
+    })
   }
 
   const onContentChange = (editorState: EditorState) => {
@@ -317,13 +321,13 @@ const NotePage: React.FC<{id: string; className: string}> = ({
   return (
     <div className={clsx('py-6 flex flex-col relative', className)}>
       <div className="absolute right-0 top-0 mr-8 mt-6">
-        {patchNoteMutation.isLoading && (
+        {isPending && (
           <div className=" flex items-center animate-pulse">
             <Spin className="w-4 h-4 text-gray-300 " />
             <span className="ml-3 text-sm text-gray-400">Saving</span>
           </div>
         )}
-        {!patchNoteMutation.isLoading && !isUndefined(updatedAt) && (
+        {!isPending && !isUndefined(updatedAt) && (
           <div className="text-gray-400 text-sm">
             {formatRelative(parseISO(updatedAt), new Date())}
           </div>
