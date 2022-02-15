@@ -99,7 +99,12 @@ const createDebugger = (tag: string) => (...args: any[]) =>
 const debug = createDebugger('editor')
 
 const patchNote = ({noteId, patch}: {noteId: string; patch: NotePatch}) => {
-  return api.patch(`notes/${noteId}`, patch).then(res => res.data)
+  return (
+    api
+      // eslint-disable-next-line camelcase
+      .patch<{uuid: string; updated_at: string}>(`notes/${noteId}`, patch)
+      .then(res => res.data)
+  )
 }
 
 const NoteQuery = {
@@ -212,6 +217,22 @@ const NotePage: React.FC<{id: string; className: string}> = ({
       },
     },
   )
+
+  useEffect(() => {
+    const unwatchDone = updateNoteFx.doneData.watch(response => {
+      debug('success update')
+      setUpdatedAt(response.updated_at)
+    })
+
+    const unwatchFail = updateNoteFx.failData.watch(() => {
+      debug('failed to update')
+    })
+
+    return () => {
+      unwatchDone()
+      unwatchFail()
+    }
+  }, [])
 
   const queryClient = useQueryClient()
 
