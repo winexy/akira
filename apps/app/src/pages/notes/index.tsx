@@ -22,9 +22,7 @@ const Notes: FC = () => {
   })
   const {backgroundColor, foregroundColor} = useShimmerColors()
 
-  const {data: notes, isLoading} = useQuery(noteModel.NoteQuery.Preview(), () =>
-    noteApi.fetchNotesPreview(),
-  )
+  const {data: notes, isLoading} = noteModel.useNotesPreviewQuery()
 
   const createEmptyNoteMutation = useMutation(() =>
     api.post('notes').then(res => res.data),
