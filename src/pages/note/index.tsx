@@ -89,12 +89,9 @@ const patchNote = ({
   noteId: string
   patch: noteModel.NotePatch
 }) => {
-  return (
-    api
-      // eslint-disable-next-line camelcase
-      .patch<{uuid: string; updated_at: string}>(`notes/${noteId}`, patch)
-      .then(res => res.data)
-  )
+  return api
+    .patch<noteModel.PatchNoteResponse>(`notes/${noteId}`, patch)
+    .then(res => res.data)
 }
 
 type UpdateEvent = {
