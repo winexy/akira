@@ -35,7 +35,7 @@ import {app} from 'shared/lib/app-domain'
 import {forward} from 'effector'
 import entries from 'lodash/entries'
 import localforage from 'localforage'
-import {noteModel} from 'entities/note'
+import {noteApi, noteModel} from 'entities/note'
 import {createDebugger} from 'shared/lib/debugger'
 
 const TextEditor: React.FC<{onChange(editorState: EditorState): void}> = ({
@@ -82,18 +82,6 @@ function useNotePageTitle(note: noteModel.Note | undefined) {
 
 const debug = createDebugger('editor')
 
-const patchNote = ({
-  noteId,
-  patch,
-}: {
-  noteId: string
-  patch: noteModel.NotePatch
-}) => {
-  return api
-    .patch<noteModel.PatchNoteResponse>(`notes/${noteId}`, patch)
-    .then(res => res.data)
-}
-
 type UpdateEvent = {
   id: string
   content: string
@@ -135,7 +123,7 @@ const enqueueUpdateFx = app.effect((event: UpdateEvent) => {
 
 const updateNoteFx = app.effect((event: UpdateParams) => {
   debug('update', event)
-  return patchNote({
+  return noteApi.patchNote({
     noteId: event.id,
     patch: event.patch,
   })
@@ -262,7 +250,7 @@ const NotePage: React.FC<Props> = ({id, className}) => {
     noteModel.NoteQuery.One(id),
     () => {
       debug('fetch note query')
-      return api.get<noteModel.Note>(`notes/${id}`).then(res => res.data)
+      return noteApi.fetchNote(id)
     },
     {
       refetchOnMount: true,
