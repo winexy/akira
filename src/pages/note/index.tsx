@@ -337,21 +337,11 @@ const NotePage: React.FC<Props> = ({id, className}) => {
       id: note.uuid,
       patch: {title},
     }).then(() => {
-      const notes = queryClient.getQueryData<Array<noteModel.NotePreview>>(
-        noteModel.NoteQuery.Preview(),
-      )
-
-      if (isUndefined(notes)) {
-        return
-      }
-
-      queryClient.setQueryData(
-        noteModel.NoteQuery.Preview(),
-        produce(notes, draft => {
-          const index = draft.findIndex(n => n.uuid === note.uuid)
-          notes[index].title = title
-        }),
-      )
+      noteModel.updateNotesPreviewQueryData({
+        noteId: note.uuid,
+        queryClient,
+        title,
+      })
     })
   }
 
