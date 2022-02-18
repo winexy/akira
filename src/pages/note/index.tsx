@@ -246,36 +246,25 @@ const NotePage: React.FC<Props> = ({id, className}) => {
     },
   })
 
-  const noteQuery = useQuery(
-    noteModel.NoteQuery.One(id),
-    () => {
-      debug('fetch note query')
-      return noteApi.fetchNote(id)
+  const noteQuery = noteModel.useNoteQuery(id, {
+    onSuccess(note) {
+      debug('success query, hydrate content')
+      editor.hydrate(note.content)
+      setUpdatedAt(note.updated_at)
     },
-    {
-      refetchOnMount: true,
-      onSuccess(note) {
-        debug('success query, hydrate content')
-        editor.hydrate(note.content)
-        setUpdatedAt(note.updated_at)
-      },
-      onSettled() {
-        debug('note query settled')
-      },
-      initialData() {
-        const cache = contentCache.get(id)
+    initialData() {
+      const cache = contentCache.get(id)
 
-        if (cache) {
-          debug('set initial data', id, cache)
-          return cache.note
-        }
+      if (cache) {
+        debug('set initial data', id, cache)
+        return cache.note
+      }
 
-        debug('no cache skip initial data', id)
+      debug('no cache skip initial data', id)
 
-        return undefined
-      },
+      return undefined
     },
-  )
+  })
 
   const [updatedAt, setUpdatedAt] = useState<string | undefined>(
     noteQuery.data?.updated_at,
