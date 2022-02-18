@@ -12,13 +12,7 @@ import NotePage from 'pages/note'
 import isNull from 'lodash/isNull'
 import ContentLoader from 'react-content-loader'
 import {useShimmerColors} from 'shared/ui/shimmer'
-
-type NotePreview = {
-  uuid: string
-  title: string
-  // eslint-disable-next-line camelcase
-  updated_at: string
-}
+import {noteModel} from 'entities/note'
 
 const Notes: FC = () => {
   const {search} = useLocation()
@@ -28,8 +22,10 @@ const Notes: FC = () => {
   })
   const {backgroundColor, foregroundColor} = useShimmerColors()
 
-  const {data: notes, isLoading} = useQuery('notes', () =>
-    api.get<Array<NotePreview>>('notes/preview').then(res => res.data),
+  const {data: notes, isLoading} = useQuery(noteModel.NoteQuery.Preview(), () =>
+    api
+      .get<Array<noteModel.NotePreview>>('notes/preview')
+      .then(res => res.data),
   )
 
   const createEmptyNoteMutation = useMutation(() =>
