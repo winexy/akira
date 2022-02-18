@@ -36,6 +36,7 @@ import {forward} from 'effector'
 import entries from 'lodash/entries'
 import localforage from 'localforage'
 import {noteModel} from 'entities/note'
+import {createDebugger} from 'shared/lib/debugger'
 
 const TextEditor: React.FC<{onChange(editorState: EditorState): void}> = ({
   onChange,
@@ -78,9 +79,6 @@ function useNotePageTitle(note: noteModel.Note | undefined) {
     }
   }, [note])
 }
-
-const createDebugger = (tag: string) => (...args: any[]) =>
-  console.debug(`[${tag}]`, ...args)
 
 const debug = createDebugger('editor')
 
