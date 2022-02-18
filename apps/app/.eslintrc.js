@@ -30,6 +30,7 @@ module.exports = {
       },
     ],
     'react/prop-types': 'off',
+    camelcase: 'off',
     'comma-dangle': 'off',
     'eol-last': 'off',
     'import/extensions': 'off',
