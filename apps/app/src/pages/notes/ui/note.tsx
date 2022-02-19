@@ -80,17 +80,15 @@ type Props = {
 
 const NotePage: React.FC<Props> = ({id, className}) => {
   const notesCache = useStore(noteUpdateQueueModel.$notesCache)
-  const cachedNote = notesCache.get(id)
+  const cacheRecord = notesCache.get(id)
 
   const editor = useEditor(undefined, {
     onSave() {
-      const cache = notesCache.get(id)
-
-      if (isUndefined(cache)) {
+      if (isUndefined(cacheRecord)) {
         debug('nothing to save, skip force save')
       } else {
         debug('✋ force save')
-        noteUpdateQueueModel.forceSave(cache.note)
+        noteUpdateQueueModel.forceSave(cacheRecord.note)
       }
     },
   })
@@ -103,11 +101,9 @@ const NotePage: React.FC<Props> = ({id, className}) => {
       noteUpdateQueueModel.putCache(note)
     },
     initialData() {
-      const cache = notesCache.get(id)
-
-      if (cache) {
-        debug('❕ set initial data', id, cache)
-        return cache.note
+      if (cacheRecord) {
+        debug('❕ set initial data', id, cacheRecord)
+        return cacheRecord.note
       }
 
       debug('❕ no cache skip initial data', id)
@@ -156,26 +152,12 @@ const NotePage: React.FC<Props> = ({id, className}) => {
 
     return () => {
       debug('🌋 unmount')
-
-      const cachedNote = notesCache.get(note.uuid)
-
-      if (!isUndefined(cachedNote)) {
-        debug('🔄  📖 update query cache', cachedNote)
-
-        noteModel.updateNoteQueryData({
-          noteId: note.uuid,
-          queryClient,
-          mutate(draft) {
-            draft.content = cachedNote.note.content
-          },
-        })
-      }
     }
   }, [])
 
   const isPending = useStore(noteUpdateQueueModel.updateNoteFx.pending)
 
-  useNotePageTitle(cachedNote?.note)
+  useNotePageTitle(cacheRecord?.note)
 
   async function onTitleChange(title: string) {
     const note = noteQuery.data
