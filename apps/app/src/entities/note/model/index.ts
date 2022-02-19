@@ -53,7 +53,7 @@ export function useNoteQuery(
       return noteApi.fetchNote(id)
     },
     {
-      refetchOnMount: true,
+      refetchOnMount: 'always',
       onSuccess,
       initialData,
     },
