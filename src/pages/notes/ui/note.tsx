@@ -1,10 +1,6 @@
-/* eslint-disable no-console */
-/* eslint-disable no-alert */
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable jsx-a11y/heading-has-content */
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import Editor from 'draft-js-plugins-editor'
-import React, {FC, useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {useStore} from 'effector-react'
 import {useQueryClient} from 'react-query'
 import {
@@ -16,7 +12,6 @@ import {
   blockStyleFn,
   useEditor,
 } from 'shared/lib/editor'
-import {api} from 'shared/api'
 import isNil from 'lodash/isNil'
 import isError from 'lodash/isError'
 import {EditableHeading} from 'shared/ui/editable-heading'
@@ -28,15 +23,11 @@ import isNull from 'lodash/isNull'
 import noop from 'lodash/noop'
 import isUndefined from 'lodash/isUndefined'
 import {Spin} from 'shared/ui/spin'
-import produce from 'immer'
 import parseISO from 'date-fns/parseISO'
 import formatRelative from 'date-fns/formatRelative'
-import {app} from 'shared/lib/app-domain'
-import {forward} from 'effector'
-import entries from 'lodash/entries'
-import localforage from 'localforage'
-import {noteApi, noteModel} from 'entities/note'
-import {createDebugger, Invariant} from 'shared/lib/debugger'
+import {noteModel} from 'entities/note'
+import {noteUpdateQueueModel, withCacheRead} from 'features/note-update-queue'
+import {createDebugger} from 'shared/lib/debugger'
 
 const TextEditor: React.FC<{onChange(editorState: EditorState): void}> = ({
   onChange,
@@ -82,171 +73,13 @@ function useNotePageTitle(note: noteModel.Note | undefined) {
 
 const debug = createDebugger('editor')
 
-type UpdateEvent = {
-  id: string
-  content: string
-}
-
-type UpdateParams = {
-  id: string
-  patch: noteModel.NotePatch
-}
-
-const writeCache = app.event<UpdateParams>()
-const forceSave = app.event<noteModel.Note>()
-const putCache = app.event<noteModel.Note>()
-const commit = app.event<string>()
-
-const enqueueUpdateFx = app.effect((event: UpdateEvent) => {
-  return new Promise<UpdateEvent>((resolve, reject) => {
-    debug('🔜 enqueue')
-
-    const startUpdate = () => {
-      unwatchEnqueueUpdate()
-      unwatchForceSave()
-      resolve(event)
-    }
-
-    const abort = () => {
-      debug('🔻 abort')
-      clearTimeout(timeoutId)
-      unwatchEnqueueUpdate()
-      unwatchForceSave()
-      reject()
-    }
-
-    const timeoutId = setTimeout(startUpdate, 2000)
-    const unwatchEnqueueUpdate = enqueueUpdateFx.watch(abort)
-    const unwatchForceSave = forceSave.watch(abort)
-  })
-})
-
-const updateNoteFx = app.effect((event: UpdateParams) => {
-  debug('✔️ startUpdate', event)
-  return noteApi.patchNote({
-    noteId: event.id,
-    patch: event.patch,
-  })
-})
-
-forward({
-  from: enqueueUpdateFx.doneData,
-  to: updateNoteFx.prepend(note => ({
-    id: note.id,
-    patch: {content: note.content},
-  })),
-})
-
-forward({
-  from: forceSave,
-  to: updateNoteFx.prepend(note => ({
-    id: note.uuid,
-    patch: {content: note.content},
-  })),
-})
-
-forward({
-  from: updateNoteFx.doneData,
-  to: commit.prepend(event => event.uuid),
-})
-
-type CacheValue = {
-  synced: boolean
-  note: noteModel.Note
-}
-
-const readCacheStorageFx = app.effect(
-  async (): Promise<Array<[string, CacheValue]>> => {
-    const value = await localforage.getItem('notes-map')
-
-    debug('🧐 read notes from storage', value)
-
-    if (Array.isArray(value)) {
-      return value
-    }
-
-    return []
-  },
-)
-
-const syncPersistedCacheFx = app.effect(
-  async (entries: Array<[string, CacheValue]>) => {
-    // eslint-disable-next-line no-restricted-syntax
-    for await (const [id, noteCache] of entries) {
-      if (!noteCache.synced) {
-        await updateNoteFx({id, patch: {content: noteCache.note.content}})
-        debug('👌 synced', id)
-      }
-    }
-  },
-)
-
-const $isCacheRead = app.store(false).on(readCacheStorageFx.finally, () => true)
-
-const $contentCache = app
-  .store(new Map<string, CacheValue>())
-  .on(readCacheStorageFx.doneData, (_, entries) => new Map(entries))
-  .on(putCache, (map, note) => {
-    return produce(map, draft => {
-      draft.set(note.uuid, {
-        synced: true,
-        note,
-      })
-    })
-  })
-  .on(writeCache, (map, event) => {
-    const cache = map.get(event.id)
-
-    if (isUndefined(cache)) {
-      throw Invariant('cache is missing pre-written note')
-    }
-
-    return produce(map, draft => {
-      draft.set(event.id, {
-        synced: false,
-        note: {
-          ...cache.note,
-          ...event.patch,
-        },
-      })
-    })
-  })
-  .on(commit, (map, id) => {
-    const cache = map.get(id)
-
-    if (cache) {
-      return produce(map, draft => {
-        draft.set(id, {...cache, synced: true})
-      })
-    }
-
-    return map
-  })
-
-const persistContentCacheFx = app.effect((map: Map<string, CacheValue>) => {
-  localforage
-    .setItem('notes-map', entries(map))
-    .then(() => debug('📖 saved to storage', map))
-    .catch(() => debug('❌ 📖 failed to write to storage'))
-})
-
-forward({
-  from: $contentCache,
-  to: persistContentCacheFx,
-})
-
-forward({
-  from: readCacheStorageFx.doneData,
-  to: syncPersistedCacheFx,
-})
-
 type Props = {
   id: string
   className: string
 }
 
 const NotePage: React.FC<Props> = ({id, className}) => {
-  const contentCache = useStore($contentCache)
+  const contentCache = useStore(noteUpdateQueueModel.$contentCache)
   const cachedNote = contentCache.get(id)
 
   const editor = useEditor(undefined, {
@@ -257,7 +90,7 @@ const NotePage: React.FC<Props> = ({id, className}) => {
         debug('nothing to save, skip force save')
       } else {
         debug('✋ force save')
-        forceSave(cache.note)
+        noteUpdateQueueModel.forceSave(cache.note)
       }
     },
   })
@@ -267,7 +100,7 @@ const NotePage: React.FC<Props> = ({id, className}) => {
       debug('✅  🏗 success query, hydrate content')
       editor.hydrate(note.content)
       setUpdatedAt(note.updated_at)
-      putCache(note)
+      noteUpdateQueueModel.putCache(note)
     },
     initialData() {
       const cache = contentCache.get(id)
@@ -288,12 +121,14 @@ const NotePage: React.FC<Props> = ({id, className}) => {
   )
 
   useEffect(() => {
-    const unwatchDone = updateNoteFx.doneData.watch(response => {
-      debug('✅ success update')
-      setUpdatedAt(response.updated_at)
-    })
+    const unwatchDone = noteUpdateQueueModel.updateNoteFx.doneData.watch(
+      response => {
+        debug('✅ success update')
+        setUpdatedAt(response.updated_at)
+      },
+    )
 
-    const unwatchFail = updateNoteFx.failData.watch(() => {
+    const unwatchFail = noteUpdateQueueModel.updateNoteFx.failData.watch(() => {
       debug('❌ failed to update')
     })
 
@@ -338,7 +173,7 @@ const NotePage: React.FC<Props> = ({id, className}) => {
     }
   }, [])
 
-  const isPending = useStore(updateNoteFx.pending)
+  const isPending = useStore(noteUpdateQueueModel.updateNoteFx.pending)
 
   useNotePageTitle(cachedNote?.note)
 
@@ -349,12 +184,12 @@ const NotePage: React.FC<Props> = ({id, className}) => {
       return
     }
 
-    writeCache({
+    noteUpdateQueueModel.writeCache({
       id: note.uuid,
       patch: {title},
     })
 
-    await updateNoteFx({
+    await noteUpdateQueueModel.updateNoteFx({
       id: note.uuid,
       patch: {title},
     })
@@ -384,12 +219,12 @@ const NotePage: React.FC<Props> = ({id, className}) => {
 
     const content = editor.toHtml(editorState)
 
-    writeCache({
+    noteUpdateQueueModel.writeCache({
       id: note.uuid,
       patch: {content},
     })
 
-    enqueueUpdateFx({id, content})
+    noteUpdateQueueModel.enqueueUpdateFx({id, content})
   }
 
   const {backgroundColor, foregroundColor} = useShimmerColors()
@@ -458,24 +293,6 @@ const NotePage: React.FC<Props> = ({id, className}) => {
       </div>
     </div>
   )
-}
-
-function withCacheRead(Component: FC<Props>): FC<Props> {
-  return props => {
-    const isCacheRead = useStore($isCacheRead)
-
-    useEffect(() => {
-      if (!isCacheRead) {
-        readCacheStorageFx()
-      }
-    }, [isCacheRead])
-
-    if (isCacheRead) {
-      return <Component {...props} />
-    }
-
-    return null
-  }
 }
 
 export default withCacheRead(NotePage)
