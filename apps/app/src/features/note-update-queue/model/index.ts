@@ -114,44 +114,44 @@ const syncPersistedCacheFx = app.effect(
 
 const $isCacheRead = app.store(false).on(readCacheStorageFx.finally, () => true)
 
-const $contentCache = app
+const $notesCache = app
   .store(new Map<string, CacheValue>())
   .on(readCacheStorageFx.doneData, (_, entries) => new Map(entries))
-  .on(putCache, (map, note) => {
-    return produce(map, draft => {
+  .on(putCache, (cache, note) => {
+    return produce(cache, draft => {
       draft.set(note.uuid, {
         synced: true,
         note,
       })
     })
   })
-  .on(writeCache, (map, event) => {
-    const cache = map.get(event.id)
+  .on(writeCache, (cache, event) => {
+    const record = cache.get(event.id)
 
-    if (isUndefined(cache)) {
+    if (isUndefined(record)) {
       throw Invariant('cache is missing pre-written note')
     }
 
-    return produce(map, draft => {
+    return produce(cache, draft => {
       draft.set(event.id, {
         synced: false,
         note: {
-          ...cache.note,
+          ...record.note,
           ...event.patch,
         },
       })
     })
   })
-  .on(commit, (map, id) => {
-    const cache = map.get(id)
+  .on(commit, (cache, id) => {
+    const record = cache.get(id)
 
-    if (cache) {
-      return produce(map, draft => {
-        draft.set(id, {...cache, synced: true})
+    if (record) {
+      return produce(cache, draft => {
+        draft.set(id, {...record, synced: true})
       })
     }
 
-    return map
+    return cache
   })
 
 const persistContentCacheFx = app.effect((map: Map<string, CacheValue>) => {
@@ -162,7 +162,7 @@ const persistContentCacheFx = app.effect((map: Map<string, CacheValue>) => {
 })
 
 forward({
-  from: $contentCache,
+  from: $notesCache,
   to: persistContentCacheFx,
 })
 
@@ -173,7 +173,7 @@ forward({
 
 export const noteUpdateQueueModel = {
   $isCacheRead,
-  $contentCache,
+  $notesCache,
   putCache,
   writeCache,
   forceSave,

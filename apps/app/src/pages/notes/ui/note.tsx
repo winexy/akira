@@ -79,12 +79,12 @@ type Props = {
 }
 
 const NotePage: React.FC<Props> = ({id, className}) => {
-  const contentCache = useStore(noteUpdateQueueModel.$contentCache)
-  const cachedNote = contentCache.get(id)
+  const notesCache = useStore(noteUpdateQueueModel.$notesCache)
+  const cachedNote = notesCache.get(id)
 
   const editor = useEditor(undefined, {
     onSave() {
-      const cache = contentCache.get(id)
+      const cache = notesCache.get(id)
 
       if (isUndefined(cache)) {
         debug('nothing to save, skip force save')
@@ -103,7 +103,7 @@ const NotePage: React.FC<Props> = ({id, className}) => {
       noteUpdateQueueModel.putCache(note)
     },
     initialData() {
-      const cache = contentCache.get(id)
+      const cache = notesCache.get(id)
 
       if (cache) {
         debug('❕ set initial data', id, cache)
@@ -157,7 +157,7 @@ const NotePage: React.FC<Props> = ({id, className}) => {
     return () => {
       debug('🌋 unmount')
 
-      const cachedNote = contentCache.get(note.uuid)
+      const cachedNote = notesCache.get(note.uuid)
 
       if (!isUndefined(cachedNote)) {
         debug('🔄  📖 update query cache', cachedNote)
