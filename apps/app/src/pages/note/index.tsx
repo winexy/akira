@@ -460,7 +460,7 @@ const NotePage: React.FC<Props> = ({id, className}) => {
   )
 }
 
-function wrap(Component: FC<Props>): FC<Props> {
+function withCacheRead(Component: FC<Props>): FC<Props> {
   return props => {
     const isCacheRead = useStore($isCacheRead)
 
@@ -478,4 +478,4 @@ function wrap(Component: FC<Props>): FC<Props> {
   }
 }
 
-export default wrap(NotePage)
+export default withCacheRead(NotePage)
