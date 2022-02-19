@@ -36,7 +36,7 @@ import {forward} from 'effector'
 import entries from 'lodash/entries'
 import localforage from 'localforage'
 import {noteApi, noteModel} from 'entities/note'
-import {createDebugger} from 'shared/lib/debugger'
+import {createDebugger, Invariant} from 'shared/lib/debugger'
 
 const TextEditor: React.FC<{onChange(editorState: EditorState): void}> = ({
   onChange,
@@ -92,8 +92,9 @@ type UpdateParams = {
   patch: noteModel.NotePatch
 }
 
-const writeCache = app.event<noteModel.Note>()
+const writeCache = app.event<UpdateParams>()
 const forceSave = app.event<noteModel.Note>()
+const putCache = app.event<noteModel.Note>()
 const commit = app.event<string>()
 
 const enqueueUpdateFx = app.effect((event: UpdateEvent) => {
@@ -185,11 +186,28 @@ const $isCacheRead = app.store(false).on(readCacheStorageFx.finally, () => true)
 const $contentCache = app
   .store(new Map<string, CacheValue>())
   .on(readCacheStorageFx.doneData, (_, entries) => new Map(entries))
-  .on(writeCache, (map, note) => {
+  .on(putCache, (map, note) => {
     return produce(map, draft => {
       draft.set(note.uuid, {
-        synced: false,
+        synced: true,
         note,
+      })
+    })
+  })
+  .on(writeCache, (map, event) => {
+    const cache = map.get(event.id)
+
+    if (isUndefined(cache)) {
+      throw Invariant('cache is missing pre-written note')
+    }
+
+    return produce(map, draft => {
+      draft.set(event.id, {
+        synced: false,
+        note: {
+          ...cache.note,
+          ...event.patch,
+        },
       })
     })
   })
@@ -229,6 +247,7 @@ type Props = {
 
 const NotePage: React.FC<Props> = ({id, className}) => {
   const contentCache = useStore($contentCache)
+  const cachedNote = contentCache.get(id)
 
   const editor = useEditor(undefined, {
     onSave() {
@@ -248,6 +267,7 @@ const NotePage: React.FC<Props> = ({id, className}) => {
       debug('✅  🏗 success query, hydrate content')
       editor.hydrate(note.content)
       setUpdatedAt(note.updated_at)
+      putCache(note)
     },
     initialData() {
       const cache = contentCache.get(id)
@@ -320,7 +340,7 @@ const NotePage: React.FC<Props> = ({id, className}) => {
 
   const isPending = useStore(updateNoteFx.pending)
 
-  useNotePageTitle(noteQuery.data)
+  useNotePageTitle(cachedNote?.note)
 
   async function onTitleChange(title: string) {
     const note = noteQuery.data
@@ -329,7 +349,10 @@ const NotePage: React.FC<Props> = ({id, className}) => {
       return
     }
 
-    writeCache({...note, title})
+    writeCache({
+      id: note.uuid,
+      patch: {title},
+    })
 
     await updateNoteFx({
       id: note.uuid,
@@ -341,19 +364,12 @@ const NotePage: React.FC<Props> = ({id, className}) => {
       queryClient,
       title,
     })
-
-    noteModel.updateNoteQueryData({
-      noteId: note.uuid,
-      queryClient,
-      mutate(draft) {
-        console.log({draft})
-        draft.title = title
-      },
-    })
   }
 
   const onContentChange = (editorState: EditorState) => {
-    if (isNil(id) || isNil(noteQuery.data)) {
+    const note = noteQuery.data
+
+    if (isNil(id) || isNil(note)) {
       globalThis.console.warn('note is nil')
       return
     }
@@ -368,7 +384,11 @@ const NotePage: React.FC<Props> = ({id, className}) => {
 
     const content = editor.toHtml(editorState)
 
-    writeCache({...noteQuery.data, content})
+    writeCache({
+      id: note.uuid,
+      patch: {content},
+    })
+
     enqueueUpdateFx({id, content})
   }
 
