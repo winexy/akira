@@ -45,7 +45,7 @@ const enqueueUpdateFx = app.effect((event: UpdateEvent) => {
       reject()
     }
 
-    const timeoutId = setTimeout(startUpdate, 2000)
+    const timeoutId = setTimeout(startUpdate, 500)
     const unwatchEnqueueUpdate = enqueueUpdateFx.watch(abort)
     const unwatchForceSave = forceSave.watch(abort)
     /* eslint-enable @typescript-eslint/no-use-before-define */
