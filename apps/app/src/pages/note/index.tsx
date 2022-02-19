@@ -6,7 +6,7 @@
 import Editor from 'draft-js-plugins-editor'
 import React, {FC, useEffect, useState} from 'react'
 import {useStore} from 'effector-react'
-import {useQuery, useQueryClient} from 'react-query'
+import {useQueryClient} from 'react-query'
 import {
   customStyleMap,
   useEditorContext,

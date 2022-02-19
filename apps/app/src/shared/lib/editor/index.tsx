@@ -4,7 +4,7 @@
 /* eslint-disable jsx-a11y/heading-has-content */
 /* eslint-disable  */
 
-import React, {useRef} from 'react'
+import React, {FC, MouseEventHandler, useRef} from 'react'
 
 import {
   EditorState,
@@ -16,9 +16,13 @@ import {
   Editor,
   EditorProps,
   KeyBindingUtil,
+  CompositeDecorator,
+  DraftDecorator,
+  ContentState,
 } from 'draft-js'
 import {convertFromHTML, convertToHTML} from 'draft-convert'
 import Immutable from 'immutable'
+import clsx from 'clsx'
 // @ts-expect-error no type anotations
 import createMarkdownShortcutsPlugin from 'draft-js-markdown-shortcuts-plugin'
 import PluginEditor, {EditorPlugin} from 'draft-js-plugins-editor'
@@ -145,11 +149,57 @@ type UseEditorProps = {
   onSave?(editorState: EditorState): void
 }
 
+const Link: FC<{entityKey: string; contentState: ContentState}> = props => {
+  const {href} = props.contentState.getEntity(props.entityKey).getData()
+
+  const onClick: MouseEventHandler = event => {
+    event.preventDefault()
+    window.open(href, '_blank')
+  }
+
+  return (
+    <a
+      href={href}
+      title={href}
+      target="_blank"
+      className={clsx(
+        'text-blue-500 underline cursor-pointer',
+        'hover:no-underline hover:text-blue-400 active:text-blue-600',
+        'transition',
+      )}
+      onClick={onClick}
+    >
+      {props.children}
+    </a>
+  )
+}
+
+const findLinkEntities: DraftDecorator['strategy'] = (
+  contentBlock,
+  callback,
+  contentState,
+) => {
+  contentBlock.findEntityRanges(character => {
+    const entityKey = character.getEntity()
+    return (
+      entityKey !== null &&
+      contentState.getEntity(entityKey).getType() === 'LINK'
+    )
+  }, callback)
+}
+
+const decorator = new CompositeDecorator([
+  {
+    strategy: findLinkEntities,
+    component: Link,
+  },
+])
+
 function useEditor(html: string | undefined, props: UseEditorProps = {}) {
   const [state, setState] = React.useState(() =>
     html
-      ? EditorState.createWithContent(HTMLtoState(html))
-      : EditorState.createEmpty(),
+      ? EditorState.createWithContent(HTMLtoState(html), decorator)
+      : EditorState.createEmpty(decorator),
   )
   const ref = useRef<PluginEditor>(null)
 
