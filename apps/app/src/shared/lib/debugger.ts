@@ -1,8 +1,14 @@
 import noop from 'lodash/noop'
 
-export function createDebugger(tag: string) {
+type Options = {
+  enabled?: boolean
+}
+
+export function createDebugger(tag: string, {enabled = true}: Options = {}) {
   function log(...args: any[]) {
-    globalThis.console.debug(`[${tag}]`, ...args)
+    if (enabled) {
+      globalThis.console.debug(`[${tag}]`, ...args)
+    }
   }
 
   log.skip = noop
