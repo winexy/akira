@@ -1,6 +1,6 @@
 import {PlusIcon} from '@heroicons/react/solid'
 import React, {FC, useState} from 'react'
-import {useQuery, useMutation} from 'react-query'
+import {useMutation} from 'react-query'
 import {api} from 'shared/api'
 import {PageView} from 'shared/ui/page-view'
 import isEmpty from 'lodash/isEmpty'
@@ -8,11 +8,11 @@ import {Empty} from 'shared/ui/empty'
 import {DocumentTextIcon} from '@heroicons/react/outline'
 import {useHistory, useLocation} from 'react-router'
 import clsx from 'clsx'
-import NotePage from 'pages/note'
 import isNull from 'lodash/isNull'
 import ContentLoader from 'react-content-loader'
 import {useShimmerColors} from 'shared/ui/shimmer'
-import {noteModel, noteApi} from 'entities/note'
+import {noteModel} from 'entities/note'
+import {Note} from './ui'
 
 const Notes: FC = () => {
   const {search} = useLocation()
@@ -102,7 +102,7 @@ const Notes: FC = () => {
       </div>
       <div className="border-t col-span-9 flex dark:border-dark-500">
         {!isNull(noteUUID) && (
-          <NotePage key={noteUUID} id={noteUUID} className="flex-1" />
+          <Note key={noteUUID} id={noteUUID} className="flex-1" />
         )}
       </div>
     </PageView>
