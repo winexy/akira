@@ -1,6 +1,6 @@
 import noop from 'lodash/noop'
 
-export const createDebugger = (tag: string) => {
+export function createDebugger(tag: string) {
   function log(...args: any[]) {
     globalThis.console.debug(`[${tag}]`, ...args)
   }
@@ -8,4 +8,8 @@ export const createDebugger = (tag: string) => {
   log.skip = noop
 
   return log
+}
+
+export function Invariant(message: string) {
+  return new Error(`Invariant Violation: ${message}`)
 }
