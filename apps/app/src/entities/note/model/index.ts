@@ -1,4 +1,4 @@
-import produce from 'immer'
+import produce, {Draft} from 'immer'
 import constant from 'lodash/constant'
 import isUndefined from 'lodash/isUndefined'
 import {useQuery, QueryClient} from 'react-query'
@@ -82,7 +82,24 @@ export function updateNotesPreviewQueryData(
     noteModel.NoteQuery.Preview(),
     produce(notes, draft => {
       const index = draft.findIndex(n => n.uuid === noteId)
-      notes[index].title = title
+      draft[index].title = title
     }),
   )
+}
+
+type UpdateNoteQueryDataParams = {
+  queryClient: QueryClient
+  noteId: string
+  mutate(draft: Draft<Note>): void
+}
+
+export function updateNoteQueryData(params: UpdateNoteQueryDataParams) {
+  const {queryClient, noteId, mutate} = params
+
+  const queryKey = NoteQuery.One(noteId)
+  const note = queryClient.getQueryData<Note>(queryKey)
+
+  if (!isUndefined(note)) {
+    queryClient.setQueryData(queryKey, produce(note, mutate))
+  }
 }
