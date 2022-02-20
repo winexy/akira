@@ -5,10 +5,10 @@ import {TouchBackend} from 'react-dnd-touch-backend'
 import {ErrorBoundary, FallbackProps} from 'react-error-boundary'
 import {
   BrowserRouter as Router,
-  Redirect,
+  Navigate,
   Route,
-  Switch,
-  useHistory,
+  Routes,
+  useNavigate,
 } from 'react-router-dom'
 import {HomeIcon, RefreshIcon} from '@heroicons/react/solid'
 import {DashboardPage} from 'pages/dashboard'
@@ -26,7 +26,7 @@ const dndConfig = {
 }
 
 function Fallback({error, resetErrorBoundary}: FallbackProps) {
-  const history = useHistory()
+  const navigate = useNavigate()
 
   return (
     <div className="min-h-screen pt-6 px-6 bg-white flex flex-col text-gray-700">
@@ -49,7 +49,7 @@ function Fallback({error, resetErrorBoundary}: FallbackProps) {
           size="md"
           className="flex-1"
           onClick={() => {
-            history.push('/')
+            navigate('/')
             resetErrorBoundary()
           }}
         >
@@ -99,77 +99,107 @@ function App() {
       <Router>
         <ErrorBoundary FallbackComponent={Fallback}>
           <Menu>
-            <Switch>
-              <Route path="/" exact>
-                <Redirect to="/dashboard/today" />
-              </Route>
-              <Route path="/dashboard/:type" exact>
-                <DashboardPage />
-              </Route>
-              <Route path="/tasks" exact>
-                <Suspense fallback={<LoadingView />}>
-                  <TasksPage />
-                </Suspense>
-              </Route>
-              <Route path="/tasks/:taskId">
-                <Suspense fallback={<TaskPageFallback />}>
-                  <TaskPage />
-                </Suspense>
-              </Route>
-              <Route path="/search">
-                <Suspense fallback={<LoadingView />}>
-                  <SearchPage />
-                </Suspense>
-              </Route>
-              <Route path="/pomodoro">
-                <Suspense fallback={<LoadingView />}>
-                  <PomodoroPage />
-                </Suspense>
-              </Route>
-              <Route path="/wip">
-                <WipPage />
-              </Route>
-              <Route path="/tags">
-                <Suspense fallback={<LoadingView />}>
-                  <TagsPage />
-                </Suspense>
-              </Route>
-              <Route path="/lists/new">
-                <Suspense fallback={<LoadingView />}>
-                  <NewListPage />
-                </Suspense>
-              </Route>
-              <Route path="/lists/:listId">
-                <Suspense fallback={<LoadingView />}>
-                  <TaskListPage />
-                </Suspense>
-              </Route>
-              <Route path="/lists">
-                <Suspense fallback={<LoadingView />}>
-                  <ListsPage />
-                </Suspense>
-              </Route>
-              <Route path="/notes" exact>
-                <Suspense fallback={<LoadingView />}>
-                  <NotesPage />
-                </Suspense>
-              </Route>
-              <Route path="/reports">
-                <Suspense fallback={<LoadingView />}>
-                  <ReportsPage />
-                </Suspense>
-              </Route>
-              <Route path="/recurrent-tasks">
-                <Suspense fallback={<LoadingView />}>
-                  <RecurrentTasksPage />
-                </Suspense>
-              </Route>
-              <Route path="/preferences">
-                <Suspense fallback={<LoadingView />}>
-                  <PreferencesPage />
-                </Suspense>
-              </Route>
-            </Switch>
+            <Routes>
+              <Route path="/" element={<Navigate to="/dashboard/today" />} />
+              <Route path="/dashboard/*" element={<DashboardPage />} />
+              <Route
+                path="/tasks"
+                element={
+                  <Suspense fallback={<LoadingView />}>
+                    <TasksPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/tasks/:taskId"
+                element={
+                  <Suspense fallback={<TaskPageFallback />}>
+                    <TaskPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/search"
+                element={
+                  <Suspense fallback={<LoadingView />}>
+                    <SearchPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/pomodoro"
+                element={
+                  <Suspense fallback={<LoadingView />}>
+                    <PomodoroPage />
+                  </Suspense>
+                }
+              />
+              <Route path="/wip" element={<WipPage />} />
+              <Route
+                path="/tags"
+                element={
+                  <Suspense fallback={<LoadingView />}>
+                    <TagsPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/lists/new"
+                element={
+                  <Suspense fallback={<LoadingView />}>
+                    <NewListPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/lists/:listId"
+                element={
+                  <Suspense fallback={<LoadingView />}>
+                    <TaskListPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/lists"
+                element={
+                  <Suspense fallback={<LoadingView />}>
+                    <ListsPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/notes"
+                element={
+                  <Suspense fallback={<LoadingView />}>
+                    <NotesPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/reports/*"
+                element={
+                  <Suspense fallback={<LoadingView />}>
+                    <ReportsPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/recurrent-tasks"
+                element={
+                  <Suspense fallback={<LoadingView />}>
+                    <RecurrentTasksPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/preferences"
+                element={
+                  <Suspense fallback={<LoadingView />}>
+                    <PreferencesPage />
+                  </Suspense>
+                }
+              />
+            </Routes>
           </Menu>
         </ErrorBoundary>
       </Router>

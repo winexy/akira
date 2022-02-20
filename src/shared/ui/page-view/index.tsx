@@ -1,5 +1,5 @@
 import React from 'react'
-import {useHistory} from 'react-router'
+import {useNavigate} from 'react-router'
 import clsx from 'clsx'
 import isUndefined from 'lodash/fp/isUndefined'
 import {ChevronLeftIcon} from '@heroicons/react/solid'
@@ -19,15 +19,15 @@ export const PageView: React.FC<ViewProps> = ({
   header,
   withBackNavigation = false,
 }) => {
-  const history = useHistory()
-  const canGoBack = history.length > 2
+  const navigate = useNavigate()
+  const canGoBack = window.history.length > 2
 
   const defaultHeader =
     withBackNavigation && canGoBack ? (
       <Header>
         <button
           className="-ml-1 flex items-center font-bold active:text-gray-500 rounded focus:outline-none"
-          onClick={history.goBack}
+          onClick={() => navigate(-1)}
         >
           <ChevronLeftIcon className="w-6 h-6 mr-1" />
           Return

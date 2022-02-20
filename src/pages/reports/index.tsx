@@ -1,5 +1,5 @@
 import React from 'react'
-import {Route, Switch, useHistory, useRouteMatch} from 'react-router'
+import {Route, Routes, useNavigate, useParams} from 'react-router'
 import {PageView} from 'shared/ui/page-view'
 import {DatePicker} from 'shared/ui/datepicker'
 import format from 'date-fns/format'
@@ -62,9 +62,7 @@ const ReportLoader: React.FC = () => {
 }
 
 function ReportView() {
-  const match = useRouteMatch<{date: string}>()
-  const {date} = match.params
-
+  const {date = ''} = useParams()
   const {data: report, isLoading, isError, error} = useReportQuery(date)
 
   return (
@@ -75,8 +73,7 @@ function ReportView() {
       </h1>
       <Match>
         <Match.Case when={isLoading}>
-          {ReportLoader}
-          {ReportLoader}
+          <ReportLoader />
         </Match.Case>
         <Match.Case when={isError}>
           <p className="mt-4">Error occured: {get('message', error)}</p>
@@ -129,28 +126,29 @@ function ReportView() {
 }
 
 const ReportsView: React.FC = () => {
-  const history = useHistory()
+  const navigate = useNavigate()
 
   function onDateSelect(dateInstance: Date) {
-    history.push(`/reports/${format(dateInstance, 'Y-MM-dd')}`)
+    navigate(`/reports/${format(dateInstance, 'Y-MM-dd')}`)
   }
 
   return (
-    <Switch>
-      <Route exact path="/reports/:date">
-        <ReportView />
-      </Route>
-      <Route exact>
-        <PageView className="px-4">
-          <h1 className="font-bold text-3xl">Select day</h1>
-          <DatePicker
-            maxDate={new Date()}
-            className="mt-6"
-            onChange={onDateSelect}
-          />
-        </PageView>
-      </Route>
-    </Switch>
+    <Routes>
+      <Route path=":date" element={<ReportView />} />
+      <Route
+        path="/"
+        element={
+          <PageView className="px-4">
+            <h1 className="font-bold text-3xl">Select day</h1>
+            <DatePicker
+              maxDate={new Date()}
+              className="mt-6"
+              onChange={onDateSelect}
+            />
+          </PageView>
+        }
+      />
+    </Routes>
   )
 }
 

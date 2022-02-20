@@ -1,5 +1,5 @@
-import React, {useState} from 'react'
-import {Route, Switch, useParams} from 'react-router'
+import React from 'react'
+import {Route, Routes, useParams} from 'react-router'
 import {TaskList} from 'modules/tasks/components/TaskList'
 import size from 'lodash/fp/size'
 import filter from 'lodash/fp/filter'
@@ -36,7 +36,7 @@ import {useShimmerColors} from 'shared/ui/shimmer'
 import {ApiTask, CreateTaskPayload} from 'modules/tasks/types.d'
 import {usePullToRefresh} from 'shared/lib/hooks/pull-to-refresh'
 import {BookOpenIcon, PlusIcon} from '@heroicons/react/solid'
-import {useHistory} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 import startOfWeek from 'date-fns/startOfWeek'
 import formatISO from 'date-fns/formatISO'
 import addDays from 'date-fns/addDays'
@@ -237,7 +237,7 @@ const Habbit: React.FC<HabbitProps> = ({Icon, variant, children}) => {
 }
 
 export function DashboardPage() {
-  const history = useHistory()
+  const navigate = useNavigate()
   const {type: mode = 'today'} = useParams<{type?: 'today' | 'week'}>()
 
   const addTaskControl = useAddTaskControl()
@@ -278,7 +278,7 @@ export function DashboardPage() {
           activeValue={mode}
           value="today"
           onClick={() => {
-            history.push('/dashboard/today')
+            navigate('/dashboard/today')
           }}
         >
           Today
@@ -287,21 +287,17 @@ export function DashboardPage() {
           activeValue={mode}
           value="week"
           onClick={() => {
-            history.push('/dashboard/week')
+            navigate('/dashboard/week')
           }}
         >
           Week
         </Control>
         <div className="flex-1 border-b-2 border-gray-200 dark:border-gray-600" />
       </div>
-      <Switch>
-        <Route path="/dashboard/today">
-          <Today />
-        </Route>
-        <Route path="/dashboard/week">
-          <Week />
-        </Route>
-      </Switch>
+      <Routes>
+        <Route path="today" element={<Today />} />
+        <Route path="week" element={<Week />} />
+      </Routes>
       {addTaskControl.isVisible && (
         <div className="z-20 fixed bottom-0 right-0 p-4">
           <AddTaskButton onClick={addTaskControl.onAddIntent} />

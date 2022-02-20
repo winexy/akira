@@ -1,5 +1,5 @@
 import React, {FC, useRef} from 'react'
-import {useHistory} from 'react-router'
+import {useNavigate} from 'react-router'
 import {ClipboardCopyIcon} from '@heroicons/react/outline'
 import {TaskActionList} from 'modules/tasks/components'
 import {Transition} from 'shared/ui/transition'
@@ -12,12 +12,12 @@ type Props = {
 
 export const CloneTaskAction: FC<Props> = ({taskId}) => {
   const cloneTaskMutation = useCloneTaskMutation(taskId)
-  const history = useHistory()
+  const navigate = useNavigate()
   const spinRef = useRef(null)
 
   function cloneTask() {
     cloneTaskMutation.mutateAsync().then(cloneId => {
-      history.push(`/tasks/${cloneId}`)
+      navigate(`/tasks/${cloneId}`)
     })
   }
 

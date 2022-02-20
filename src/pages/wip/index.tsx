@@ -1,11 +1,11 @@
 import React from 'react'
 import {ShieldExclamationIcon} from '@heroicons/react/solid'
 import {PageView} from 'shared/ui/page-view'
-import {useHistory} from 'react-router'
+import {useNavigate} from 'react-router'
 import {Button} from 'shared/ui/button'
 
 const WipPage: React.FC = () => {
-  const history = useHistory()
+  const navigate = useNavigate()
 
   return (
     <PageView className="flex-1 flex flex-col items-center justify-center">
@@ -17,7 +17,7 @@ const WipPage: React.FC = () => {
         size="md"
         variant="outline"
         className="mt-8"
-        onClick={history.goBack}
+        onClick={() => navigate(-1)}
       >
         Go back
       </Button>

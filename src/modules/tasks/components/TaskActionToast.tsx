@@ -1,7 +1,7 @@
 import React from 'react'
 import {CheckIcon, FireIcon, TrashIcon} from '@heroicons/react/solid'
 import clsx from 'clsx'
-import {useHistory} from 'react-router'
+import {useNavigate} from 'react-router'
 import {TaskId} from 'modules/tasks/types.d'
 import {ActionToast} from 'shared/ui/action-toast'
 import {ActionSheet} from 'shared/ui/action-sheet'
@@ -25,14 +25,14 @@ export const TaskActionToast: React.FC<Props> = ({
   isImportant,
   isForcedVisible,
 }) => {
-  const history = useHistory()
+  const navigate = useNavigate()
   const toggleCompletedMutation = useToggleCompletedMutation()
   const toggleImportantMutation = useToggleImportantMutation()
   const removeTaskMutation = useRemoveTaskMutation()
 
   function onRemoveConfirm() {
     removeTaskMutation.mutateAsync(taskId).then(() => {
-      history.goBack()
+      navigate(-1)
     })
   }
 
