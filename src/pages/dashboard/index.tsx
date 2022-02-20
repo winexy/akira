@@ -1,45 +1,18 @@
 import React from 'react'
-import {Route, Routes, useParams} from 'react-router'
-import {TaskList} from 'modules/tasks/components/TaskList'
-import size from 'lodash/fp/size'
-import filter from 'lodash/fp/filter'
-
-import format from 'date-fns/format'
+import {Outlet, useParams} from 'react-router'
 import {PageView} from 'shared/ui/page-view'
 import {useQueryClient, useMutation} from 'react-query'
 import {akira} from 'shared/api/akira'
-import {useTagsQuery} from 'modules/tags/hooks'
-import {filterTasks, useTaskFilters} from 'modules/tasks/filters'
-import {FiltersBottomSheet} from 'modules/tasks/filters/FiltersBottomSheet'
-import {TaskListOperations} from 'modules/tasks/components/TaskListOperations'
-import {
-  SortingBottomSheet,
-  useTaskSorting,
-} from 'modules/tasks/sorting/SortingBottomSheet'
 import {
   AddTaskForm,
   AddTaskButton,
   useAddTaskControl,
 } from 'features/create-task'
 import clsx from 'clsx'
-import groupBy from 'lodash/fp/groupBy'
-import keys from 'lodash/fp/keys'
-import merge from 'lodash/merge'
-import parseISO from 'date-fns/parseISO'
-import ContentLoader from 'react-content-loader'
-import times from 'lodash/times'
-import InboxIcon from '@heroicons/react/solid/InboxIcon'
-import isEmpty from 'lodash/fp/isEmpty'
-import {useMyDayQuery, useWeekQuery} from 'modules/tasks/hooks'
 import {TaskQuery} from 'modules/tasks/config'
-import {useShimmerColors} from 'shared/ui/shimmer'
-import {ApiTask, CreateTaskPayload} from 'modules/tasks/types.d'
-import {usePullToRefresh} from 'shared/lib/hooks/pull-to-refresh'
+import {CreateTaskPayload} from 'modules/tasks/types.d'
 import {BookOpenIcon, PlusIcon} from '@heroicons/react/solid'
 import {useNavigate} from 'react-router-dom'
-import startOfWeek from 'date-fns/startOfWeek'
-import formatISO from 'date-fns/formatISO'
-import addDays from 'date-fns/addDays'
 
 const Control: React.FC<{
   value: string
@@ -68,130 +41,6 @@ const SnackBar: React.FC = () => (
     <p className="text-white text-sm text-center">Refreshing...</p>
   </div>
 )
-
-function transformResponse(tasks: Array<ApiTask> | undefined) {
-  const defaultRecord: Record<string, []> = {}
-
-  let date = startOfWeek(new Date(), {weekStartsOn: 1})
-  times(7, () => {
-    defaultRecord[formatISO(date)] = []
-    date = addDays(date, 1)
-  })
-
-  const byDay = merge(
-    defaultRecord,
-    groupBy(task => formatISO(parseISO(task.date ?? '')), tasks),
-  )
-
-  const days = keys(byDay).sort()
-
-  return {byDay, days}
-}
-
-const Week: React.FC = () => {
-  const {data: tasks, isLoading, refetch: refetchTasks} = useWeekQuery()
-
-  const {backgroundColor, foregroundColor} = useShimmerColors()
-
-  usePullToRefresh({
-    mainElement: '#week-wrapper',
-    onRefresh: refetchTasks,
-  })
-
-  if (isLoading) {
-    return (
-      <div className="px-4">
-        {times(4, x => (
-          <ContentLoader
-            key={x}
-            speed={2}
-            width="100%"
-            className="mt-4"
-            height="98px"
-            backgroundColor={backgroundColor}
-            foregroundColor={foregroundColor}
-          >
-            <rect x="0" y={0} rx="6" ry="6" width="40%" height={28} />
-            <rect x="0" y={38} rx="6" ry="6" width="100%" height={60} />
-          </ContentLoader>
-        ))}
-      </div>
-    )
-  }
-
-  if (isEmpty(tasks)) {
-    return (
-      <div id="week-wrapper" className="px-4 h-full flex flex-col items-center">
-        <InboxIcon className="mt-32 w-12 h-12" />
-        <h2 className="mt-2 font-semibold text-lg">No tasks</h2>
-      </div>
-    )
-  }
-
-  const {byDay, days} = transformResponse(tasks)
-
-  return (
-    <div id="week-wrapper" className="mt-2 px-4 space-y-2 pb-24">
-      {days.map(day => (
-        <section key={day}>
-          <h2 className="font-bold text-2xl">
-            {format(parseISO(day), 'EEEE')}
-          </h2>
-          {isEmpty(byDay[day]) ? (
-            <div className="mt-2 px-4 h-12 flex items-center w-full rounded-md bg-gray-50">
-              <div className="w-5 h-5 rounded-md bg-white border border-gray-100" />
-            </div>
-          ) : (
-            <TaskList className="mt-2" isPending={false} tasks={byDay[day]} />
-          )}
-        </section>
-      ))}
-    </div>
-  )
-}
-
-const Today: React.FC = () => {
-  const {sortType, setSortType, sort} = useTaskSorting()
-  const [filtersState, updateFilters] = useTaskFilters()
-
-  const {data: tasks = [], isLoading, refetch: refetchTasks} = useMyDayQuery()
-
-  const {data: tags = []} = useTagsQuery()
-
-  const sorted = sort(filterTasks(tasks, filtersState))
-  const completedTasksCount = size(filter({is_completed: true}, sorted))
-  const today = format(new Date(), 'eeee, do MMM')
-
-  usePullToRefresh({
-    mainElement: '#today-wrapper',
-    onRefresh: refetchTasks,
-  })
-
-  return (
-    <div id="today-wrapper">
-      <div className="mt-2 flex justify-between items-center px-4">
-        <p className="font-bold text-xl">{today}</p>
-        <span className="text-2xl font-bold">
-          {completedTasksCount} / {size(sorted)}
-        </span>
-      </div>
-      <section className="mt-2 pb-24 px-4">
-        <TaskList isPending={isLoading} tasks={sorted} />
-      </section>
-      <TaskListOperations
-        isFiltered={size(sorted) !== size(tasks)}
-        isSorted={Boolean(sortType)}
-      />
-      <FiltersBottomSheet
-        canReset={size(tasks) !== size(sorted)}
-        state={filtersState}
-        tags={tags}
-        onChange={updateFilters}
-      />
-      <SortingBottomSheet sortType={sortType} onChange={setSortType} />
-    </div>
-  )
-}
 
 type HabbitProps = {
   Icon: SVGIconElement
@@ -294,10 +143,7 @@ export function DashboardPage() {
         </Control>
         <div className="flex-1 border-b-2 border-gray-200 dark:border-gray-600" />
       </div>
-      <Routes>
-        <Route path="today" element={<Today />} />
-        <Route path="week" element={<Week />} />
-      </Routes>
+      <Outlet />
       {addTaskControl.isVisible && (
         <div className="z-20 fixed bottom-0 right-0 p-4">
           <AddTaskButton onClick={addTaskControl.onAddIntent} />

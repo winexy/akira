@@ -20,6 +20,8 @@ import {PageView} from 'shared/ui/page-view'
 import {useFirebaseAuth} from 'shared/lib/firebase'
 import {NotificationManager} from 'modules/notifications/NotificationManager'
 import {TaskPageFallback} from 'pages/task/fallback'
+import {TodayPage} from 'pages/today'
+import {WeekPage} from 'pages/week'
 
 const dndConfig = {
   enableMouseEvents: true,
@@ -101,7 +103,10 @@ function App() {
           <Menu>
             <Routes>
               <Route path="/" element={<Navigate to="/dashboard/today" />} />
-              <Route path="/dashboard/*" element={<DashboardPage />} />
+              <Route path="/dashboard" element={<DashboardPage />}>
+                <Route path="today" element={<TodayPage />} />
+                <Route path="week" element={<WeekPage />} />
+              </Route>
               <Route
                 path="/tasks"
                 element={
