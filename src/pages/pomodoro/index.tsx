@@ -1,8 +1,7 @@
 import clsx from 'clsx'
 import React, {FC} from 'react'
 import {useStore} from 'effector-react'
-import {useHotkey} from 'modules/hotkeys/HotKeyContext'
-import {HotKey} from 'modules/hotkeys/HotKey'
+import {HotKey, useHotkey} from 'shared/lib/hotkey'
 import {pomodoroModel, pomodoroLib} from 'entities/pomodoro'
 import {PomodoroModeSwitcher, PomodoroTimer} from 'features/pomodoro-timer'
 import {

@@ -32,8 +32,7 @@ import {
   disableBodyScroll,
   enableBodyScroll,
 } from 'body-scroll-lock'
-import {useHotkey} from 'modules/hotkeys/HotKeyContext'
-import {HotKey} from 'modules/hotkeys/HotKey'
+import {HotKey, useHotkey} from 'shared/lib/hotkey'
 import {TaskQuery} from 'modules/tasks/config'
 import {useFirebaseAuth} from 'shared/lib/firebase'
 import {closeMenu, openMenu, $isMenuOpen} from './model'

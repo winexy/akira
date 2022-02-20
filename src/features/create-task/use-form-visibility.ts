@@ -1,6 +1,5 @@
 import {useEffect, useState} from 'react'
-import {HotKey} from 'modules/hotkeys/HotKey'
-import {useHotkey} from 'modules/hotkeys/HotKeyContext'
+import {HotKey, useHotkey} from 'shared/lib/hotkey'
 
 export function useFormVisibility({
   onVisibilityChange,
