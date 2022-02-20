@@ -1,8 +1,7 @@
 import React, {FC, useRef} from 'react'
 import {CSSTransition} from 'react-transition-group'
 import clsx from 'clsx'
-import {useHotkey} from 'modules/hotkeys/HotKeyContext'
-import {HotKey} from 'modules/hotkeys/HotKey'
+import {HotKey, useHotkey} from 'shared/lib/hotkey'
 import {useFocusTrap} from 'shared/lib/focus-trap'
 import './index.css'
 
