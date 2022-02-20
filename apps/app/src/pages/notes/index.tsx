@@ -6,7 +6,7 @@ import {PageView} from 'shared/ui/page-view'
 import isEmpty from 'lodash/isEmpty'
 import {Empty} from 'shared/ui/empty'
 import {DocumentTextIcon} from '@heroicons/react/outline'
-import {useHistory, useLocation} from 'react-router'
+import {useNavigate, useLocation} from 'react-router'
 import clsx from 'clsx'
 import isNull from 'lodash/isNull'
 import ContentLoader from 'react-content-loader'
@@ -16,7 +16,7 @@ import {Note} from './ui'
 
 const Notes: FC = () => {
   const {search} = useLocation()
-  const history = useHistory()
+  const navigate = useNavigate()
   const [noteUUID, setNoteUUID] = useState<string | null>(() => {
     return new URLSearchParams(search).get('id')
   })
@@ -30,12 +30,12 @@ const Notes: FC = () => {
 
   async function createEmptyNote() {
     const note = await createEmptyNoteMutation.mutateAsync()
-    history.push(`/notes/${note.uuid}`)
+    navigate(`/notes/${note.uuid}`)
   }
 
   const selectNote = (id: string) => {
     setNoteUUID(id)
-    history.replace({search: `id=${id}`})
+    navigate({search: `id=${id}`}, {replace: true})
   }
 
   return (

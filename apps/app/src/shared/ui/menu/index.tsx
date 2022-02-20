@@ -21,7 +21,7 @@ import {
 import {config} from 'shared/config'
 import {Tag} from 'modules/tags/components/Tag'
 import {useStore} from 'effector-react'
-import {Link, useHistory} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import isNull from 'lodash/fp/isNull'
 import {useQueryClient} from 'react-query'
 import size from 'lodash/fp/size'
@@ -201,7 +201,7 @@ const ScrollShadow = forwardRef<
 })
 
 export const Menu: React.FC = ({children}) => {
-  const history = useHistory()
+  const navigate = useNavigate()
   const queryClient = useQueryClient()
   const isOpen = useStore($isMenuOpen)
   const auth = useFirebaseAuth()
@@ -329,7 +329,7 @@ export const Menu: React.FC = ({children}) => {
                 <MenuItem.Button
                   Icon={PlusIcon}
                   onClick={() => {
-                    history.push('/lists/new')
+                    navigate('/lists/new')
                     closeMenu()
                   }}
                 />

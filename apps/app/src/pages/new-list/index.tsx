@@ -1,6 +1,6 @@
 import React, {useEffect, useLayoutEffect, useRef, useState} from 'react'
 import {useMutation, useQueryClient} from 'react-query'
-import {Redirect} from 'react-router'
+import {Navigate} from 'react-router'
 import {akira} from 'shared/api/akira'
 import {PageView} from 'shared/ui/page-view'
 
@@ -34,7 +34,7 @@ const NewListPage: React.FC = () => {
 
   return (
     <PageView>
-      {list ? <Redirect to={`/lists/${list.id}`} /> : null}
+      {list ? <Navigate to={`/lists/${list.id}`} /> : null}
       <div className="">
         <input
           ref={inputRef}

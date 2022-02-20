@@ -44,7 +44,7 @@ const ReccurentTasksPage: React.FC = () => {
           {query.data.map(recurrence => {
             const {task} = recurrence
             return (
-              <>
+              <React.Fragment key={recurrence.id}>
                 <section
                   className={clsx(
                     'border dark:border-dark-400 shadow-lg rounded-lg',
@@ -98,7 +98,7 @@ const ReccurentTasksPage: React.FC = () => {
                     Remove
                   </ActionSheet.Action>
                 </ActionSheet>
-              </>
+              </React.Fragment>
             )
           })}
         </div>
