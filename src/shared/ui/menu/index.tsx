@@ -19,7 +19,7 @@ import {
   NewspaperIcon,
 } from '@heroicons/react/solid'
 import {config} from 'shared/config'
-import {Tag} from 'modules/tags/components/Tag'
+import {Tag} from 'shared/ui/tag'
 import {useStore} from 'effector-react'
 import {Link, useNavigate} from 'react-router-dom'
 import isNull from 'lodash/fp/isNull'

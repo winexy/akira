@@ -15,7 +15,7 @@ import {
 } from 'modules/tasks/components'
 import {TagsManager, TaskTag} from 'modules/tags/components'
 import {usePatchTaskMutation, useTaskQuery} from 'modules/tasks/hooks'
-import {Tag} from 'modules/tags/components/Tag'
+import {Tag} from 'shared/ui/tag'
 import {
   DotsVerticalIcon,
   ViewListIcon,
