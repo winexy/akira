@@ -1,7 +1,6 @@
 import React, {FC} from 'react'
 import clsx from 'clsx'
 import {MenuIcon} from '@heroicons/react/solid'
-import {WIP} from 'modules/tags/components/Tag'
 import {toggleMenu} from 'shared/ui/menu'
 
 export const Header: FC = () => {
@@ -12,7 +11,6 @@ export const Header: FC = () => {
       </span>{' '}
       <span className={clsx('font-semibold ml-3 text-xl flex items-center')}>
         Pomodoro
-        <WIP className="ml-3" />
       </span>
       <button
         className={clsx(
