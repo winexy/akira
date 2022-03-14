@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 import * as React from 'react'
 
-import './TagsGrid.css'
+import './index.css'
 
 type Props = {
   HtmlTag: React.ElementType
