@@ -35,9 +35,16 @@ import {IconButton} from 'shared/ui/icon-button'
 import {Recurrence} from 'features/recurrence'
 import capitalize from 'lodash/capitalize'
 import {CloneTaskAction} from 'features/clone-task'
+import isUndefined from 'lodash/fp/isUndefined'
+import {Invariant} from 'shared/lib/debugger'
 
 const TaskPage: React.FC = () => {
-  const {taskId} = useParams<{taskId: string}>()
+  const {taskId} = useParams()
+
+  if (isUndefined(taskId)) {
+    throw Invariant('TaskPage can not have nullable taskId parameter')
+  }
+
   const [isActionToastVisible, setIsActionToastVisible] = useState(true)
   const {data: task, isFetching} = useTaskQuery(taskId, {
     suspense: true,
