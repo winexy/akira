@@ -4,9 +4,15 @@ import isUndefined from 'lodash/fp/isUndefined'
 import {TaskList} from 'modules/tasks/components/TaskList'
 import {PageView} from 'shared/ui/page-view'
 import {useTasksListQuery} from 'modules/tasks/hooks'
+import {Invariant} from 'shared/lib/debugger'
 
 const TaskListPage: React.FC = () => {
-  const {listId} = useParams<{listId: string}>()
+  const {listId} = useParams()
+
+  if (isUndefined(listId)) {
+    throw Invariant('TaskListPage can not have nullable listId parameter')
+  }
+
   const {data: list, isLoading} = useTasksListQuery(listId)
 
   if (isLoading) {
