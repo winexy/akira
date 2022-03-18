@@ -67,7 +67,6 @@ const TasksPage = lazy(() => import('pages/tasks'))
 const TagsPage = lazy(() => import('pages/tags'))
 const NewListPage = lazy(() => import('pages/new-list'))
 const WipPage = lazy(() => import('pages/wip'))
-const ListsPage = lazy(() => import('pages/lists'))
 const TaskListPage = lazy(() => import('pages/task-list'))
 const SearchPage = lazy(() => import('pages/search'))
 const ReportsPage = lazy(() => import('pages/reports'))
@@ -161,14 +160,6 @@ function App() {
                 element={
                   <Suspense fallback={<LoadingView />}>
                     <TaskListPage />
-                  </Suspense>
-                }
-              />
-              <Route
-                path="/lists"
-                element={
-                  <Suspense fallback={<LoadingView />}>
-                    <ListsPage />
                   </Suspense>
                 }
               />
