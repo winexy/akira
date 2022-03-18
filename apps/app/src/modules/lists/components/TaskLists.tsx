@@ -55,6 +55,12 @@ const TaskListItem: React.FC<TaskListItemProps> = ({list, allowRemoval}) => {
     closeActionSheet()
   }
 
+  const tasksCountText = pluralize(
+    parseInt(list.tasksCount, 10),
+    'task',
+    'tasks',
+  )
+
   return (
     <Swipeable
       Component="li"
@@ -84,7 +90,15 @@ const TaskListItem: React.FC<TaskListItemProps> = ({list, allowRemoval}) => {
       }
     >
       <>
-        <ActionSheet name={`remove-task-list(${list.id})`}>
+        <ActionSheet
+          name={`remove-task-list(${list.id})`}
+          description={
+            <>
+              Are you sure you want delete &quot;{list.title}&quot; (
+              {list.tasksCount}&nbsp;{tasksCountText}). This action is permanent
+            </>
+          }
+        >
           <ActionSheet.Action destructive onClick={onRemoveConfirm}>
             Delete task
           </ActionSheet.Action>
@@ -105,8 +119,7 @@ const TaskListItem: React.FC<TaskListItemProps> = ({list, allowRemoval}) => {
           {isRemoving && <Spin className="w-5 h-5 text-opacity-30" />}
           {!isRemoving && list.tasksCount !== '0' && (
             <span className="ml-4 text-gray-400">
-              {list.tasksCount}{' '}
-              {pluralize(parseInt(list.tasksCount, 10), 'task', 'tasks')}
+              {list.tasksCount} {tasksCountText}
             </span>
           )}
         </Link>

@@ -12,6 +12,7 @@ import './index.css'
 
 type Props = {
   name: string
+  description?: React.ReactNode
 }
 
 type ActionProps = {
@@ -79,6 +80,7 @@ function useCleanup(isVisible: boolean) {
 
 const ActionSheet: React.FC<Props> & {Action: typeof Action} = ({
   children,
+  description,
   name,
 }) => {
   const ref = useRef<HTMLDivElement>(null)
@@ -119,6 +121,11 @@ const ActionSheet: React.FC<Props> & {Action: typeof Action} = ({
             className="sheet z-10 fixed bottom-0 p-2 pb-6-safe flex flex-col left-0 right-0"
           >
             <ul className="rounded-lg bg-white dark:bg-dark-500 w-full divide-y divide-gray-200">
+              {description && (
+                <li className="px-6 text-center text-sm text-gray-400 py-4">
+                  {description}
+                </li>
+              )}
               {children}
             </ul>
             <button
