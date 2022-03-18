@@ -2,14 +2,11 @@ import React from 'react'
 import {TrashIcon} from '@heroicons/react/solid'
 import {Link} from 'react-router-dom'
 import isUndefined from 'lodash/fp/isUndefined'
-import {useIsMutating, useMutation, useQueryClient} from 'react-query'
 import clsx from 'clsx'
-import {akira} from 'shared/api/akira'
 import {closeMenu} from 'shared/ui/menu'
-import {ActionSheet} from 'shared/ui/action-sheet'
-import {openActionSheet, closeActionSheet} from 'shared/ui/action-sheet/model'
 import {Spin} from 'shared/ui/spin'
 import {Swipeable} from 'shared/ui/swipeable'
+import {ConfirmRemoval, removeTaskListModel} from 'features/remove-task-list'
 import {useListsQuery} from '../hooks/index'
 import {TaskList} from '../types.d'
 
@@ -29,30 +26,10 @@ type TaskListItemProps = {
 }
 
 const TaskListItem: React.FC<TaskListItemProps> = ({list, allowRemoval}) => {
-  const queryClient = useQueryClient()
-  const removeListMutation = useMutation(akira.lists.remove, {
-    mutationKey: 'remove-tasks-list',
-    onSuccess() {
-      queryClient.invalidateQueries('lists')
-    },
-  })
-
-  const isRemoving = Boolean(
-    useIsMutating({
-      mutationKey: 'remove-tasks-list',
-      predicate(mutation) {
-        return mutation.options.variables === list.id
-      },
-    }),
-  )
+  const isRemoving = removeTaskListModel.useIsRemoving(list.id)
 
   function onRemoveIntent() {
-    openActionSheet(`remove-task-list(${list.id})`)
-  }
-
-  function onRemoveConfirm() {
-    removeListMutation.mutate(list.id)
-    closeActionSheet()
+    removeTaskListModel.openConfirmRemovalSheet(list.id)
   }
 
   const tasksCountText = pluralize(
@@ -73,14 +50,14 @@ const TaskListItem: React.FC<TaskListItemProps> = ({list, allowRemoval}) => {
         allowRemoval ? (
           <button
             className="
-                  h-full px-3 
-                  flex items-center justify-between  
-                  text-white bg-red-500
-                  transition ease-in duration-100
-                  active:bg-red-600
-                  focus:outline-none
-                  rounded-r-md
-                "
+              h-full px-3 
+              flex items-center justify-between  
+              text-white bg-red-500
+              transition ease-in duration-100
+              active:bg-red-600
+              focus:outline-none
+              rounded-r-md
+            "
             disabled={isRemoving}
             onClick={onRemoveIntent}
           >
@@ -90,19 +67,7 @@ const TaskListItem: React.FC<TaskListItemProps> = ({list, allowRemoval}) => {
       }
     >
       <>
-        <ActionSheet
-          name={`remove-task-list(${list.id})`}
-          description={
-            <>
-              Are you sure you want delete &quot;{list.title}&quot; (
-              {list.tasksCount}&nbsp;{tasksCountText}). This action is permanent
-            </>
-          }
-        >
-          <ActionSheet.Action destructive onClick={onRemoveConfirm}>
-            Delete task
-          </ActionSheet.Action>
-        </ActionSheet>
+        <ConfirmRemoval list={list} />
         <Link
           to={`/lists/${list.id}`}
           className={clsx(
