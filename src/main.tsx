@@ -7,7 +7,7 @@ import {QueryClient, QueryClientProvider} from 'react-query'
 import {akira} from 'shared/api/akira'
 import {FirebaseAuthProvider, setupCloudMessaging} from 'shared/lib/firebase'
 import {HotkeyProvider} from 'shared/lib/hotkey'
-import {TaskQuery} from 'modules/tasks/config/index'
+import {taskConfig} from 'entities/task'
 import './app/index.css'
 import App from './app/App'
 
@@ -24,7 +24,7 @@ const queryClient = new QueryClient({
 
 async function prefetchQueries() {
   queryClient.prefetchQuery('tags', akira.tags.findAll)
-  queryClient.prefetchQuery(TaskQuery.MyDay(), akira.myday.tasks)
+  queryClient.prefetchQuery(taskConfig.queryKey.MyDay(), akira.myday.tasks)
 }
 
 function onAuthSuccess() {

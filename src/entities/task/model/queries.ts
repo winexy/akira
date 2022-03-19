@@ -1,13 +1,13 @@
-import {TaskQuery} from 'modules/tasks/config'
 import {ApiTask} from 'modules/tasks/types.d'
 import {useQuery, useQueryClient} from 'react-query'
 import {akira} from 'shared/api'
 import {TaskCacheUtils} from '../lib'
+import {taskConfig} from '../config'
 
 export function useTasksQuery() {
   const queryClient = useQueryClient()
 
-  return useQuery(TaskQuery.All(), () => akira.tasks.findAll(), {
+  return useQuery(taskConfig.queryKey.All(), () => akira.tasks.findAll(), {
     onSuccess(tasks) {
       TaskCacheUtils.writeTasksToCache(queryClient, tasks)
     },
@@ -24,16 +24,20 @@ export function useTaskQuery<Select = ApiTask>(
     suspense: boolean
   }> = {},
 ) {
-  return useQuery(TaskQuery.One(taskId), () => akira.tasks.findOne(taskId), {
-    suspense,
-    select,
-  })
+  return useQuery(
+    taskConfig.queryKey.One(taskId),
+    () => akira.tasks.findOne(taskId),
+    {
+      suspense,
+      select,
+    },
+  )
 }
 
 export function useMyDayQuery() {
   const queryClient = useQueryClient()
 
-  return useQuery(TaskQuery.MyDay(), () => akira.myday.tasks(), {
+  return useQuery(taskConfig.queryKey.MyDay(), () => akira.myday.tasks(), {
     onSuccess(tasks) {
       TaskCacheUtils.writeTasksToCache(queryClient, tasks)
     },
@@ -43,18 +47,22 @@ export function useMyDayQuery() {
 export function useWeekQuery() {
   const queryClient = useQueryClient()
 
-  return useQuery<Array<ApiTask>>(TaskQuery.Week(), () => akira.tasks.week(), {
-    onSuccess(tasks) {
-      TaskCacheUtils.writeTasksToCache(queryClient, tasks)
+  return useQuery<Array<ApiTask>>(
+    taskConfig.queryKey.Week(),
+    () => akira.tasks.week(),
+    {
+      onSuccess(tasks) {
+        TaskCacheUtils.writeTasksToCache(queryClient, tasks)
+      },
     },
-  })
+  )
 }
 
 export function useTasksListQuery(listId: string) {
   const queryClient = useQueryClient()
 
   return useQuery(
-    TaskQuery.List(listId),
+    taskConfig.queryKey.List(listId),
     () => akira.lists.findTasks(Number(listId)),
     {
       onSuccess(data) {

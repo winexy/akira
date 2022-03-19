@@ -1,7 +1,7 @@
-import {TaskQuery} from 'modules/tasks/config'
 import {TaskId, TaskPatch} from 'modules/tasks/types.d'
 import {useMutation, useQueryClient} from 'react-query'
 import {akira} from 'shared/api'
+import {taskConfig} from '../config'
 import {TaskCacheUtils} from '../lib'
 
 export function useToggleCompletedMutation() {
@@ -48,13 +48,17 @@ export function useRemoveTaskMutation() {
   return useMutation(akira.tasks.delete, {
     mutationKey: 'delete-task',
     onSuccess(_, taskId) {
-      queryClient.removeQueries(TaskQuery.One(taskId))
+      queryClient.removeQueries(taskConfig.queryKey.One(taskId))
       TaskCacheUtils.removeTasksFromCache(
         queryClient,
-        TaskQuery.MyDay(),
+        taskConfig.queryKey.MyDay(),
         taskId,
       )
-      TaskCacheUtils.removeTasksFromCache(queryClient, TaskQuery.All(), taskId)
+      TaskCacheUtils.removeTasksFromCache(
+        queryClient,
+        taskConfig.queryKey.All(),
+        taskId,
+      )
     },
   })
 }
@@ -68,8 +72,12 @@ export function usePatchTaskMutation(taskId: TaskId) {
     },
     {
       onSuccess(task) {
-        queryClient.setQueryData(TaskQuery.One(taskId), task)
-        TaskCacheUtils.writeTaskListCache(TaskQuery.MyDay(), queryClient, task)
+        queryClient.setQueryData(taskConfig.queryKey.One(taskId), task)
+        TaskCacheUtils.writeTaskListCache(
+          taskConfig.queryKey.MyDay(),
+          queryClient,
+          task,
+        )
       },
     },
   )

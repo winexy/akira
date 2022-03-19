@@ -9,10 +9,10 @@ import {
   useAddTaskControl,
 } from 'features/create-task'
 import clsx from 'clsx'
-import {TaskQuery} from 'modules/tasks/config'
 import {CreateTaskPayload} from 'modules/tasks/types.d'
 import {BookOpenIcon, PlusIcon} from '@heroicons/react/solid'
 import {useNavigate} from 'react-router-dom'
+import {taskConfig} from 'entities/task'
 
 const Control: React.FC<{
   value: string
@@ -97,8 +97,8 @@ export function DashboardPage() {
     },
     {
       onSuccess() {
-        queryClient.invalidateQueries(TaskQuery.MyDay())
-        queryClient.invalidateQueries(TaskQuery.Week())
+        queryClient.invalidateQueries(taskConfig.queryKey.MyDay())
+        queryClient.invalidateQueries(taskConfig.queryKey.Week())
       },
     },
   )

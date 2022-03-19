@@ -5,7 +5,7 @@ import isNull from 'lodash/fp/isNull'
 import reduce from 'lodash/reduce'
 import {QueryClient} from 'react-query'
 import {ApiTask, TaskId} from 'modules/tasks/types.d'
-import {TaskQuery} from 'modules/tasks/config'
+import {taskConfig} from 'entities/task'
 import {forEach} from 'lodash/fp'
 import {ApiList} from 'modules/lists/types.d'
 
@@ -51,7 +51,9 @@ function writeTaskListQueryCache(
   }
 
   const listId = String(task.list_id)
-  const tasksList = queryClient.getQueryData<ApiList>(TaskQuery.List(listId))
+  const tasksList = queryClient.getQueryData<ApiList>(
+    taskConfig.queryKey.List(listId),
+  )
 
   if (isUndefined(tasksList)) {
     return
@@ -65,7 +67,7 @@ function writeTaskListQueryCache(
     }
   })
 
-  queryClient.setQueryData(TaskQuery.List(listId), newTasksList)
+  queryClient.setQueryData(taskConfig.queryKey.List(listId), newTasksList)
 }
 
 export function writeTaskCache(
@@ -73,11 +75,13 @@ export function writeTaskCache(
   queryClient: QueryClient,
   mutateDraft: DraftMutation,
 ): [null, null] | [ApiTask, ApiTask] {
-  const prevTask = queryClient.getQueryData<ApiTask>(TaskQuery.One(taskId))
+  const prevTask = queryClient.getQueryData<ApiTask>(
+    taskConfig.queryKey.One(taskId),
+  )
 
   if (!isUndefined(prevTask)) {
     const newTask = produce(prevTask, draft => mutateDraft(draft, prevTask))
-    queryClient.setQueriesData(TaskQuery.One(taskId), newTask)
+    queryClient.setQueriesData(taskConfig.queryKey.One(taskId), newTask)
 
     writeTaskListQueryCache(newTask, queryClient)
 
@@ -116,7 +120,11 @@ export function writeTaskListsCache(
   queryClient: QueryClient,
   updatedTask: ApiTask | null,
 ) {
-  const keys = [TaskQuery.All(), TaskQuery.MyDay(), TaskQuery.Week()]
+  const keys = [
+    taskConfig.queryKey.All(),
+    taskConfig.queryKey.MyDay(),
+    taskConfig.queryKey.Week(),
+  ]
 
   return reduce(
     keys,
@@ -147,7 +155,7 @@ export function rollbackTaskMutation(
   prevTask: ApiTask | null,
 ) {
   if (prevTask) {
-    queryClient.setQueryData(TaskQuery.One(taskId), prevTask)
+    queryClient.setQueryData(taskConfig.queryKey.One(taskId), prevTask)
   }
 }
 
@@ -165,7 +173,9 @@ export function writeTasksToCache(
   queryClient: QueryClient,
   tasks: Array<ApiTask>,
 ) {
-  tasks.forEach(task => queryClient.setQueryData(TaskQuery.One(task.id), task))
+  tasks.forEach(task =>
+    queryClient.setQueryData(taskConfig.queryKey.One(task.id), task),
+  )
 }
 
 export function removeTask(tasks: ApiTask[], taskId: TaskId) {

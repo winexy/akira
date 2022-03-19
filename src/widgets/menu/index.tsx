@@ -33,7 +33,7 @@ import {
   enableBodyScroll,
 } from 'body-scroll-lock'
 import {HotKey, useHotkey} from 'shared/lib/hotkey'
-import {TaskQuery} from 'modules/tasks/config'
+import {taskConfig} from 'entities/task'
 import {useFirebaseAuth} from 'shared/lib/firebase'
 import {closeMenu, openMenu, $isMenuOpen} from './model'
 import './index.css'
@@ -207,7 +207,9 @@ export const Menu: React.FC = ({children}) => {
   const menuRef = useRef<HTMLElement>(null)
   const scrollContentRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
-  const todayTasksCount = size(queryClient.getQueryData(TaskQuery.MyDay()))
+  const todayTasksCount = size(
+    queryClient.getQueryData(taskConfig.queryKey.MyDay()),
+  )
 
   useOpenMenuLock('root', isOpen, scrollContentRef.current)
 

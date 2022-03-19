@@ -1,7 +1,7 @@
 import {useMutation, useQueryClient} from 'react-query'
 import {api} from 'shared/api'
 import {TaskId} from 'modules/tasks/types.d'
-import {TaskQuery} from 'modules/tasks/config'
+import {taskConfig} from 'entities/task'
 
 export function useScheduleTaskMutation(taskId: TaskId) {
   const queryClient = useQueryClient()
@@ -14,9 +14,9 @@ export function useScheduleTaskMutation(taskId: TaskId) {
       }),
     {
       onSuccess() {
-        queryClient.refetchQueries(TaskQuery.One(taskId))
-        queryClient.invalidateQueries(TaskQuery.MyDay())
-        queryClient.invalidateQueries(TaskQuery.Week())
+        queryClient.refetchQueries(taskConfig.queryKey.One(taskId))
+        queryClient.invalidateQueries(taskConfig.queryKey.MyDay())
+        queryClient.invalidateQueries(taskConfig.queryKey.Week())
       },
     },
   )

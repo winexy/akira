@@ -4,10 +4,10 @@ import {useMutation, useQueryClient} from 'react-query'
 import {ChevronLeftIcon} from '@heroicons/react/solid'
 import {api} from 'shared/api'
 import {List} from 'shared/ui/list'
-import {TaskQuery} from 'modules/tasks/config'
 import {BottomSheet, bottomSheetModel} from 'shared/ui/bottom-sheet'
 import {Button} from 'shared/ui/button'
 import {Picker} from 'shared/ui/picker'
+import {taskConfig} from 'entities/task'
 import {
   makeRecurrencePayload,
   RecurrenceParams,
@@ -104,7 +104,7 @@ export const Recurrence: React.FC<Props> = ({taskId}) => {
     },
     {
       onSuccess() {
-        queryClient.invalidateQueries(TaskQuery.One(taskId))
+        queryClient.invalidateQueries(taskConfig.queryKey.One(taskId))
       },
     },
   )
