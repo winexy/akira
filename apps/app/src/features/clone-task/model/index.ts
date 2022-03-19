@@ -1,7 +1,7 @@
 import {useMutation, useQueryClient} from 'react-query'
-import {TaskQuery} from 'modules/tasks/config'
 import {TaskId} from 'modules/tasks/types.d'
 import {akira} from 'shared/api'
+import {taskConfig} from 'entities/task'
 
 export function useCloneTaskMutation(taskId: TaskId) {
   const queryClient = useQueryClient()
@@ -12,7 +12,7 @@ export function useCloneTaskMutation(taskId: TaskId) {
     },
     {
       onSuccess() {
-        queryClient.invalidateQueries(TaskQuery.MyDay())
+        queryClient.invalidateQueries(taskConfig.queryKey.MyDay())
       },
     },
   )

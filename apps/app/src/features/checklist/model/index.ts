@@ -2,10 +2,9 @@ import {useMutation, useQueryClient} from 'react-query'
 import uniqueId from 'lodash/fp/uniqueId'
 import {TaskId, Todo, TodoId, TodoPatch} from 'modules/tasks/types.d'
 import {akira} from 'shared/api'
-import {TaskQuery} from 'modules/tasks/config'
 import filter from 'lodash/fp/filter'
 import findIndex from 'lodash/fp/findIndex'
-import {TaskCacheUtils} from 'entities/task'
+import {taskConfig, TaskCacheUtils} from 'entities/task'
 
 export function useAddTodoMutation(taskId: TaskId) {
   const queryClient = useQueryClient()
@@ -35,7 +34,7 @@ export function useAddTodoMutation(taskId: TaskId) {
         )
       },
       onSuccess() {
-        queryClient.invalidateQueries(TaskQuery.One(taskId))
+        queryClient.invalidateQueries(taskConfig.queryKey.One(taskId))
       },
       onError(_, __, context: any) {
         TaskCacheUtils.rollbackOptimisticUpdate(taskId, queryClient, context)
@@ -76,7 +75,7 @@ export function useBatchAddTodoMutation(taskId: TaskId) {
         )
       },
       onSuccess() {
-        queryClient.invalidateQueries(TaskQuery.One(taskId))
+        queryClient.invalidateQueries(taskConfig.queryKey.One(taskId))
       },
       onError(_, __, context: any) {
         TaskCacheUtils.rollbackOptimisticUpdate(taskId, queryClient, context)

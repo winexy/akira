@@ -18,8 +18,8 @@ import {
 import {useTaskFilters, filterTasks} from 'modules/tasks/filters'
 import size from 'lodash/fp/size'
 import {taskTagModel} from 'entities/task-tag'
+import {taskConfig} from 'entities/task'
 import {TaskListOperations} from 'modules/tasks/components/TaskListOperations'
-import {TaskQuery} from 'modules/tasks/config'
 import {SearchIcon} from '@heroicons/react/solid'
 import {usePullToRefresh} from '../../shared/lib/hooks/pull-to-refresh'
 
@@ -33,7 +33,7 @@ const TasksPage: React.FC = () => {
 
   const createTaskMutation = useMutation(akira.tasks.create, {
     onSuccess(task) {
-      queryClient.setQueryData(TaskQuery.All(), [task, ...tasks])
+      queryClient.setQueryData(taskConfig.queryKey.All(), [task, ...tasks])
     },
   })
 
