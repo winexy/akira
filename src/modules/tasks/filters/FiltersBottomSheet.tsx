@@ -5,7 +5,7 @@ import {RefreshIcon, XIcon} from '@heroicons/react/solid'
 import {Tag} from 'shared/ui/tag'
 import format from 'date-fns/format'
 import {bottomSheetModel, BottomSheet} from 'shared/ui/bottom-sheet'
-import {TaskTag} from 'modules/tags/types.d'
+import {taskTagModel} from 'entities/task-tag'
 import {exhaustiveCheck} from 'shared/lib/utils'
 import {TagsGrid} from 'shared/ui/tags-grid'
 import {DatePickerSheet} from 'shared/ui/datepicker-sheet'
@@ -15,7 +15,7 @@ import {FiltersState, FilterAction} from '.'
 type Props = {
   canReset: boolean
   state: FiltersState
-  tags: TaskTag[]
+  tags: taskTagModel.TaskTag[]
   onChange(action: FilterAction): void
 }
 

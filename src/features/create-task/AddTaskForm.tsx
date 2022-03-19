@@ -16,10 +16,9 @@ import {
   PencilAltIcon,
 } from '@heroicons/react/solid'
 import clsx from 'clsx'
-import {useTagsQuery} from 'modules/tags/hooks/index'
 import {bottomSheetModel, BottomSheet} from 'shared/ui/bottom-sheet'
 import {Button} from 'shared/ui/button'
-import {TaskTag} from 'modules/tags/types.d'
+import {taskTagModel} from 'entities/task-tag'
 import {TagsGrid} from 'shared/ui/tags-grid'
 import filter from 'lodash/fp/filter'
 import lowerCase from 'lodash/fp/lowerCase'
@@ -100,7 +99,7 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
     const selectedTags = useStore($selectedTags)
     const selectedList = useStore($selectedList)
 
-    const {data: tags} = useTagsQuery()
+    const {data: tags} = taskTagModel.useTagsQuery()
     const {data: lists} = useListsQuery()
     const [search, setSearch] = useState('')
     const [isVisible, setIsVisible] = useFormVisibility({onVisibilityChange})
@@ -150,7 +149,7 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
       }
     }
 
-    function toggleTag(tag: TaskTag) {
+    function toggleTag(tag: taskTagModel.TaskTag) {
       onTagsToggle(tag.id)
     }
 

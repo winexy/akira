@@ -6,14 +6,13 @@ import {XIcon} from '@heroicons/react/solid'
 import {IconButton} from 'shared/ui/icon-button'
 import {Spin} from 'shared/ui/spin'
 import isEmpty from 'lodash/fp/isEmpty'
-import {TaskTag} from 'modules/tags/components'
+import {taskTagModel, TaskTag} from 'entities/task-tag'
 import {CreateTagForm} from 'features/create-tag'
-import {useTagsQuery} from 'modules/tags/hooks'
 import {List} from 'shared/ui/list'
 
 const TagsPage: React.FC = () => {
   const queryClient = useQueryClient()
-  const {data: tags = []} = useTagsQuery()
+  const {data: tags = []} = taskTagModel.useTagsQuery()
   const removeTagMutation = useMutation(akira.tags.remove, {
     onSuccess(_, tagId) {
       queryClient.setQueryData('tags', () => {

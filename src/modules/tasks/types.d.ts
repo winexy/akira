@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import {TaskTag} from 'modules/tags/types.d'
+import {taskTagModel} from 'entities/task-tag'
 import {TaskList} from 'modules/lists/types.d'
 
 export type Todo = {
@@ -35,7 +35,7 @@ export type ApiTask = {
   list: Omit<TaskList, 'tasksCount'> | null
   is_important: boolean
   checklist: Array<Todo>
-  tags: Array<TaskTag>
+  tags: Array<taskTagModel.TaskTag>
   date: string | null
   recurrence: Recurrence | null
 }

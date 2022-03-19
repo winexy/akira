@@ -2,7 +2,7 @@ import React from 'react'
 import format from 'date-fns/format'
 import filter from 'lodash/fp/filter'
 import size from 'lodash/fp/size'
-import {useTagsQuery} from 'modules/tags/hooks'
+import {taskTagModel} from 'entities/task-tag'
 import {filterTasks, useTaskFilters} from 'modules/tasks/filters'
 import {useMyDayQuery} from 'modules/tasks/hooks'
 import {
@@ -20,7 +20,7 @@ const TodayPage: React.FC = () => {
 
   const {data: tasks = [], isLoading, refetch: refetchTasks} = useMyDayQuery()
 
-  const {data: tags = []} = useTagsQuery()
+  const {data: tags = []} = taskTagModel.useTagsQuery()
 
   const sorted = sort(filterTasks(tasks, filtersState))
   const completedTasksCount = size(filter({is_completed: true}, sorted))

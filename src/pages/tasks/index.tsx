@@ -17,7 +17,7 @@ import {
 } from 'features/create-task'
 import {useTaskFilters, filterTasks} from 'modules/tasks/filters'
 import size from 'lodash/fp/size'
-import {useTagsQuery} from 'modules/tags/hooks'
+import {taskTagModel} from 'entities/task-tag'
 import {TaskListOperations} from 'modules/tasks/components/TaskListOperations'
 import {TaskQuery} from 'modules/tasks/config'
 import {SearchIcon} from '@heroicons/react/solid'
@@ -25,7 +25,7 @@ import {usePullToRefresh} from '../../shared/lib/hooks/pull-to-refresh'
 
 const TasksPage: React.FC = () => {
   const {data: tasks = [], isLoading, refetch: refetchTasks} = useTasksQuery()
-  const {data: tags = []} = useTagsQuery()
+  const {data: tags = []} = taskTagModel.useTagsQuery()
   const addTaskControl = useAddTaskControl()
   const [filtersState, updateFilters] = useTaskFilters()
   const {sortType, setSortType, sort} = useTaskSorting()
