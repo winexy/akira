@@ -1,2 +1,1 @@
-export * as TaskLib from './lib'
-export * as TaskCacheUtils from './lib/cache-utils'
+export {TaskLib, TaskCacheUtils} from './lib'
