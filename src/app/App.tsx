@@ -13,7 +13,7 @@ import {
 import {HomeIcon, RefreshIcon} from '@heroicons/react/solid'
 import {DashboardPage} from 'pages/dashboard'
 import {AuthPage} from 'pages/auth'
-import {Menu} from 'shared/ui/menu'
+import {Menu} from 'widgets/menu'
 import {AkiraLoader} from 'shared/ui/akira-spinner'
 import {Button} from 'shared/ui/button'
 import {PageView} from 'shared/ui/page-view'
