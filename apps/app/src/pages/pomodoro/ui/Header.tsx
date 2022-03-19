@@ -1,7 +1,7 @@
 import React, {FC} from 'react'
 import clsx from 'clsx'
 import {MenuIcon} from '@heroicons/react/solid'
-import {toggleMenu} from 'shared/ui/menu'
+import {toggleMenu} from 'widgets/menu'
 
 export const Header: FC = () => {
   return (
