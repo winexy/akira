@@ -6,11 +6,7 @@ import {TaskId} from 'modules/tasks/types.d'
 import {ActionToast} from 'shared/ui/action-toast'
 import {ActionSheet} from 'shared/ui/action-sheet'
 import {openActionSheet} from 'shared/ui/action-sheet/model'
-import {
-  useRemoveTaskMutation,
-  useToggleCompletedMutation,
-  useToggleImportantMutation,
-} from '../hooks'
+import {taskModel} from 'entities/task'
 
 type Props = {
   taskId: TaskId
@@ -26,9 +22,9 @@ export const TaskActionToast: React.FC<Props> = ({
   isForcedVisible,
 }) => {
   const navigate = useNavigate()
-  const toggleCompletedMutation = useToggleCompletedMutation()
-  const toggleImportantMutation = useToggleImportantMutation()
-  const removeTaskMutation = useRemoveTaskMutation()
+  const toggleCompletedMutation = taskModel.useToggleCompletedMutation()
+  const toggleImportantMutation = taskModel.useToggleImportantMutation()
+  const removeTaskMutation = taskModel.useRemoveTaskMutation()
 
   function onRemoveConfirm() {
     removeTaskMutation.mutateAsync(taskId).then(() => {

@@ -16,8 +16,8 @@ import {DatePickerSheet} from 'shared/ui/datepicker-sheet'
 import {DatePickerShortcut} from 'shared/ui/datepicker-shortcut'
 import {bottomSheetModel} from 'shared/ui/bottom-sheet'
 import ContentLoader from 'react-content-loader'
-import {usePatchTaskMutation} from 'modules/tasks/hooks'
 import {Swipeable, SwipeableRefHandle} from 'shared/ui/swipeable'
+import {taskModel} from 'entities/task'
 
 type Props = {
   taskId: TaskId
@@ -42,7 +42,7 @@ export const TaskDueDate: React.FC<Props> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dueDate])
 
-  const patchTaskMutation = usePatchTaskMutation(taskId)
+  const patchTaskMutation = taskModel.usePatchTaskMutation(taskId)
 
   function apply() {
     const shouldChangeDate =

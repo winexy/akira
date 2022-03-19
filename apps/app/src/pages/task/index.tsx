@@ -15,7 +15,6 @@ import {
 } from 'modules/tasks/components'
 import {TaskTag} from 'entities/task-tag'
 import {TagsManager} from 'features/tags-manager'
-import {usePatchTaskMutation, useTaskQuery} from 'modules/tasks/hooks'
 import {Tag} from 'shared/ui/tag'
 import {
   DotsVerticalIcon,
@@ -38,6 +37,7 @@ import capitalize from 'lodash/capitalize'
 import {CloneTaskAction} from 'features/clone-task'
 import isUndefined from 'lodash/fp/isUndefined'
 import {Invariant} from 'shared/lib/debugger'
+import {taskModel} from 'entities/task'
 
 const TaskPage: React.FC = () => {
   const {taskId} = useParams()
@@ -47,11 +47,11 @@ const TaskPage: React.FC = () => {
   }
 
   const [isActionToastVisible, setIsActionToastVisible] = useState(true)
-  const {data: task, isFetching} = useTaskQuery(taskId, {
+  const {data: task, isFetching} = taskModel.useTaskQuery(taskId, {
     suspense: true,
   })
 
-  const patchTaskMutation = usePatchTaskMutation(taskId)
+  const patchTaskMutation = taskModel.usePatchTaskMutation(taskId)
 
   if (isNil(task)) {
     return null

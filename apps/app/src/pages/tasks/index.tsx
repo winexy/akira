@@ -1,7 +1,6 @@
 import React from 'react'
 import {PageView} from 'shared/ui/page-view'
 import {TaskList} from 'modules/tasks/components/TaskList'
-import {useTasksQuery} from 'modules/tasks/hooks'
 import {akira} from 'shared/api/akira'
 import {Link} from 'react-router-dom'
 import {useMutation, useQueryClient} from 'react-query'
@@ -18,13 +17,17 @@ import {
 import {useTaskFilters, filterTasks} from 'modules/tasks/filters'
 import size from 'lodash/fp/size'
 import {taskTagModel} from 'entities/task-tag'
-import {taskConfig} from 'entities/task'
+import {taskConfig, taskModel} from 'entities/task'
 import {TaskListOperations} from 'modules/tasks/components/TaskListOperations'
 import {SearchIcon} from '@heroicons/react/solid'
-import {usePullToRefresh} from '../../shared/lib/hooks/pull-to-refresh'
+import {usePullToRefresh} from 'shared/lib/hooks/pull-to-refresh'
 
 const TasksPage: React.FC = () => {
-  const {data: tasks = [], isLoading, refetch: refetchTasks} = useTasksQuery()
+  const {
+    data: tasks = [],
+    isLoading,
+    refetch: refetchTasks,
+  } = taskModel.useTasksQuery()
   const {data: tags = []} = taskTagModel.useTagsQuery()
   const addTaskControl = useAddTaskControl()
   const [filtersState, updateFilters] = useTaskFilters()
