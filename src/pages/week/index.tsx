@@ -1,5 +1,4 @@
 import times from 'lodash/times'
-import {useWeekQuery} from 'modules/tasks/hooks'
 import React from 'react'
 import ContentLoader from 'react-content-loader'
 import {usePullToRefresh} from 'shared/lib/hooks/pull-to-refresh'
@@ -16,6 +15,7 @@ import isEmpty from 'lodash/fp/isEmpty'
 import {TaskList} from 'modules/tasks/components/TaskList'
 import format from 'date-fns/format'
 import {ApiTask} from 'modules/tasks/types.d'
+import {taskModel} from 'entities/task'
 
 function transformResponse(tasks: Array<ApiTask> | undefined) {
   const defaultRecord: Record<string, []> = {}
@@ -37,7 +37,11 @@ function transformResponse(tasks: Array<ApiTask> | undefined) {
 }
 
 const WeekPage: React.FC = () => {
-  const {data: tasks, isLoading, refetch: refetchTasks} = useWeekQuery()
+  const {
+    data: tasks,
+    isLoading,
+    refetch: refetchTasks,
+  } = taskModel.useWeekQuery()
 
   const {backgroundColor, foregroundColor} = useShimmerColors()
 

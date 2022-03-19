@@ -4,7 +4,6 @@ import filter from 'lodash/fp/filter'
 import size from 'lodash/fp/size'
 import {taskTagModel} from 'entities/task-tag'
 import {filterTasks, useTaskFilters} from 'modules/tasks/filters'
-import {useMyDayQuery} from 'modules/tasks/hooks'
 import {
   SortingBottomSheet,
   useTaskSorting,
@@ -13,12 +12,17 @@ import {usePullToRefresh} from 'shared/lib/hooks/pull-to-refresh'
 import {TaskList} from 'modules/tasks/components/TaskList'
 import {TaskListOperations} from 'modules/tasks/components/TaskListOperations'
 import {FiltersBottomSheet} from 'modules/tasks/filters/FiltersBottomSheet'
+import {taskModel} from 'entities/task'
 
 const TodayPage: React.FC = () => {
   const {sortType, setSortType, sort} = useTaskSorting()
   const [filtersState, updateFilters] = useTaskFilters()
 
-  const {data: tasks = [], isLoading, refetch: refetchTasks} = useMyDayQuery()
+  const {
+    data: tasks = [],
+    isLoading,
+    refetch: refetchTasks,
+  } = taskModel.useMyDayQuery()
 
   const {data: tags = []} = taskTagModel.useTagsQuery()
 

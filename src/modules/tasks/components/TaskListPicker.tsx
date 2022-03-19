@@ -1,6 +1,5 @@
 import React from 'react'
 import {useListsQuery} from 'modules/lists/hooks'
-import {usePatchTaskMutation} from 'modules/tasks/hooks'
 import {ApiTask} from 'modules/tasks/types.d'
 import clsx from 'clsx'
 import {CheckIcon} from '@heroicons/react/solid'
@@ -10,6 +9,7 @@ import isEmpty from 'lodash/fp/isEmpty'
 import get from 'lodash/fp/get'
 import {NewListLink, NoLists} from 'entities/task-list'
 import {StickyBottomSheetBox} from 'shared/ui/sticky-bottom-sheet-box'
+import {taskModel} from 'entities/task'
 
 type Props = {
   taskId: ApiTask['id']
@@ -51,7 +51,7 @@ Match.Default.defaultProps = {
 
 export const TaskListPicker: React.FC<Props> = ({taskId, activeListId}) => {
   const {data: lists = [], isLoading} = useListsQuery()
-  const patchTaskMutation = usePatchTaskMutation(taskId)
+  const patchTaskMutation = taskModel.usePatchTaskMutation(taskId)
 
   return (
     <>

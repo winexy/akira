@@ -5,16 +5,19 @@ import {SunIcon} from '@heroicons/react/solid'
 import {Spin} from 'shared/ui/spin'
 import {Button} from 'shared/ui/button'
 import {ApiTask, TaskId} from 'modules/tasks/types.d'
-import {useTaskQuery} from 'modules/tasks/hooks'
+import {taskModel} from 'entities/task'
 import {useAddToMyDayMutation, useRemoveFromMyDayMutation} from '../model/index'
 
 const isTaskOnMyDay = (task: ApiTask): boolean =>
   task.date ? isToday(new Date(task.date)) : false
 
 export const MyDayToggle: React.FC<{taskId: TaskId}> = ({taskId}) => {
-  const {data: isOnMyDay, isLoading, isFetching} = useTaskQuery(taskId, {
-    select: isTaskOnMyDay,
-  })
+  const {data: isOnMyDay, isLoading, isFetching} = taskModel.useTaskQuery(
+    taskId,
+    {
+      select: isTaskOnMyDay,
+    },
+  )
 
   const addToMyDayMutation = useAddToMyDayMutation()
   const removeFromMyDayMutation = useRemoveFromMyDayMutation()

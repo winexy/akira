@@ -3,8 +3,8 @@ import {useParams} from 'react-router'
 import isUndefined from 'lodash/fp/isUndefined'
 import {TaskList} from 'modules/tasks/components/TaskList'
 import {PageView} from 'shared/ui/page-view'
-import {useTasksListQuery} from 'modules/tasks/hooks'
 import {Invariant} from 'shared/lib/debugger'
+import {taskModel} from 'entities/task'
 
 const TaskListPage: React.FC = () => {
   const {listId} = useParams()
@@ -13,7 +13,7 @@ const TaskListPage: React.FC = () => {
     throw Invariant('TaskListPage can not have nullable listId parameter')
   }
 
-  const {data: list, isLoading} = useTasksListQuery(listId)
+  const {data: list, isLoading} = taskModel.useTasksListQuery(listId)
 
   if (isLoading) {
     return (

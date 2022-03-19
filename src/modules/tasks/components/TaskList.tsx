@@ -5,14 +5,10 @@ import ContentLoader from 'react-content-loader'
 import isEmpty from 'lodash/fp/isEmpty'
 import times from 'lodash/fp/times'
 import noop from 'lodash/fp/noop'
-import {
-  useToggleCompletedMutation,
-  useToggleImportantMutation,
-  useRemoveTaskMutation,
-} from 'modules/tasks/hooks'
 import clsx from 'clsx'
 import {useShimmerColors} from 'shared/ui/shimmer'
 import {Empty} from 'shared/ui/empty'
+import {taskModel} from 'entities/task'
 
 type Props = {
   isPending: boolean
@@ -27,9 +23,9 @@ export const TaskList: React.FC<Props> = ({
   noTasksSlot,
   className,
 }) => {
-  const toggleTaskCompleteMutation = useToggleCompletedMutation()
-  const toggleImportantMutation = useToggleImportantMutation()
-  const removeTaskMutation = useRemoveTaskMutation()
+  const toggleTaskCompleteMutation = taskModel.useToggleCompletedMutation()
+  const toggleImportantMutation = taskModel.useToggleImportantMutation()
+  const removeTaskMutation = taskModel.useRemoveTaskMutation()
   const {backgroundColor, foregroundColor} = useShimmerColors()
 
   if (isPending) {
