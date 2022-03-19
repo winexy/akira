@@ -1,105 +1,21 @@
 import filter from 'lodash/fp/filter'
-import {useMutation, useQuery, useQueryClient} from 'react-query'
+import {useMutation, useQueryClient} from 'react-query'
 import {akira} from 'shared/api/akira'
-import {TaskPatch, ApiTask, TaskId} from 'modules/tasks/types.d'
+import {ApiTask} from 'modules/tasks/types.d'
 import {taskTagModel} from 'entities/task-tag'
-import {TaskQuery} from 'modules/tasks/config'
-import {TaskCacheUtils} from 'entities/task'
+import {TaskCacheUtils, taskModel} from 'entities/task'
 
-export function useTasksQuery() {
-  const queryClient = useQueryClient()
-
-  return useQuery(TaskQuery.All(), () => akira.tasks.findAll(), {
-    onSuccess(tasks) {
-      TaskCacheUtils.writeTasksToCache(queryClient, tasks)
-    },
-  })
-}
-
-export function useTasksListQuery(listId: string) {
-  const queryClient = useQueryClient()
-
-  return useQuery(
-    TaskQuery.List(listId),
-    () => akira.lists.findTasks(Number(listId)),
-    {
-      onSuccess(data) {
-        TaskCacheUtils.writeTasksToCache(queryClient, data.tasks)
-      },
-    },
-  )
-}
-
-export function usePatchTaskMutation(taskId: TaskId) {
-  const queryClient = useQueryClient()
-
-  return useMutation(
-    (patch: TaskPatch) => {
-      return akira.tasks.patch(taskId, patch)
-    },
-    {
-      onSuccess(task) {
-        queryClient.setQueryData(TaskQuery.One(taskId), task)
-        TaskCacheUtils.writeTaskListCache(TaskQuery.MyDay(), queryClient, task)
-      },
-    },
-  )
-}
-
-export function useToggleCompletedMutation() {
-  const queryClient = useQueryClient()
-
-  return useMutation(akira.tasks.toggleCompletness, {
-    onMutate(taskId) {
-      return TaskCacheUtils.writeOptimisticUpdate(
-        taskId,
-        queryClient,
-        draft => {
-          draft.is_completed = !draft.is_completed
-        },
-      )
-    },
-    onError(_, taskId, context: any) {
-      TaskCacheUtils.rollbackOptimisticUpdate(taskId, queryClient, context)
-    },
-  })
-}
-
-export function useToggleImportantMutation() {
-  const queryClient = useQueryClient()
-
-  return useMutation(akira.tasks.toggleImportance, {
-    onMutate(taskId) {
-      return TaskCacheUtils.writeOptimisticUpdate(
-        taskId,
-        queryClient,
-        draft => {
-          draft.is_important = !draft.is_important
-        },
-      )
-    },
-    onError(_, taskId, context: any) {
-      TaskCacheUtils.rollbackOptimisticUpdate(taskId, queryClient, context)
-    },
-  })
-}
-
-export function useRemoveTaskMutation() {
-  const queryClient = useQueryClient()
-
-  return useMutation(akira.tasks.delete, {
-    mutationKey: 'delete-task',
-    onSuccess(_, taskId) {
-      queryClient.removeQueries(TaskQuery.One(taskId))
-      TaskCacheUtils.removeTasksFromCache(
-        queryClient,
-        TaskQuery.MyDay(),
-        taskId,
-      )
-      TaskCacheUtils.removeTasksFromCache(queryClient, TaskQuery.All(), taskId)
-    },
-  })
-}
+export const {
+  useTaskQuery,
+  useTasksQuery,
+  useMyDayQuery,
+  useWeekQuery,
+  useTasksListQuery,
+  usePatchTaskMutation,
+  useRemoveTaskMutation,
+  useToggleImportantMutation,
+  useToggleCompletedMutation,
+} = taskModel
 
 export function useAddTaskTagMutation(task: ApiTask) {
   const queryClient = useQueryClient()
@@ -147,40 +63,4 @@ export function useRemoveTaskTagMutation(task: ApiTask) {
       },
     },
   )
-}
-
-export function useTaskQuery<Select = ApiTask>(
-  taskId: string,
-  {
-    suspense,
-    select,
-  }: Partial<{
-    select(task: ApiTask): Select
-    suspense: boolean
-  }> = {},
-) {
-  return useQuery(TaskQuery.One(taskId), () => akira.tasks.findOne(taskId), {
-    suspense,
-    select,
-  })
-}
-
-export function useMyDayQuery() {
-  const queryClient = useQueryClient()
-
-  return useQuery(TaskQuery.MyDay(), () => akira.myday.tasks(), {
-    onSuccess(tasks) {
-      TaskCacheUtils.writeTasksToCache(queryClient, tasks)
-    },
-  })
-}
-
-export function useWeekQuery() {
-  const queryClient = useQueryClient()
-
-  return useQuery<Array<ApiTask>>(TaskQuery.Week(), () => akira.tasks.week(), {
-    onSuccess(tasks) {
-      TaskCacheUtils.writeTasksToCache(queryClient, tasks)
-    },
-  })
 }
