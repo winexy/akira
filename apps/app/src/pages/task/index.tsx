@@ -13,7 +13,8 @@ import {
   TaskActionToast,
   TextArea,
 } from 'modules/tasks/components'
-import {TagsManager, TaskTag} from 'modules/tags/components'
+import {TaskTag} from 'entities/task-tag'
+import {TagsManager} from 'features/tags-manager'
 import {usePatchTaskMutation, useTaskQuery} from 'modules/tasks/hooks'
 import {Tag} from 'shared/ui/tag'
 import {

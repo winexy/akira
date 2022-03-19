@@ -2,7 +2,7 @@ import filter from 'lodash/fp/filter'
 import {useMutation, useQuery, useQueryClient} from 'react-query'
 import {akira} from 'shared/api/akira'
 import {TaskPatch, ApiTask, TaskId} from 'modules/tasks/types.d'
-import {TaskTag} from 'modules/tags/types.d'
+import {taskTagModel} from 'entities/task-tag'
 import {TaskQuery} from 'modules/tasks/config'
 import {TaskCacheUtils} from 'entities/task'
 
@@ -105,7 +105,7 @@ export function useAddTaskTagMutation(task: ApiTask) {
   const queryClient = useQueryClient()
 
   return useMutation(
-    (tag: TaskTag) => {
+    (tag: taskTagModel.TaskTag) => {
       return akira.tasks.addTag(task.id, tag.id)
     },
     {
@@ -129,7 +129,7 @@ export function useRemoveTaskTagMutation(task: ApiTask) {
   const queryClient = useQueryClient()
 
   return useMutation(
-    (tag: TaskTag) => {
+    (tag: taskTagModel.TaskTag) => {
       return akira.tasks.removeTag(task.id, tag.id)
     },
     {

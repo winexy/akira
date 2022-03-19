@@ -1,6 +1,6 @@
 import {AxiosInstance} from 'axios'
 import get from 'lodash/fp/get'
-import {TaskTag} from 'modules/tags/types.d'
+import {taskTagModel} from 'entities/task-tag'
 
 export function tags(api: AxiosInstance) {
   const unwrap = get('data')
@@ -9,7 +9,7 @@ export function tags(api: AxiosInstance) {
     findAll() {
       return api.get('tags').then(unwrap)
     },
-    create(name: string): Promise<TaskTag> {
+    create(name: string): Promise<taskTagModel.TaskTag> {
       return api
         .post('tags', {
           name,

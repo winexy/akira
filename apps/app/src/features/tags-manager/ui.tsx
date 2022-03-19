@@ -15,11 +15,10 @@ import {ApiTask} from 'modules/tasks/types.d'
 import {Button} from 'shared/ui/button'
 import {useShimmerColors} from 'shared/ui/shimmer'
 import {List} from 'shared/ui/list'
-import {TaskTag} from './TaskTag'
-import {useTagsQuery} from '../hooks'
+import {taskTagModel, TaskTag} from 'entities/task-tag'
 
 export const TagsManager: React.FC<{task: ApiTask}> = ({task}) => {
-  const {data: tags, isLoading} = useTagsQuery()
+  const {data: tags, isLoading} = taskTagModel.useTagsQuery()
   const taskTagsIdSet = new Set(map('id', task.tags))
 
   const addTagMutation = useAddTaskTagMutation(task)
