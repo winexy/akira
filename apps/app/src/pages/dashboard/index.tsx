@@ -1,5 +1,5 @@
 import React from 'react'
-import {Outlet, useParams} from 'react-router'
+import {Outlet, useMatch} from 'react-router'
 import {PageView} from 'shared/ui/page-view'
 import {useQueryClient, useMutation} from 'react-query'
 import {akira} from 'shared/api/akira'
@@ -13,6 +13,8 @@ import {CreateTaskPayload} from 'modules/tasks/types.d'
 import {BookOpenIcon, PlusIcon} from '@heroicons/react/solid'
 import {useNavigate} from 'react-router-dom'
 import {taskConfig} from 'entities/task'
+import isNull from 'lodash/isNull'
+import {Invariant} from 'shared/lib/debugger'
 
 const Control: React.FC<{
   value: string
@@ -87,7 +89,13 @@ const Habbit: React.FC<HabbitProps> = ({Icon, variant, children}) => {
 
 export function DashboardPage() {
   const navigate = useNavigate()
-  const {type: mode = 'today'} = useParams<{type?: 'today' | 'week'}>()
+  const match = useMatch('dashboard/:mode')
+
+  if (isNull(match)) {
+    throw Invariant('Dashboard Page missing mode')
+  }
+
+  const {mode = 'today'} = match.params
 
   const addTaskControl = useAddTaskControl()
   const queryClient = useQueryClient()
