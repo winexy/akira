@@ -76,13 +76,13 @@ export const GoogleProvider = new GoogleAuthProvider()
 
 export type User = FirebaseUser
 
-const messaging = getMessaging(app)
-
 export async function setupCloudMessaging() {
   if (import.meta.env.VITE_USE_MOCK_AUTH) {
     globalThis.console.info('[auth] Skipping fcm service initialization')
     return
   }
+
+  const messaging = getMessaging(app)
 
   const supported = await isSupported()
 
@@ -90,6 +90,10 @@ export async function setupCloudMessaging() {
     globalThis.console.log('Notification API is not supported')
     return
   }
+
+  onMessage(messaging, payload => {
+    globalThis.console.log({payload})
+  })
 
   const permission = await Notification.requestPermission()
 
@@ -120,7 +124,3 @@ export async function setupCloudMessaging() {
 function onPermissionDenied() {
   globalThis.console.log('Notification permission is not granted')
 }
-
-onMessage(messaging, payload => {
-  globalThis.console.log({payload})
-})
