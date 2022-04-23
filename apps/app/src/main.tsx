@@ -3,15 +3,25 @@ import ReactDOM from 'react-dom'
 import {enableMapSet} from 'immer'
 import * as Sentry from '@sentry/react'
 import {Integrations} from '@sentry/tracing'
+import LogRocket from 'logrocket'
 import {QueryClient, QueryClientProvider} from 'react-query'
 import {akira} from 'shared/api/akira'
 import {FirebaseAuthProvider, setupCloudMessaging} from 'shared/lib/firebase'
+import type {User} from 'shared/lib/firebase'
 import {HotkeyProvider} from 'shared/lib/hotkey'
 import {taskConfig} from 'entities/task'
 import './app/index.css'
 import App from './app/App'
 
 enableMapSet()
+enableSentry()
+enableLogRocket()
+
+function enableLogRocket() {
+  if (import.meta.env.PROD) {
+    LogRocket.init('bcxdki/akira')
+  }
+}
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -27,17 +37,40 @@ async function prefetchQueries() {
   queryClient.prefetchQuery(taskConfig.queryKey.MyDay(), akira.myday.tasks)
 }
 
-function onAuthSuccess() {
-  prefetchQueries()
-  setupCloudMessaging()
+function identifyUser(user: User) {
+  if (!import.meta.env.PROD) {
+    return
+  }
+
+  const userTraits: Record<string, string> = {}
+
+  if (user.email) {
+    userTraits.email = user.email
+  }
+
+  LogRocket.identify(user.uid, userTraits)
+
+  LogRocket.getSessionURL(sessionURL => {
+    Sentry.configureScope(scope => {
+      scope.setExtra('sessionURL', sessionURL)
+    })
+  })
 }
 
-if (import.meta.env.PROD) {
-  Sentry.init({
-    dsn: import.meta.env.VITE_SENTRY_DSN,
-    integrations: [new Integrations.BrowserTracing()],
-    tracesSampleRate: 1.0,
-  })
+function onAuthSuccess(user: User) {
+  prefetchQueries()
+  setupCloudMessaging()
+  identifyUser(user)
+}
+
+function enableSentry() {
+  if (import.meta.env.PROD) {
+    Sentry.init({
+      dsn: import.meta.env.VITE_SENTRY_DSN,
+      integrations: [new Integrations.BrowserTracing()],
+      tracesSampleRate: 1.0,
+    })
+  }
 }
 
 ReactDOM.render(

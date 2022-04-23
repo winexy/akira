@@ -5,7 +5,7 @@ import pkg from './package.json'
 import alias from './config/alias'
 
 function GetServerConfig() {
-  if (process.env.NODE_ENV !== 'development') {
+  if (true || process.env.NODE_ENV !== 'development') {
     return
   }
 

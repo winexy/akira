@@ -41,7 +41,7 @@ const Context = createContext<ContextValueT>(defaultContextValue)
 Context.displayName = 'FirebaseAuth'
 
 type Props = {
-  onAuthSuccess?(): void
+  onAuthSuccess?(user: User): void
 }
 
 export const FirebaseAuthProvider: React.FC<Props> = ({
@@ -78,7 +78,7 @@ export const FirebaseAuthProvider: React.FC<Props> = ({
       if (firebaseUser) {
         setUser(firebaseUser)
         setIsAuthenticated(true)
-        onAuthSuccess()
+        onAuthSuccess(firebaseUser)
       } else {
         setUser(null)
         setIsAuthenticated(false)

@@ -48,6 +48,7 @@
     "immer": "^9.0.1",
     "localforage": "^1.10.0",
     "lodash": "^4.17.21",
+    "logrocket": "^2.2.1",
     "nanoid": "^3.1.23",
     "node-fetch": "^2.6.1",
     "pulltorefreshjs": "^0.1.22",
