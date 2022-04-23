@@ -14,12 +14,18 @@ type Props = {
   labeled?: boolean
 }
 
-type Size = 'xs' | 'sm'
+type Size = 'xs' | 'sm' | 'md'
 
 const xs = 'w-4 h-4'
 const sm = 'w-5 h-5'
+const md = 'w-6 h-6'
 
-const matchSize = createMatcher<Size>('size')({xs, sm})
+const matchSize = createMatcher<Size>('size')({xs, sm, md})
+const matchBorderRadius = createMatcher<Size>('borderRadius')({
+  xs: 'rounded',
+  sm: 'rounded',
+  md: 'rounded-md',
+})
 
 export const Checkbox: React.FC<Props> = ({
   isChecked = false,
@@ -36,7 +42,8 @@ export const Checkbox: React.FC<Props> = ({
     <Element
       className={clsx(
         className,
-        'focus-within:ring-2 rounded transition ease-in duration-150',
+        'focus-within:ring-2 transition ease-in duration-150',
+        matchBorderRadius(size),
       )}
       onClick={onClick}
     >
@@ -49,13 +56,14 @@ export const Checkbox: React.FC<Props> = ({
       <div
         className={clsx(
           'flex items-center justify-center',
-          'rounded border',
+          'border',
           'transition ease-in duration-75',
           {
             'bg-indigo-400 border-indigo-500': isChecked,
             'bg-white dark:bg-dark-500 border-gray-400 dark:border-dark-400': !isChecked,
           },
           matchSize(size),
+          matchBorderRadius(size),
         )}
       >
         <Transition.Scale nodeRef={ref} appear in={isChecked} unmountOnExit>
