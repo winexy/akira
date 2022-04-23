@@ -69,6 +69,7 @@ export const TextArea: React.FC<Props> = ({
     <textarea
       ref={ref}
       style={{height}}
+      rows={1}
       className={clsx(
         'w-full p-0 bg-transparent focus:outline-none',
         className,
