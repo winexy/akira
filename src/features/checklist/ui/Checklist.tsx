@@ -13,10 +13,70 @@ type Props = {
   checklist: Todo[]
 }
 
-export const Checklist: React.FC<Props> = ({taskId, checklist}) => {
+type TodoProps = {
+  taskId: TaskId
+  todo: Todo
+}
+
+const TodoItem: React.FC<TodoProps> = ({taskId, todo}) => {
   const patchTodoMutation = usePatchTodoMutation(taskId)
   const removeTodoMutation = useRemoveTodoMutation(taskId)
 
+  return (
+    <li
+      key={todo.id}
+      className={clsx(
+        'px-4 rounded-md flex items-center active:bg-gray-100 dark:active:bg-dark-500 transition',
+        {
+          'line-through': todo.is_completed,
+        },
+      )}
+    >
+      <label className="py-1 flex items-center">
+        <Checkbox
+          labeled
+          isChecked={todo.is_completed}
+          className="mr-3"
+          size="md"
+          onChange={() =>
+            patchTodoMutation.mutate({
+              todoId: todo.id,
+              patch: {
+                is_completed: !todo.is_completed,
+              },
+            })
+          }
+        />
+      </label>
+      <TextArea
+        value={todo.title}
+        onChange={newTitle => {
+          patchTodoMutation.mutate({
+            todoId: todo.id,
+            patch: {
+              title: newTitle,
+            },
+          })
+        }}
+      />
+      <button
+        className={clsx(
+          'ml-auto -mr-3 w-10 h-10',
+          'flex items-center justify-center',
+          'text-red-500 rounded',
+          'transition ease-in duration-150',
+          'active:text-red-600 active:bg-gray-100 dark:active:bg-dark-400',
+          'focus:outline-none focus:bg-gray-200 focus:bg-opacity-75',
+        )}
+        onClick={() => removeTodoMutation.mutate(todo.id)}
+      >
+        <XIcon className="w-4 h-4" />
+      </button>
+    </li>
+  )
+}
+
+export const Checklist: React.FC<Props> = ({taskId, checklist}) => {
   if (isEmpty(checklist)) {
     return null
   }
@@ -24,56 +84,7 @@ export const Checklist: React.FC<Props> = ({taskId, checklist}) => {
   return (
     <ul className="mt-2 space-y-1">
       {checklist.map(todo => (
-        <li
-          key={todo.id}
-          className={clsx(
-            'px-4 rounded-md flex items-center active:bg-gray-100 dark:active:bg-dark-500 transition',
-            {
-              'line-through': todo.is_completed,
-            },
-          )}
-        >
-          <label className="py-1 flex items-center">
-            <Checkbox
-              labeled
-              isChecked={todo.is_completed}
-              className="mr-3"
-              size="md"
-              onChange={() =>
-                patchTodoMutation.mutate({
-                  todoId: todo.id,
-                  patch: {
-                    is_completed: !todo.is_completed,
-                  },
-                })
-              }
-            />
-          </label>
-          <TextArea
-            value={todo.title}
-            onChange={newTitle => {
-              patchTodoMutation.mutate({
-                todoId: todo.id,
-                patch: {
-                  title: newTitle,
-                },
-              })
-            }}
-          />
-          <button
-            className={clsx(
-              'ml-auto -mr-3 w-10 h-10',
-              'flex items-center justify-center',
-              'text-red-500 rounded',
-              'transition ease-in duration-150',
-              'active:text-red-600 active:bg-gray-100 dark:active:bg-dark-400',
-              'focus:outline-none focus:bg-gray-200 focus:bg-opacity-75',
-            )}
-            onClick={() => removeTodoMutation.mutate(todo.id)}
-          >
-            <XIcon className="w-4 h-4" />
-          </button>
-        </li>
+        <TodoItem key={todo.id} taskId={taskId} todo={todo} />
       ))}
     </ul>
   )
