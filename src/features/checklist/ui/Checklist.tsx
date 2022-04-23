@@ -5,6 +5,7 @@ import {XIcon} from '@heroicons/react/solid'
 
 import {Checkbox} from 'shared/ui/checkbox'
 import {TaskId, Todo} from 'modules/tasks/types.d'
+import {TextArea} from 'modules/tasks/components'
 import {useRemoveTodoMutation, usePatchTodoMutation} from '../model'
 
 type Props = {
@@ -26,13 +27,13 @@ export const Checklist: React.FC<Props> = ({taskId, checklist}) => {
         <li
           key={todo.id}
           className={clsx(
-            'px-4 rounded-md flex active:bg-gray-100 dark:active:bg-dark-500 transition',
+            'px-4 rounded-md flex items-center active:bg-gray-100 dark:active:bg-dark-500 transition',
             {
               'line-through': todo.is_completed,
             },
           )}
         >
-          <label className="py-1 w-full flex items-center">
+          <label className="py-1 flex items-center">
             <Checkbox
               labeled
               isChecked={todo.is_completed}
@@ -47,8 +48,18 @@ export const Checklist: React.FC<Props> = ({taskId, checklist}) => {
                 })
               }
             />
-            {todo.title}
           </label>
+          <TextArea
+            value={todo.title}
+            onChange={newTitle => {
+              patchTodoMutation.mutate({
+                todoId: todo.id,
+                patch: {
+                  title: newTitle,
+                },
+              })
+            }}
+          />
           <button
             className={clsx(
               'ml-auto -mr-3 w-10 h-10',
