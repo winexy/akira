@@ -6,8 +6,13 @@ import React, {
   useState,
 } from 'react'
 import noop from 'lodash/fp/noop'
-import size from 'lodash/fp/size'
 import clsx from 'clsx'
+import isFunction from 'lodash/isFunction'
+
+type NativeProps = React.DetailedHTMLProps<
+  React.TextareaHTMLAttributes<HTMLTextAreaElement>,
+  HTMLTextAreaElement
+>
 
 type Props = {
   value: string
@@ -15,7 +20,7 @@ type Props = {
   className?: string
   onChange(value: string): void
   onInput?(value: string): void
-}
+} & Omit<NativeProps, 'onChange'>
 
 export const TextArea: React.FC<Props> = ({
   value,
@@ -23,6 +28,8 @@ export const TextArea: React.FC<Props> = ({
   className = '',
   onChange,
   onInput = noop,
+  onBlur: nativeOnBlur,
+  ...nativeProps
 }) => {
   const ref = useRef<HTMLTextAreaElement>(null)
   const [localValue, setLocalValue] = useState(value)
@@ -63,6 +70,10 @@ export const TextArea: React.FC<Props> = ({
 
     onChange(value)
     sync(value)
+
+    if (isFunction(nativeOnBlur)) {
+      nativeOnBlur(event)
+    }
   }
 
   return (
@@ -78,6 +89,7 @@ export const TextArea: React.FC<Props> = ({
       placeholder={placeholder}
       onChange={handleChange}
       onBlur={handleBlur}
+      {...nativeProps}
     />
   )
 }
