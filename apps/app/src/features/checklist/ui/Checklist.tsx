@@ -53,9 +53,13 @@ const TodoItem: React.FC<TodoProps> = ({taskId, todo}) => {
           }
         />
       </label>
-      <form onSubmit={e => e.preventDefault()}>
+      <form
+        className="w-full flex items-center"
+        onSubmit={e => e.preventDefault()}
+      >
         <TextArea
           value={todo.title}
+          className="resize-none"
           onChange={newTitle => {
             patchTodoMutation.mutate({
               todoId: todo.id,
