@@ -1,7 +1,7 @@
 import produce, {Draft} from 'immer'
 import constant from 'lodash/constant'
 import isUndefined from 'lodash/isUndefined'
-import {useQuery, QueryClient} from 'react-query'
+import {useQuery, QueryClient, useMutation, useQueryClient} from 'react-query'
 import {noteApi, noteModel} from '..'
 
 export type NotePreview = {
@@ -18,6 +18,8 @@ export type Note = {
   updated_at: string
   created_at: string
 }
+
+export type CreatedNote = Pick<Note, 'uuid' | 'author_uid'>
 
 export type NotePatch = {
   title?: string
@@ -102,4 +104,13 @@ export function updateNoteQueryData(params: UpdateNoteQueryDataParams) {
   if (!isUndefined(note)) {
     queryClient.setQueryData(queryKey, produce(note, mutate))
   }
+}
+
+export function useCreateEmptyNoteMutation() {
+  const queryClient = useQueryClient()
+  return useMutation(noteApi.createEmptyNote, {
+    onSuccess() {
+      queryClient.invalidateQueries(noteModel.NoteQuery.Preview())
+    },
+  })
 }
