@@ -19,3 +19,7 @@ export function fetchNote(id: string): Promise<noteModel.Note> {
 export function fetchNotesPreview(): Promise<Array<noteModel.NotePreview>> {
   return api.get('notes/preview').then(res => res.data)
 }
+
+export function createEmptyNote(): Promise<noteModel.CreatedNote> {
+  return api.post('notes').then(res => res.data)
+}

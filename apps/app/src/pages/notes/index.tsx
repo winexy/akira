@@ -1,7 +1,5 @@
 import {PlusIcon} from '@heroicons/react/solid'
 import React, {FC, useState} from 'react'
-import {useMutation} from 'react-query'
-import {api} from 'shared/api'
 import {PageView} from 'shared/ui/page-view'
 import isEmpty from 'lodash/isEmpty'
 import {Empty} from 'shared/ui/empty'
@@ -24,9 +22,7 @@ const Notes: FC = () => {
 
   const {data: notes, isLoading} = noteModel.useNotesPreviewQuery()
 
-  const createEmptyNoteMutation = useMutation(() =>
-    api.post('notes').then(res => res.data),
-  )
+  const createEmptyNoteMutation = noteModel.useCreateEmptyNoteMutation()
 
   async function createEmptyNote() {
     const note = await createEmptyNoteMutation.mutateAsync()
