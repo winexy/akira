@@ -43,7 +43,12 @@ export function useBottomSheet(
   name: string,
 ): BottomSheetState & BottomSheetEvents {
   const sheet =
-    useStore($bottomSheets.map(find(sheet => sheet.name === name))) ?? null
+    useStore(
+      $bottomSheets.map(
+        find<Sheet>({name}),
+      ),
+    ) ?? null
+
   const activeBottomSheet = useStore($activeBottomSheet)
   const [isBlackoutTouchStarted, setIsBlackoutTouchStarted] = useState(false)
   const [isSheetTouchStarted, setIsSheetTouchStarted] = useState(false)
