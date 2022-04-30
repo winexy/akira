@@ -1,5 +1,5 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import {createRoot} from 'react-dom/client'
 import {enableMapSet} from 'immer'
 import * as Sentry from '@sentry/react'
 import {Integrations} from '@sentry/tracing'
@@ -73,7 +73,9 @@ function enableSentry() {
   }
 }
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('root')!)
+
+root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <FirebaseAuthProvider onAuthSuccess={onAuthSuccess}>
@@ -83,5 +85,4 @@ ReactDOM.render(
       </FirebaseAuthProvider>
     </QueryClientProvider>
   </React.StrictMode>,
-  document.getElementById('root'),
 )
