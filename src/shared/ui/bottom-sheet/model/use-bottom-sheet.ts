@@ -6,7 +6,7 @@ import {
 import {useStore} from 'effector-react'
 import find from 'lodash/fp/find'
 import get from 'lodash/fp/get'
-import isUndefined from 'lodash/isUndefined'
+import isNull from 'lodash/isNull'
 import {
   MutableRefObject,
   TouchEventHandler,
@@ -42,7 +42,8 @@ const extractTouch = get('changedTouches.0.clientY')
 export function useBottomSheet(
   name: string,
 ): BottomSheetState & BottomSheetEvents {
-  const sheet = useStore($bottomSheets.map(find({name})))
+  const sheet =
+    useStore($bottomSheets.map(find(sheet => sheet.name === name))) ?? null
   const activeBottomSheet = useStore($activeBottomSheet)
   const [isBlackoutTouchStarted, setIsBlackoutTouchStarted] = useState(false)
   const [isSheetTouchStarted, setIsSheetTouchStarted] = useState(false)
@@ -50,7 +51,7 @@ export function useBottomSheet(
   const [sheetShift, setSheetShift] = useState(0)
   const contentRef = useRef<HTMLDivElement | null>(null)
 
-  const isVisible = !isUndefined(sheet)
+  const isVisible = !isNull(sheet)
   const isActive = activeBottomSheet?.name === name
 
   useEffect(() => {
