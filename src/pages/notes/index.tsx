@@ -26,7 +26,7 @@ const Notes: FC = () => {
 
   async function createEmptyNote() {
     const note = await createEmptyNoteMutation.mutateAsync()
-    navigate(`/notes/${note.uuid}`)
+    navigate(`/notes?id=${note.uuid}`)
   }
 
   const selectNote = (id: string) => {
