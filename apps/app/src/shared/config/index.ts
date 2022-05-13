@@ -14,6 +14,12 @@ export const config = {
   webPush: {
     vapidKey: import.meta.env.VITE_VAPID_KEY,
   },
+  auth: {
+    use_mock: import.meta.env.VITE_USE_MOCK_AUTH,
+  },
+  sentry: {
+    dsn: import.meta.env.VITE_SENTRY_DSN,
+  },
 }
 
 if (config.env.dev) {

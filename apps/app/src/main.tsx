@@ -10,6 +10,7 @@ import {FirebaseAuthProvider, setupCloudMessaging} from 'shared/lib/firebase'
 import type {User} from 'shared/lib/firebase'
 import {HotkeyProvider} from 'shared/lib/hotkey'
 import {taskConfig} from 'entities/task'
+import {config} from 'shared/config'
 import './app/index.css'
 import App from './app/App'
 
@@ -18,7 +19,7 @@ enableSentry()
 enableLogRocket()
 
 function enableLogRocket() {
-  if (import.meta.env.PROD) {
+  if (config.env.prod) {
     LogRocket.init('bcxdki/akira')
   }
 }
@@ -38,7 +39,7 @@ async function prefetchQueries() {
 }
 
 function identifyUser(user: User) {
-  if (!import.meta.env.PROD) {
+  if (config.env.dev) {
     return
   }
 
@@ -64,9 +65,9 @@ function onAuthSuccess(user: User) {
 }
 
 function enableSentry() {
-  if (import.meta.env.PROD) {
+  if (config.env.prod) {
     Sentry.init({
-      dsn: import.meta.env.VITE_SENTRY_DSN,
+      dsn: config.sentry.dsn,
       integrations: [new Integrations.BrowserTracing()],
       tracesSampleRate: 1.0,
     })

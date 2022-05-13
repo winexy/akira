@@ -1,6 +1,7 @@
 import React, {FC, useEffect, createContext, useContext} from 'react'
 import isNil from 'lodash/isNil'
 import isUndefined from 'lodash/fp/isUndefined'
+import {config} from 'shared/config'
 import {HotKey} from './HotKey'
 
 type HotkeyHandler = () => void
@@ -38,7 +39,7 @@ function Handler(event: KeyboardEvent) {
     return
   }
 
-  if (import.meta.env.DEV) {
+  if (config.env.dev) {
     window.console.debug(
       `[HotKeyContext]: ${HotKey.inspect(hotkey)} "${hotkeyInfo.description}"`,
     )
