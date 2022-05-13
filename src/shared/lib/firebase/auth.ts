@@ -67,9 +67,7 @@ function getMockAuth(): FirebaseAuth {
   } as ReturnType<typeof getAuth>
 }
 
-export const auth = import.meta.env.VITE_USE_MOCK_AUTH
-  ? getMockAuth()
-  : getAuth()
+export const auth = config.auth.use_mock ? getMockAuth() : getAuth()
 
 export {signInWithRedirect}
 export const GoogleProvider = new GoogleAuthProvider()
@@ -77,7 +75,7 @@ export const GoogleProvider = new GoogleAuthProvider()
 export type User = FirebaseUser
 
 export async function setupCloudMessaging() {
-  if (import.meta.env.VITE_USE_MOCK_AUTH) {
+  if (config.auth.use_mock) {
     globalThis.console.info('[auth] Skipping fcm service initialization')
     return
   }
@@ -103,7 +101,7 @@ export async function setupCloudMessaging() {
         vapidKey: config.webPush.vapidKey,
       })
 
-      if (import.meta.env.DEV) {
+      if (config.env.dev) {
         globalThis.console.log({token})
       }
 

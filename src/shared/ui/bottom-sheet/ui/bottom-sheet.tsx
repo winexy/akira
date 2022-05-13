@@ -4,6 +4,7 @@ import {ErrorBoundary, FallbackProps} from 'react-error-boundary'
 import clsx from 'clsx'
 import {ExclamationCircleIcon} from '@heroicons/react/solid'
 import {Button} from 'shared/ui/button'
+import {config} from 'shared/config'
 import * as bottomSheetModel from '../model'
 import './bottom-sheet.css'
 
@@ -17,7 +18,7 @@ function Fallback({error}: FallbackProps) {
     <div className="py-8 px-8 flex justify-center items-center flex-col">
       <ExclamationCircleIcon className="w-16 h-16 text-red-500" />
       <p className="mt-4 text-xl font-semibold">Something went wrong...</p>
-      {import.meta.env.DEV && <p className="mt-4  ">{error.message}</p>}
+      {config.env.dev && <p className="mt-4  ">{error.message}</p>}
       <Button
         variant="red"
         size="md"
