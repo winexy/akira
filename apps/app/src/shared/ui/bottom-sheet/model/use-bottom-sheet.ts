@@ -42,12 +42,8 @@ const extractTouch = get('changedTouches.0.clientY')
 export function useBottomSheet(
   name: string,
 ): BottomSheetState & BottomSheetEvents {
-  const sheet =
-    useStore(
-      $bottomSheets.map(
-        find<Sheet>({name}),
-      ),
-    ) ?? null
+  const sheets = useStore($bottomSheets)
+  const sheet = find({name}, sheets) ?? null
 
   const activeBottomSheet = useStore($activeBottomSheet)
   const [isBlackoutTouchStarted, setIsBlackoutTouchStarted] = useState(false)
