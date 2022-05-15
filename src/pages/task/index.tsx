@@ -4,7 +4,7 @@ import {PageView} from 'shared/ui/page-view'
 import format from 'date-fns/format'
 import parseISO from 'date-fns/parseISO'
 import isEmpty from 'lodash/fp/isEmpty'
-import {ExclamationIcon, PlusIcon} from '@heroicons/react/outline'
+import {ExclamationIcon, PlusIcon, ShareIcon} from '@heroicons/react/outline'
 import isNil from 'lodash/fp/isNil'
 import {bottomSheetModel, BottomSheet} from 'shared/ui/bottom-sheet'
 import {Button} from 'shared/ui/button'
@@ -15,7 +15,7 @@ import {
 } from 'modules/tasks/components'
 import {TaskTag} from 'entities/task-tag'
 import {TagsManager} from 'features/tags-manager'
-import {Tag} from 'shared/ui/tag'
+import {Tag, WIP} from 'shared/ui/tag'
 import {
   DotsVerticalIcon,
   ViewListIcon,
@@ -38,6 +38,9 @@ import {CloneTaskAction} from 'features/clone-task'
 import isUndefined from 'lodash/fp/isUndefined'
 import {Invariant} from 'shared/lib/debugger'
 import {taskModel} from 'entities/task'
+import {UniversalDrawer} from 'widgets/universal-drawer'
+import {map} from 'lodash/fp'
+import {List} from '../../shared/ui/list/index'
 
 const TaskPage: React.FC = () => {
   const {taskId} = useParams()
@@ -154,6 +157,14 @@ const TaskPage: React.FC = () => {
             </TaskActionList.Button>
           </TaskActionList.Item>
         )}
+        <TaskActionList.Item>
+          <TaskActionList.Button
+            Icon={ShareIcon}
+            onClick={() => bottomSheetModel.showBottomSheet('share-task')}
+          >
+            Share
+          </TaskActionList.Button>
+        </TaskActionList.Item>
         <TaskDueDate
           taskId={taskId}
           dueDate={task.due_date}
@@ -176,6 +187,30 @@ const TaskPage: React.FC = () => {
           </TaskActionList.Button>
         </TaskActionList.Item>
       </TaskActionList>
+      <UniversalDrawer name="share-task" className="p-4">
+        <h2 className="flex items-center font-bold text-2xl">
+          Share your task <WIP className="ml-auto" />
+        </h2>
+        <p className="mt-1 text-gray-500">
+          Invite your team to colloborate on this task
+        </p>
+        <h3 className="mt-2 font-bold text-lg">Invite team members</h3>
+        <div className="flex">
+          <input placeholder="teammate@example.com" className="flex-1 mr-4" />
+          <Button size="xs" className="ml-auto">
+            Send invite
+          </Button>
+        </div>
+        <h4 className="mt-4 font-bold text-lg">Members</h4>
+        <List className="mt-2">
+          {map(
+            member => (
+              <List.Item>{member}</List.Item>
+            ),
+            ['ellie', 'ed', 'adele'],
+          )}
+        </List>
+      </UniversalDrawer>
       <div id="schedule-datepicker" />
       <Recurrence taskId={task.id} />
       {task && (
