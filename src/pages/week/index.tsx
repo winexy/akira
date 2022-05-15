@@ -92,8 +92,8 @@ const WeekPage: React.FC = () => {
             {format(parseISO(day), 'EEEE')}
           </h2>
           {isEmpty(byDay[day]) ? (
-            <div className="mt-2 px-4 h-12 flex items-center w-full rounded-md bg-gray-50">
-              <div className="w-5 h-5 rounded-md bg-white border border-gray-100" />
+            <div className="mt-2 px-4 h-14 flex items-center w-full rounded-lg bg-white border border-gray-200 dark:bg-dark-500 dark:border-dark-400">
+              <div className="w-5 h-5 mr-3 rounded bg-white border border-gray-400 dark:bg-dark-500 dark:border-dark-300" />
             </div>
           ) : (
             <TaskList className="mt-2" isPending={false} tasks={byDay[day]} />
