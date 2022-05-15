@@ -1,5 +1,4 @@
 import React, {lazy, Suspense} from 'react'
-import {ReactQueryDevtools} from 'react-query/devtools'
 import {DndProvider} from 'react-dnd'
 import {TouchBackend} from 'react-dnd-touch-backend'
 import {ErrorBoundary, FallbackProps} from 'react-error-boundary'
@@ -10,6 +9,7 @@ import {
   Routes,
   useNavigate,
 } from 'react-router-dom'
+import {ReactQueryDebugger} from 'features/react-query-debugger'
 import {HomeIcon, RefreshIcon} from '@heroicons/react/solid'
 import {DashboardPage} from 'pages/dashboard'
 import {AuthPage} from 'pages/auth'
@@ -200,7 +200,7 @@ function App() {
         </ErrorBoundary>
       </Router>
       <NotificationManager />
-      <ReactQueryDevtools />
+      <ReactQueryDebugger />
     </DndProvider>
   )
 }
