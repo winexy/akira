@@ -5,6 +5,7 @@ import isUndefined from 'lodash/fp/isUndefined'
 import {toggleMenu} from 'widgets/menu'
 import {Link} from 'react-router-dom'
 import {Akira} from 'shared/ui/akira'
+import {AkiraTitle} from '../akira-title'
 
 export const Header: React.FC<{className?: string}> = ({
   className,
@@ -37,26 +38,9 @@ export const Header: React.FC<{className?: string}> = ({
         className,
       )}
     >
-      {isUndefined(children) ? (
-        <Link to="/" className="flex items-center">
-          <Akira className="w-5 h-5 -mt-px" />
-          <h1
-            className="
-              ml-2 font-bold text-xl font-mono 
-              transition
-              active:text-gray-900 
-              dark:active:text-purple-300
-            "
-          >
-            Akira
-          </h1>
-        </Link>
-      ) : (
-        children
-      )}
       <button
         className="
-          ml-auto w-8 h-8 -mr-1
+          mr-auto w-8 h-8
           flex items-center justify-center 
           rounded 
           transition ease-in duration-150
@@ -69,6 +53,15 @@ export const Header: React.FC<{className?: string}> = ({
       >
         <MenuIcon className="w-6 h-6" />
       </button>
+      {isUndefined(children) ? (
+        <Link to="/" className="flex items-center">
+          <Akira className="w-5 h-5 -mt-px" />
+          <AkiraTitle className="ml-2" />
+        </Link>
+      ) : (
+        children
+      )}
+      <div className="ml-auto w-8" />
     </header>
   )
 }
