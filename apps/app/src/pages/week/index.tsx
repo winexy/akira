@@ -17,18 +17,20 @@ import format from 'date-fns/format'
 import {ApiTask} from 'modules/tasks/types.d'
 import {taskModel} from 'entities/task'
 
+const toDateKey = (d: Date) => format(d, 'yyyy-MM-dd')
+
 function transformResponse(tasks: Array<ApiTask> | undefined) {
   const defaultRecord: Record<string, []> = {}
 
   let date = startOfWeek(new Date(), {weekStartsOn: 1})
   times(7, () => {
-    defaultRecord[formatISO(date)] = []
+    defaultRecord[toDateKey(date)] = []
     date = addDays(date, 1)
   })
 
   const byDay = merge(
     defaultRecord,
-    groupBy(task => formatISO(parseISO(task.date ?? '')), tasks),
+    groupBy(task => toDateKey(parseISO(task.date ?? '')), tasks),
   )
 
   const days = keys(byDay).sort()
