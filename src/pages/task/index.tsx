@@ -38,9 +38,7 @@ import {CloneTaskAction} from 'features/clone-task'
 import isUndefined from 'lodash/fp/isUndefined'
 import {Invariant} from 'shared/lib/debugger'
 import {taskModel} from 'entities/task'
-import {UniversalDrawer} from 'widgets/universal-drawer'
-import {map} from 'lodash/fp'
-import {List} from '../../shared/ui/list/index'
+import {ShareManager, shareTaskModel} from 'features/share-task'
 
 const TaskPage: React.FC = () => {
   const {taskId} = useParams()
@@ -160,7 +158,7 @@ const TaskPage: React.FC = () => {
         <TaskActionList.Item>
           <TaskActionList.Button
             Icon={ShareIcon}
-            onClick={() => bottomSheetModel.showBottomSheet('share-task')}
+            onClick={shareTaskModel.showShareManager}
           >
             Share
           </TaskActionList.Button>
@@ -187,38 +185,7 @@ const TaskPage: React.FC = () => {
           </TaskActionList.Button>
         </TaskActionList.Item>
       </TaskActionList>
-      <UniversalDrawer name="share-task" className="p-4 md:w-96">
-        <h2 className="flex items-center font-bold text-2xl">
-          Share your task <WIP className="ml-auto" />
-        </h2>
-        <p className="mt-1 text-gray-500">
-          Invite your team to collaborate on this task
-        </p>
-        <h3 className="mt-2 font-bold text-lg">Invite team members</h3>
-        <div className="mt-2 flex">
-          <input
-            placeholder="teammate@example.com"
-            className="
-              flex-1 mr-4 px-3
-              shadow-inner rounded-md
-              border
-              focus:outline-none focus:outline-2
-            "
-          />
-          <Button size="xs" className="ml-auto">
-            Send invite
-          </Button>
-        </div>
-        <h4 className="mt-4 font-bold text-lg">Members</h4>
-        <List className="mt-2">
-          {map(
-            member => (
-              <List.Item>{member}</List.Item>
-            ),
-            ['ellie', 'ed', 'adele'],
-          )}
-        </List>
-      </UniversalDrawer>
+      <ShareManager />
       <div id="schedule-datepicker" />
       <Recurrence taskId={task.id} />
       {task && (
