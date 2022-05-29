@@ -185,7 +185,7 @@ const TaskPage: React.FC = () => {
           </TaskActionList.Button>
         </TaskActionList.Item>
       </TaskActionList>
-      <ShareManager />
+      <ShareManager taskId={task.id} />
       <div id="schedule-datepicker" />
       <Recurrence taskId={task.id} />
       {task && (

@@ -1,4 +1,4 @@
-import {useQuery} from 'react-query'
+import {useQuery, useMutation} from 'react-query'
 import React, {useState, FC} from 'react'
 import map from 'lodash/fp/map'
 import {Button} from 'shared/ui/button'
@@ -7,11 +7,16 @@ import {WIP} from 'shared/ui/tag'
 import {UniversalDrawer} from 'widgets/universal-drawer'
 import {userApi} from 'entities/user'
 import {shareTaskModel} from '../model'
+import {shareTaskApi} from '../api'
 
 const emailRegex = /\S+@\S+\.\S+/
 const isEmail = (email: string) => emailRegex.test(email)
 
-export const ShareManager: FC = () => {
+type Props = {
+  taskId: string
+}
+
+export const ShareManager: FC<Props> = ({taskId}) => {
   const [email, setEmail] = useState('')
   const findUserQuery = useQuery(
     ['findUser', {email}],
@@ -20,6 +25,10 @@ export const ShareManager: FC = () => {
       enabled: isEmail(email),
     },
   )
+
+  const shareMutation = useMutation((userId: string) => {
+    return shareTaskApi.share(taskId, userId)
+  })
 
   return (
     <UniversalDrawer
@@ -51,7 +60,13 @@ export const ShareManager: FC = () => {
           <span className="mr-4 flex-1 truncate">
             {findUserQuery.data.email}
           </span>
-          <Button size="xs" className="ml-auto">
+          <Button
+            size="xs"
+            className="ml-auto"
+            onClick={() => {
+              shareMutation.mutate(findUserQuery.data.uid)
+            }}
+          >
             Send invite
           </Button>
         </div>
