@@ -187,16 +187,24 @@ const TaskPage: React.FC = () => {
           </TaskActionList.Button>
         </TaskActionList.Item>
       </TaskActionList>
-      <UniversalDrawer name="share-task" className="p-4">
+      <UniversalDrawer name="share-task" className="p-4 md:w-96">
         <h2 className="flex items-center font-bold text-2xl">
           Share your task <WIP className="ml-auto" />
         </h2>
         <p className="mt-1 text-gray-500">
-          Invite your team to colloborate on this task
+          Invite your team to collaborate on this task
         </p>
         <h3 className="mt-2 font-bold text-lg">Invite team members</h3>
-        <div className="flex">
-          <input placeholder="teammate@example.com" className="flex-1 mr-4" />
+        <div className="mt-2 flex">
+          <input
+            placeholder="teammate@example.com"
+            className="
+              flex-1 mr-4 px-3
+              shadow-inner rounded-md
+              border
+              focus:outline-none focus:outline-2
+            "
+          />
           <Button size="xs" className="ml-auto">
             Send invite
           </Button>
