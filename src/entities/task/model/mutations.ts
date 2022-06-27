@@ -1,3 +1,4 @@
+import amplitude from 'amplitude-js'
 import {TaskId, TaskPatch} from 'modules/tasks/types.d'
 import {useMutation, useQueryClient} from 'react-query'
 import {akira} from 'shared/api'
@@ -59,6 +60,8 @@ export function useRemoveTaskMutation() {
         taskConfig.queryKey.All(),
         taskId,
       )
+
+      amplitude.getInstance().logEvent('RemoveTask', {taskId})
     },
   })
 }

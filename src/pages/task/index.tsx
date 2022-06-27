@@ -1,3 +1,4 @@
+import amplitude from 'amplitude-js'
 import React, {useState} from 'react'
 import {useParams} from 'react-router'
 import {PageView} from 'shared/ui/page-view'
@@ -50,6 +51,9 @@ const TaskPage: React.FC = () => {
   const [isActionToastVisible, setIsActionToastVisible] = useState(true)
   const {data: task, isFetching} = taskModel.useTaskQuery(taskId, {
     suspense: true,
+    onSuccess() {
+      amplitude.getInstance().logEvent('FetchTask', {taskId})
+    },
   })
 
   const patchTaskMutation = taskModel.usePatchTaskMutation(taskId)
