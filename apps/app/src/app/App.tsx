@@ -1,5 +1,5 @@
 import amplitude from 'amplitude-js'
-import React, {lazy, Suspense} from 'react'
+import React, {lazy, Suspense, useEffect, useState} from 'react'
 import {DndProvider} from 'react-dnd'
 import {TouchBackend} from 'react-dnd-touch-backend'
 import {ErrorBoundary, FallbackProps} from 'react-error-boundary'
@@ -10,6 +10,7 @@ import {
   Routes,
   useNavigate,
 } from 'react-router-dom'
+import {logEvent, remoteConfig,useFirebaseAuth} from 'shared/lib/firebase'
 import {ReactQueryDebugger} from 'features/react-query-debugger'
 import {HomeIcon, RefreshIcon} from '@heroicons/react/solid'
 import {DashboardPage} from 'pages/dashboard'
@@ -18,11 +19,12 @@ import {Menu} from 'widgets/menu'
 import {AkiraLoader} from 'shared/ui/akira-spinner'
 import {Button} from 'shared/ui/button'
 import {PageView} from 'shared/ui/page-view'
-import {useFirebaseAuth} from 'shared/lib/firebase'
+
 import {NotificationManager} from 'modules/notifications/NotificationManager'
 import {TaskPageFallback} from 'pages/task/fallback'
 import {TodayPage} from 'pages/today'
 import {WeekPage} from 'pages/week'
+import {getValue} from 'firebase/remote-config'
 
 const dndConfig = {
   enableMouseEvents: true,
@@ -82,6 +84,29 @@ const LoadingView: React.FC = () => (
   <PageView className="p-4">loading...</PageView>
 )
 
+function RemoteConfigTest() {
+  const [featureTest, setFeatureTest] = useState('')
+
+  useEffect(() => {
+    setTimeout(() => {
+      setFeatureTest(getValue(remoteConfig, 'feature_test').asString())
+    }, 3000)
+  }, [])
+
+  function test() {
+    logEvent('test', {
+      value: getValue(remoteConfig, 'feature_test').asString(),
+    })
+  }
+
+  return (
+    <div className="p-10">
+      feature_test: {featureTest}
+      <Button onClick={test}>click</Button>
+    </div>
+  )
+}
+
 function App() {
   const {isLoading, isAuthenticated} = useFirebaseAuth()
 
@@ -104,6 +129,7 @@ function App() {
         <ErrorBoundary FallbackComponent={Fallback}>
           <Menu>
             <Routes>
+              <Route path="/test" element={<RemoteConfigTest />} />
               <Route path="/" element={<Navigate to="/dashboard/today" />} />
               <Route path="/dashboard" element={<DashboardPage />}>
                 <Route path="today" element={<TodayPage />} />
