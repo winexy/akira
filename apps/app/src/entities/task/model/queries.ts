@@ -1,5 +1,5 @@
 import {ApiTask} from 'modules/tasks/types.d'
-import {useQuery, useQueryClient} from 'react-query'
+import {useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 import {akira} from 'shared/api'
 import {TaskCacheUtils} from '../lib'
 import {taskConfig} from '../config'
@@ -14,23 +14,14 @@ export function useTasksQuery() {
   })
 }
 
-export function useTaskQuery<Select = ApiTask>(
+export function useTaskQuery<Params = UseQueryOptions>(
   taskId: string,
-  {
-    suspense,
-    select,
-  }: Partial<{
-    select(task: ApiTask): Select
-    suspense: boolean
-  }> = {},
+  params: Partial<Params> = {},
 ) {
   return useQuery(
     taskConfig.queryKey.One(taskId),
     () => akira.tasks.findOne(taskId),
-    {
-      suspense,
-      select,
-    },
+    params,
   )
 }
 
