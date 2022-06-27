@@ -1,3 +1,4 @@
+import amplitude from 'amplitude-js'
 import React, {
   forwardRef,
   useRef,
@@ -124,6 +125,10 @@ export const AddTaskForm = forwardRef<TaskFormRef, TaskFormProps>(
       if (isEmpty(title)) {
         return
       }
+
+      amplitude.getInstance().logEvent('CreateNewTask', {
+        title,
+      })
 
       onSubmit({
         task: {

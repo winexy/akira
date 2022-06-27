@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import format from 'date-fns/format'
 import filter from 'lodash/fp/filter'
 import size from 'lodash/fp/size'
@@ -13,6 +13,7 @@ import {TaskList} from 'modules/tasks/components/TaskList'
 import {TaskListOperations} from 'modules/tasks/components/TaskListOperations'
 import {FiltersBottomSheet} from 'modules/tasks/filters/FiltersBottomSheet'
 import {taskModel} from 'entities/task'
+import amplitude from 'amplitude-js'
 
 const TodayPage: React.FC = () => {
   const {sortType, setSortType, sort} = useTaskSorting()
@@ -34,6 +35,10 @@ const TodayPage: React.FC = () => {
     mainElement: '#today-wrapper',
     onRefresh: refetchTasks,
   })
+
+  useEffect(() => {
+    amplitude.getInstance().logEvent('ViewTodayTasks')
+  }, [])
 
   return (
     <div id="today-wrapper">

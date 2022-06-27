@@ -1,3 +1,4 @@
+import amplitude from 'amplitude-js'
 import React, {lazy, Suspense} from 'react'
 import {DndProvider} from 'react-dnd'
 import {TouchBackend} from 'react-dnd-touch-backend'
@@ -74,6 +75,8 @@ const PreferencesPage = lazy(() => import('pages/preferences'))
 const NotesPage = lazy(() => import('pages/notes'))
 const RecurrentTasksPage = lazy(() => import('pages/recurrent-tasks'))
 const PomodoroPage = lazy(() => import('pages/pomodoro'))
+
+amplitude.getInstance().init('8a64695affc53861550ddf5cf68b5f10')
 
 const LoadingView: React.FC = () => (
   <PageView className="p-4">loading...</PageView>

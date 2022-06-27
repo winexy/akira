@@ -16,6 +16,7 @@ import {Swipeable, SwipeableRefHandle} from 'shared/ui/swipeable'
 import {CalendarIcon} from '@heroicons/react/outline'
 import {ChecklistLib} from 'entities/checklist'
 import {TaskLib} from 'entities/task'
+import amplitude from 'amplitude-js'
 
 const ItemType = 'list-item'
 
@@ -227,6 +228,11 @@ export const Task: React.FC<TaskProps> = ({
           'transition ease-in duration-150',
           'active:bg-gray-50',
         )}
+        onClick={() => {
+          amplitude.getInstance().logEvent('OpenTask', {
+            task_id: task.id,
+          })
+        }}
       >
         <Checkbox
           className="mr-1"
