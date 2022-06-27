@@ -1,3 +1,4 @@
+import amplitude from 'amplitude-js'
 import React from 'react'
 import {createRoot} from 'react-dom/client'
 import {enableMapSet} from 'immer'
@@ -62,6 +63,8 @@ function onAuthSuccess(user: User) {
   prefetchQueries()
   setupCloudMessaging()
   identifyUser(user)
+  amplitude.getInstance().logEvent('Authorize')
+  amplitude.getInstance().setUserId(user.uid)
 }
 
 function enableSentry() {
