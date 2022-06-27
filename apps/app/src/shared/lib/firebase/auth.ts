@@ -1,4 +1,3 @@
-import {initializeApp} from 'firebase/app'
 import {getAuth, GoogleAuthProvider, signInWithRedirect} from 'firebase/auth'
 import type {User as FirebaseUser} from 'firebase/auth'
 import {
@@ -11,18 +10,7 @@ import {config} from 'shared/config'
 import {api} from 'shared/api'
 import noop from 'lodash/noop'
 import {exhaustiveCheck} from '../utils/index'
-
-const firebaseConfig = {
-  apiKey: 'AIzaSyCBU8b6HX2K75H9ejUkjkLjvFN3y9-3QBg',
-  authDomain: 'akira-wnx.firebaseapp.com',
-  projectId: 'akira-wnx',
-  storageBucket: 'akira-wnx.appspot.com',
-  messagingSenderId: '252721708576',
-  appId: '1:252721708576:web:48f406bc8ba729b021c645',
-  measurementId: 'G-DFBDL3KN6W',
-}
-
-const app = initializeApp(firebaseConfig)
+import {app} from './app'
 
 type FirebaseAuth = ReturnType<typeof getAuth>
 
