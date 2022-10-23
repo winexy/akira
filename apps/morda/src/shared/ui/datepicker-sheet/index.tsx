@@ -14,6 +14,7 @@ type DatePickerSheetProps = {
   date: Date | null
   onApply?(): void
   fixedChildren?: ReactNode | ((props: FixedChildrenProps) => ReactNode)
+  children: React.ReactNode
 }
 
 export const DatePickerSheet: React.FC<DatePickerSheetProps> = ({

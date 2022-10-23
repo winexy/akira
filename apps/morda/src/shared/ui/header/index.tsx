@@ -7,10 +7,10 @@ import {Link} from 'react-router-dom'
 import {Akira} from 'shared/ui/akira'
 import {AkiraTitle} from '../akira-title'
 
-export const Header: React.FC<{className?: string}> = ({
-  className,
-  children,
-}) => {
+export const Header: React.FC<{
+  className?: string
+  children?: React.ReactNode
+}> = ({className, children}) => {
   const [isFloating, setIsFloating] = useState(false)
 
   useEffect(() => {

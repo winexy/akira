@@ -149,7 +149,13 @@ type UseEditorProps = {
   onSave?(editorState: EditorState): void
 }
 
-const Link: FC<{entityKey: string; contentState: ContentState}> = props => {
+type LinkProps = {
+  entityKey: string
+  contentState: ContentState
+  children: React.ReactNode
+}
+
+const Link: FC<LinkProps> = props => {
   const {href} = props.contentState.getEntity(props.entityKey).getData()
 
   const onClick: MouseEventHandler = event => {
@@ -265,22 +271,29 @@ function useEditor(html: string | undefined, props: UseEditorProps = {}) {
   )
 
   const addLink = React.useCallback(
-    href => {
+    (href: string) => {
       addEntity(EntityType.link, {href}, 'MUTABLE')
     },
     [addEntity],
   )
 
-  const setEntityData = React.useCallback((entityKey, data) => {
-    setState(currentState => {
-      /* Получаем текущий контент */
-      const content = currentState.getCurrentContent()
-      /* Объединяем текущие данные Entity с новыми */
-      const contentStateUpdated = content.mergeEntityData(entityKey, data)
-      /* Обновляем состояние редактора с указанием типа изменения */
-      return EditorState.push(currentState, contentStateUpdated, 'apply-entity')
-    })
-  }, [])
+  const setEntityData = React.useCallback(
+    (entityKey: string, data: Record<string, any>) => {
+      setState(currentState => {
+        /* Получаем текущий контент */
+        const content = currentState.getCurrentContent()
+        /* Объединяем текущие данные Entity с новыми */
+        const contentStateUpdated = content.mergeEntityData(entityKey, data)
+        /* Обновляем состояние редактора с указанием типа изменения */
+        return EditorState.push(
+          currentState,
+          contentStateUpdated,
+          'apply-entity',
+        )
+      })
+    },
+    [],
+  )
 
   const handleKeyCommand = React.useCallback(
     (command: KeyCommand, editorState: EditorState) => {
@@ -356,7 +369,12 @@ function useEditorContext() {
   return context
 }
 
-const TextEditorProvider: React.FC<{editor: EditorAPI}> = ({
+type TextEditorProviderProps = {
+  editor: EditorAPI
+  children: React.ReactNode
+}
+
+const TextEditorProvider: React.FC<TextEditorProviderProps> = ({
   editor,
   children,
 }) => {

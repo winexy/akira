@@ -10,6 +10,7 @@ import './bottom-sheet.css'
 
 type BottomSheetProps = {
   className?: string
+  children: React.ReactNode
 } & bottomSheetModel.BottomSheetState &
   bottomSheetModel.BottomSheetEvents
 

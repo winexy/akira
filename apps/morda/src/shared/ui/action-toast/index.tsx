@@ -12,6 +12,7 @@ type ActionToastButtonProps = NativeButtonProps & {
 
 type ActionToastProps = {
   isForcedVisible?: boolean
+  children: React.ReactNode
 }
 
 export const ActionToast: React.FC<ActionToastProps> & {

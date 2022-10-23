@@ -49,7 +49,9 @@ function Handler(event: KeyboardEvent) {
   hotkeyInfo.handler()
 }
 
-const HotkeyProvider: FC = ({children}) => {
+const HotkeyProvider: FC<{
+  children: React.ReactNode
+}> = ({children}) => {
   useEffect(() => {
     window.addEventListener('keydown', Handler)
     return () => window.removeEventListener('keydown', Handler)

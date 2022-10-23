@@ -5,6 +5,7 @@ import './ui-fade.css'
 
 type Props = Omit<CSSTransitionProps, 'timeout'> & {
   timeout?: number
+  children: React.ReactNode
 }
 
 export const FadeTransition: FC<Props> = ({

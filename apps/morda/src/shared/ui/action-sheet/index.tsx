@@ -13,11 +13,13 @@ import './index.css'
 type Props = {
   name: string
   description?: React.ReactNode
+  children: React.ReactNode
 }
 
 type ActionProps = {
   destructive?: boolean
   onClick?(): void
+  children: React.ReactNode
 }
 
 const TRANSITION_DURATION = 500

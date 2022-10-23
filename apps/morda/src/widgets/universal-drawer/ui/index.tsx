@@ -5,6 +5,7 @@ import {Drawer} from 'shared/ui/drawer'
 type Props = {
   name: string
   className?: string
+  children: React.ReactNode
 }
 
 export const UniversalDrawer: FC<Props> = ({name, className, children}) => {

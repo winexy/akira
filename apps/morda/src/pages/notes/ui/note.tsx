@@ -76,6 +76,7 @@ const debug = createDebugger('editor')
 type Props = {
   id: string
   className: string
+  children?: React.ReactNode
 }
 
 const NotePage: React.FC<Props> = ({id, className}) => {

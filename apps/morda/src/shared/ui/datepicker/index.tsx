@@ -24,8 +24,13 @@ type Props = {
   onChange(date: Date): void
   className?: string
 }
+type ChangeMonthProps = {
+  isDisabled: boolean
+  onClick(): void
+  children: React.ReactNode
+}
 
-const ChangeMonth: React.FC<{isDisabled: boolean; onClick(): void}> = ({
+const ChangeMonth: React.FC<ChangeMonthProps> = ({
   isDisabled,
   onClick,
   children,

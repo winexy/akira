@@ -3,6 +3,7 @@ import {createPortal} from 'react-dom'
 
 type Props = {
   to: string
+  children: React.ReactNode
 }
 
 export const Portal: FC<Props> = ({children, to}) => {

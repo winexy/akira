@@ -24,6 +24,7 @@ const Context = React.createContext<
 
 type SegmentProps = {
   id: string
+  children: React.ReactNode
 }
 
 const Segment: React.FC<SegmentProps> = ({id, children}) => {
@@ -62,6 +63,7 @@ type Props = {
   activeId: string
   className?: string
   onChange(id: string): void
+  children: React.ReactNode
 }
 
 const SegmentedControl: React.FC<Props> = ({

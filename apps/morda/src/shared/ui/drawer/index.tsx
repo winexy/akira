@@ -9,6 +9,7 @@ type Props = {
   visible: boolean
   className?: string
   onClose(): void
+  children: React.ReactNode
 }
 
 const Drawer: FC<Props> = ({visible, className, children, onClose}) => {

@@ -43,11 +43,13 @@ type MenuItemProps =
       Icon: SVGIconElement
       to: string
       CustomIcon?: never
+      children: React.ReactNode
     }
   | {
       CustomIcon: React.ReactNode
       to: string
       Icon?: never
+      children: React.ReactNode
     }
 
 type ButtonProps = {
@@ -199,7 +201,7 @@ const ScrollShadow = forwardRef<
   )
 })
 
-export const Menu: React.FC = ({children}) => {
+export const Menu: React.FC<{children: React.ReactNode}> = ({children}) => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const isOpen = useStore($isMenuOpen)

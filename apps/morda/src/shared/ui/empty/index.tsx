@@ -6,6 +6,7 @@ import {Transition} from 'shared/ui/transition'
 type Props = {
   message?: string
   className?: string
+  children?: React.ReactNode
 }
 
 export const Empty: FC<Props> = ({

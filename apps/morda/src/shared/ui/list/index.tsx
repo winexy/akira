@@ -31,6 +31,7 @@ const Item: React.FC<ItemProps> = ({
 
 type Props = {
   className?: string
+  children: React.ReactNode
 }
 
 export const List: {Item: typeof Item} & React.FC<Props> = ({

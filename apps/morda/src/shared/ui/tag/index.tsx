@@ -7,6 +7,7 @@ export type TagPropsT = {
   variant: Variant
   className?: ClassValue
   onClick?(): void
+  children: React.ReactNode
 }
 
 export const Tag: React.FC<TagPropsT> = ({

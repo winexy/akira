@@ -20,6 +20,7 @@ const Control: React.FC<{
   value: string
   activeValue: string
   onClick(value: string): void
+  children: React.ReactNode
 }> = ({activeValue, value, children, onClick}) => (
   <button
     type="button"
@@ -47,6 +48,7 @@ const SnackBar: React.FC = () => (
 type HabbitProps = {
   Icon: SVGIconElement
   variant?: 'outline'
+  children: React.ReactNode
 }
 
 const Habbit: React.FC<HabbitProps> = ({Icon, variant, children}) => {

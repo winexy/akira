@@ -6,6 +6,7 @@ import './index.css'
 type Props = {
   HtmlTag: React.ElementType
   className?: string
+  children: React.ReactNode
 }
 
 export const TagsGrid: React.FC<Props> = ({HtmlTag, className, children}) => {

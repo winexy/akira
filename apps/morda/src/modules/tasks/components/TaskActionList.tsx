@@ -3,9 +3,12 @@ import React from 'react'
 
 type Props = {
   className?: string
+  children: React.ReactNode
 }
 
-type ItemProps = {}
+type ItemProps = {
+  children: React.ReactNode
+}
 
 type ButtonProps = {
   Icon?: SVGIconElement

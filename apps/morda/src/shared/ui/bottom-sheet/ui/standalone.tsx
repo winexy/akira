@@ -5,6 +5,7 @@ import {BottomSheet} from './bottom-sheet'
 type Props = {
   name: string
   className?: string
+  children: React.ReactNode
 }
 
 export const BottomSheetStandalone: React.FC<Props> = ({

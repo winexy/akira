@@ -6,6 +6,7 @@ type Props = {
   className?: string
   isChecked?: boolean
   onChange?(): void
+  children?: React.ReactNode
 }
 
 export const Toggle: React.FC<Props> = ({

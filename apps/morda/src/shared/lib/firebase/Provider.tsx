@@ -42,6 +42,7 @@ Context.displayName = 'FirebaseAuth'
 
 type Props = {
   onAuthSuccess?(user: User): void
+  children: React.ReactNode
 }
 
 export const FirebaseAuthProvider: React.FC<Props> = ({

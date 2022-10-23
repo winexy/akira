@@ -24,7 +24,7 @@ const Input: FC<InputProps> = ({className, ...props}) => (
   />
 )
 
-const Label: FC = ({children}) => (
+const Label: FC<{children: React.ReactNode}> = ({children}) => (
   <label className="flex justify-between items-center font-semibold">
     {children}
   </label>

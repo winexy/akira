@@ -16,7 +16,9 @@ type Props = {
   activeListId: ApiTask['list_id']
 }
 
-type MatchComponent = React.FC & {
+type MatchComponent = React.FC<{
+  children: React.ReactNode
+}> & {
   Case: React.FC<CaseWhen>
   Default: React.FC<CaseDefault>
 }
@@ -31,10 +33,12 @@ const Match: MatchComponent = ({children}) => {
 
 type CaseWhen = {
   when: boolean
+  children: React.ReactNode
 }
 
 type CaseDefault = {
   default?: true
+  children: React.ReactNode
 }
 
 Match.Case = ({children}) => {

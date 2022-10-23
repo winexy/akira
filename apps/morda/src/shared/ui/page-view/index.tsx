@@ -8,8 +8,9 @@ import {Header} from 'shared/ui/header'
 type ViewProps = {
   id?: string
   className?: string
-  header?: React.ReactChild
+  header?: React.ReactNode
   withBackNavigation?: boolean
+  children: React.ReactNode
 }
 
 export const PageView: React.FC<ViewProps> = ({
