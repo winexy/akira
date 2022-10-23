@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "private": true,
-  "scripts": {},
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build"
+  },
   "author": "Olzhas Seitmagambet",
   "workspaces": [
     "packages/*",
