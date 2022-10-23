@@ -8,7 +8,7 @@ import {Spin} from 'shared/ui/spin'
 import {Swipeable} from 'shared/ui/swipeable'
 import {ConfirmRemoval, removeTaskListModel} from 'features/remove-task-list'
 import {useListsQuery} from '../hooks/index'
-import {TaskList} from '../types.d'
+import {TaskList} from '../types'
 
 type Props = {
   className?: string
