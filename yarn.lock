@@ -10491,12 +10491,10 @@ tailwind-caret-color@^1.1.0:
   resolved "https://registry.yarnpkg.com/tailwind-caret-color/-/tailwind-caret-color-1.1.0.tgz#4ce4c26232acd1dd9cebdb11fe4e69cae56a1c64"
   integrity sha512-szIOaJesH/T/Inz8tWyxtTMDr6YBmehjXuVBZYtYaynShm7dKfLXf/DtIyY7dA/AmASHncHTagAhiZFkkvSPsw==
 
-tailwindcss-padding-safe@^1.0.5:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/tailwindcss-padding-safe/-/tailwindcss-padding-safe-1.0.6.tgz#346f399905945d8bd052fdefcf5190863cbdd554"
-  integrity sha512-7roSHcTXR95qtHspEvLEnM96F7kdJN6UooMXv312H9rmjCO/dgogxkuyQU5UYhgS8z5wKFF1MFOC00wFRRzqZw==
-  dependencies:
-    lodash "^4.17.21"
+tailwindcss-padding-safe@1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/tailwindcss-padding-safe/-/tailwindcss-padding-safe-1.0.5.tgz#0878bca1ec68fbd1664b02547d29f3db8248eede"
+  integrity sha512-ofAhVZ0Et3r3mygLBxaJjpjnmdg4gviovh9nX79+hPZ23evQeSa7BEVRFRmC3w7pE7fgofgm8EjH/LP0xaIJRw==
 
 tailwindcss@3.0.16:
   version "3.0.16"
