@@ -18,7 +18,7 @@ export const ScaleTransition: FC<Props> = ({
   scaleTo = 1,
   ...props
 }) => {
-  const style = {
+  const style: React.CSSProperties = {
     '--ui-scale-enter-duration': `${timeout}ms`,
     '--ui-scale-exit-duration': `${timeout}ms`,
     '--ui-scale-from': scaleFrom,
@@ -27,7 +27,8 @@ export const ScaleTransition: FC<Props> = ({
 
   const child = React.Children.only(children)
   const element = React.isValidElement(child)
-    ? React.cloneElement(child, {style})
+    ? // @ts-expect-error style prop is valid
+      React.cloneElement(child, {style})
     : null
 
   return (

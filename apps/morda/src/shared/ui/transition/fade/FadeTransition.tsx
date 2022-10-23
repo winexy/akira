@@ -15,14 +15,15 @@ export const FadeTransition: FC<Props> = ({
   children,
   ...props
 }) => {
-  const style = {
+  const style: React.CSSProperties = {
     '--ui-fade-enter-duration': `${timeout}ms`,
     '--ui-fade-exit-duration': `${timeout}ms`,
   }
 
   const child = React.Children.only(children)
   const element = React.isValidElement(child)
-    ? React.cloneElement(child, {style})
+    ? // @ts-expect-error style prop is valid
+      React.cloneElement(child, {style})
     : null
 
   return (

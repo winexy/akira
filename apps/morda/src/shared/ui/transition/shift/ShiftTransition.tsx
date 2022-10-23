@@ -30,7 +30,7 @@ export const ShiftTransition: FC<Props> = ({
   children,
   ...props
 }) => {
-  const style = {
+  const style: React.CSSProperties = {
     '--ui-shift-enter-duration': `${timeout}ms`,
     '--ui-shift-exit-duration': `${timeout}ms`,
     '--ui-shift-translate-y': TranslateY[from],
@@ -39,7 +39,8 @@ export const ShiftTransition: FC<Props> = ({
 
   const child = React.Children.only(children)
   const element = React.isValidElement(child)
-    ? React.cloneElement(child, {style})
+    ? // @ts-expect-error style prop is valid
+      React.cloneElement(child, {style})
     : null
 
   return (
