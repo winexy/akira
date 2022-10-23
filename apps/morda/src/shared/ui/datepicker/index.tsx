@@ -2,12 +2,13 @@ import React from 'react'
 import clsx from 'clsx'
 import ReactDatePicker, {registerLocale} from 'react-datepicker'
 import en from 'date-fns/locale/en-US'
+import type {Locale} from 'date-fns'
 import ChevronLeftIcon from '@heroicons/react/solid/ChevronLeftIcon'
 import ChevronRightIcon from '@heroicons/react/solid/ChevronRightIcon'
 import format from 'date-fns/format'
 import './index.css'
 
-const locale = {
+const locale: Locale = {
   ...en,
   options: {
     ...en.options,
