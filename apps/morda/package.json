@@ -2,6 +2,11 @@
   "name": "morda",
   "version": "1.145.0",
   "private": true,
+  "engines": {
+    "node": "16.15.0",
+    "npm": "8.5.5",
+    "yarn": "1.22.19"
+  },
   "scripts": {
     "commit": "cz",
     "dev": "NODE_ENV=development vite",
