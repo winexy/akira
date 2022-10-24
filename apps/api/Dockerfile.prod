@@ -1,0 +1,25 @@
+FROM node:14-alpine
+
+RUN mkdir /code
+RUN chown node /code
+
+USER node
+
+WORKDIR /code
+
+COPY --chown=node:node package.json yarn.lock ./
+
+RUN yarn global add @nestjs/cli
+RUN yarn install --frozen-lockfile
+
+COPY --chown=node:node . ./
+
+RUN yarn build
+
+# ca-certificate used for connection to external database
+# file is generated during CI pipeline
+COPY --chown=node:node ./ca-certificate.crt ./dist/
+
+EXPOSE 3000
+
+CMD ["yarn", "start:prod"]
